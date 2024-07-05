@@ -7,7 +7,6 @@ const axiosInstance = axios.create({
   timeout: 5000,
 });
 
-// 커스텀 훅을 사용하는 리액트 컴포넌트 또는 훅 내에서 설정
 interface AxiosProviderProps {
   children: ReactNode;
 }

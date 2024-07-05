@@ -8,7 +8,7 @@ import Cookies from 'js-cookie';
 const Header = () => {
   const [loginTrue, setLoginTrue] = useState<boolean>(false);
   
-  useEffect(() => {
+  const checkAuthStatus = () => {
     const accessToken = Cookies.get('trip-tune_at');
     const refreshToken = Cookies.get('trip-tune_rt');
     
@@ -17,6 +17,13 @@ const Header = () => {
     } else {
       setLoginTrue(false);
     }
+  };
+  
+  useEffect(() => {
+    checkAuthStatus();
+    const interval = setInterval(checkAuthStatus, 1000);
+    
+    return () => clearInterval(interval);
   }, []);
   
   return (

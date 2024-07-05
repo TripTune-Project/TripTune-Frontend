@@ -1,4 +1,3 @@
-// hooks/useAxiosConfig.ts
 import { useEffect } from 'react';
 import axios, { AxiosInstance } from 'axios';
 
@@ -7,7 +6,6 @@ const useAxiosConfig = (axiosInstance: AxiosInstance) => {
     const setAxiosInterceptors = (instance: AxiosInstance) => {
       instance.interceptors.request.use(
         (config) => {
-          // 요청 인터셉터 로직
           return config;
         },
         (error) => {
@@ -17,7 +15,6 @@ const useAxiosConfig = (axiosInstance: AxiosInstance) => {
       
       instance.interceptors.response.use(
         (response) => {
-          // 응답 인터셉터 로직
           return response;
         },
         (error) => {
