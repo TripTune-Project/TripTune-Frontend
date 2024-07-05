@@ -4,7 +4,7 @@ import React, { useEffect, useState, Suspense } from 'react';
 import { requestFindId, requestFindPassword } from '../../api/findApi';
 import { useRouter, useSearchParams } from 'next/navigation';
 import styles from '../../styles/Find.module.css';
-import useErrorBoundary from '../../hooks/useErrorBoundary'; // 경로에 맞게 수정
+import useErrorBoundary from '../../hooks/useErrorBoundary';
 
 const FindPage: React.FC = () => {
 	const router = useRouter();
