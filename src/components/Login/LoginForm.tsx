@@ -6,8 +6,8 @@ import { validatePassword, validateUserId } from '../../utils/validation';
 import styles from '../../styles/Login.module.css';
 import { useRouter } from 'next/navigation';
 import useLogin from '../../hooks/useLogin';
-import FindIdModal from '../Find/FindIdModal';
-import FindPasswordModal from '../Find/FindPasswordModal';
+import Alert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
 
 interface LoginFormData {
   userId: string;
@@ -16,11 +16,9 @@ interface LoginFormData {
 
 const LoginForm: React.FC = () => {
   const router = useRouter();
-  const { loginUser } = useLogin();  // useLogin 훅 사용
-  const [isFindIdModalOpen, setFindIdModalOpen] = useState(false);
-  const [isFindPasswordModalOpen, setFindPasswordModalOpen] = useState(false);
+  const { loginUser } = useLogin();
   const [errorMessage, setErrorMessage] = useState('');
-  const [notificationMessage, setNotificationMessage] = useState('');
+  const [openSnackbar, setOpenSnackbar] = useState(false);
   
   const {
     register,
@@ -33,23 +31,32 @@ const LoginForm: React.FC = () => {
   const onSubmit = async (data: LoginFormData) => {
     try {
       await loginUser(data);
-      setNotificationMessage('로그인에 성공했습니다. 홈으로 이동합니다.');
       router.push('/Home');
     } catch (error) {
       console.error('로그인 에러:', error);
-      if (error instanceof Error) {
-        setErrorMessage(error.message);
-        setNotificationMessage(error.message);
-      } else {
-        setErrorMessage('로그인 중 오류가 발생했습니다.');
-        setNotificationMessage('로그인 중 오류가 발생했습니다.');
-      }
+      setErrorMessage('아이디 또는 비밀번호가 잘못되었습니다.');
+      setOpenSnackbar(true);
     }
   };
   
-  const closeModal = () => {
-    setFindIdModalOpen(false);
-    setFindPasswordModalOpen(false);
+  const handleKakaoLogin = () => {
+    window.location.href = 'https://kauth.kakao.com/oauth/authorize?client_id=YOUR_KAKAO_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&response_type=code';
+  };
+  
+  const handleNaverLogin = () => {
+    window.location.href = 'https://nid.naver.com/oauth2.0/authorize?client_id=YOUR_NAVER_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&response_type=code';
+  };
+  
+  const handleFindId = () => {
+    window.open('/Find?tab=findId', 'FindId', 'width=600,height=400');
+  };
+  
+  const handleFindPassword = () => {
+    window.open('/Find?tab=findPassword', 'FindPassword', 'width=600,height=400');
+  };
+  
+  const closeSnackbar = () => {
+    setOpenSnackbar(false);
   };
   
   return (
@@ -94,9 +101,20 @@ const LoginForm: React.FC = () => {
             로그인하기
           </button>
         </form>
-        {errorMessage && <p className={styles.errorText}>{errorMessage}</p>}
-        {notificationMessage && <p className={styles.notificationMessage}>{notificationMessage}</p>}
+        {errorMessage && (
+          <p className={styles.errorText}>{errorMessage}</p>
+        )}
       </div>
+      
+      <div className={styles.socialLoginContainer}>
+        <button onClick={handleKakaoLogin} className={styles.kakaoButton}>
+          카카오 계정으로 로그인
+        </button>
+        <button onClick={handleNaverLogin} className={styles.naverButton}>
+          네이버 계정으로 로그인
+        </button>
+      </div>
+      
       <hr className={styles.hr} />
       <div className={styles.linkContainer}>
         <div className={styles.join} onClick={() => router.push('/Join')}>
@@ -105,21 +123,29 @@ const LoginForm: React.FC = () => {
         <div>
           <span
             className={styles.findId}
-            onClick={() => setFindIdModalOpen(true)}
+            onClick={handleFindId}
           >
             아이디 찾기
           </span>
           <span
             className={styles.findPassword}
-            onClick={() => setFindPasswordModalOpen(true)}
+            onClick={handleFindPassword}
           >
             비밀번호 찾기
           </span>
         </div>
       </div>
       
-      {isFindIdModalOpen && <FindIdModal closeModal={closeModal} />}
-      {isFindPasswordModalOpen && <FindPasswordModal closeModal={closeModal} />}
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={closeSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+      >
+        <Alert onClose={closeSnackbar} severity="error" sx={{ width: '100%' }}>
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 };
