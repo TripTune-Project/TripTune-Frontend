@@ -1,0 +1,70 @@
+.pageContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+}
+
+.tabContainer {
+    display: flex;
+    gap: 10px; /* Reduce the gap between buttons */
+    margin-bottom: 20px;
+}
+
+.tabButton {
+    padding: 10px 30px; /* Increase padding for larger buttons */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #e0e0e0; /* Light gray background */
+    font-size: 16px;
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition for background and text color */
+}
+
+.tabButton:hover {
+    background-color: #d0d0d0; /* Slightly darker gray on hover */
+}
+
+.activeTab {
+    background-color: #007bff; /* Blue background for active tab */
+    color: white; /* White text for active tab */
+}
+
+.inputGroup {
+    margin-bottom: 20px;
+}
+
+.input {
+    padding: 10px;
+    width: 300px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+.submitButton {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s; /* Smooth transition for background color */
+}
+
+.submitButton:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+.message {
+    color: green;
+    margin-top: 20px;
+}
+
+.errorText {
+    color: red;
+    margin-top: 20px;
+}

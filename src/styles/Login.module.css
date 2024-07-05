@@ -48,7 +48,7 @@
 }
 
 .submitButton {
-    width: 500px;
+    width: 550px;
     height: 55px;
     flex-shrink: 0;
     background: #1C3C29;
@@ -327,5 +327,57 @@
     .linkContainer {
         margin-left: 15%;
         width: 250px;
+    }
+}
+
+.socialLoginContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.kakaoButton, .naverButton {
+    width: 500px;
+    height: 55px;
+    flex-shrink: 0;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 100%;
+    letter-spacing: -0.48px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    margin: 10px 0;
+}
+
+.kakaoButton {
+    background-color: #FEE500; /* 카카오톡 노란색 */
+    color: #181600; /* 검은색 텍스트 */
+}
+
+.kakaoButton:hover {
+    background-color: #e6c200; /* 조금 어두운 노란색 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 약간의 그림자 효과 */
+}
+
+.naverButton {
+    background-color: #03C75A; /* 네이버 초록색 */
+    color: white;
+}
+
+.naverButton:hover {
+    background-color: #028c3e; /* 조금 어두운 초록색 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 약간의 그림자 효과 */
+}
+
+@media screen and (max-width: 1279px) {
+    .kakaoButton, .naverButton {
+        width: 250px;
+        height: 45px;
+        font-size: 16px;
+        letter-spacing: -0.32px;
+        margin-left: 30px;
     }
 }

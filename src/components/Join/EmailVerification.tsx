@@ -9,6 +9,8 @@ import {
 import { validateEmail } from '../../utils/validation';
 import styles from '../../styles/Join.module.css';
 import { requestEmailVerification, verifyEmail } from '../../api/emailApi';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 interface JoinFormData {
   nickname: string;
@@ -40,10 +42,18 @@ const EmailVerification: React.FC<EmailVerificationProps> = ({
                                                              }) => {
   const [isVerificationSent, setIsVerificationSent] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState('');
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [alertSeverity, setAlertSeverity] = useState<'success' | 'error'>('success');
+  
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
   
   const handleEmailVerificationRequest = async (email: string) => {
     if (!validateEmail(email)) {
+      setAlertSeverity('error');
       setNotificationMessage('유효하지 않은 이메일 주소입니다.');
+      setOpenSnackbar(true);
       setErrorMessage('유효하지 않은 이메일 주소입니다.');
       return;
     }
@@ -52,15 +62,20 @@ const EmailVerification: React.FC<EmailVerificationProps> = ({
       await requestEmailVerification(email);
       setIsVerificationSent(true);
       setErrorMessage('');
+      setAlertSeverity('success');
       setNotificationMessage('인증 코드가 발송되었습니다. 이메일을 확인해주세요.');
+      setOpenSnackbar(true);
     } catch (error) {
       if (error instanceof Error) {
         setErrorMessage(error.message);
+        setAlertSeverity('error');
         setNotificationMessage(error.message);
       } else {
         setErrorMessage('인증 코드 요청에 실패했습니다. 다시 시도해주세요.');
+        setAlertSeverity('error');
         setNotificationMessage('인증 코드 요청에 실패했습니다. 다시 시도해주세요.');
       }
+      setOpenSnackbar(true);
     }
   };
   
@@ -73,15 +88,20 @@ const EmailVerification: React.FC<EmailVerificationProps> = ({
       }
       setIsVerificationComplete(true);
       setErrorMessage('');
+      setAlertSeverity('success');
       setNotificationMessage('이메일 인증이 완료되었습니다.');
+      setOpenSnackbar(true);
     } catch (error) {
       if (error instanceof Error) {
         setErrorMessage(error.message);
+        setAlertSeverity('error');
         setNotificationMessage(error.message);
       } else {
         setErrorMessage('인증 코드가 유효하지 않습니다.');
+        setAlertSeverity('error');
         setNotificationMessage('인증 코드가 유효하지 않습니다.');
       }
+      setOpenSnackbar(true);
     }
   };
   
@@ -141,9 +161,17 @@ const EmailVerification: React.FC<EmailVerificationProps> = ({
           <p className={styles.verifiedText}>이메일이 인증되었습니다.</p>
         </div>
       )}
-      {notificationMessage && (
-        <p className={styles.notificationMessage}>{notificationMessage}</p>
-      )}
+      
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={alertSeverity} sx={{ width: '100%' }}>
+          {notificationMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 };

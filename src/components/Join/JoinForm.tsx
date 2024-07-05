@@ -11,6 +11,8 @@ import styles from '../../styles/Join.module.css';
 import { useRouter } from 'next/navigation';
 import { joinMember } from '../../api/joinApi';
 import EmailVerification from './EmailVerification';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 interface JoinFormData {
   nickname: string;
@@ -34,21 +36,34 @@ const JoinForm: React.FC = () => {
   const [isAgreed, setIsAgreed] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [notificationMessage, setNotificationMessage] = useState('');
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [alertSeverity, setAlertSeverity] = useState<'success' | 'error'>('success');
   
   const router = useRouter();
+  
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
   
   const onSubmit = async (data: JoinFormData) => {
     if (!isVerificationComplete) {
       setNotificationMessage('이메일 인증을 완료해주세요.');
       setErrorMessage('이메일 인증을 완료해주세요.');
+      setAlertSeverity('error');
+      setOpenSnackbar(true);
       return;
     }
     
     try {
       const { authCode, ...submitData } = data;
       await joinMember(submitData);
-      setNotificationMessage('회원가입이 완료되었습니다. 홈으로 이동합니다.');
-      router.push('/Home');
+      setNotificationMessage(`${data.nickname} 고객님 회원가입을 축하드립니다!`);
+      setAlertSeverity('success');
+      setOpenSnackbar(true);
+      
+      setTimeout(() => {
+        router.push('/Login');
+      }, 3000);
     } catch (error) {
       if (error instanceof Error) {
         setErrorMessage(error.message);
@@ -57,6 +72,8 @@ const JoinForm: React.FC = () => {
         setErrorMessage('회원가입에 실패했습니다. 다시 시도해주세요.');
         setNotificationMessage('회원가입에 실패했습니다. 다시 시도해주세요.');
       }
+      setAlertSeverity('error');
+      setOpenSnackbar(true);
     }
   };
   
@@ -154,6 +171,17 @@ const JoinForm: React.FC = () => {
           {notificationMessage && <p className={styles.notificationMessage}>{notificationMessage}</p>}
         </form>
       </div>
+      
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={alertSeverity} sx={{ width: '100%' }}>
+          {notificationMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 };
