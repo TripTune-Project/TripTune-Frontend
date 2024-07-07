@@ -3,7 +3,7 @@ import { AxiosError } from 'axios';
 
 export const requestFindId = async (email: string) => {
   try {
-    const response = await axiosInstance.post('/find-id', { email });
+    const response = await axiosInstance.post('/api/members/find-id', { email });
     return response.data.message;
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
@@ -17,7 +17,7 @@ export const requestFindId = async (email: string) => {
 
 export const requestFindPassword = async (email: string, userId: string) => {
   try {
-    const response = await axiosInstance.post('/find-password', { email, userId });
+    const response = await axiosInstance.post('/api/members/find-password', { email, userId });
     return response.data.message;
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
