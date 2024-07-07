@@ -12,7 +12,7 @@ const FindPage: React.FC = () => {
 	const initialTab = searchParams.get('tab') || 'findId';
 	const [tab, setTab] = useState<'findId' | 'findPassword'>(initialTab as 'findId' | 'findPassword');
 	const [email, setEmail] = useState('');
-	const [username, setUsername] = useState('');
+	const [userId, setUserId] = useState('');
 	const [message, setMessage] = useState('');
 	const [errorMessage, setErrorMessage] = useState('');
 	
@@ -23,7 +23,7 @@ const FindPage: React.FC = () => {
 	const handleTabChange = (tab: 'findId' | 'findPassword') => {
 		setTab(tab);
 		setEmail('');
-		setUsername('');
+		setUserId('');
 		setMessage('');
 		setErrorMessage('');
 	};
@@ -32,8 +32,8 @@ const FindPage: React.FC = () => {
 		setEmail(event.target.value);
 	};
 	
-	const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setUsername(event.target.value);
+	const handleuserIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setUserId(event.target.value);
 	};
 	
 	const handleFindIdSubmit = async (event: React.FormEvent) => {
@@ -55,7 +55,7 @@ const FindPage: React.FC = () => {
 	const handleFindPasswordSubmit = async (event: React.FormEvent) => {
 		event.preventDefault();
 		try {
-			const responseMessage = await requestFindPassword(email, username);
+			const responseMessage = await requestFindPassword(email, userId);
 			setMessage(responseMessage);
 			setErrorMessage('');
 		} catch (error) {
@@ -113,12 +113,12 @@ const FindPage: React.FC = () => {
 						<h2>비밀번호 찾기</h2>
 						<form onSubmit={handleFindPasswordSubmit}>
 							<div className={styles.inputGroup}>
-								<label htmlFor="username">아이디</label>
+								<label htmlFor="userId">아이디</label>
 								<input
 									type="text"
-									id="username"
-									value={username}
-									onChange={handleUsernameChange}
+									id="userId"
+									value={userId}
+									onChange={handleuserIdChange}
 									required
 									className={styles.input}
 								/>
