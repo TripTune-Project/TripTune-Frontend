@@ -5,6 +5,7 @@ import { requestFindId, requestFindPassword } from '../../api/findApi';
 import { useRouter, useSearchParams } from 'next/navigation';
 import styles from '../../styles/Find.module.css';
 import useErrorBoundary from '../../hooks/useErrorBoundary';
+import { Alert, Snackbar } from '@mui/material';
 
 const FindPage: React.FC = () => {
 	const router = useRouter();
@@ -12,9 +13,11 @@ const FindPage: React.FC = () => {
 	const initialTab = searchParams.get('tab') || 'findId';
 	const [tab, setTab] = useState<'findId' | 'findPassword'>(initialTab as 'findId' | 'findPassword');
 	const [email, setEmail] = useState('');
-	const [username, setUsername] = useState('');
+	const [userId, setUserId] = useState('');
 	const [message, setMessage] = useState('');
 	const [errorMessage, setErrorMessage] = useState('');
+	const [alertOpen, setAlertOpen] = useState(false);
+	const [alertSeverity, setAlertSeverity] = useState<'success' | 'error'>('success');
 	
 	useEffect(() => {
 		setTab(initialTab as 'findId' | 'findPassword');
@@ -23,7 +26,7 @@ const FindPage: React.FC = () => {
 	const handleTabChange = (tab: 'findId' | 'findPassword') => {
 		setTab(tab);
 		setEmail('');
-		setUsername('');
+		setUserId('');
 		setMessage('');
 		setErrorMessage('');
 	};
@@ -32,8 +35,8 @@ const FindPage: React.FC = () => {
 		setEmail(event.target.value);
 	};
 	
-	const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setUsername(event.target.value);
+	const handleUserIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setUserId(event.target.value);
 	};
 	
 	const handleFindIdSubmit = async (event: React.FormEvent) => {
@@ -42,6 +45,7 @@ const FindPage: React.FC = () => {
 			const responseMessage = await requestFindId(email);
 			setMessage(responseMessage);
 			setErrorMessage('');
+			setAlertSeverity('success');
 		} catch (error) {
 			if (error instanceof Error) {
 				setErrorMessage(error.message);
@@ -49,15 +53,19 @@ const FindPage: React.FC = () => {
 				setErrorMessage('아이디 찾기 요청에 실패했습니다. 다시 시도해주세요.');
 			}
 			setMessage('');
+			setAlertSeverity('error');
+		} finally {
+			setAlertOpen(true);
 		}
 	};
 	
 	const handleFindPasswordSubmit = async (event: React.FormEvent) => {
 		event.preventDefault();
 		try {
-			const responseMessage = await requestFindPassword(email, username);
+			const responseMessage = await requestFindPassword(email, userId);
 			setMessage(responseMessage);
 			setErrorMessage('');
+			setAlertSeverity('success');
 		} catch (error) {
 			if (error instanceof Error) {
 				setErrorMessage(error.message);
@@ -65,7 +73,14 @@ const FindPage: React.FC = () => {
 				setErrorMessage('비밀번호 찾기 요청에 실패했습니다. 다시 시도해주세요.');
 			}
 			setMessage('');
+			setAlertSeverity('error');
+		} finally {
+			setAlertOpen(true);
 		}
+	};
+	
+	const handleAlertClose = () => {
+		setAlertOpen(false);
 	};
 	
 	const { ErrorFallback } = useErrorBoundary();
@@ -113,12 +128,12 @@ const FindPage: React.FC = () => {
 						<h2>비밀번호 찾기</h2>
 						<form onSubmit={handleFindPasswordSubmit}>
 							<div className={styles.inputGroup}>
-								<label htmlFor="username">아이디</label>
+								<label htmlFor="userId">아이디</label>
 								<input
 									type="text"
-									id="username"
-									value={username}
-									onChange={handleUsernameChange}
+									id="userId"
+									value={userId}
+									onChange={handleUserIdChange}
 									required
 									className={styles.input}
 								/>
@@ -140,8 +155,11 @@ const FindPage: React.FC = () => {
 						</form>
 					</div>
 				)}
-				{message && <p className={styles.message}>{message}</p>}
-				{errorMessage && <p className={styles.errorText}>{errorMessage}</p>}
+				<Snackbar open={alertOpen} autoHideDuration={6000} onClose={handleAlertClose}>
+					<Alert onClose={handleAlertClose} severity={alertSeverity} sx={{ width: '100%' }}>
+						{alertSeverity === 'success' ? message : errorMessage}
+					</Alert>
+				</Snackbar>
 			</ErrorFallback>
 		</div>
 	);

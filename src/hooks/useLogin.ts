@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import axiosInstance from '../api/axiosInstance';
-import { AxiosError } from 'axios';
+import axios, { AxiosError } from 'axios';
 import useSaveLocalContent from './useSaveLocalContent';
 
 interface LoginData {
@@ -13,7 +13,7 @@ const useLogin = () => {
   
   const loginUser = useCallback(async (data: LoginData) => {
     try {
-      const response = await axiosInstance.post('/api/members/login', data);
+      const response = await axios.post('/api/members/login', data);
       const { accessToken, refreshToken } = response.data.data;
       
       setEncryptedCookie('trip-tune_at', accessToken, 7);

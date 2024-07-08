@@ -1,5 +1,4 @@
-import axiosInstance from './axiosInstance';
-import { AxiosError } from 'axios';
+import axios, { AxiosError } from 'axios';
 
 interface JoinMemberData {
   nickname: string;
@@ -10,7 +9,7 @@ interface JoinMemberData {
 
 export const joinMember = async (data: JoinMemberData) => {
   try {
-    const response = await axiosInstance.post('/api/members/join', data);
+    const response = await axios.post('/api/members/join', data);
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
