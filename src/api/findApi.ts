@@ -1,9 +1,8 @@
-import axiosInstance from './axiosInstance';
-import { AxiosError } from 'axios';
+import axios, { AxiosError } from 'axios';
 
 export const requestFindId = async (email: string) => {
   try {
-    const response = await axiosInstance.post('/api/members/find-id', { email });
+    const response = await axios.post('/api/members/find-id', { email });
     return response.data.message;
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
@@ -11,13 +10,13 @@ export const requestFindId = async (email: string) => {
         throw new Error(error.response.data.message);
       }
     }
-    throw new Error('아이디 찾기 요청에 실패했습니다.');
+    throw new Error('이메일이 유효하지 않습니다.');
   }
 };
 
 export const requestFindPassword = async (email: string, userId: string) => {
   try {
-    const response = await axiosInstance.post('/api/members/find-password', { email, userId });
+    const response = await axios.post('/api/members/find-password', { email, userId });
     return response.data.message;
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
@@ -25,6 +24,6 @@ export const requestFindPassword = async (email: string, userId: string) => {
         throw new Error(error.response.data.message);
       }
     }
-    throw new Error('비밀번호 찾기 요청에 실패했습니다.');
+    throw new Error('이메일이 유효하지 않습니다.');
   }
 };

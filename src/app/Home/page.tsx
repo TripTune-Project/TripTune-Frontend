@@ -2,18 +2,28 @@
 
 import React, { useState } from 'react';
 import LogoutModal from '../../components/Logout/LogoutModal';
-import { logout } from '../../api/logout';
+import { logoutApi } from '../../api/logoutApi';
+import { Alert, Snackbar } from '@mui/material';
 
 const Home: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
   
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
   
   const handleLogout = async () => {
     closeModal();
-    await logout();
+    try {
+      await logoutApi();
+    } catch (error) {
+      setAlertMessage('로그아웃에 실패했습니다. 다시 시도해 주세요.');
+      setAlertOpen(true);
+    }
   };
+  
+  const handleAlertClose = () => setAlertOpen(false);
   
   return (
     <div>
@@ -24,6 +34,11 @@ const Home: React.FC = () => {
         onClose={closeModal}
         onConfirm={handleLogout}
       />
+      <Snackbar open={alertOpen} autoHideDuration={6000} onClose={handleAlertClose}>
+        <Alert onClose={handleAlertClose} severity="error" sx={{ width: '100%' }}>
+          {alertMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

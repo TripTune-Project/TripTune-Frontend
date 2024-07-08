@@ -1,9 +1,8 @@
-import axiosInstance from './axiosInstance';
-import { AxiosError } from 'axios';
+import axios, { AxiosError } from 'axios';
 
 export const requestEmailVerification = async (email: string) => {
   try {
-    const response = await axiosInstance.post('/api/emails/verify-request', { email });
+    const response = await axios.post('/api/emails/verify-request', { email });
     return response.data.message;
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
@@ -17,7 +16,7 @@ export const requestEmailVerification = async (email: string) => {
 
 export const verifyEmail = async (email: string, authCode: string) => {
   try {
-    const response = await axiosInstance.post('/api/emails/verify', { email, authCode });
+    const response = await axios.post('/api/emails/verify', { email, authCode });
     return response.data.message;
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
