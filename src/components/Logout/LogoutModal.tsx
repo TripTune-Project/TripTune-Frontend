@@ -1,11 +1,10 @@
 import React from 'react';
 import { Modal, Box, Button, Typography } from '@mui/material';
 
-// props의 타입을 정의합니다.
 interface LogoutModalProps {
-	isOpen: boolean; // boolean 타입으로 지정
-	onClose: () => void; // void를 반환하는 함수 타입으로 지정
-	onConfirm: () => void; // void를 반환하는 함수 타입으로 지정
+	isOpen: boolean;
+	onClose: () => void;
+	onConfirm: () => void;
 }
 
 const LogoutModal: React.FC<LogoutModalProps> = ({ isOpen, onClose, onConfirm }) => {

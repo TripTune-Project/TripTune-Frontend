@@ -353,23 +353,23 @@
 }
 
 .kakaoButton {
-    background-color: #FEE500; /* 카카오톡 노란색 */
-    color: #181600; /* 검은색 텍스트 */
+    background-color: #FEE500;
+    color: #181600;
 }
 
 .kakaoButton:hover {
-    background-color: #e6c200; /* 조금 어두운 노란색 */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 약간의 그림자 효과 */
+    background-color: #e6c200;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .naverButton {
-    background-color: #03C75A; /* 네이버 초록색 */
+    background-color: #03C75A;
     color: white;
 }
 
 .naverButton:hover {
-    background-color: #028c3e; /* 조금 어두운 초록색 */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 약간의 그림자 효과 */
+    background-color: #028c3e;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 @media screen and (max-width: 1279px) {
