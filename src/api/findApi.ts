@@ -3,7 +3,7 @@ import axios, { AxiosError } from 'axios';
 export const requestFindId = async (email: string) => {
   try {
     const response = await axios.post('/api/members/find-id', { email });
-    return response.data.message;
+    return response.data.success;
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
       if (error.response.data && error.response.data.message) {

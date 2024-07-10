@@ -4,9 +4,32 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import styles from '../styles/Header.module.css';
 import Cookies from 'js-cookie';
+import LogoutModal from "@/components/Logout/LogoutModal";
+import { Alert, Snackbar } from "@mui/material";
+import { logoutApi } from "@/api/logoutApi";
+import Button from '@mui/material/Button';
 
 const Header = () => {
   const [loginTrue, setLoginTrue] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+  
+  const handleLogout = async () => {
+    closeModal();
+    try {
+      await logoutApi();
+      // 로그아웃 성공 시, 필요한 추가 작업 수행
+    } catch (error) {
+      setAlertMessage('로그아웃에 실패했습니다. 다시 시도해 주세요.');
+      setAlertOpen(true);
+    }
+  };
+  
+  const handleAlertClose = () => setAlertOpen(false);
   
   const checkAuthStatus = () => {
     const accessToken = Cookies.get('trip-tune_at');
@@ -44,19 +67,30 @@ const Header = () => {
             일정 만들기
           </Link>
         </li>
+        <li className={styles.header_link}>
+          <Link href="/MyPage" className={styles.header_link_a}>
+            마이 페이지
+          </Link>
+        </li>
       </ul>
       <ul className={styles.header_menu}>
         {loginTrue ? (
           <>
             <li className={styles.header_link}>
-              <Link href="/BookMark" className={styles.header_link_a}>
-                북마크
-              </Link>
+              {"hyo814"} 님
             </li>
             <li className={styles.header_link}>
-              <Link href="/MyPage" className={styles.header_link_a}>
-                마이페이지
-              </Link>
+              <Button onClick={openModal} variant="text" size="large">로그아웃</Button>
+              <LogoutModal
+                isOpen={isModalOpen}
+                onClose={closeModal}
+                onConfirm={handleLogout}
+              />
+              <Snackbar open={alertOpen} autoHideDuration={6000} onClose={handleAlertClose}>
+                <Alert onClose={handleAlertClose} severity="error" sx={{ width: '100%' }}>
+                  {alertMessage}
+                </Alert>
+              </Snackbar>
             </li>
           </>
         ) : (
