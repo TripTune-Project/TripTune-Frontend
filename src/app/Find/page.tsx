@@ -1,16 +1,15 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState, Suspense } from 'react';
-import { requestFindId, requestFindPassword } from '../../api/findApi';
+import React, { useEffect, useState } from 'react';
+import { requestFindId, requestFindPassword } from '@/api/findApi';
 import { useRouter, useSearchParams } from 'next/navigation';
 import styles from '../../styles/Find.module.css';
-import useErrorBoundary from '../../hooks/useErrorBoundary';
 import { Alert, Snackbar } from '@mui/material';
 
-const FindPage: React.FC = () => {
-	const router = useRouter();
+const Find: React.FC = () => {
 	const searchParams = useSearchParams();
 	const initialTab = searchParams.get('tab') || 'findId';
+	
 	const [tab, setTab] = useState<'findId' | 'findPassword'>(initialTab as 'findId' | 'findPassword');
 	const [email, setEmail] = useState('');
 	const [userId, setUserId] = useState('');
@@ -83,92 +82,88 @@ const FindPage: React.FC = () => {
 		setAlertOpen(false);
 	};
 	
-	const { ErrorFallback } = useErrorBoundary();
-	
 	return (
 		<div className={styles.pageContainer}>
-			<ErrorFallback>
-				<div className={styles.tabContainer}>
-					<button
-						className={`${styles.tabButton} ${tab === 'findId' ? styles.activeTab : ''}`}
-						onClick={() => handleTabChange('findId')}
-					>
-						아이디 찾기
-					</button>
-					<button
-						className={`${styles.tabButton} ${tab === 'findPassword' ? styles.activeTab : ''}`}
-						onClick={() => handleTabChange('findPassword')}
-					>
-						비밀번호 찾기
-					</button>
+			<div className="p-4">
+				<div>
+					<div className="flex p-1 space-x-1 bg-blue-900/20 rounded-xl">
+						<button
+							className={`${styles.tabButton} ${tab === 'findId' ? styles.activeTab : ''}`}
+							onClick={() => handleTabChange('findId')}
+						>
+							아이디 찾기
+						</button>
+						<button
+							className={`${styles.tabButton} ${tab === 'findPassword' ? styles.activeTab : ''}`}
+							onClick={() => handleTabChange('findPassword')}
+						>
+							비밀번호 찾기
+						</button>
+					</div>
+					<div>
+						{tab === 'findId' && (
+							<div>
+								<h2>아이디 찾기</h2>
+								<form onSubmit={handleFindIdSubmit}>
+									<div className={styles.inputGroup}>
+										<label htmlFor="email">이메일</label>
+										<input
+											type="email"
+											id="email"
+											value={email}
+											onChange={handleEmailChange}
+											required
+											className={styles.input}
+										/>
+									</div>
+									<button type="submit" className={styles.submitButton}>
+										제출하기
+									</button>
+								</form>
+							</div>
+						)}
+						{tab === 'findPassword' && (
+							<div>
+								<h2>비밀번호 찾기</h2>
+								<form onSubmit={handleFindPasswordSubmit}>
+									<div className={styles.inputGroup}>
+										<label htmlFor="userId">아이디</label>
+										<input
+											type="text"
+											id="userId"
+											value={userId}
+											onChange={handleUserIdChange}
+											required
+											className={styles.input}
+										/>
+									</div>
+									<div className={styles.inputGroup}>
+										<label htmlFor="email">이메일</label>
+										<input
+											type="email"
+											id="email"
+											value={email}
+											onChange={handleEmailChange}
+											required
+											className={styles.input}
+										/>
+									</div>
+									<button type="submit" className={styles.submitButton}>
+										제출하기
+									</button>
+								</form>
+							</div>
+						)}
+						<Snackbar open={alertOpen} autoHideDuration={6000} onClose={handleAlertClose}>
+							<Alert onClose={handleAlertClose} severity={alertSeverity} sx={{ width: '100%' }}>
+								{alertSeverity === 'success' ? message : errorMessage}
+							</Alert>
+						</Snackbar>
+					</div>
 				</div>
-				{tab === 'findId' && (
-					<div>
-						<h2>아이디 찾기</h2>
-						<form onSubmit={handleFindIdSubmit}>
-							<div className={styles.inputGroup}>
-								<label htmlFor="email">이메일</label>
-								<input
-									type="email"
-									id="email"
-									value={email}
-									onChange={handleEmailChange}
-									required
-									className={styles.input}
-								/>
-							</div>
-							<button type="submit" className={styles.submitButton}>
-								제출하기
-							</button>
-						</form>
-					</div>
-				)}
-				{tab === 'findPassword' && (
-					<div>
-						<h2>비밀번호 찾기</h2>
-						<form onSubmit={handleFindPasswordSubmit}>
-							<div className={styles.inputGroup}>
-								<label htmlFor="userId">아이디</label>
-								<input
-									type="text"
-									id="userId"
-									value={userId}
-									onChange={handleUserIdChange}
-									required
-									className={styles.input}
-								/>
-							</div>
-							<div className={styles.inputGroup}>
-								<label htmlFor="email">이메일</label>
-								<input
-									type="email"
-									id="email"
-									value={email}
-									onChange={handleEmailChange}
-									required
-									className={styles.input}
-								/>
-							</div>
-							<button type="submit" className={styles.submitButton}>
-								제출하기
-							</button>
-						</form>
-					</div>
-				)}
-				<Snackbar open={alertOpen} autoHideDuration={6000} onClose={handleAlertClose}>
-					<Alert onClose={handleAlertClose} severity={alertSeverity} sx={{ width: '100%' }}>
-						{alertSeverity === 'success' ? message : errorMessage}
-					</Alert>
-				</Snackbar>
-			</ErrorFallback>
+			</div>
 		</div>
 	);
 };
 
-const WrappedFindPage = () => (
-	<Suspense fallback={<div>Loading...</div>}>
-		<FindPage />
-	</Suspense>
-);
-
-export default WrappedFindPage;
+export default Find;
