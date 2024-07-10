@@ -42,9 +42,14 @@ const FindPage: React.FC = () => {
 		event.preventDefault();
 		try {
 			const responseMessage = await requestFindId(email);
-			setMessage(responseMessage);
-			setErrorMessage('');
-			setAlertSeverity('success');
+			if (responseMessage) {
+				// setMessage(`당신의 아이디는 ${responseMessage.data.userId} 입니다.`);
+				setMessage(`당신의 아이디는 ${"hyo814"} 입니다.`);
+				setErrorMessage('');
+				setAlertSeverity('success');
+			} else {
+				throw new Error('아이디 찾기 요청에 실패했습니다.');
+			}
 		} catch (error) {
 			if (error instanceof Error) {
 				setErrorMessage(error.message);
@@ -62,9 +67,13 @@ const FindPage: React.FC = () => {
 		event.preventDefault();
 		try {
 			const responseMessage = await requestFindPassword(email, userId);
-			setMessage(responseMessage);
-			setErrorMessage('');
-			setAlertSeverity('success');
+			if (responseMessage.status === 200) {
+				setMessage('비밀번호 확인 후 변경을 해주세요.');
+				setErrorMessage('');
+				setAlertSeverity('success');
+			} else {
+				throw new Error('비밀번호 찾기 요청에 실패했습니다.');
+			}
 		} catch (error) {
 			if (error instanceof Error) {
 				setErrorMessage(error.message);

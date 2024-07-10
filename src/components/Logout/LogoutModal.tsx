@@ -1,66 +1,46 @@
 import React from 'react';
+import { Modal, Box, Button, Typography } from '@mui/material';
 
+// props의 타입을 정의합니다.
 interface LogoutModalProps {
-	isOpen: boolean;
-	onClose: () => void;
-	onConfirm: () => void;
+	isOpen: boolean; // boolean 타입으로 지정
+	onClose: () => void; // void를 반환하는 함수 타입으로 지정
+	onConfirm: () => void; // void를 반환하는 함수 타입으로 지정
 }
 
 const LogoutModal: React.FC<LogoutModalProps> = ({ isOpen, onClose, onConfirm }) => {
-	if (!isOpen) return null;
-	
 	return (
-		<div className="modal">
-			<div className="modal-content" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-				<h2 id="modal-title">로그아웃</h2>
-				<p>정말 로그아웃하시겠습니까?</p>
-				<button className="confirm-button" onClick={onConfirm}>예</button>
-				<button className="cancel-button" onClick={onClose}>아니오</button>
-			</div>
-			<style jsx>{`
-				.modal {
-					position: fixed;
-					top: 0;
-					left: 0;
-					width: 100%;
-					height: 100%;
-					background-color: rgba(0, 0, 0, 0.5);
-					display: flex;
-					justify-content: center;
-					align-items: center;
-				}
-				.modal-content {
-					background-color: white;
-					padding: 20px;
-					border-radius: 5px;
-					text-align: center;
-					box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-				}
-				button {
-					margin: 5px;
-					padding: 10px 20px;
-					border: none;
-					border-radius: 5px;
-					cursor: pointer;
-					font-size: 16px;
-				}
-				.confirm-button {
-					background-color: #4CAF50; /* 녹색 */
-					color: white;
-				}
-				.confirm-button:hover {
-					background-color: #45a049;
-				}
-				.cancel-button {
-					background-color: #f44336; /* 빨강 */
-					color: white;
-				}
-				.cancel-button:hover {
-					background-color: #d32f2f;
-				}
-			`}
-			</style>
-		</div>
+		<Modal open={isOpen} onClose={onClose}>
+			<Box
+				sx={{
+					p: 4,
+					backgroundColor: 'white',
+					borderRadius: 1,
+					boxShadow: 24,
+					position: 'absolute',
+					top: '50%',
+					left: '50%',
+					transform: 'translate(-50%, -50%)',
+				}}
+			>
+				<Typography variant="h6" component="h2">
+					로그아웃 하시겠습니까?
+				</Typography>
+				<Box mt={2}>
+					<Button onClick={onConfirm} variant="contained" color="primary">
+						확인
+					</Button>
+					<Button
+						onClick={onClose}
+						variant="outlined"
+						color="secondary"
+						sx={{ ml: 2 }}
+					>
+						취소
+					</Button>
+				</Box>
+			</Box>
+		</Modal>
 	);
 };
 
