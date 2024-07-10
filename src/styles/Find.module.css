@@ -9,27 +9,27 @@
 
 .tabContainer {
     display: flex;
-    gap: 10px; /* Reduce the gap between buttons */
+    gap: 10px;
     margin-bottom: 20px;
 }
 
 .tabButton {
-    padding: 10px 30px; /* Increase padding for larger buttons */
+    padding: 10px 30px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    background-color: #e0e0e0; /* Light gray background */
+    background-color: #e0e0e0;
     font-size: 16px;
-    transition: background-color 0.3s, color 0.3s; /* Smooth transition for background and text color */
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .tabButton:hover {
-    background-color: #d0d0d0; /* Slightly darker gray on hover */
+    background-color: #d0d0d0;
 }
 
 .activeTab {
-    background-color: #007bff; /* Blue background for active tab */
-    color: white; /* White text for active tab */
+    background-color: #007bff;
+    color: white;
 }
 
 .inputGroup {
@@ -52,11 +52,11 @@
     color: white;
     cursor: pointer;
     font-size: 16px;
-    transition: background-color 0.3s; /* Smooth transition for background color */
+    transition: background-color 0.3s;
 }
 
 .submitButton:hover {
-    background-color: #0056b3; /* Darker blue on hover */
+    background-color: #0056b3;
 }
 
 .message {
