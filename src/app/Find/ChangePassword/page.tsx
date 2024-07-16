@@ -1,9 +1,8 @@
-// http://localhost:3000/Find/ChangePassword?token={백엔드에게 받아야하는 토큰}
-
 "use client";
 
 import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import styles from '../../../styles/ChangePasswordPage.module.css';
 
 const ChangePassword = () => {
 	const searchParams = useSearchParams();
@@ -55,26 +54,28 @@ const ChangePassword = () => {
 	};
 	
 	return (
-		<div>
-			<h1>비밀번호 변경</h1>
-			<form onSubmit={handlePasswordChange}>
-				<label htmlFor="newPassword">새 비밀번호:</label>
+		<div className={styles.container}>
+			<h1 className={styles.title}>비밀번호 변경</h1>
+			<form onSubmit={handlePasswordChange} className={styles.form}>
+				<label htmlFor="newPassword" className={styles.label}>새 비밀번호:</label>
 				<input
 					type="password"
 					id="newPassword"
 					value={newPassword}
 					onChange={(e) => setNewPassword(e.target.value)}
 					required
+					className={styles.input}
 				/>
-				<label htmlFor="confirmPassword">비밀번호 확인:</label>
+				<label htmlFor="confirmPassword" className={styles.label}>비밀번호 확인:</label>
 				<input
 					type="password"
 					id="confirmPassword"
 					value={confirmPassword}
 					onChange={(e) => setConfirmPassword(e.target.value)}
 					required
+					className={styles.input}
 				/>
-				<button type="submit">변경</button>
+				<button type="submit" className={styles.button}>변경</button>
 			</form>
 		</div>
 	);
