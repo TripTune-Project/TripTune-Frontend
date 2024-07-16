@@ -43,8 +43,7 @@ const FindPage: React.FC = () => {
 		try {
 			const responseMessage = await requestFindId(email);
 			if (responseMessage) {
-				// setMessage(`당신의 아이디는 ${responseMessage.data.userId} 입니다.`);
-				setMessage(`당신의 아이디는 ${"hyo814"} 입니다.`);
+				setMessage(`당신의 아이디는 ${responseMessage.data.userId} 입니다.`);
 				setErrorMessage('');
 				setAlertSeverity('success');
 			} else {

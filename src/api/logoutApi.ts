@@ -3,9 +3,12 @@ import Cookies from 'js-cookie';
 
 export const logoutApi = async () => {
 	const accessToken = Cookies.get('trip-tune_at');
+	const userId = Cookies.get('userId');
 	if (accessToken) {
 		try {
-			const response = await axios.patch('/api/members/logout', {}, {
+			const response = await axios.patch('/api/members/logout', {
+				userId: userId,
+			}, {
 				headers: {
 					'Authorization': `Bearer ${accessToken}`
 				}

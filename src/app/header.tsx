@@ -12,6 +12,7 @@ import {useRouter} from "next/navigation";
 
 const Header = () => {
   const router = useRouter();
+  const userId = Cookies.get('userId');
   const [loginTrue, setLoginTrue] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
@@ -79,7 +80,7 @@ const Header = () => {
         {loginTrue ? (
           <>
             <li className={styles.header_link}>
-              {"hyo814"} 님
+              {userId} 님
             </li>
             <li className={styles.header_link}>
               <Button onClick={openModal} variant="text" size="large">로그아웃</Button>
