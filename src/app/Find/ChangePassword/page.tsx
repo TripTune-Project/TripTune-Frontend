@@ -2,10 +2,10 @@
 
 "use client";
 
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
 
-const ChangePasswordPage = () => {
+const ChangePassword = () => {
 	const searchParams = useSearchParams();
 	const router = useRouter();
 	const token = searchParams.get('token');
@@ -79,5 +79,11 @@ const ChangePasswordPage = () => {
 		</div>
 	);
 };
+
+const ChangePasswordPage = () => (
+	<Suspense fallback={<div>Loading...</div>}>
+		<ChangePassword />
+	</Suspense>
+);
 
 export default ChangePasswordPage;
