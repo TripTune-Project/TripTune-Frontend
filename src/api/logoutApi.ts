@@ -20,6 +20,7 @@ export const logoutApi = async () => {
 			
 			Cookies.remove('trip-tune_at');
 			Cookies.remove('trip-tune_rt');
+			Cookies.remove('userId');
 			window.location.href = '/';
 		} catch (error) {
 			throw new Error('Logout failed');
