@@ -7,36 +7,36 @@ import styles from '../../../styles/ChangePasswordPage.module.css';
 const ChangePassword = () => {
 	const searchParams = useSearchParams();
 	const router = useRouter();
-	const token = searchParams.get('token');
-	const [newPassword, setNewPassword] = useState('');
-	const [confirmPassword, setConfirmPassword] = useState('');
+	const passwordToken = searchParams.get('passwordToken');
+	const [password, setpassword] = useState('');
+	const [repassword, setrepassword] = useState('');
 	
 	useEffect(() => {
-		if (!token) {
-			console.error('No token found');
+		if (!passwordToken) {
+			console.error('No passwordToken found');
 		}
-	}, [token]);
+	}, [passwordToken]);
 	
 	const handlePasswordChange = async (e: React.FormEvent) => {
 		e.preventDefault();
 		
-		if (!token) {
+		if (!passwordToken) {
 			alert('유효하지 않은 토큰입니다.');
 			return;
 		}
 		
-		if (newPassword !== confirmPassword) {
+		if (password !== repassword) {
 			alert('비밀번호가 일치하지 않습니다.');
 			return;
 		}
 		
 		try {
-			const response = await fetch('/api/reset-password', {
-				method: 'POST',
+			const response = await fetch('/api/change-password', {
+				method: 'PATCH',
 				headers: {
 					'Content-Type': 'application/json',
 				},
-				body: JSON.stringify({ token, newPassword }),
+				body: JSON.stringify({ passwordToken, password, repassword }),
 			});
 			
 			const data = await response.json();
@@ -57,21 +57,21 @@ const ChangePassword = () => {
 		<div className={styles.container}>
 			<h1 className={styles.title}>비밀번호 변경</h1>
 			<form onSubmit={handlePasswordChange} className={styles.form}>
-				<label htmlFor="newPassword" className={styles.label}>새 비밀번호:</label>
+				<label htmlFor="password" className={styles.label}>새 비밀번호:</label>
 				<input
 					type="password"
-					id="newPassword"
-					value={newPassword}
-					onChange={(e) => setNewPassword(e.target.value)}
+					id="password"
+					value={password}
+					onChange={(e) => setpassword(e.target.value)}
 					required
 					className={styles.input}
 				/>
-				<label htmlFor="confirmPassword" className={styles.label}>비밀번호 확인:</label>
+				<label htmlFor="repassword" className={styles.label}>비밀번호 확인:</label>
 				<input
 					type="password"
-					id="confirmPassword"
-					value={confirmPassword}
-					onChange={(e) => setConfirmPassword(e.target.value)}
+					id="repassword"
+					value={repassword}
+					onChange={(e) => setrepassword(e.target.value)}
 					required
 					className={styles.input}
 				/>
