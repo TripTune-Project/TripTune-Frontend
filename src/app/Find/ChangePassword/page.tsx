@@ -31,7 +31,7 @@ const ChangePassword = () => {
 		}
 		
 		try {
-			const response = await fetch('/api/change-password', {
+			const response = await fetch('/api/members/change-password', {
 				method: 'PATCH',
 				headers: {
 					'Content-Type': 'application/json',
