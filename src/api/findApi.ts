@@ -17,7 +17,8 @@ export const requestFindId = async (email: string) => {
 export const requestFindPassword = async (email: string, userId: string) => {
   try {
     const response = await axios.post('/api/members/find-password', { email, userId });
-    return response.data.message;
+    // TODO : 여기가 문제 일듯 싶음
+    return response.data.success;
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
       if (error.response.data && error.response.data.message) {
