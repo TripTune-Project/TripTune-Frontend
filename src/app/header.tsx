@@ -9,6 +9,8 @@ import { Alert, Snackbar } from "@mui/material";
 import { logoutApi } from "@/api/logoutApi";
 import Button from '@mui/material/Button';
 import {useRouter} from "next/navigation";
+import Vector from "../../public/assets/icon/Vector.png"
+import Image from 'next/image';
 
 const Header = () => {
   const router = useRouter();
@@ -53,16 +55,11 @@ const Header = () => {
   }, []);
   
   return (
-    <>
+    <div>
       <ul className={styles.header_menu}>
         <li className={styles.header_link}>
           <Link href="/Home" className={styles.header_link_a}>
             홈 화면
-          </Link>
-        </li>
-        <li className={styles.header_link}>
-          <Link href="/Travel" className={styles.header_link_a}>
-            여행지 탐색
           </Link>
         </li>
         <li className={styles.header_link}>
@@ -71,12 +68,15 @@ const Header = () => {
           </Link>
         </li>
         <li className={styles.header_link}>
+          <Link href="/Travel" className={styles.header_link_a}>
+            여행지 탐색
+          </Link>
+        </li>
+        <li className={styles.header_link}>
           <Link href="/MyPage" className={styles.header_link_a}>
             마이 페이지
           </Link>
         </li>
-      </ul>
-      <ul className={styles.header_menu}>
         {loginTrue ? (
           <>
             <li className={styles.header_link}>
@@ -90,23 +90,20 @@ const Header = () => {
                 onConfirm={handleLogout}
               />
               <Snackbar open={alertOpen} autoHideDuration={6000} onClose={handleAlertClose}>
-                <Alert onClose={handleAlertClose} severity="error" sx={{ width: '100%' }}>
+                <Alert onClose={handleAlertClose} severity="error" sx={{width: '100%'}}>
                   {alertMessage}
                 </Alert>
               </Snackbar>
             </li>
           </>
         ) : (
-          <>
-            <li className={styles.header_link}>
-              <Link href="/Login" className={styles.header_link_a}>
-                로그인
-              </Link>
-            </li>
-          </>
+          <div className={styles.header_link_login}>
+	          로그인
+            {" >"}
+          </div>
         )}
       </ul>
-    </>
+    </div>
   );
 };
 

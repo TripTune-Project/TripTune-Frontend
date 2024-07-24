@@ -1,41 +1,337 @@
-
-.appContainer {
+.onboarding_top {
+    width:1920px;
+    height:50vh;
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    height: 100vh;
-    text-align: center;
-}
-
-.banner {
-    padding: 20px;
-    margin: 20px 0;
-    border-radius: 10px;
-    text-align: center;
-}
-
-.banner img {
-    max-width: 60%;
-    height: auto;
-    border-radius: 10px;
-}
-
-.buttonContainer {
-    display: flex;
+    align-items: start;
     gap: 20px;
 }
 
-.button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: white;
-    cursor: pointer;
-    font-size: 16px;
+.onboarding_img {
+    width: 890px;
+    height: 440px;
+    flex-shrink: 0;
+    border-radius: 30px 0px;
+    background: rgba(0, 0, 0, 0.17);
 }
 
-.button:hover {
-    background-color: #0056b3;
+.onboarding_explain_div {
+    color: #FFF;
+    font-family: Inter;
+    font-size: 37px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+}
+
+.onboarding_explain_p {
+    color: #FFF;
+    font-family: Inter;
+    font-size: 25px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.onboarding_view, .onboarding_show {
+    flex: 1;
+    padding: 20px;
+}
+
+.viewBtn {
+    width: 370px;
+    height: 316px;
+    flex-shrink: 0;
+    border-radius: 30px;
+    border: 1px solid #D9D9D9;
+    background: #FFF;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.go_link {
+    border-radius: 20px;
+    float: right;
+    display: flex;
+    width: 126px;
+    height: 35px;
+    flex-direction: column;
+    justify-content: center;
+    flex-shrink: 0;
+    color: #FFF;
+    background: black;
+    text-align: center;
+    font-family: Inter;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.time,.travel {
+    width: 346px;
+    height: 190.611px;
+    flex-shrink: 0;
+}
+
+.recommended_destinations {
+    padding: 20px 0;
+    text-align: left; /* 중앙 정렬 */
+    margin-top: 70px; /* 이미지와의 간격 */
+}
+
+.choose_recomend {
+    color: #000;
+    font-family: Inter;
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.onboard_choose_btn_more, .onboard_no_choose_btn, .onboard_choose_btn {
+    width: 90px;
+    height: 38px;
+    flex-shrink: 0;
+    border-radius: 40px;
+    background: #E8E8E8;
+}
+
+.onboard_choose_btn {
+    background: #A7CDCC;
+}
+
+.onboard_choose_btn_more {
+    float: right;
+}
+
+.img_slider_container {
+    width: 400px;
+    height: 280px;
+    flex-shrink: 0;
+    border-radius: 30px 0px 0px 0px;
+}
+
+.img_slider_view {
+    width: 400px;
+    height: 280px;
+    flex-shrink: 0;
+    border-radius: 30px 0px 0px 0px;
+}
+
+.img_slider_explain {
+    width: 400px;
+    height: 153px;
+    flex-shrink: 0;
+    border-radius: 0px 0px 30px 0px;
+    background: #FFF;
+}
+
+.onboarding_search {
+    width: 781px;
+    height: 74px;
+    flex-shrink: 0;
+    border-radius: 20px;
+    border: 2px solid #004A55;
+    background: #FFF;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.filter_select {
+    border: none;
+    background-color: transparent;
+    padding: 8px 16px;
+    font-size: 16px;
+    color: #333;
+    outline: none;
+    cursor: pointer;
+}
+
+.search_input {
+    flex: 1;
+    border: none;
+    padding: 8px 16px;
+    font-size: 16px;
+    color: #333;
+    outline: none;
+}
+
+.search_input::placeholder {
+    color: #aaa;
+}
+
+.search_input:focus, .filter_select:focus {
+    box-shadow: 0 0 0 2px rgba(100,100,255,0.5); /* subtle focus outline */
+}
+
+.onboarding_show {
+    display: flex;
+    flex-direction: column; /* Stack children vertically */
+    align-items: center; /* Center children horizontally */
+}
+
+.onboarding_search {
+    width: 100%; /* Take full width of the container */
+    display: flex;
+    justify-content: space-between; /* Distribute space evenly */
+    padding: 10px; /* Add some padding around the search area */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Optional shadow for depth */
+    margin-bottom: 10px; /* Separate search bar from button container */
+}
+
+.button_container {
+    display: flex; /* Align buttons horizontally */
+    justify-content: space-between; /* Distribute buttons evenly */
+    width: 100%; /* Ensure container takes full width */
+}
+
+.viewBtn {
+    flex: 1; /* Each button takes equal space */
+    margin: 0 10px; /* Add margin between buttons */
+    text-align: center; /* Center text within button */
+    padding: 10px; /* Padding inside button */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Optional shadow for depth */
+}
+
+.onboarding_view {
+    position: relative; /* Needed to position text absolutely within the container */
+    width: 100%; /* Set width */
+    height: 440px; /* Set a specific height */
+    display: flex;
+    align-items: center; /* Centers the text vertically */
+    justify-content: left; /* Centers the text horizontally */
+}
+
+.onboarding_img {
+    position: absolute; /* Image covers the entire container */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image covers the full area without distortion */
+    z-index: -1; /* Ensures the image stays in the background */
+}
+
+.onboarding_explain_div {
+    position: absolute; /* Absolutely position the div */
+    top: 25%; /* Center vertically */
+    left: 40%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Ensure centering is precise */
+    color: #FFF;
+    font-size: 37px;
+    text-align: center;
+    z-index: 1; /* Make sure text appears above the image */
+}
+
+.onboarding_explain_p {
+    position: absolute;
+    top: 30%; /* Center vertically */
+    left: 44%; /* Center horizontally */
+    width:750px;
+    transform: translateX(-50%);
+    color: #FFF;
+    font-size: 25px;
+    text-align: center;
+    z-index: 1;
+}
+
+.slider_container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    width: 100%; /* Adjust based on your layout */
+    height: 300px; /* Adjust based on your content */
+    margin: 20px 0;
+    padding: 0 20px;
+}
+
+.slider_img {
+    width: 400px;
+    height: 280px;
+    flex-shrink: 0;
+    max-height: 100%;
+    object-fit: cover; /* Ensures the image covers the area nicely */
+}
+
+.img_slider_explain {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background for text */
+    color: #FFF;
+    text-align: center;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.slider_button {
+    background: none;
+    border: none;
+    color: #333;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 10px 20px;
+    user-select: none;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+}
+
+.slider_button:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.slider_text_p {
+    width: 76.667px;
+    color: #000;
+    font-family: Inter;
+    font-size: 25px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.slider_text_p_detail {
+    width: 318.889px;
+    color: #848282;
+    font-family: Inter;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+/* Slider.module.css */
+.slider_container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.slider_button {
+    background-color: #ddd;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.img_slider_explain {
+    text-align: center;
+}
+
+.slider_img {
+    width: 300px;
+    height: auto;
+}
+
+.slider_text_p {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.slider_text_p_detail {
+    font-size: 0.9em;
+    color: #666;
 }
