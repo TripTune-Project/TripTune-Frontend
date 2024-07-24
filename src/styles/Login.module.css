@@ -1,383 +1,124 @@
-.loginContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 30px;
-    margin-top: 3%;
-}
-
-.loginTitle {
-    color: #000;
-    text-align: center;
-    font-size: 52px;
-    font-style: normal;
-    font-weight: 300;
-    line-height: 150%; /* 78px */
-    letter-spacing: -1.04px;
-    margin-bottom: 20px;
-}
-
-.inputGroup {
-    position: relative;
-    margin-bottom: 20px;
-}
-
-.input, .inputError {
-    width: 500px;
-    height: 45px;
+.loginBackground {
+    z-index: -1;
+    width: 100%;
+    height: 100vh;
     flex-shrink: 0;
-    color: #757575;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 100%; /* 16px */
-    letter-spacing: -0.32px;
-    border: 1px solid #ECECEC;
-    background: #FFF;
-    padding: 10px 20px;
-}
-
-.inputError {
-    border: 2px solid red;
-}
-
-.errorText {
-    color: red;
-    font-size: 0.75rem;
-    margin-top: 5px;
-}
-
-.submitButton {
-    width: 550px;
-    height: 55px;
-    flex-shrink: 0;
-    background: #1C3C29;
-    color: #FFFFFF;
-    font-size: 20px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 100%;
-    letter-spacing: -0.48px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.submitButton:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-}
-
-.errorMessage {
-    color: red;
-    margin-top: 10px;
-}
-
-.hr {
-    width: 500px;
-    height: 0;
-    flex-shrink: 0;
-    border: 2px solid #87CEFA;
-}
-
-.linkContainer {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-    margin-left: 36%;
-    width: 500px;
-}
-
-.join, .findId, .findPassword {
-    color: #757575;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 100%;
-    letter-spacing: -0.4px;
-    cursor: pointer;
-    text-decoration: none;
-}
-
-.join {
-    text-align: left;
-}
-
-.findId, .findPassword {
-    text-align: right;
-}
-
-.findId {
-    margin-right: 10px;
-}
-
-.modalOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.75);
+    border-radius: 0px 0px 0px 200px;
+    background: linear-gradient(264deg, #EDF9F7 3.98%, #F1F5FF 98.44%);
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.modal {
-    background: #FFF;
+.loginContainer {
+    z-index: 1;
+    width: 756px;
+    height: 814px;
+    flex-shrink: 0;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 400px;
-    max-width: 90%;
+    border-radius: 30px;
+    background: #FFF;
+    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.30);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-@media screen and (max-width: 1919px) and (min-width: 1600px) {
-    .loginContainer {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 30px;
-        margin-top: 9%;
-    }
-
-    .loginTitle {
-        color: #000;
-        text-align: center;
-        font-size: 44px;
-        font-style: normal;
-        font-weight: 300;
-        line-height: 150%; /* 78px */
-        letter-spacing: -1.04px;
-        margin-bottom: 20px;
-    }
-
-    .inputGroup {
-        position: relative;
-        margin-bottom: 20px;
-    }
-
-    .input, .inputError {
-        width: 500px;
-        height: 45px;
-        flex-shrink: 0;
-        font-size: 14px;
-        letter-spacing: -0.28px;
-        border: 1px solid #ECECEC;
-        background: #FFF;
-        padding: 10px 20px;
-    }
-
-    .inputError {
-        border: 2px solid red;
-    }
-
-    .errorText {
-        color: red;
-        font-size: 0.75rem;
-        margin-top: 5px;
-    }
-
-    .submitButton {
-        font-size: 16px;
-        letter-spacing: -0.32px;
-    }
-
-    .linkContainer {
-        margin-left: 33%;
-    }
-
-    .join, .findId, .findPassword {
-        font-size: 12px;
-        line-height: 100%;
-        letter-spacing: -0.24px;
-    }
-
-    .findId {
-        margin-right: 10px;
-    }
+.loginTitle {
+    color: #000;
+    font-family: Inter, sans-serif;
+    font-size: 32px;
+    font-weight: 400;
+    margin-bottom: 20px;
 }
 
-@media screen and (max-width: 1599px) and (min-width: 1280px) {
-    .loginContainer {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 30px;
-        margin-top: 5%;
-    }
-
-    .loginTitle {
-        color: #000;
-        text-align: center;
-        font-size: 44px;
-        font-style: normal;
-        font-weight: 300;
-        line-height: 150%; /* 78px */
-        letter-spacing: -1.04px;
-        margin-bottom: 20px;
-    }
-
-    .inputGroup {
-        position: relative;
-        margin-bottom: 20px;
-    }
-
-    .input, .inputError {
-        width: 500px;
-        height: 45px;
-        flex-shrink: 0;
-        font-size: 14px;
-        letter-spacing: -0.28px;
-        border: 1px solid #ECECEC;
-        background: #FFF;
-        padding: 10px 20px;
-    }
-
-    .inputError {
-        border: 2px solid red;
-    }
-
-    .errorText {
-        color: red;
-        font-size: 0.75rem;
-        margin-top: 5px;
-    }
-
-    .submitButton {
-        font-size: 16px;
-        letter-spacing: -0.32px;
-    }
-
-    .join, .findId, .findPassword {
-        font-size: 12px;
-        line-height: 100%;
-        letter-spacing: -0.24px;
-    }
-
-    .findId {
-        margin-right: 10px;
-    }
+.errorText {
+    color: red;
+    font-family: Inter, sans-serif;
+    font-size: 14px;
+    margin-top: 5px;
 }
 
-@media screen and (max-width: 1279px) {
-    .loginContainer {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 30px;
-        margin-top: 5%;
-    }
+.inputGroup {
+    flex-shrink: 0;
+    margin-bottom: 15px;
+}
 
-    .loginTitle {
-        color: #000;
-        text-align: center;
-        font-size: 40px;
-        font-style: normal;
-        font-weight: 300;
-        line-height: 150%; /* 78px */
-        letter-spacing: -1.04px;
-        margin-bottom: 20px;
-    }
+.input {
+    width: 480px;
+    height: 60px;
+    flex-shrink: 0;
+    padding: 10px;
+    border: 1px solid #848282;
+    border-radius: 5px;
+    font-family: Inter, sans-serif;
+    font-size: 16px;
+    background: #FFF;
+}
 
-    .inputGroup {
-        position: relative;
-        margin-bottom: 20px;
-    }
+.inputError {
+    border: 1px solid red;
+}
 
-    .input, .inputError {
-        width: 250px;
-        height: 45px;
-        flex-shrink: 0;
-        font-size: 14px;
-        letter-spacing: -0.28px;
-        border: 1px solid #ECECEC;
-        background: #FFF;
-        padding: 10px 20px;
-        margin-left: 30px;
-    }
+.submitButton {
+    width: 480px;
+    height: 60px;
+    flex-shrink: 0;
+    padding: 15px;
+    color: #FFF;
+    background: #000;
+    border: none;
+    border-radius: 5px;
+    font-family: Inter, sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
 
-    .submitButton {
-        width: 250px;
-        height: 45px;
-        font-size: 16px;
-        letter-spacing: -0.32px;
-        margin-left: 30px;
-    }
+.submitButton:disabled {
+    background: #ccc;
+}
 
-    .join, .findId, .findPassword {
-        font-size: 12px;
-        line-height: 100%;
-        letter-spacing: -0.24px;
-    }
+.linkContainer {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 20px;
+}
 
-    .findId {
-        margin-right: 10px;
-    }
-
-    .hr {
-        width: 250px;
-        height: 0;
-        flex-shrink: 0;
-        border: 2px solid #87CEFA;
-    }
-
-    .linkContainer {
-        margin-left: 15%;
-        width: 250px;
-    }
+.findId, .findPassword, .join {
+    color: #333;
+    font-family: Inter, sans-serif;
+    font-size: 14px;
+    cursor: pointer;
 }
 
 .socialLoginContainer {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    margin-top: 20px;
+    gap: 10px;
+    width: 100%;
 }
 
 .kakaoButton, .naverButton {
-    width: 500px;
-    height: 55px;
+    width: 480px;
+    height: 60px;
     flex-shrink: 0;
-    font-size: 20px;
-    font-weight: 500;
-    line-height: 100%;
-    letter-spacing: -0.48px;
+    padding: 15px;
+    color: #363636;
     border: none;
     border-radius: 5px;
+    font-family: Inter, sans-serif;
+    font-size: 16px;
+    font-weight: 500;
     cursor: pointer;
-    transition: background-color 0.3s, box-shadow 0.3s;
-    margin: 10px 0;
 }
 
 .kakaoButton {
-    background-color: #FEE500;
-    color: #181600;
-}
-
-.kakaoButton:hover {
-    background-color: #e6c200;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background: #FFEB00;
 }
 
 .naverButton {
-    background-color: #03C75A;
-    color: white;
-}
-
-.naverButton:hover {
-    background-color: #028c3e;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-@media screen and (max-width: 1279px) {
-    .kakaoButton, .naverButton {
-        width: 250px;
-        height: 45px;
-        font-size: 16px;
-        letter-spacing: -0.32px;
-        margin-left: 30px;
-    }
+    background: #1EC800;
 }

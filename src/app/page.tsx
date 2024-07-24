@@ -8,7 +8,7 @@ import favicon from '../../public/favicon.ico';
 import styles from '../styles/onBoard.module.css';
 import travel from '../../public/assets/images/travel.png';
 import time from '../../public/assets/images/time.png';
-import SwiperComponent from '../components/Home/index';
+import SwiperComponent from '../components/Common';
 
 const Home: React.FC = () => {
 	const router = useRouter();
@@ -18,11 +18,9 @@ const Home: React.FC = () => {
 	};
 	
 	const test_images = [
-		'https://picsum.photos/seed/picsum/1000/300',
-		'https://picsum.photos/seed/picsum/1000/301',
-		'https://picsum.photos/seed/picsum/1000/302',
-		'https://picsum.photos/seed/picsum/1000/303',
-		'https://picsum.photos/seed/picsum/1000/304',
+		'../../public/assets/images/picture_1.png',
+		'../../public/assets/images/picture_2.png',
+		'../../public/assets/images/picture_3.png'
 	];
 	
 	return (
