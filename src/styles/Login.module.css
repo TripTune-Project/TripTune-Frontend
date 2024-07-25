@@ -26,7 +26,7 @@
 
 .loginTitle {
     color: #000;
-    font-family: Inter, sans-serif;
+    font-family: Noto Sans KR, sans-serif;
     font-size: 32px;
     font-weight: 400;
     margin-bottom: 20px;
@@ -34,7 +34,7 @@
 
 .errorText {
     color: red;
-    font-family: Inter, sans-serif;
+    font-family: Noto Sans KR, sans-serif;
     font-size: 14px;
     margin-top: 5px;
 }
@@ -51,7 +51,7 @@
     padding: 10px;
     border: 1px solid #848282;
     border-radius: 5px;
-    font-family: Inter, sans-serif;
+    font-family: Noto Sans KR, sans-serif;
     font-size: 16px;
     background: #FFF;
 }
@@ -69,7 +69,7 @@
     background: #000;
     border: none;
     border-radius: 5px;
-    font-family: Inter, sans-serif;
+    font-family: Noto Sans KR, sans-serif;
     font-size: 18px;
     font-weight: 700;
     cursor: pointer;
@@ -89,7 +89,7 @@
 
 .findId, .findPassword, .join {
     color: #333;
-    font-family: Inter, sans-serif;
+    font-family: Noto Sans KR, sans-serif;
     font-size: 14px;
     cursor: pointer;
 }
@@ -109,7 +109,7 @@
     color: #363636;
     border: none;
     border-radius: 5px;
-    font-family: Inter, sans-serif;
+    font-family: Noto Sans KR, sans-serif;
     font-size: 16px;
     font-weight: 500;
     cursor: pointer;

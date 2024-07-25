@@ -4,8 +4,8 @@
     border-bottom: 1px solid #C4C4C4;
     background: #FFF;
     backdrop-filter: blur(2px);
-    flex-direction: column; /* Stacks header, section, and footer vertically */
-    min-height: 100vh; /* Minimum height of the viewport */
+    flex-direction: column;
+    min-height: 100vh;
     background: linear-gradient(180deg, #FFF 33.5%, rgba(156, 201, 200, 0.65) 100%);
 }
 .header {
@@ -22,12 +22,12 @@
 }
 
 .section {
-    flex: 1; /* Takes up all available space pushing the footer to the bottom */
-    display: flex; /* Enables flex properties for child components */
+    flex: 1;
+    display: flex;
 }
 
 .content {
-    width: 100%; /* Ensures content uses all available space within the section */
+    width: 100%;
 }
 
 .footer {
@@ -38,18 +38,9 @@
 
 .email,.github,.copyright {
     color: #FFF;
-    font-family: Inter;
+    font-family: Noto Sans KR, serif;
     font-size: 17px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
-}
-.email {
-
-}
-.github{
-
-}
-.copyright{
-
 }

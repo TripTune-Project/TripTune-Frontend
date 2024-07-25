@@ -17,7 +17,7 @@
 
 .onboarding_explain_div {
     color: #FFF;
-    font-family: Inter;
+    font-family: Noto Sans KR, serif;
     font-size: 37px;
     font-style: normal;
     font-weight: 800;
@@ -26,7 +26,7 @@
 
 .onboarding_explain_p {
     color: #FFF;
-    font-family: Inter;
+    font-family: Noto Sans KR, serif;
     font-size: 25px;
     font-style: normal;
     font-weight: 500;
@@ -60,7 +60,7 @@
     color: #FFF;
     background: black;
     text-align: center;
-    font-family: Inter;
+    font-family: Noto Sans KR, serif;
     font-size: 15px;
     font-style: normal;
     font-weight: 500;
@@ -75,13 +75,13 @@
 
 .recommended_destinations {
     padding: 20px 0;
-    text-align: left; /* 중앙 정렬 */
-    margin-top: 70px; /* 이미지와의 간격 */
+    text-align: left;
+    margin-top: 70px;
 }
 
 .choose_recomend {
     color: #000;
-    font-family: Inter;
+    font-family: Noto Sans KR, serif;
     font-size: 40px;
     font-style: normal;
     font-weight: 600;
@@ -163,72 +163,72 @@
 }
 
 .search_input:focus, .filter_select:focus {
-    box-shadow: 0 0 0 2px rgba(100,100,255,0.5); /* subtle focus outline */
+    box-shadow: 0 0 0 2px rgba(100,100,255,0.5);
 }
 
 .onboarding_show {
     display: flex;
-    flex-direction: column; /* Stack children vertically */
-    align-items: center; /* Center children horizontally */
+    flex-direction: column;
+    align-items: center;
 }
 
 .onboarding_search {
-    width: 100%; /* Take full width of the container */
+    width: 100%;
     display: flex;
-    justify-content: space-between; /* Distribute space evenly */
-    padding: 10px; /* Add some padding around the search area */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Optional shadow for depth */
-    margin-bottom: 10px; /* Separate search bar from button container */
+    justify-content: space-between;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 10px;
 }
 
 .button_container {
-    display: flex; /* Align buttons horizontally */
-    justify-content: space-between; /* Distribute buttons evenly */
-    width: 100%; /* Ensure container takes full width */
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
 }
 
 .viewBtn {
-    flex: 1; /* Each button takes equal space */
-    margin: 0 10px; /* Add margin between buttons */
-    text-align: center; /* Center text within button */
-    padding: 10px; /* Padding inside button */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Optional shadow for depth */
+    flex: 1;
+    margin: 0 10px;
+    text-align: center;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .onboarding_view {
-    position: relative; /* Needed to position text absolutely within the container */
-    width: 100%; /* Set width */
-    height: 440px; /* Set a specific height */
+    position: relative;
+    width: 100%;
+    height: 440px;
     display: flex;
-    align-items: center; /* Centers the text vertically */
-    justify-content: left; /* Centers the text horizontally */
+    align-items: center;
+    justify-content: left;
 }
 
 .onboarding_img {
-    position: absolute; /* Image covers the entire container */
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Ensures the image covers the full area without distortion */
-    z-index: -1; /* Ensures the image stays in the background */
+    object-fit: cover;
+    z-index: -1;
 }
 
 .onboarding_explain_div {
-    position: absolute; /* Absolutely position the div */
-    top: 25%; /* Center vertically */
-    left: 40%; /* Center horizontally */
-    transform: translate(-50%, -50%); /* Ensure centering is precise */
+    position: absolute;
+    top: 25%;
+    left: 40%;
+    transform: translate(-50%, -50%);
     color: #FFF;
     font-size: 37px;
     text-align: center;
-    z-index: 1; /* Make sure text appears above the image */
+    z-index: 1;
 }
 
 .onboarding_explain_p {
     position: absolute;
-    top: 30%; /* Center vertically */
-    left: 44%; /* Center horizontally */
+    top: 30%;
+    left: 44%;
     width:750px;
     transform: translateX(-50%);
     color: #FFF;
@@ -242,8 +242,8 @@
     align-items: center;
     justify-content: space-between;
     position: relative;
-    width: 100%; /* Adjust based on your layout */
-    height: 300px; /* Adjust based on your content */
+    width: 100%;
+    height: 300px;
     margin: 20px 0;
     padding: 0 20px;
 }
@@ -253,14 +253,14 @@
     height: 280px;
     flex-shrink: 0;
     max-height: 100%;
-    object-fit: cover; /* Ensures the image covers the area nicely */
+    object-fit: cover;
 }
 
 .img_slider_explain {
     position: absolute;
     bottom: 0;
     left: 0;
-    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background for text */
+    background: rgba(0, 0, 0, 0.5);
     color: #FFF;
     text-align: center;
     padding: 10px;
@@ -286,7 +286,7 @@
 .slider_text_p {
     width: 76.667px;
     color: #000;
-    font-family: Inter;
+    font-family: Noto Sans KR, serif;
     font-size: 25px;
     font-style: normal;
     font-weight: 500;
@@ -296,14 +296,13 @@
 .slider_text_p_detail {
     width: 318.889px;
     color: #848282;
-    font-family: Inter;
+    font-family: Noto Sans KR, serif;
     font-size: 18px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;
 }
 
-/* Slider.module.css */
 .slider_container {
     display: flex;
     align-items: center;
