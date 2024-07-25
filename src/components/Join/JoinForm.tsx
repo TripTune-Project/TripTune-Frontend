@@ -84,7 +84,7 @@ const JoinForm: React.FC = () => {
   return (
     <>
       <div className={styles.joinContainer}>
-        <div className={styles.joinTitle}>회원가입</div>
+        <h3 className={styles.joinTitle}>회원가입</h3>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.inputGroup}>
             <input
@@ -150,15 +150,13 @@ const JoinForm: React.FC = () => {
             errors={errors}
             errorMessage={errorMessage}
           />
-          <div className={styles.inputGroup}>
-            <label>
-              <input
-                type="checkbox"
-                checked={isAgreed}
-                onChange={handleAgreementChange}
-              />
-              개인정보 수집 및 이용 동의
-            </label>
+          <div className={styles.checkboxGroup}>
+            <input
+              type="checkbox"
+              checked={isAgreed}
+              onChange={handleAgreementChange}
+            />
+            <label>개인정보 수집 및 이용 동의</label>
           </div>
           <button
             type="submit"

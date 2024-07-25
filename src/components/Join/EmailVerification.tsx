@@ -122,12 +122,12 @@ const EmailVerification: React.FC<EmailVerificationProps> = ({
             validate: validateEmail,
           })}
           style={{ width: '390px' }}
-          className={errors.email ? styles.inputError : styles.input_email_text}
+          className={errors.email ? styles.inputError : styles.emailInput}
         />
         <button
           type="button"
           onClick={() => handleEmailVerificationRequest(getValues('email'))}
-          className={styles.verifyButton}
+          className={styles.emailButton}
           disabled={isVerificationSent}
         >
           인증하기
