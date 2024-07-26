@@ -55,10 +55,10 @@ const Header = () => {
   }, []);
   
   return (
-    <div>
+    <>
       <ul className={styles.header_menu}>
         <li className={styles.header_link}>
-          <Link href="/Home" className={styles.header_link_a}>
+          <Link href="/" className={styles.header_link_a}>
             홈 화면
           </Link>
         </li>
@@ -103,7 +103,7 @@ const Header = () => {
           </div>
         )}
       </ul>
-    </div>
+    </>
   );
 };
 

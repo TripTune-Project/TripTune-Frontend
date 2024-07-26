@@ -8,6 +8,7 @@
     list-style: none;
     display: flex;
     align-items: center;
+    justify-content: space-between;
 }
 
 .header_link {
@@ -40,8 +41,8 @@
 }
 
 .header_link_login, .header_link_login_second {
-    width: 180px;
-    height: 52px;
+    background-color: #F5F5F5;
+    width: 100px;
     display: flex;
     border-radius: 100px;
     padding: 10px;

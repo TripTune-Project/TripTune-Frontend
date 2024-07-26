@@ -1,19 +1,20 @@
 .main {
-    width: 1920px;
+    width:1920px;
+    height:1752px;
     flex-shrink: 0;
     border-bottom: 1px solid #C4C4C4;
     background: #FFF;
     backdrop-filter: blur(2px);
     flex-direction: column;
-    min-height: 100vh;
     background: linear-gradient(180deg, #FFF 33.5%, rgba(156, 201, 200, 0.65) 100%);
 }
 .header {
-    width: 1920px;
+    margin-left:109px;
+    margin-bottom:46px;
     height: 91px;
     flex-shrink: 0;
     border-bottom: 1px solid #C4C4C4;
-    background: #FFF;
+    background: #FFFFFF;
     backdrop-filter: blur(2px);
 }
 
@@ -27,10 +28,12 @@
 }
 
 .content {
-    width: 100%;
+    width:1920px;
+    height: 1336px;
 }
 
 .footer {
+    margin-left: 109px;
     height: 324px;
     flex-shrink: 0;
     background: #363636;
