@@ -1,64 +1,53 @@
-.container {
-    padding: 0 2rem;
-}
-
 .main {
-    height: 100vh;
-    flex: 1;
-    background: #fff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow-x: hidden;
-    overflow-y: auto;
-    scrollbar-width: none;
-}
-
-.main::-webkit-scrollbar {
-    display: none;
-}
-
-.header {
-    font-weight: 700;
-    position: sticky;
-    display: flex;
-    align-items: center;
-    color: #007BFF;
-    font-size: 32px;
-    user-select: none;
-}
-
-.logo_link {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    color: inherit;
-}
-
-.logo_title {
-    font-size: 3rem;
-    font-weight: 700;
-    margin-left: 50px;
-    padding: 0;
-    text-decoration: none;
-}
-
-.content {
+    width:1920px;
     flex-shrink: 0;
-    border-radius: 20px;
-    border: 1px solid #ECECEC;
-    background: #E0FFFF;
-    width: 1820px;
-    height: max-content;
-    min-height: 850px;
-    position: relative;
+    border-bottom: 1px solid #C4C4C4;
+    backdrop-filter: blur(2px);
+    flex-direction: column;
+    background: #FFFFFF;
+}
+.header {
+    margin-left:109px;
+    margin-bottom:46px;
+    height: 91px;
+    flex-shrink: 0;
+    border-bottom: 1px solid #C4C4C4;
+    background: #FFFFFF;
+    backdrop-filter: blur(2px);
+}
+
+.header_left {
+    float: left;
 }
 
 .section {
     flex: 1;
-    width: 100vw;
-    padding: 0 50px 50px 50px;
     display: flex;
-    justify-content: center;
-    align-items: center;
+}
+
+.content {
+    width:1920px;
+    height: 1336px;
+}
+
+.footer {
+    width:1920px;
+    height: 324px;
+    flex-shrink: 0;
+    background: #363636;
+}
+
+.logoImg, .email,.github,.copyright {
+    margin-left:205px;
+    color: #FFF;
+    font-family: Noto Sans KR, serif;
+    font-size: 17px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.logoImg {
+    margin-left:180px;
+    margin-top: 53px;
 }

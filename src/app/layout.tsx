@@ -40,7 +40,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 				}}
 			/>
 			<title>TripTune</title>
-			<link rel="icon" href="/favicon.ico" />
+			<link rel="icon" href="/favicon.ico"/>
 		</Head>
 		<body>
 		{isFindPage ? (
@@ -48,20 +48,18 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 		) : (
 			<div className={styles.main}>
 				<header className={styles.header}>
-					<Link href="/Home" className={styles.logo_link}>
-						<Image
-							src={LogoImage}
-							alt="로고"
-							width={200}
-							height={200}
-							className={styles.logoImage}
-						/>
-					</Link>
-					<Header />
+					<Image src={LogoImage} alt="로고" className={styles.header_left}/>
+					<Header/>
 				</header>
 				<main className={styles.section}>
-					<div className={styles.content}>{children}</div>
+					{isFindPage ? children : <div className={styles.content}>{children}</div>}
 				</main>
+				<footer className={styles.footer}>
+					<Image className={styles.logoImg} src={LogoImage} alt="로고"/>
+					<p className={styles.email}>Email: triptunehost@gmail.com</p>
+					<p className={styles.github}>Github: https://github.com/TripTune-Project</p>
+					<p className={styles.copyright}>Copyright © 2024 TripTune. All rights reserved.</p>
+				</footer>
 			</div>
 		)}
 		</body>

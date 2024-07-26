@@ -8,7 +8,9 @@ import LogoutModal from "@/components/Logout/LogoutModal";
 import { Alert, Snackbar } from "@mui/material";
 import { logoutApi } from "@/api/logoutApi";
 import Button from '@mui/material/Button';
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
+import vector from "../../public/assets/icon/Vector.png";
+import Image from 'next/image';
 
 const Header = () => {
   const router = useRouter();
@@ -52,17 +54,16 @@ const Header = () => {
     return () => clearInterval(interval);
   }, []);
   
+  const handleLogin = () => {
+    router.push('/Login');
+  }
+  
   return (
     <>
       <ul className={styles.header_menu}>
         <li className={styles.header_link}>
-          <Link href="/Home" className={styles.header_link_a}>
+          <Link href="/" className={styles.header_link_a}>
             홈 화면
-          </Link>
-        </li>
-        <li className={styles.header_link}>
-          <Link href="/Travel" className={styles.header_link_a}>
-            여행지 탐색
           </Link>
         </li>
         <li className={styles.header_link}>
@@ -71,12 +72,15 @@ const Header = () => {
           </Link>
         </li>
         <li className={styles.header_link}>
+          <Link href="/Travel" className={styles.header_link_a}>
+            여행지 탐색
+          </Link>
+        </li>
+        <li className={styles.header_link}>
           <Link href="/MyPage" className={styles.header_link_a}>
             마이 페이지
           </Link>
         </li>
-      </ul>
-      <ul className={styles.header_menu}>
         {loginTrue ? (
           <>
             <li className={styles.header_link}>
@@ -90,20 +94,17 @@ const Header = () => {
                 onConfirm={handleLogout}
               />
               <Snackbar open={alertOpen} autoHideDuration={6000} onClose={handleAlertClose}>
-                <Alert onClose={handleAlertClose} severity="error" sx={{ width: '100%' }}>
+                <Alert onClose={handleAlertClose} severity="error" sx={{width: '100%'}}>
                   {alertMessage}
                 </Alert>
               </Snackbar>
             </li>
           </>
         ) : (
-          <>
-            <li className={styles.header_link}>
-              <Link href="/Login" className={styles.header_link_a}>
-                로그인
-              </Link>
-            </li>
-          </>
+          <div className={styles.header_link_login} onClick={handleLogin}>
+            로그인
+            <Image src={vector} alt={">"} width={16} height={16} />
+          </div>
         )}
       </ul>
     </>

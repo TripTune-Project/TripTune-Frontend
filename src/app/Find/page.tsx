@@ -66,7 +66,7 @@ const FindPage: React.FC = () => {
 		event.preventDefault();
 		try {
 			const responseMessage = await requestFindPassword(email, userId);
-			if (responseMessage.status === 200) {
+			if (responseMessage) {
 				setMessage('비밀번호 확인 후 변경을 해주세요.');
 				setErrorMessage('');
 				setAlertSeverity('success');

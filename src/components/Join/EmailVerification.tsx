@@ -114,30 +114,29 @@ const EmailVerification: React.FC<EmailVerificationProps> = ({
   
   return (
     <>
-      <div className={styles.inputGroup}>
+      <div className={styles.emailGroup}>
         <input
           placeholder="이메일 인증"
           {...register('email', {
             required: '이메일 인증을 입력해주세요.',
             validate: validateEmail,
           })}
-          style={{ width: '390px' }}
-          className={errors.email ? styles.inputError : styles.input_email_text}
+          className={errors.email ? styles.inputError : styles.emailInput}
         />
         <button
           type="button"
           onClick={() => handleEmailVerificationRequest(getValues('email'))}
-          className={styles.verifyButton}
+          className={styles.emailButton}
           disabled={isVerificationSent}
         >
-          인증하기
+          인증 요청
         </button>
-        {errors.email && (
-          <p className={styles.errorText}>{getEmailErrorMessage()}</p>
-        )}
       </div>
+      {errors.email && (
+        <div className={styles.errorText}>{getEmailErrorMessage()}</div>
+      )}
       {isVerificationSent && !isVerificationComplete && (
-        <div className={`${styles.inputGroup} ${styles.emailInputGroup}`}>
+        <div className={styles.emailGroup}>
           <input
             placeholder="인증 코드 입력"
             {...register('authCode', {

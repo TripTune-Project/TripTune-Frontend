@@ -1,0 +1,73 @@
+@font-face {
+    font-family: 'Noto Sans KR';
+    font-weight: 100;
+    src: url('/public/assets/fonts/NotoSansKR-Thin.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Noto Sans KR';
+    font-weight: 200;
+    src: url('/public/assets/fonts/NotoSansKR-ExtraLight.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Noto Sans KR';
+    font-weight: 300;
+    src: url('/public/assets/fonts/NotoSansKR-Light.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Noto Sans KR';
+    font-weight: 400;
+    src: url('/public/assets/fonts/NotoSansKR-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Noto Sans KR';
+    font-weight: 500;
+    src: url('/public/assets/fonts/NotoSansKR-Medium.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Noto Sans KR';
+    font-weight: 600;
+    src: url('/public/assets/fonts/NotoSansKR-SemiBold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Noto Sans KR';
+    font-weight: 700;
+    src: url('public/assets/fonts/NotoSansKR-Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Noto Sans KR';
+    font-weight: 800;
+    src: url('/public/assets/fonts/NotoSansKR-ExtraBold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Noto Sans KR';
+    font-weight: 900;
+    src: url('/public/assets/fonts/NotoSansKR-Black.ttf') format('truetype');
+}
+
+html,
+body {
+    padding: 0;
+    margin: 0;
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+button {
+    cursor: pointer;
+}
