@@ -55,7 +55,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 					{isFindPage ? children : <div className={styles.content}>{children}</div>}
 				</main>
 				<footer className={styles.footer}>
-					<Image src={LogoImage} alt="로고"/>
+					<Image className={styles.logoImg} src={LogoImage} alt="로고"/>
 					<p className={styles.email}>Email: triptunehost@gmail.com</p>
 					<p className={styles.github}>Github: https://github.com/TripTune-Project</p>
 					<p className={styles.copyright}>Copyright © 2024 TripTune. All rights reserved.</p>

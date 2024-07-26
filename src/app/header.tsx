@@ -8,8 +8,8 @@ import LogoutModal from "@/components/Logout/LogoutModal";
 import { Alert, Snackbar } from "@mui/material";
 import { logoutApi } from "@/api/logoutApi";
 import Button from '@mui/material/Button';
-import {useRouter} from "next/navigation";
-import Vector from "../../public/assets/icon/Vector.png"
+import { useRouter } from "next/navigation";
+import vector from "../../public/assets/icon/Vector.png";
 import Image from 'next/image';
 
 const Header = () => {
@@ -54,6 +54,10 @@ const Header = () => {
     return () => clearInterval(interval);
   }, []);
   
+  const handleLogin = () => {
+    router.push('/Login');
+  }
+  
   return (
     <>
       <ul className={styles.header_menu}>
@@ -97,9 +101,9 @@ const Header = () => {
             </li>
           </>
         ) : (
-          <div className={styles.header_link_login}>
-	          로그인
-            {" >"}
+          <div className={styles.header_link_login} onClick={handleLogin}>
+            로그인
+            <Image src={vector} alt={">"} width={16} height={16} />
           </div>
         )}
       </ul>

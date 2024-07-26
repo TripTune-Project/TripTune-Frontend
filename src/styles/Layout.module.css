@@ -1,12 +1,10 @@
 .main {
     width:1920px;
-    height:1752px;
     flex-shrink: 0;
     border-bottom: 1px solid #C4C4C4;
-    background: #FFF;
     backdrop-filter: blur(2px);
     flex-direction: column;
-    background: linear-gradient(180deg, #FFF 33.5%, rgba(156, 201, 200, 0.65) 100%);
+    background: #FFFFFF;
 }
 .header {
     margin-left:109px;
@@ -33,17 +31,23 @@
 }
 
 .footer {
-    margin-left: 109px;
+    width:1920px;
     height: 324px;
     flex-shrink: 0;
     background: #363636;
 }
 
-.email,.github,.copyright {
+.logoImg, .email,.github,.copyright {
+    margin-left:205px;
     color: #FFF;
     font-family: Noto Sans KR, serif;
     font-size: 17px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
+}
+
+.logoImg {
+    margin-left:180px;
+    margin-top: 53px;
 }

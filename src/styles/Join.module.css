@@ -1,3 +1,27 @@
+.joinBackground {
+    width: 1920px;
+    height: 100vh;
+    flex-shrink: 0;
+    border-radius: 0px 0px 0px 200px;
+    background-color: #FFFFFF;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.joinBackground::before {
+    content: '';
+    position: absolute;
+    width: 1455px;
+    height: 601px;
+    flex-shrink: 0;
+    background: linear-gradient(264deg, #EDF9F7 3.98%, #F1F5FF 98.44%);
+    border-radius: 0px 0px 0px 200px;
+    top: 20%;
+    left: 10%;
+    z-index: -1;
+}
+
 .joinContainer {
     width: 756px;
     padding: 20px;
@@ -14,16 +38,18 @@
     font-weight: 400;
     line-height: normal;
     text-align: center;
-    margin-bottom: 20px;
 }
 
 .inputGroup {
-    width: 100%;
-    margin-bottom: 20px;
+    width: 480px;
+    height: 55px;
+    flex-shrink: 0;
+    margin-bottom: 40px;
+    margin-left:20%;
 }
 
 .input {
-    width: calc(100% - 22px);
+    width: 480px;
     height: 55px;
     padding: 10px;
     border: 1px solid #848282;
@@ -33,25 +59,29 @@
 }
 
 .inputError {
-    border-color: red;
+    width: 480px;
+    height: 55px;
+    border: 1px solid red;
 }
 
 .errorText {
     color: red;
+    font-family: Noto Sans KR, sans-serif;
     font-size: 14px;
     margin-top: 5px;
 }
 
 .submitButton {
-    width: 100%;
+    width: 480px;
     height: 55px;
-    background-color: #57C5B6;
+    background-color: #A7CDCC;
     color: white;
     font-size: 18px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     margin-top: 20px;
+    margin-left:20%;
 }
 
 .notificationMessage {
@@ -63,17 +93,32 @@
     display: flex;
     align-items: center;
     margin-bottom: 20px;
+    margin-left:20%;
 }
 
 .emailGroup {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
+    width: 480px;
+    height: 55px;
+    margin-bottom: 40px;
+    margin-left:20%;
 }
 
 .emailInput {
-    width: calc(70% - 10px);
+    width: 480px;
+    height: 55px;
+    padding: 10px;
+    border: 1px solid #848282;
+    border-radius: 5px;
+    background: #FFF;
+    font-size: 16px
+}
+
+.emailInput {
+    flex: 1;
+    width: 480px;
     height: 55px;
     padding: 10px;
     border: 1px solid #848282;
@@ -83,12 +128,42 @@
 }
 
 .emailButton {
-    width: calc(30% - 10px);
+    width: 106px;
     height: 55px;
-    background-color: #57C5B6;
+    background-color: #363636;
     color: white;
     font-size: 16px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    margin-left: 10px;
+}
+
+.verifiedText {
+    color: #57C5B6;
+    font-family: Noto Sans KR, sans-serif;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.inputVerification {
+    flex: 1;
+    height: 55px;
+    padding: 10px;
+    border: 1px solid #848282;
+    border-radius: 5px;
+    background: #FFF;
+    font-size: 16px;
+}
+
+.verifyButton {
+    width: 106px;
+    height: 55px;
+    background-color: #57C5B6;
+    color: #FFF;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
 }

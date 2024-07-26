@@ -82,7 +82,7 @@ const JoinForm: React.FC = () => {
   };
   
   return (
-    <>
+    <div className={styles.joinBackground}>
       <div className={styles.joinContainer}>
         <h3 className={styles.joinTitle}>회원가입</h3>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -169,7 +169,6 @@ const JoinForm: React.FC = () => {
           {notificationMessage && <p className={styles.notificationMessage}>{notificationMessage}</p>}
         </form>
       </div>
-      
       <Snackbar
         open={openSnackbar}
         autoHideDuration={3000}
@@ -180,7 +179,7 @@ const JoinForm: React.FC = () => {
           {notificationMessage}
         </Alert>
       </Snackbar>
-    </>
+    </div>
   );
 };
 

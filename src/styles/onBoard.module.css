@@ -1,5 +1,24 @@
+.onboard {
+    width:1920px;
+    height:100vh;
+    flex-shrink: 0;
+    background-color: #FFFFFF;
+}
+
+.onbaord::before {
+    content: '';
+    position: absolute;
+    width: 1455px;
+    height: 601px;
+    border-radius: 0px 0px 0px 200px;
+    background: linear-gradient(264deg, #EDF9F7 3.98%, #F1F5FF 98.44%);
+    top: 20%;
+    left: 10%;
+    z-index: -1;
+}
+
 .onboarding_top {
-    display: flex;
+    display: inline-flex;
     justify-content: center;
     align-items: start;
     gap: 20px;
@@ -101,7 +120,6 @@
     background: #FFF;
     display: flex;
     align-items: center;
-    overflow: hidden;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -218,6 +236,8 @@
 }
 
 .img_slider_container {
+    margin-top:39px;
+    flex: 1;
     width: 400px;
     height: 433px;
     border-radius: 0px 0px 30px 0px;
@@ -262,3 +282,41 @@
     border-radius: 30px 0px 0px 0px;
     object-fit: cover;
 }
+
+.slider_container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    width: 100%;
+    overflow: hidden; /* 슬라이더의 오버플로우를 숨깁니다 */
+    cursor: grab; /* 드래그 가능한 커서를 설정합니다 */
+}
+
+.slider_container:active {
+    cursor: grabbing; /* 드래그 중일 때 커서를 변경합니다 */
+}
+
+.slider_button {
+    background: none;
+    border: none;
+    color: #333;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 10px 20px;
+    user-select: none;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+}
+
+.slider_button:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.img_slider_explain {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+

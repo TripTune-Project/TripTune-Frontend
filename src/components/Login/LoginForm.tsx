@@ -8,6 +8,9 @@ import {useRouter} from 'next/navigation';
 import useLogin from '../../hooks/useLogin';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
+import Image from "next/image";
+import kakaoImg from "../../../public/assets/images/kakao.png";
+import naverImg from "../../../public/assets/images/naver.png";
 
 interface LoginFormData {
 	userId: string;
@@ -104,28 +107,35 @@ const LoginForm: React.FC = () => {
 					<p className={styles.errorText}>{errorMessage}</p>
 				)}
 				<div className={styles.linkContainer}>
-          <p
+          <span
 	          className={styles.findId}
 	          onClick={handleFindId}
           >
             아이디 찾기
-          </p> {" | "}
-					<p
+          </span> {" | "}
+					<span
 						className={styles.findPassword}
 						onClick={handleFindPassword}
 					>
             비밀번호 찾기
-          </p> {" | "}
-					<p className={styles.join} onClick={() => router.push('/Join')}>
+          </span> {" | "}
+					<span className={styles.join} onClick={() => router.push('/Join')}>
             회원가입
-          </p>
+          </span>
 				</div>
 				<div className={styles.socialLoginContainer}>
+					<div className={styles.hrContainer}>
+						<hr className={styles.hrStyle}/>
+						<span className={styles.hrText}>간편 로그인</span>
+						<hr className={styles.hrStyle}/>
+					</div>
 					<button onClick={handleKakaoLogin} className={styles.kakaoButton}>
-						카카오 계정으로 로그인
+						<Image src={kakaoImg} alt={"kakao"} width={21} height={21} />
+						카카오로 시작하기
 					</button>
 					<button onClick={handleNaverLogin} className={styles.naverButton}>
-						네이버 계정으로 로그인
+						<Image src={naverImg} alt={"kakao"} width={21} height={21} />
+						네이버로 시작하기
 					</button>
 				</div>
 				
