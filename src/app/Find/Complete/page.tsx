@@ -23,6 +23,7 @@ const FindIdComplete = () => {
 	};
 	
 	const handleLinkTogoLogin = async (e: React.FormEvent) => {
+		window.close();
 		router.push('/Login');
 	}
 	
@@ -31,12 +32,13 @@ const FindIdComplete = () => {
 			<h1 className={styles.FindTitle}>아이디 / 비밀번호 찾기</h1>
 			<div className={styles.tabContainer}>
 				<button
-					className={`${styles.tabButton} ${tab === 'findId' ? styles.activeTab : ''}`}
+					className={`${styles.tabButton} ${styles.activeTab}`}
 					onClick={() => handleTabChange('findId')}
 				>
 					아이디 찾기
 				</button>
 				<button
+					className={`${styles.tabButton} ${tab === 'findPassword' ? styles.activeTab : ''}`}
 					onClick={() =>
 						router.push('/Find?tab=findPassword')}
 				>

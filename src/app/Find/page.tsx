@@ -1,8 +1,8 @@
 'use client';
 
-import React, {useEffect, useState, Suspense} from 'react';
-import {requestFindId, requestFindPassword} from '@/api/findApi';
-import {useRouter, useSearchParams} from 'next/navigation';
+import React, { useEffect, useState, Suspense } from 'react';
+import { requestFindId, requestFindPassword } from '@/api/findApi';
+import { useRouter, useSearchParams } from 'next/navigation';
 import styles from '../../styles/Find.module.css';
 
 const FindPage: React.FC = () => {
@@ -28,6 +28,7 @@ const FindPage: React.FC = () => {
 		setUserId('');
 		setMessage('');
 		setErrorMessage('');
+		setAlertOpen(false);
 	};
 	
 	const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,7 +43,7 @@ const FindPage: React.FC = () => {
 		event.preventDefault();
 		try {
 			const responseMessage = await requestFindId(email);
-			if (responseMessage) {
+			if (responseMessage.success) {
 				setAlertSeverity('success');
 				router.push(`/Find/Complete?userId=${responseMessage.data.userId}`);
 			} else {
@@ -58,6 +59,11 @@ const FindPage: React.FC = () => {
 			setAlertSeverity('error');
 		} finally {
 			setAlertOpen(true);
+			setTimeout(() => {
+				setAlertOpen(false);
+				setEmail('');
+				setUserId('');
+			}, 1000);
 		}
 	};
 	
@@ -65,8 +71,9 @@ const FindPage: React.FC = () => {
 		event.preventDefault();
 		try {
 			const responseMessage = await requestFindPassword(email, userId);
-			if (responseMessage) {
-				setMessage('비밀번호 확인 후 변경을 해주세요.');
+			console.log(responseMessage.success);
+			if (responseMessage.success) {
+				setMessage('이메일을 확인한 후 비밀번호를 재설정해 주시기 바랍니다.');
 				setErrorMessage('');
 				setAlertSeverity('success');
 			} else {
@@ -82,6 +89,11 @@ const FindPage: React.FC = () => {
 			setAlertSeverity('error');
 		} finally {
 			setAlertOpen(true);
+			setTimeout(() => {
+				setAlertOpen(false);
+				setEmail('');
+				setUserId('');
+			}, 5000); // 5초 후에 알림을 닫고 입력 필드를 초기화합니다.
 		}
 	};
 	
@@ -148,13 +160,18 @@ const FindPage: React.FC = () => {
 					</button>
 				</div>
 			)}
+			{alertOpen && (
+				<div className={`${styles.alert} ${alertSeverity === 'success' ? styles.alertSuccess : styles.alertError}`}>
+					{alertSeverity === 'success' ? message : errorMessage}
+				</div>
+			)}
 		</div>
 	);
 };
 
 const WrappedFindPage = () => (
 	<Suspense fallback={<div>Loading...</div>}>
-		<FindPage/>
+		<FindPage />
 	</Suspense>
 );
 
