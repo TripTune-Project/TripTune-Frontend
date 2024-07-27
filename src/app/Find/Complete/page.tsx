@@ -1,6 +1,6 @@
 "use client";
 
-import React, {useEffect, useState} from 'react';
+import React, {Suspense, useEffect, useState} from 'react';
 import styles from '../../../styles/Find.module.css';
 import Image from "next/image";
 import favicon from "../../../../public/favicon.ico";
@@ -12,14 +12,13 @@ const FindIdComplete = () => {
 	const userId = searchParams.get('userId');
 	const initialTab = searchParams.get('tab');
 	
-	const [tab, setTab] = useState<'findId'>(initialTab as 'findId');
-
+	const [tab, setTab] = useState<'findId' | 'findPassword'>(initialTab as 'findId' | 'findPassword');
 	
 	useEffect(() => {
-		setTab(initialTab as 'findId');
+		setTab(initialTab as 'findId' | 'findPassword');
 	}, [initialTab]);
 	
-	const handleTabChange = (tab: 'findId') => {
+	const handleTabChange = (tab: 'findId' | 'findPassword') => {
 		setTab(tab);
 	};
 	
@@ -38,9 +37,8 @@ const FindIdComplete = () => {
 					아이디 찾기
 				</button>
 				<button
-					className={`${styles.tabButton} ${tab === 'findPassword' ? styles.activeTab : ''}`}
 					onClick={() =>
-						router.push('/Find?tab=password')}
+						router.push('/Find?tab=findPassword')}
 				>
 					비밀번호 찾기
 				</button>
@@ -55,4 +53,11 @@ const FindIdComplete = () => {
 	);
 };
 
-export default FindIdComplete;
+
+const WrappedFindCompletePage = () => (
+	<Suspense fallback={<div>Loading...</div>}>
+		<FindIdComplete/>
+	</Suspense>
+);
+
+export default WrappedFindCompletePage;
