@@ -3,7 +3,7 @@ import axios, { AxiosError } from 'axios';
 export const requestFindId = async (email: string) => {
   try {
     const response = await axios.post('/api/members/find-id', { email });
-    return response.data.success;
+    return response.data;
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
       if (error.response.data && error.response.data.message) {
@@ -17,8 +17,7 @@ export const requestFindId = async (email: string) => {
 export const requestFindPassword = async (email: string, userId: string) => {
   try {
     const response = await axios.post('/api/members/find-password', { email, userId });
-    // TODO : 여기가 문제 일듯 싶음
-    return response.data.success;
+    return response.data;
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
       if (error.response.data && error.response.data.message) {
