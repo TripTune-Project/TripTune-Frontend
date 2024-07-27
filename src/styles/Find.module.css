@@ -1,70 +1,110 @@
+.FindTitle {
+    color: #000;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
 .pageContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 100vh;
-    text-align: center;
+    background-color: #f7f7f7;
+    padding: 20px;
 }
 
 .tabContainer {
     display: flex;
-    gap: 10px;
     margin-bottom: 20px;
 }
 
 .tabButton {
-    padding: 10px 30px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    background-color: #e0e0e0;
+    display: flex;
+    width: 240px;
+    height: 60px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex-shrink: 0;
+    color: #848282;
+    font-family: Noto Sans KR, sans-serif;
     font-size: 16px;
-    transition: background-color 0.3s, color 0.3s;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    border: 1px solid #848282;
 }
 
-.tabButton:hover {
-    background-color: #d0d0d0;
-}
-
-.activeTab {
-    background-color: #007bff;
-    color: white;
+.tabButton:hover, .activeTab {
+    border: 1px solid #76ADAC;
+    color: #000;
 }
 
 .inputGroup {
     margin-bottom: 20px;
+    width: 480px;
 }
 
 .input {
-    padding: 10px;
-    width: 300px;
+    padding: 12px;
+    width: 480px;
     border-radius: 5px;
     border: 1px solid #ccc;
     font-size: 16px;
+    box-sizing: border-box;
 }
 
 .submitButton {
-    padding: 10px 20px;
+    margin-top: 18px;
+    width: 480px;
     border: none;
     border-radius: 5px;
-    background-color: #007bff;
-    color: white;
+    background-color: #76ADAC;
     cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s;
+    display: flex;
+    height: 60px;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    flex-shrink: 0;
+    color: #FFF;
+    font-family: Noto Sans KR, sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
 }
 
 .submitButton:hover {
-    background-color: #0056b3;
+    background-color: #4D7F7D;
 }
 
-.message {
-    color: green;
-    margin-top: 20px;
+.hrStyle {
+    width: 445px;
+    height: 1px;
+    background-color: #848282;
+    border: none;
 }
 
-.errorText {
-    color: red;
-    margin-top: 20px;
+.FindIdBox {
+    display: flex;
+    width: 480px;
+    height: 103px;
+    flex-direction: column;
+    justify-content: center;
+    flex-shrink: 0;
+    color: #000;
+    border: 1px solid #ccc;
+    text-align: center;
+    font-family: Noto Sans KR, sans-serif;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
 }

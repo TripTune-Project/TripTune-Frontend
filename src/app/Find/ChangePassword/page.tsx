@@ -2,7 +2,9 @@
 
 import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import styles from '../../../styles/ChangePasswordPage.module.css';
+import styles from '../../../styles/Find.module.css';
+import Image from "next/image";
+import favicon from "../../../../public/favicon.ico";
 
 const ChangePassword = () => {
 	const searchParams = useSearchParams();
@@ -54,29 +56,31 @@ const ChangePassword = () => {
 	};
 	
 	return (
-		<div className={styles.container}>
-			<h1 className={styles.title}>비밀번호 변경</h1>
-			<form onSubmit={handlePasswordChange} className={styles.form}>
-				<label htmlFor="password" className={styles.label}>새 비밀번호:</label>
+		<div className={styles.pageContainer}>
+			<h1 className={styles.FindTitle}>비밀번호 재설정</h1>
+			<p><Image src={favicon} alt={"파비콘"} width={31} height={20}/> 새롭게 설정할 비밀번호를 입력해 주세요.</p>
+			<hr className={styles.hrStyle}/>
+				<p>새로운 비밀번호</p>
 				<input
 					type="password"
 					id="password"
 					value={password}
 					onChange={(e) => setpassword(e.target.value)}
 					required
+					placeholder={"비밀번호 (영문 대/소문자, 숫자, 특수문자 조합 8~15자리)"}
 					className={styles.input}
 				/>
-				<label htmlFor="repassword" className={styles.label}>비밀번호 확인:</label>
+				<p> 비밀번호 재입력 </p>
 				<input
 					type="password"
 					id="repassword"
 					value={repassword}
 					onChange={(e) => setrepassword(e.target.value)}
 					required
+					placeholder={"비밀번호 재입력"}
 					className={styles.input}
 				/>
-				<button type="submit" className={styles.button}>변경</button>
-			</form>
+				<button type="submit" className={styles.submitButton} onClick={handlePasswordChange}>비밀번호 변경</button>
 		</div>
 	);
 };

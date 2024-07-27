@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useEffect, useState, Suspense } from 'react';
-import { requestFindId, requestFindPassword } from '../../api/findApi';
-import { useSearchParams } from 'next/navigation';
+import React, {useEffect, useState, Suspense} from 'react';
+import {requestFindId, requestFindPassword} from '@/api/findApi';
+import {useRouter, useSearchParams} from 'next/navigation';
 import styles from '../../styles/Find.module.css';
-import { Alert, Snackbar } from '@mui/material';
 
 const FindPage: React.FC = () => {
+	const router = useRouter();
 	const searchParams = useSearchParams();
 	const initialTab = searchParams.get('tab') || 'findId';
 	
@@ -43,9 +43,8 @@ const FindPage: React.FC = () => {
 		try {
 			const responseMessage = await requestFindId(email);
 			if (responseMessage) {
-				setMessage(`당신의 아이디는 ${responseMessage.data.userId} 입니다.`);
-				setErrorMessage('');
 				setAlertSeverity('success');
+				router.push(`/Find/Complete?userId=${responseMessage.data.userId}`);
 			} else {
 				throw new Error('아이디 찾기 요청에 실패했습니다.');
 			}
@@ -86,12 +85,9 @@ const FindPage: React.FC = () => {
 		}
 	};
 	
-	const handleAlertClose = () => {
-		setAlertOpen(false);
-	};
-	
 	return (
 		<div className={styles.pageContainer}>
+			<h1 className={styles.FindTitle}>아이디 / 비밀번호 찾기</h1>
 			<div className={styles.tabContainer}>
 				<button
 					className={`${styles.tabButton} ${tab === 'findId' ? styles.activeTab : ''}`}
@@ -106,71 +102,59 @@ const FindPage: React.FC = () => {
 					비밀번호 찾기
 				</button>
 			</div>
-			{tab === 'findId' && (
-				<div>
-					<h2>아이디 찾기</h2>
-					<form onSubmit={handleFindIdSubmit}>
-						<div className={styles.inputGroup}>
-							<label htmlFor="email">이메일</label>
-							<input
-								type="email"
-								id="email"
-								value={email}
-								onChange={handleEmailChange}
-								required
-								className={styles.input}
-							/>
-						</div>
-						<button type="submit" className={styles.submitButton}>
-							제출하기
-						</button>
-					</form>
+			{tab === 'findId' ? (
+				<div className={styles.inputGroup}>
+					<p>가입할 때 사용한 이메일을 입력하시면 아이디를 찾을 수 있습니다.</p>
+					<p>이메일</p>
+					<input
+						type="email"
+						id="email"
+						value={email}
+						placeholder="이메일 주소 입력"
+						onChange={handleEmailChange}
+						required
+						className={styles.input}
+					/>
+					<button type="submit" className={styles.submitButton} onClick={handleFindIdSubmit}>
+						아이디 찾기
+					</button>
+				</div>
+			) : (
+				<div className={styles.inputGroup}>
+					<p>가입한 아이디, 이메일을 입력해주세요.</p>
+					<p>이메일을 통해 비밀번호 변경 링크가 전송됩니다.</p>
+					<p>아이디</p>
+					<input
+						type="text"
+						id="userId"
+						value={userId}
+						onChange={handleUserIdChange}
+						required
+						placeholder="아이디 입력"
+						className={styles.input}
+					/>
+					<p>이메일</p>
+					<input
+						type="email"
+						id="email"
+						value={email}
+						onChange={handleEmailChange}
+						required
+						placeholder="이메일 주소 입력"
+						className={styles.input}
+					/>
+					<button type="submit" className={styles.submitButton} onClick={handleFindPasswordSubmit}>
+						비밀번호 찾기
+					</button>
 				</div>
 			)}
-			{tab === 'findPassword' && (
-				<div>
-					<h2>비밀번호 찾기</h2>
-					<form onSubmit={handleFindPasswordSubmit}>
-						<div className={styles.inputGroup}>
-							<label htmlFor="userId">아이디</label>
-							<input
-								type="text"
-								id="userId"
-								value={userId}
-								onChange={handleUserIdChange}
-								required
-								className={styles.input}
-							/>
-						</div>
-						<div className={styles.inputGroup}>
-							<label htmlFor="email">이메일</label>
-							<input
-								type="email"
-								id="email"
-								value={email}
-								onChange={handleEmailChange}
-								required
-								className={styles.input}
-							/>
-						</div>
-						<button type="submit" className={styles.submitButton}>
-							제출하기
-						</button>
-					</form>
-				</div>
-			)}
-			<Snackbar open={alertOpen} autoHideDuration={6000} onClose={handleAlertClose}>
-				<Alert onClose={handleAlertClose} severity={alertSeverity} sx={{ width: '100%' }}>
-					{alertSeverity === 'success' ? message : errorMessage}
-				</Alert>
-			</Snackbar>
 		</div>
 	);
 };
 
 const WrappedFindPage = () => (
 	<Suspense fallback={<div>Loading...</div>}>
-		<FindPage />
+		<FindPage/>
 	</Suspense>
 );
 
