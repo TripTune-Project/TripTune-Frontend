@@ -3,7 +3,9 @@
 import React, { useEffect, useState, Suspense } from 'react';
 import { requestFindId, requestFindPassword } from '@/api/findApi';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Loading from '../../components/Common/Loading';
 import styles from '../../styles/Find.module.css';
+import { validateEmail, validateUserId } from '../../utils/validation';
 
 const FindPage: React.FC = () => {
 	const router = useRouter();
@@ -17,10 +19,18 @@ const FindPage: React.FC = () => {
 	const [errorMessage, setErrorMessage] = useState('');
 	const [alertOpen, setAlertOpen] = useState(false);
 	const [alertSeverity, setAlertSeverity] = useState<'success' | 'error'>('success');
+	const [loading, setLoading] = useState(false);
+	const [isEmailValid, setIsEmailValid] = useState(false);
+	const [isUserIdValid, setIsUserIdValid] = useState(false);
 	
 	useEffect(() => {
 		setTab(initialTab as 'findId' | 'findPassword');
 	}, [initialTab]);
+	
+	useEffect(() => {
+		setIsEmailValid(validateEmail(email) === true);
+		setIsUserIdValid(validateUserId(userId) === true);
+	}, [email, userId]);
 	
 	const handleTabChange = (tab: 'findId' | 'findPassword') => {
 		setTab(tab);
@@ -41,8 +51,10 @@ const FindPage: React.FC = () => {
 	
 	const handleFindIdSubmit = async (event: React.FormEvent) => {
 		event.preventDefault();
+		setLoading(true);
 		try {
 			const responseMessage = await requestFindId(email);
+			console.log(responseMessage.success, "1");
 			if (responseMessage.success) {
 				setAlertSeverity('success');
 				router.push(`/Find/Complete?userId=${responseMessage.data.userId}`);
@@ -58,20 +70,22 @@ const FindPage: React.FC = () => {
 			setMessage('');
 			setAlertSeverity('error');
 		} finally {
+			setLoading(false);
 			setAlertOpen(true);
 			setTimeout(() => {
 				setAlertOpen(false);
 				setEmail('');
 				setUserId('');
-			}, 1000);
+			}, 5000);
 		}
 	};
 	
 	const handleFindPasswordSubmit = async (event: React.FormEvent) => {
 		event.preventDefault();
+		setLoading(true);
 		try {
 			const responseMessage = await requestFindPassword(email, userId);
-			console.log(responseMessage.success);
+			console.log(responseMessage.success, '2');
 			if (responseMessage.success) {
 				setMessage('이메일을 확인한 후 비밀번호를 재설정해 주시기 바랍니다.');
 				setErrorMessage('');
@@ -88,12 +102,13 @@ const FindPage: React.FC = () => {
 			setMessage('');
 			setAlertSeverity('error');
 		} finally {
+			setLoading(false);
 			setAlertOpen(true);
 			setTimeout(() => {
 				setAlertOpen(false);
 				setEmail('');
 				setUserId('');
-			}, 5000); // 5초 후에 알림을 닫고 입력 필드를 초기화합니다.
+			}, 5000);
 		}
 	};
 	
@@ -114,7 +129,9 @@ const FindPage: React.FC = () => {
 					비밀번호 찾기
 				</button>
 			</div>
-			{tab === 'findId' ? (
+			{loading ? (
+				<Loading />
+			) : tab === 'findId' ? (
 				<div className={styles.inputGroup}>
 					<p>가입할 때 사용한 이메일을 입력하시면 아이디를 찾을 수 있습니다.</p>
 					<p>이메일</p>
@@ -127,7 +144,12 @@ const FindPage: React.FC = () => {
 						required
 						className={styles.input}
 					/>
-					<button type="submit" className={styles.submitButton} onClick={handleFindIdSubmit}>
+					<button
+						type="submit"
+						className={styles.submitButton}
+						onClick={handleFindIdSubmit}
+						disabled={!isEmailValid}
+					>
 						아이디 찾기
 					</button>
 				</div>
@@ -155,7 +177,12 @@ const FindPage: React.FC = () => {
 						placeholder="이메일 주소 입력"
 						className={styles.input}
 					/>
-					<button type="submit" className={styles.submitButton} onClick={handleFindPasswordSubmit}>
+					<button
+						type="submit"
+						className={styles.submitButton}
+						onClick={handleFindPasswordSubmit}
+						disabled={!isEmailValid || !isUserIdValid}
+					>
 						비밀번호 찾기
 					</button>
 				</div>
