@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate, NavigateFunction } from 'react-router-dom';
 import { AxiosInstance } from 'axios';
 import Cookies from 'js-cookie';
@@ -48,10 +48,12 @@ const setAxiosInterceptors = (instance: AxiosInstance, navigate: NavigateFunctio
 
 const useAxiosConfig = (axiosInstance: AxiosInstance) => {
   const navigate = useNavigate();
+  const interceptorsRegistered = useRef(false);
   
   useEffect(() => {
-    if (!axiosInstance.interceptors.request.handlers.length) {
+    if (!interceptorsRegistered.current) {
       setAxiosInterceptors(axiosInstance, navigate);
+      interceptorsRegistered.current = true;
     }
   }, [axiosInstance, navigate]);
 };
