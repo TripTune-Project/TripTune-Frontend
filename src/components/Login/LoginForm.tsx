@@ -34,7 +34,7 @@ const LoginForm: React.FC = () => {
 	const onSubmit = async (data: LoginFormData) => {
 		try {
 			await loginUser(data);
-			router.push('/Home');
+			router.push('/');
 		} catch (error) {
 			console.error('로그인 에러:', error);
 			setErrorMessage('아이디 또는 비밀번호가 잘못되었습니다.');
