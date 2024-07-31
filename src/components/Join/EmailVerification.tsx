@@ -11,6 +11,7 @@ import styles from '../../styles/Join.module.css';
 import { requestEmailVerification, verifyEmail } from '../../api/emailApi';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+import Loading from '../Common/Loading';
 
 interface JoinFormData {
   nickname: string;
@@ -44,6 +45,7 @@ const EmailVerification: React.FC<EmailVerificationProps> = ({
   const [notificationMessage, setNotificationMessage] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState<'success' | 'error'>('success');
+  const [loading, setLoading] = useState(false);
   
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
@@ -58,6 +60,7 @@ const EmailVerification: React.FC<EmailVerificationProps> = ({
       return;
     }
     
+    setLoading(true);
     try {
       await requestEmailVerification(email);
       setIsVerificationSent(true);
@@ -76,12 +79,15 @@ const EmailVerification: React.FC<EmailVerificationProps> = ({
         setNotificationMessage('인증 코드 요청에 실패했습니다. 다시 시도해주세요.');
       }
       setOpenSnackbar(true);
+    } finally {
+      setLoading(false);
     }
   };
   
   const handleEmailVerification = async () => {
     const { email, authCode } = getValues();
     
+    setLoading(true);
     try {
       if (authCode != null) {
         await verifyEmail(email, authCode);
@@ -102,6 +108,8 @@ const EmailVerification: React.FC<EmailVerificationProps> = ({
         setNotificationMessage('인증 코드가 유효하지 않습니다.');
       }
       setOpenSnackbar(true);
+    } finally {
+      setLoading(false);
     }
   };
   
@@ -114,51 +122,56 @@ const EmailVerification: React.FC<EmailVerificationProps> = ({
   
   return (
     <>
-      <div className={styles.emailGroup}>
-        <input
-          placeholder="이메일 인증"
-          {...register('email', {
-            required: '이메일 인증을 입력해주세요.',
-            validate: validateEmail,
-          })}
-          className={errors.email ? styles.inputError : styles.emailInput}
-        />
-        <button
-          type="button"
-          onClick={() => handleEmailVerificationRequest(getValues('email'))}
-          className={styles.emailButton}
-          disabled={isVerificationSent}
-        >
-          인증 요청
-        </button>
-      </div>
-      {errors.email && (
-        <div className={styles.errorText}>{getEmailErrorMessage()}</div>
-      )}
-      {isVerificationSent && !isVerificationComplete && (
-        <div className={styles.emailGroup}>
-          <input
-            placeholder="인증 코드 입력"
-            {...register('authCode', {
-              required: '인증 코드를 입력해주세요.',
-            })}
-            className={
-              errors.authCode ? styles.inputError : styles.inputVerification
-            }
-          />
-          <button
-            type="button"
-            onClick={handleEmailVerification}
-            className={styles.verifyButton}
-          >
-            인증 확인
-          </button>
-        </div>
-      )}
-      {isVerificationSent && isVerificationComplete && (
-        <div className={styles.inputGroup}>
-          <p className={styles.verifiedText}>이메일이 인증되었습니다.</p>
-        </div>
+      {loading && <Loading />}
+      {!loading && (
+        <>
+          <div className={styles.emailGroup}>
+            <input
+              placeholder="이메일 인증"
+              {...register('email', {
+                required: '이메일 인증을 입력해주세요.',
+                validate: validateEmail,
+              })}
+              className={errors.email ? styles.inputError : styles.emailInput}
+            />
+            <button
+              type="button"
+              onClick={() => handleEmailVerificationRequest(getValues('email'))}
+              className={styles.emailButton}
+              disabled={isVerificationSent}
+            >
+              인증 요청
+            </button>
+          </div>
+          {errors.email && (
+            <div className={styles.errorText}>{getEmailErrorMessage()}</div>
+          )}
+          {isVerificationSent && !isVerificationComplete && (
+            <div className={styles.emailGroup}>
+              <input
+                placeholder="인증 코드 입력"
+                {...register('authCode', {
+                  required: '인증 코드를 입력해주세요.',
+                })}
+                className={
+                  errors.authCode ? styles.inputError : styles.inputVerification
+                }
+              />
+              <button
+                type="button"
+                onClick={handleEmailVerification}
+                className={styles.verifyButton}
+              >
+                인증 확인
+              </button>
+            </div>
+          )}
+          {isVerificationSent && isVerificationComplete && (
+            <div className={styles.inputGroup}>
+              <p className={styles.verifiedText}>이메일이 인증되었습니다.</p>
+            </div>
+          )}
+        </>
       )}
       
       <Snackbar

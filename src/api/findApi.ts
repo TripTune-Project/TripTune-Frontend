@@ -5,10 +5,8 @@ export const requestFindId = async (email: string) => {
     const response = await axios.post('/api/members/find-id', { email });
     return response.data;
   } catch (error) {
-    if (error instanceof AxiosError && error.response) {
-      if (error.response.data && error.response.data.message) {
-        throw new Error(error.response.data.message);
-      }
+    if (error instanceof AxiosError && error.response?.data?.message) {
+      throw new Error(error.response.data.message);
     }
     throw new Error('이메일이 유효하지 않습니다.');
   }
@@ -19,10 +17,8 @@ export const requestFindPassword = async (email: string, userId: string) => {
     const response = await axios.post('/api/members/find-password', { email, userId });
     return response.data;
   } catch (error) {
-    if (error instanceof AxiosError && error.response) {
-      if (error.response.data && error.response.data.message) {
-        throw new Error(error.response.data.message);
-      }
+    if (error instanceof AxiosError && error.response?.data?.message) {
+      throw new Error(error.response.data.message);
     }
     throw new Error('이메일이 유효하지 않습니다.');
   }
