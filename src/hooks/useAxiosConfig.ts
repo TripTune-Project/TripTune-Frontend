@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, NavigateFunction } from 'react-router-dom';
 import { AxiosInstance } from 'axios';
 import Cookies from 'js-cookie';
 
-const setAxiosInterceptors = (instance: AxiosInstance, navigate) => {
+const setAxiosInterceptors = (instance: AxiosInstance, navigate: NavigateFunction) => {
   instance.interceptors.request.use(
     (config) => {
       const token = Cookies.get('trip-tune_at');
