@@ -1,5 +1,6 @@
 .main {
-    width:1920px;
+    width:auto;
+    max-width: 1920px;
     flex-shrink: 0;
     border-bottom: 1px solid #C4C4C4;
     border-bottom: 1px solid #C4C4C4;
@@ -24,12 +25,14 @@
 }
 
 .content {
-    width:1920px;
+    width:auto;
+    max-width: 1920px;
     height: 1336px;
 }
 
 .footer {
-    width:1920px;
+    width:auto;
+    max-width: 1920px;
     height: 324px;
     flex-shrink: 0;
     background: #363636;

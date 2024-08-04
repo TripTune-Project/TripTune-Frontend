@@ -111,7 +111,7 @@ const Home: React.FC = () => {
 						alt="온보딩 이미지"
 						objectFit="cover"
 						width={"1920"}
-						height="auto"
+						height={"610"}
 					/>
 					<div className={styles.onboarding_content}>
 						<div className={styles.onboarding_text}>

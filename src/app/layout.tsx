@@ -48,7 +48,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 		) : (
 			<div className={styles.main}>
 				<header className={styles.header}>
-					<Image src={LogoImage} alt="로고" className={styles.header_left} width={183} height={57}/>
 					<Header/>
 				</header>
 				<main className={styles.section}>

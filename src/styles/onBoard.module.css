@@ -3,6 +3,7 @@
     padding: 0;
     flex-shrink: 0;
     position: relative;
+    overflow-x:hidden;
 }
 
 .onboard::before {
@@ -28,9 +29,8 @@
 .onboarding_img {
     display: block;
     margin:0;
-    height: auto;
+    height: 610px;
     max-height: 610px;
-    object-fit: cover;
 }
 
 .onboarding_explain_div {
@@ -218,7 +218,8 @@
 .img_slider_container {
     margin-top: 39px;
     flex: 1;
-    width: 400px;
+    width: 100%;
+    max-width:400px;
     height: 433px;
     border-radius: 0px 0px 30px 0px;
     background: #fff;
@@ -228,7 +229,8 @@
 }
 
 .slider_img {
-    width: 400px;
+    width: 100%;
+    max-width:400px;
     height: 280px;
     object-fit: cover;
     border-radius: 30px 0px 0px 0px;
@@ -259,6 +261,7 @@
     position: relative;
     width: 100%;
     cursor: grab;
+    flex-wrap: wrap;
 }
 
 .slider_container:active {
