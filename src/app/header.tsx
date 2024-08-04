@@ -64,10 +64,9 @@ const Header = () => {
       <ul className={styles.header_menu}>
         <li className={styles.logo}>
           <Link href="/">
-            <Image src={LogoImage} alt="로고" className={styles.header_left} width={183} height={57}/>
+            <Image src={LogoImage} alt="로고" width={183} height={57}/>
           </Link>
         </li>
-        {/* Navigation Links */}
         <li className={styles.header_link}>
           <Link href="/" className={styles.header_link_a}>
             홈 화면

@@ -2,12 +2,12 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import {useRouter} from 'next/navigation';
+import {Swiper, SwiperSlide} from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import { Navigation, Pagination } from 'swiper/modules';
+import {Navigation, Pagination} from 'swiper/modules';
 import styled from 'styled-components';
 import travelImage from '../../public/assets/travel-main.png';
 import favicon from '../../public/favicon.ico';
@@ -17,41 +17,59 @@ import time from '../../public/assets/images/time.png';
 import go from '../../public/assets/images/go.png';
 import picture from '../../public/assets/images/picture.png';
 
+const StyledSwiperContainer = styled.div`
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    max-width: 1800px;
+    margin: 0 auto;
+
+    .swiper-slide {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+`;
+
 const StyledSwiperButtonPrev = styled.div`
+    position: absolute;
+    top: 50%;
+    width: 60px;
+    height: 60px;
+    left: 10px;
+    transform: translateY(-50%);
     background: none;
     border: none;
-    color: #000;
-    font-size: 24px;
     cursor: pointer;
-    padding: 10px;
+    z-index: 10;
     user-select: none;
-    position: absolute;
-    left: 10px;
     &::after {
         content: '';
         display: block;
-        width: 30px;
-        height: 30px;
+        width: 60px;
+        height: 60px;
         background-size: cover;
         background-image: url('/assets/images/left_btn.png');
     }
 `;
 
 const StyledSwiperButtonNext = styled.div`
+    position: absolute;
+    top: 50%;
+    width: 60px;
+    height: 60px;
+    right: 10px;
+    transform: translateY(-50%);
     background: none;
     border: none;
-    color: #000;
-    font-size: 24px;
     cursor: pointer;
-    padding: 10px;
+    z-index: 10;
     user-select: none;
-    position: absolute;
-    right: 10px;
     &::after {
         content: '';
         display: block;
-        width: 30px;
-        height: 30px;
+        width: 60px;
+        height: 60px;
         background-size: cover;
         background-image: url('/assets/images/right_btn.png');
     }
@@ -136,7 +154,8 @@ const Home: React.FC = () => {
 							</div>
 							<div className={styles.button_container}>
 								<div className={styles.viewBtn} onClick={handleScheduleClick}>
-									<div className={styles.viewTitle}>일정 만들기</div><br/>
+									<div className={styles.viewTitle}>일정 만들기</div>
+									<br/>
 									<div className={styles.iconContainer}>
 										<div className={styles.go_link}>
 											<Image
@@ -183,43 +202,45 @@ const Home: React.FC = () => {
 			</div>
 			<div className={styles.recommended_destinations}>
 				<h2 className={styles.choose_recomend}>
-				<Image src={favicon} alt={"파비콘"}/>
+					<Image src={favicon} alt={"파비콘"}/>
 					추천 여행지
 				</h2>
 				<button className={styles.onboard_choose_btn}>전체</button>
 				<button className={styles.onboard_no_choose_btn}>국내</button>
 				<button className={styles.onboard_no_choose_btn}>해외</button>
 				<button className={styles.onboard_choose_btn_more}>더보기</button>
-				<Swiper
-					modules={[Navigation, Pagination]}
-					spaceBetween={30}
-					slidesPerView={4}
-					navigation={{
-						nextEl: '.swiper-button-next',
-						prevEl: '.swiper-button-prev',
-					}}
-					loop
-				>
-					{images.map((image, index) => (
-						<SwiperSlide key={index}>
-							<div className={styles.img_slider_container}>
-								<Image
-									className={styles.slider_img}
-									src={image.src}
-									alt={image.alt}
-									width={400}
-									height={280}
-								/>
-								<p className={styles.slider_text_p}>{image.title}</p>
-								<p className={styles.slider_text_p_detail}>
-									{image.description}
-								</p>
-							</div>
-						</SwiperSlide>
-					))}
-					<StyledSwiperButtonPrev className="swiper-button-prev"/>
-					<StyledSwiperButtonNext className="swiper-button-next"/>
-				</Swiper>
+				<StyledSwiperContainer>
+					<Swiper
+						modules={[Navigation, Pagination]}
+						spaceBetween={5}
+						slidesPerView={4}
+						navigation={{
+							nextEl: '.swiper-button-next',
+							prevEl: '.swiper-button-prev',
+						}}
+						loop
+					>
+						{images.map((image, index) => (
+							<SwiperSlide key={index}>
+								<div className={styles.img_slider_container}>
+									<Image
+										className={styles.slider_img}
+										src={image.src}
+										alt={image.alt}
+										width={400}
+										height={280}
+									/>
+									<p className={styles.slider_text_p}>{image.title}</p>
+									<p className={styles.slider_text_p_detail}>
+										{image.description}
+									</p>
+								</div>
+							</SwiperSlide>
+						))}
+						<StyledSwiperButtonPrev className="swiper-button-prev"/>
+						<StyledSwiperButtonNext className="swiper-button-next"/>
+					</Swiper>
+				</StyledSwiperContainer>
 			</div>
 		</div>
 	);

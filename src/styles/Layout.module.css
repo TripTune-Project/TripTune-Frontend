@@ -31,7 +31,7 @@
 }
 
 .footer {
-    width:auto;
+    width:100vw;
     max-width: 1920px;
     height: 324px;
     flex-shrink: 0;
