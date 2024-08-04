@@ -1,4 +1,7 @@
 .header_menu {
+    width:calc(100% - 183px);
+    height: 5.69rem;
+    flex-shrink: 0;
     color: #757575;
     font-size: 16px;
     font-style: normal;
@@ -9,6 +12,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin: 0 auto;
 }
 
 .header_link {
