@@ -1,4 +1,8 @@
 .header_menu {
+    width: auto;
+    max-width: 1920px;
+    height: 5.69rem;
+    flex-shrink: 0;
     color: #757575;
     font-size: 16px;
     font-style: normal;
@@ -11,22 +15,27 @@
     justify-content: space-between;
 }
 
+.logo {
+    margin-right: 224px;
+    margin-left: 109px;
+}
+
 .header_link {
+    display: flex;
     justify-content: center;
     align-items: center;
-    width: 180px;
+    width: auto;
     height: 72px;
-    flex-direction: column;
-    flex-shrink: 0;
-    display: flex;
     padding: 0 20px;
     color: #333;
     text-align: center;
-    font-family: Noto Sans KR, serif;
+    font-family: 'Noto Sans KR', serif;
     font-size: 20px;
-    font-style: normal;
     font-weight: 400;
     line-height: normal;
+    flex-direction: column;
+    flex-shrink: 0;
+    margin: 0 10px;
 }
 
 .header_link_a {
@@ -49,18 +58,17 @@
     padding: 10px 20px;
     color: #555;
     text-align: center;
-    font-family: Noto Sans KR, serif;
+    font-family: 'Noto Sans KR', serif;
     font-size: 18px;
-    font-style: normal;
     font-weight: 400;
     line-height: normal;
-    position: inherit;
+    position: relative;
     z-index: 1;
     letter-spacing: -0.32px;
-    right: 100px;
-    top: 115px;
     text-decoration: none;
     cursor: pointer;
+    margin-left: auto;
+    margin-right: 20px;
 }
 
 .header_link_login img {

@@ -1,5 +1,6 @@
 .joinBackground {
-    width: 1920px;
+    width: auto;
+    max-width:1920px;
     height: 100vh;
     flex-shrink: 0;
     border-radius: 0px 0px 0px 200px;

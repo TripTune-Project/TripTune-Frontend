@@ -11,6 +11,7 @@ import Button from '@mui/material/Button';
 import { useRouter } from "next/navigation";
 import vector from "../../public/assets/icon/Vector.png";
 import Image from 'next/image';
+import LogoImage from "../../public/Logo.png";
 
 const Header = () => {
   const router = useRouter();
@@ -61,6 +62,11 @@ const Header = () => {
   return (
     <>
       <ul className={styles.header_menu}>
+        <li className={styles.logo}>
+          <Link href="/">
+            <Image src={LogoImage} alt="로고" width={183} height={57}/>
+          </Link>
+        </li>
         <li className={styles.header_link}>
           <Link href="/" className={styles.header_link_a}>
             홈 화면
@@ -101,10 +107,10 @@ const Header = () => {
             </li>
           </>
         ) : (
-          <div className={styles.header_link_login} onClick={handleLogin}>
+          <li className={styles.header_link_login} onClick={handleLogin}>
             로그인
             <Image src={vector} alt={">"} width={16} height={16} />
-          </div>
+          </li>
         )}
       </ul>
     </>

@@ -1,14 +1,13 @@
 .main {
-    width:1920px;
+    width:auto;
+    max-width: 1920px;
     flex-shrink: 0;
+    border-bottom: 1px solid #C4C4C4;
     border-bottom: 1px solid #C4C4C4;
     backdrop-filter: blur(2px);
     flex-direction: column;
-    background: #FFFFFF;
 }
 .header {
-    margin-left:109px;
-    margin-bottom:46px;
     height: 91px;
     flex-shrink: 0;
     border-bottom: 1px solid #C4C4C4;
@@ -26,19 +25,21 @@
 }
 
 .content {
-    width:1920px;
+    width:auto;
+    max-width: 1920px;
     height: 1336px;
 }
 
 .footer {
-    width:1920px;
+    width:100vw;
+    max-width: 1920px;
     height: 324px;
     flex-shrink: 0;
     background: #363636;
 }
 
 .logoImg, .email,.github,.copyright {
-    margin-left:205px;
+    margin-left:202px;
     color: #FFF;
     font-family: Noto Sans KR, serif;
     font-size: 17px;
@@ -48,6 +49,5 @@
 }
 
 .logoImg {
-    margin-left:180px;
     margin-top: 53px;
 }

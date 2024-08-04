@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { usePathname } from 'next/navigation';
 import Head from 'next/head';
 import Header from './header';
 import styles from '../styles/Layout.module.css';
 import Image from 'next/image';
 import LogoImage from '../../public/Logo.png';
-import Link from 'next/link';
+
 import ReactGA from 'react-ga4';
 
 ReactGA.initialize('YOUR_GA4_MEASUREMENT_ID');
@@ -21,7 +21,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 	const isFindPage = pathname.includes('Find');
 	
 	return (
-		<html lang="ko">
+		<html>
 		<Head>
 			<script
 				async
@@ -48,14 +48,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 		) : (
 			<div className={styles.main}>
 				<header className={styles.header}>
-					<Image src={LogoImage} alt="로고" className={styles.header_left}/>
 					<Header/>
 				</header>
 				<main className={styles.section}>
 					{isFindPage ? children : <div className={styles.content}>{children}</div>}
 				</main>
 				<footer className={styles.footer}>
-					<Image className={styles.logoImg} src={LogoImage} alt="로고"/>
+					<Image className={styles.logoImg} src={LogoImage} alt="로고" width={183} height={57}/>
 					<p className={styles.email}>Email: triptunehost@gmail.com</p>
 					<p className={styles.github}>Github: https://github.com/TripTune-Project</p>
 					<p className={styles.copyright}>Copyright © 2024 TripTune. All rights reserved.</p>
