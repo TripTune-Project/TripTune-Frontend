@@ -1,12 +1,8 @@
 .loginBackground {
-    width: 1920px;
-    height: 100vh;
+    margin: 0;
+    padding: 0;
     flex-shrink: 0;
-    border-radius: 0px 0px 0px 200px;
-    background-color: #FFFFFF;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
+    position: relative;
 }
 
 .loginBackground::before {
@@ -14,15 +10,16 @@
     position: absolute;
     width: 1455px;
     height: 601px;
-    flex-shrink: 0;
-    background: linear-gradient(264deg, #EDF9F7 3.98%, #F1F5FF 98.44%);
     border-radius: 0px 0px 0px 200px;
-    top: 20%;
-    left: 10%;
+    background: linear-gradient(264deg, #EDF9F7 3.98%, #F1F5FF 98.44%);
+    top: 10%;
+    left: 54%;
     z-index: -1;
 }
 
 .loginContainer {
+    margin-top:82px;
+    margin-left:74%;
     z-index: 1;
     width: 756px;
     height: 814px;

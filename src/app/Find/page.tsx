@@ -51,41 +51,45 @@ const FindPage: React.FC = () => {
 	
 	const handleFindIdSubmit = async (event: React.FormEvent) => {
 		event.preventDefault();
+		
+		if (!isEmailValid) {
+			setErrorMessage('유효한 이메일을 입력해주세요.');
+			setAlertSeverity('error');
+			setAlertOpen(true);
+			setTimeout(() => setAlertOpen(false), 5000);
+			return;
+		}
+		
 		setLoading(true);
 		try {
 			const responseMessage = await requestFindId(email);
-			console.log(responseMessage.success, "1");
 			if (responseMessage.success) {
 				setAlertSeverity('success');
 				router.push(`/Find/Complete?userId=${responseMessage.data.userId}`);
-			} else {
-				throw new Error('아이디 찾기 요청에 실패했습니다.');
 			}
 		} catch (error) {
 			if (error instanceof Error) {
-				setErrorMessage(error.message);
+				router.push(`/Find/Complete?userId=undefined`);
 			} else {
 				setErrorMessage('아이디 찾기 요청에 실패했습니다. 다시 시도해주세요.');
 			}
-			setMessage('');
-			setAlertSeverity('error');
-		} finally {
-			setLoading(false);
-			setAlertOpen(true);
-			setTimeout(() => {
-				setAlertOpen(false);
-				setEmail('');
-				setUserId('');
-			}, 5000);
 		}
 	};
 	
 	const handleFindPasswordSubmit = async (event: React.FormEvent) => {
 		event.preventDefault();
+		
+		if (!isEmailValid || !isUserIdValid) {
+			setErrorMessage('유효한 이메일과 아이디를 입력해주세요.');
+			setAlertSeverity('error');
+			setAlertOpen(true);
+			setTimeout(() => setAlertOpen(false), 5000);
+			return;
+		}
+		
 		setLoading(true);
 		try {
 			const responseMessage = await requestFindPassword(email, userId);
-			console.log(responseMessage.success, '2');
 			if (responseMessage.success) {
 				setMessage('이메일을 확인한 후 비밀번호를 재설정해 주시기 바랍니다.');
 				setErrorMessage('');
@@ -101,6 +105,7 @@ const FindPage: React.FC = () => {
 			}
 			setMessage('');
 			setAlertSeverity('error');
+			setAlertOpen(true);
 		} finally {
 			setLoading(false);
 			setAlertOpen(true);
@@ -133,7 +138,7 @@ const FindPage: React.FC = () => {
 				<Loading />
 			) : tab === 'findId' ? (
 				<div className={styles.inputGroup}>
-					<p>가입할 때 사용한 이메일을 입력하시면 아이디를 찾을 수 있습니다.</p>
+					<p className={styles.findText}>가입할 때 사용한 이메일을 입력하시면 아이디를 찾을 수 있습니다.</p>
 					<p>이메일</p>
 					<input
 						type="email"
@@ -146,7 +151,7 @@ const FindPage: React.FC = () => {
 					/>
 					<button
 						type="submit"
-						className={styles.submitButton}
+						className={`${styles.submitButton} ${!isEmailValid ? styles.disabledButton : ''}`}
 						onClick={handleFindIdSubmit}
 						disabled={!isEmailValid}
 					>
@@ -155,8 +160,8 @@ const FindPage: React.FC = () => {
 				</div>
 			) : (
 				<div className={styles.inputGroup}>
-					<p>가입한 아이디, 이메일을 입력해주세요.</p>
-					<p>이메일을 통해 비밀번호 변경 링크가 전송됩니다.</p>
+					<p className={styles.findText}>가입한 아이디, 이메일을 입력해주세요.</p>
+					<p className={styles.findText}>이메일을 통해 비밀번호 변경 링크가 전송됩니다.</p>
 					<p>아이디</p>
 					<input
 						type="text"
@@ -179,7 +184,7 @@ const FindPage: React.FC = () => {
 					/>
 					<button
 						type="submit"
-						className={styles.submitButton}
+						className={`${styles.submitButton} ${!isEmailValid || !isUserIdValid ? styles.disabledButton : ''}`}
 						onClick={handleFindPasswordSubmit}
 						disabled={!isEmailValid || !isUserIdValid}
 					>

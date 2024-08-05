@@ -61,38 +61,38 @@ const Header = () => {
   
   return (
     <>
-      <ul className={styles.header_menu}>
+      <ul className={styles.headerMenu}>
         <li className={styles.logo}>
           <Link href="/">
             <Image src={LogoImage} alt="로고" width={183} height={57}/>
           </Link>
         </li>
-        <li className={styles.header_link}>
-          <Link href="/" className={styles.header_link_a}>
+        <li className={styles.headerLink}>
+          <Link href="/" className={styles.headerLinkA}>
             홈 화면
           </Link>
         </li>
-        <li className={styles.header_link}>
-          <Link href="/Schedule" className={styles.header_link_a}>
+        <li className={styles.headerLink}>
+          <Link href="/Schedule" className={styles.headerLinkA}>
             일정 만들기
           </Link>
         </li>
-        <li className={styles.header_link}>
-          <Link href="/Travel" className={styles.header_link_a}>
+        <li className={styles.headerLink}>
+          <Link href="/Travel" className={styles.headerLinkA}>
             여행지 탐색
           </Link>
         </li>
-        <li className={styles.header_link}>
-          <Link href="/MyPage" className={styles.header_link_a}>
+        <li className={styles.headerLink}>
+          <Link href="/MyPage" className={styles.headerLinkA}>
             마이 페이지
           </Link>
         </li>
         {loginTrue ? (
           <>
-            <li className={styles.header_link}>
+            <li className={styles.headerLink}>
               {userId} 님
             </li>
-            <li className={styles.header_link}>
+            <li className={styles.headerLink}>
               <Button onClick={openModal} variant="text" size="large">로그아웃</Button>
               <LogoutModal
                 isOpen={isModalOpen}
@@ -107,7 +107,7 @@ const Header = () => {
             </li>
           </>
         ) : (
-          <li className={styles.header_link_login} onClick={handleLogin}>
+          <li className={styles.headerLinkLogin} onClick={handleLogin}>
             로그인
             <Image src={vector} alt={">"} width={16} height={16} />
           </li>

@@ -1,12 +1,12 @@
 "use client";
 
-import { Suspense, useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import styles from '../../../styles/Find.module.css';
 import Image from "next/image";
 import favicon from "../../../../public/favicon.ico";
 import Loading from "../../../components/Common/Loading";
-import { validatePassword } from '../../../utils/validation';
+import { validatePassword } from '@/utils/validation';
 
 const ChangePassword = () => {
 	const searchParams = useSearchParams();
@@ -77,7 +77,10 @@ const ChangePassword = () => {
 	return (
 		<div className={styles.pageContainer}>
 			<h1 className={styles.FindTitle}>비밀번호 재설정</h1>
-			<p><Image src={favicon} alt={"파비콘"} width={31} height={20}/> 새롭게 설정할 비밀번호를 입력해 주세요.</p>
+			<div className={styles.completeText}>
+				<Image src={favicon} alt={"파비콘"} width={31} height={20}/>
+				새롭게 설정할 비밀번호를 입력해 주세요.
+			</div>
 			<hr className={styles.hrStyle}/>
 			{loading ? (
 				<Loading />
