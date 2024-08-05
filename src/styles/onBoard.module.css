@@ -1,12 +1,11 @@
-.onboard {
+.onBoard {
     margin: 0;
     padding: 0;
     flex-shrink: 0;
     position: relative;
-    overflow-x:hidden;
 }
 
-.onboard::before {
+.onBoard::before {
     content: '';
     position: absolute;
     width: 1455px;
@@ -18,7 +17,7 @@
     z-index: -1;
 }
 
-.onboarding_top {
+.onBoardingTop {
     margin: 0;
     padding: 0;
     display: flex;
@@ -26,18 +25,32 @@
     position: relative;
 }
 
-.onboarding_img {
+.onBoardingImg {
     display: inline-block;
     margin:0;
     height: 610px;
     max-height: 610px;
 }
 
-.onboarding_explain_div {
+.onBoardingExplainDiv {
     color: #fff;
     font-family: 'Noto Sans KR', serif;
     font-size: 37px;
     font-weight: 800;
+    line-height: normal;
+    position: absolute;
+    top: 18%;
+    left: 7%;
+    transform: translateY(-50%);
+    text-align: left;
+    z-index: 1;
+}
+
+.onBoardingExplainP {
+    color: #fff;
+    font-family: 'Noto Sans KR', serif;
+    font-size: 25px;
+    font-weight: 500;
     line-height: normal;
     position: absolute;
     top: 25%;
@@ -47,28 +60,14 @@
     z-index: 1;
 }
 
-.onboarding_explain_p {
-    color: #fff;
-    font-family: 'Noto Sans KR', serif;
-    font-size: 25px;
-    font-weight: 500;
-    line-height: normal;
-    position: absolute;
-    top: 35%;
-    left: 7%;
-    transform: translateY(-50%);
-    text-align: left;
-    z-index: 1;
-}
-
-.onboarding_view {
+.onBoardingView {
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.onboarding_search {
+.onBoardingSearch {
     width: 781px;
     height: 74px;
     flex-shrink: 0;
@@ -79,9 +78,10 @@
     align-items: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
+    padding:5px;
 }
 
-.filter_select {
+.filterSelect {
     border: none;
     background-color: transparent;
     padding: 8px 16px;
@@ -89,24 +89,31 @@
     color: #333;
     outline: none;
     cursor: pointer;
+    margin-right:10px;
 }
 
-.search_input {
+.searchInput {
     flex: 1;
-    border: none;
     padding: 8px 16px;
     font-size: 16px;
     color: #333;
+    border: none;
+    border-left: 2px solid #004a55;
     outline: none;
 }
 
-.search_input::placeholder {
+.searchInput::placeholder {
     color: #aaa;
 }
 
-.search_input:focus,
-.filter_select:focus {
-    box-shadow: 0 0 0 2px rgba(100, 100, 255, 0.5);
+.searchButton {
+    width: 84px;
+    height: 51px;
+    flex-shrink: 0;
+    border-radius: 20px;
+    background: linear-gradient(313deg, #004A55 1.45%, #CCEAD5 98.55%);
+    margin-right:5px;
+    border:none;
 }
 
 .viewBtn {
@@ -121,7 +128,7 @@
     transition: background-color 0.3s;
 }
 
-.go_link {
+.goLink {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -133,7 +140,7 @@
     margin-left:50px;
 }
 
-.go_link:hover {
+.goLink:hover {
     background-color: #333;
 }
 
@@ -148,14 +155,14 @@
     background-color: #f5f5f5;
 }
 
-.button_container {
+.buttonContainer {
     display: flex;
     align-items: center;
     gap: 20px;
     margin-top: 40px;
 }
 
-.onboarding_show {
+.onBoardingShow {
     margin-left:1000px;
     display: flex;
     flex-direction: column;
@@ -163,33 +170,25 @@
     margin-top: 20px;
 }
 
-.recommended_destinations {
+.recommendedDestinations {
     text-align: left;
     margin-top: 76px;
 }
 
-.choose_recomend {
+.chooseRecomend {
     margin-left:109px;
     color: #000;
-    font-family: Noto Sans KR, serif;
     font-size: 40px;
     font-style: normal;
     font-weight: 600;
     line-height: normal;
-}
-
-.choose_recommend {
-    color: #000;
     font-family: 'Noto Sans KR', serif;
-    font-size: 40px;
-    font-weight: 600;
-    line-height: normal;
     margin-bottom: 20px;
 }
 
-.onboard_choose_btn_more,
-.onboard_no_choose_btn,
-.onboard_choose_btn {
+.onBoardChooseBtnMore,
+.onBoardNoChooseBtn,
+.onBoardChooseBtn {
     width: 90px;
     height: 38px;
     border-radius: 40px;
@@ -200,36 +199,37 @@
     transition: background-color 0.3s;
 }
 
-.onboard_choose_btn {
+.onBoardChooseBtn {
     margin-left: 109px;
     background: #a7cdcc;
 }
 
-.onboard_choose_btn_more {
+.onBoardChooseBtnMore {
     float: right;
     margin-right: 60px;
 }
 
-.onboard_choose_btn:hover,
-.onboard_no_choose_btn:hover,
-.onboard_choose_btn_more:hover {
+.onBoardChooseBtn:hover,
+.onBoardNoChooseBtn:hover,
+.onBoardChooseBtnMore:hover {
     background-color: #d0d0d0;
 }
 
-.img_slider_container {
+.imgSliderContainer {
     margin-top: 39px;
     flex: 1;
     width: 100%;
     max-width:400px;
     height: 433px;
     border-radius: 0px 0px 30px 0px;
-    background: #fff;
+    background: #FFFFFF;
     text-align: center;
     margin-left: 109px;
+    border: 1px solid #e0e0e0;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.slider_img {
+.sliderImg {
     width: 100%;
     max-width:400px;
     height: 280px;
@@ -237,7 +237,7 @@
     border-radius: 30px 0px 0px 0px;
 }
 
-.slider_text_p {
+.sliderTextP {
     color: #000;
     font-family: 'Noto Sans KR', serif;
     font-size: 25px;
@@ -246,7 +246,7 @@
     margin-top: 10px;
 }
 
-.slider_text_p_detail {
+.sliderTextPDetail {
     color: #848282;
     font-family: 'Noto Sans KR', serif;
     font-size: 18px;
@@ -255,7 +255,7 @@
     margin-top: 5px;
 }
 
-.slider_container {
+.sliderContainer {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -265,11 +265,11 @@
     flex-wrap: wrap;
 }
 
-.slider_container:active {
+.sliderContainer:active {
     cursor: grabbing;
 }
 
-.slider_button {
+.sliderButton {
     background: none;
     border: none;
     color: #333;
@@ -281,17 +281,17 @@
     border-radius: 50%;
 }
 
-.slider_button:hover {
+.sliderButton:hover {
     background-color: rgba(255, 255, 255, 0.8);
 }
 
-.img_slider_explain {
+.imgSliderExplain {
     display: flex;
     justify-content: space-between;
     width: 100%;
 }
 
-.onboarding_content {
+.onBoardingContent {
     width: 100%;
     position: absolute;
     top: 50%;
@@ -302,7 +302,7 @@
     flex-direction: column;
 }
 
-.onboarding_text {
+.onBoardingText {
     flex: 1;
     text-align: left;
     color: #fff;

@@ -16,19 +16,15 @@ import travel from '../../public/assets/images/travel.png';
 import time from '../../public/assets/images/time.png';
 import go from '../../public/assets/images/go.png';
 import picture from '../../public/assets/images/picture.png';
+import searchIcon from '../../public/assets/images/search-icon.png';
+import place from '../../public/assets/images/place.png';
 
 const StyledSwiperContainer = styled.div`
     overflow: hidden;
     position: relative;
     width: 100%;
-    max-width: 1800px;
+    max-width: 1850px;
     margin: 0 auto;
-
-    .swiper-slide {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
 `;
 
 const StyledSwiperButtonPrev = styled.div`
@@ -86,6 +82,10 @@ const Home: React.FC = () => {
 		router.push('/Travel');
 	};
 	
+	const handleSearch = () => {
+		router.push('/Search');
+	};
+	
 	const images = [
 		{
 			src: picture,
@@ -120,44 +120,55 @@ const Home: React.FC = () => {
 	];
 	
 	return (
-		<div className={styles.onboard}>
-			<div className={styles.onboarding_top}>
-				<div className={styles.onboarding_view}>
+		<div className={styles.onBoard}>
+			<div className={styles.onBoardingTop}>
+				<div className={styles.onBoardingView}>
 					<Image
-						className={styles.onboarding_img}
+						className={styles.onBoardingImg}
 						src={travelImage}
 						alt="온보딩 이미지"
 						objectFit="cover"
 						width={"1920"}
 						height={"610"}
 					/>
-					<div className={styles.onboarding_content}>
-						<div className={styles.onboarding_text}>
-							<div className={styles.onboarding_explain_div}>
+					<div className={styles.onBoardingContent}>
+						<div className={styles.onBoardingText}>
+							<div className={styles.onBoardingExplainDiv}>
 								모두의 아이디어로 완성되는 여행
 							</div>
-							<p className={styles.onboarding_explain_p}>
+							<p className={styles.onBoardingExplainP}>
 								TripTune과 함께 즐겁고 새로운 여행 계획을 세워보세요.
 							</p>
 						</div>
-						<div className={styles.onboarding_show}>
-							<div className={styles.onboarding_search}>
-								<select className={styles.filter_select}>
+						<div className={styles.onBoardingShow}>
+							<div className={styles.onBoardingSearch}>
+								<select className={styles.filterSelect}>
 									<option value="country">국가명</option>
 									<option value="city">도시명</option>
 								</select>
 								<input
 									type="text"
 									placeholder="원하는 여행지를 검색하세요"
-									className={styles.search_input}
+									className={styles.searchInput}
 								/>
+								<button
+									className={styles.searchButton}
+									onClick={handleSearch}
+								>
+								<Image
+									src={searchIcon}
+									alt="돋보기 아이콘"
+									width={20}
+									height={20}
+								/>
+							</button>
 							</div>
-							<div className={styles.button_container}>
+							<div className={styles.buttonContainer}>
 								<div className={styles.viewBtn} onClick={handleScheduleClick}>
 									<div className={styles.viewTitle}>일정 만들기</div>
 									<br/>
 									<div className={styles.iconContainer}>
-										<div className={styles.go_link}>
+										<div className={styles.goLink}>
 											<Image
 												src={go}
 												alt="바로가기"
@@ -178,7 +189,7 @@ const Home: React.FC = () => {
 									<div className={styles.viewTitle}>여행지 탐색</div>
 									<br/>
 									<div className={styles.iconContainer}>
-										<div className={styles.go_link}>
+										<div className={styles.goLink}>
 											<Image
 												src={go}
 												alt="바로가기"
@@ -200,15 +211,15 @@ const Home: React.FC = () => {
 					</div>
 				</div>
 			</div>
-			<div className={styles.recommended_destinations}>
-				<h2 className={styles.choose_recomend}>
+			<div className={styles.recommendedDestinations}>
+				<h2 className={styles.chooseRecomend}>
 					<Image src={favicon} alt={"파비콘"}/>
 					추천 여행지
 				</h2>
-				<button className={styles.onboard_choose_btn}>전체</button>
-				<button className={styles.onboard_no_choose_btn}>국내</button>
-				<button className={styles.onboard_no_choose_btn}>해외</button>
-				<button className={styles.onboard_choose_btn_more}>더보기</button>
+				<button className={styles.onBoardChooseBtn}>전체</button>
+				<button className={styles.onBoardNoChooseBtn}>국내</button>
+				<button className={styles.onBoardNoChooseBtn}>해외</button>
+				<button className={styles.onBoardChooseBtnMore}>더보기</button>
 				<StyledSwiperContainer>
 					<Swiper
 						modules={[Navigation, Pagination]}
@@ -222,16 +233,22 @@ const Home: React.FC = () => {
 					>
 						{images.map((image, index) => (
 							<SwiperSlide key={index}>
-								<div className={styles.img_slider_container}>
+								<div className={styles.imgSliderContainer}>
 									<Image
-										className={styles.slider_img}
+										className={styles.sliderImg}
 										src={image.src}
 										alt={image.alt}
 										width={400}
 										height={280}
 									/>
-									<p className={styles.slider_text_p}>{image.title}</p>
-									<p className={styles.slider_text_p_detail}>
+									<p className={styles.sliderTextP}>{image.title}</p>
+									<p className={styles.sliderTextPDetail}>
+										<Image
+											src={place}
+											alt={"place"}
+											width={15}
+											height={21}
+										/>&nbsp;
 										{image.description}
 									</p>
 								</div>
