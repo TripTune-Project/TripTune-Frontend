@@ -73,6 +73,8 @@ const FindPage: React.FC = () => {
 			} else {
 				setErrorMessage('아이디 찾기 요청에 실패했습니다. 다시 시도해주세요.');
 			}
+		} finally {
+			setLoading(false);
 		}
 	};
 	
@@ -134,9 +136,7 @@ const FindPage: React.FC = () => {
 					비밀번호 찾기
 				</button>
 			</div>
-			{loading ? (
-				<Loading />
-			) : tab === 'findId' ? (
+			{tab === 'findId' ? (
 				<div className={styles.inputGroup}>
 					<p className={styles.findText}>가입할 때 사용한 이메일을 입력하시면 아이디를 찾을 수 있습니다.</p>
 					<p>이메일</p>
@@ -153,9 +153,9 @@ const FindPage: React.FC = () => {
 						type="submit"
 						className={`${styles.submitButton} ${!isEmailValid ? styles.disabledButton : ''}`}
 						onClick={handleFindIdSubmit}
-						disabled={!isEmailValid}
+						disabled={!isEmailValid || loading}
 					>
-						아이디 찾기
+						{loading ? <Loading /> : '아이디 찾기'}
 					</button>
 				</div>
 			) : (
@@ -186,9 +186,9 @@ const FindPage: React.FC = () => {
 						type="submit"
 						className={`${styles.submitButton} ${!isEmailValid || !isUserIdValid ? styles.disabledButton : ''}`}
 						onClick={handleFindPasswordSubmit}
-						disabled={!isEmailValid || !isUserIdValid}
+						disabled={!isEmailValid || !isUserIdValid || loading}
 					>
-						비밀번호 찾기
+						{loading ? <Loading /> : '비밀번호 찾기'}
 					</button>
 				</div>
 			)}
