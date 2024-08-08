@@ -3,25 +3,31 @@
     padding: 0;
     flex-shrink: 0;
     position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 .loginBackground::before {
     content: '';
     position: absolute;
-    width: 1455px;
+    width: 80%;
+    max-width: 1455px;
     height: 601px;
-    border-radius: 0px 0px 0px 200px;
+    border-radius: 0 0 0 200px;
     background: linear-gradient(264deg, #EDF9F7 3.98%, #F1F5FF 98.44%);
     top: 10%;
-    left: 54%;
+    left: 50%;
+    transform: translateX(-50%);
     z-index: -1;
 }
 
 .loginContainer {
-    margin-top:82px;
-    margin-left:74%;
+    margin-top: 82px;
+    margin: 0 auto;
     z-index: 1;
-    width: 756px;
+    width: 80%;
+    max-width: 756px;
     height: 814px;
     flex-shrink: 0;
     padding: 20px;
@@ -52,14 +58,16 @@
 }
 
 .inputGroup {
-    width: 480px;
+    width: 100%;
+    max-width: 480px;
     height: 60px;
     flex-shrink: 0;
     margin-bottom: 40px;
 }
 
 .input {
-    width: 480px;
+    width: 100%;
+    max-width: 480px;
     height: 60px;
     flex-shrink: 0;
     padding: 10px;
@@ -71,13 +79,15 @@
 }
 
 .inputError {
-    width: 480px;
+    width: 100%;
+    max-width: 480px;
     height: 60px;
     border: 1px solid red;
 }
 
 .submitButton {
-    width: 480px;
+    width: 100%;
+    max-width: 480px;
     height: 60px;
     flex-shrink: 0;
     padding: 15px;
@@ -100,7 +110,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 480px;
+    width: 100%;
+    max-width: 480px;
     margin-top: 10px;
 }
 
@@ -141,7 +152,8 @@
 }
 
 .kakaoButton, .naverButton {
-    width: 480px;
+    width: 100%; /* 상대적인 너비 사용 */
+    max-width: 480px;
     height: 60px;
     flex-shrink: 0;
     padding: 15px;
@@ -156,17 +168,16 @@
 
 .kakaoButton {
     display: flex;
-    width: 480px;
-    padding: 19px 152px;
+    padding: 19px 0; /* 좌우 여백을 제거하여 중앙 정렬 */
     align-items: center;
+    justify-content: center;
     gap: 15px;
     background: #FEE500;
 }
 
 .naverButton {
     display: flex;
-    width: 480px;
-    padding: 19px 154px;
+    padding: 19px 0;
     justify-content: center;
     align-items: center;
     gap: 15px;

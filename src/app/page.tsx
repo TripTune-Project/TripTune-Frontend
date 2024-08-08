@@ -128,8 +128,6 @@ const Home: React.FC = () => {
 						src={travelImage}
 						alt="온보딩 이미지"
 						objectFit="cover"
-						width={"1920"}
-						height={"610"}
 					/>
 					<div className={styles.onBoardingContent}>
 						<div className={styles.onBoardingText}>

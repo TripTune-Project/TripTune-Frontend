@@ -1,13 +1,15 @@
 .main {
-    width:auto;
+    width: 100%;
     max-width: 1920px;
     flex-shrink: 0;
-    border-bottom: 1px solid #C4C4C4;
     border-bottom: 1px solid #C4C4C4;
     backdrop-filter: blur(2px);
     flex-direction: column;
 }
+
 .header {
+    display: flex;
+    align-items: center;
     height: 91px;
     flex-shrink: 0;
     border-bottom: 1px solid #C4C4C4;
@@ -16,7 +18,7 @@
 }
 
 .header_left {
-    float: left;
+    margin-right: auto;
 }
 
 .section {
@@ -25,23 +27,23 @@
 }
 
 .content {
-    width:auto;
+    width: 100%;
     max-width: 1920px;
     height: 1336px;
 }
 
 .footer {
-    width:100vw;
+    width: 100%;
     max-width: 1920px;
     height: 324px;
     flex-shrink: 0;
     background: #363636;
 }
 
-.logoImg, .email,.github,.copyright {
-    margin-left:202px;
+.logoImg, .email, .github, .copyright {
+    margin-left: 202px;
     color: #FFF;
-    font-family: Noto Sans KR, serif;
+    font-family: 'Noto Sans KR', serif;
     font-size: 17px;
     font-style: normal;
     font-weight: 700;
