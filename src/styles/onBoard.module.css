@@ -8,12 +8,12 @@
 .onBoard::before {
     content: '';
     position: absolute;
-    width: 1455px;
+    width: 80vw;
     height: 601px;
     border-radius: 0px 0px 0px 200px;
     background: linear-gradient(264deg, #edf9f7 3.98%, #f1f5ff 98.44%);
     top: 10%;
-    left: 25%;
+    left: 10%;
     z-index: -1;
 }
 
@@ -26,9 +26,11 @@
 }
 
 .onBoardingImg {
+    width: 98vw;
+    max-width: 1920px;
+    height: auto;
     display: inline-block;
     margin:0;
-    height: 610px;
     max-height: 610px;
 }
 
@@ -68,7 +70,8 @@
 }
 
 .onBoardingSearch {
-    width: 781px;
+    width: 80%;
+    max-width: 781px;
     height: 74px;
     flex-shrink: 0;
     border-radius: 20px;
@@ -217,13 +220,14 @@
 .imgSliderContainer {
     margin-top: 39px;
     flex: 1;
-    width: 100%;
-    max-width:400px;
+    width: 90%;
+    max-width: 400px;
     height: 433px;
     border-radius: 0px 0px 30px 0px;
     background: #FFFFFF;
     text-align: center;
-    margin-left: 109px;
+    margin-left: auto;
+    margin-right: auto;
     border: 1px solid #e0e0e0;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
