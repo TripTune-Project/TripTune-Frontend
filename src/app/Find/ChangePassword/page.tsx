@@ -82,46 +82,40 @@ const ChangePassword = () => {
 				새롭게 설정할 비밀번호를 입력해 주세요.
 			</div>
 			<hr className={styles.hrStyle}/>
-			{loading ? (
-				<Loading />
-			) : (
-				<>
-					<p>새로운 비밀번호</p>
-					<input
-						type="password"
-						id="password"
-						value={password}
-						onChange={(e) => setPassword(e.target.value)}
-						required
-						placeholder={"비밀번호 (영문 대/소문자, 숫자, 특수문자 조합 8~15자리)"}
-						className={styles.input}
-					/>
-					{!isPasswordValid && password && (
-						<div className={styles.errorText}>유효한 비밀번호 형식이 아닙니다.</div>
-					)}
-					<p> 비밀번호 재입력 </p>
-					<input
-						type="password"
-						id="repassword"
-						value={repassword}
-						onChange={(e) => setRepassword(e.target.value)}
-						required
-						placeholder={"비밀번호 재입력"}
-						className={styles.input}
-					/>
-					{!isRepasswordValid && repassword && (
-						<div className={styles.errorText}>비밀번호가 일치하지 않습니다.</div>
-					)}
-					<button
-						type="submit"
-						className={styles.submitButton}
-						onClick={handlePasswordChange}
-						disabled={!isFormValid}
-					>
-						비밀번호 변경
-					</button>
-				</>
+			<p>새로운 비밀번호</p>
+			<input
+				type="password"
+				id="password"
+				value={password}
+				onChange={(e) => setPassword(e.target.value)}
+				required
+				placeholder={"비밀번호 (영문 대/소문자, 숫자, 특수문자 조합 8~15자리)"}
+				className={styles.input}
+			/>
+			{!isPasswordValid && password && (
+				<div className={styles.errorText}>유효한 비밀번호 형식이 아닙니다.</div>
 			)}
+			<p> 비밀번호 재입력 </p>
+			<input
+				type="password"
+				id="repassword"
+				value={repassword}
+				onChange={(e) => setRepassword(e.target.value)}
+				required
+				placeholder={"비밀번호 재입력"}
+				className={styles.input}
+			/>
+			{!isRepasswordValid && repassword && (
+				<div className={styles.errorText}>비밀번호가 일치하지 않습니다.</div>
+			)}
+			<button
+				type="submit"
+				className={styles.submitButton}
+				onClick={handlePasswordChange}
+				disabled={!isFormValid || loading}
+			>
+				{loading ? <Loading /> : '비밀번호 변경'}
+			</button>
 		</div>
 	);
 };
