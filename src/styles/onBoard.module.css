@@ -72,13 +72,12 @@
     height: 74px;
     flex-shrink: 0;
     border-radius: 20px;
-    border: 2px solid #004a55;
+    border: none;
     background: #fff;
     display: flex;
     align-items: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
-    padding:5px;
 }
 
 .filterSelect {
