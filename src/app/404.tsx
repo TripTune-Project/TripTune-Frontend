@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import styles from './ErrorPage.module.css';
+import styles from '../styles/Error.module.css';
 
 export default function Custom404() {
   return (
