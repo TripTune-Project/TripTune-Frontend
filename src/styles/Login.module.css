@@ -16,15 +16,14 @@
     height: 601px;
     border-radius: 0 0 0 200px;
     background: linear-gradient(264deg, #EDF9F7 3.98%, #F1F5FF 98.44%);
-    top: 10%;
-    left: 50%;
+    top: 0;
+    left: 61.8%;
     transform: translateX(-50%);
     z-index: -1;
 }
 
 .loginContainer {
     margin-top: 82px;
-    margin: 0 auto;
     z-index: 1;
     width: 80%;
     max-width: 756px;
@@ -33,7 +32,7 @@
     padding: 20px;
     border-radius: 30px;
     background: #FFF;
-    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.30);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.30);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -47,7 +46,8 @@
     font-weight: 400;
     line-height: normal;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 54px;
+    margin-top:64px;
 }
 
 .errorText {
@@ -60,9 +60,10 @@
 .inputGroup {
     width: 100%;
     max-width: 480px;
-    height: 60px;
+    height: auto;
     flex-shrink: 0;
-    margin-bottom: 40px;
+    margin-bottom: 15px;
+    position: relative;
 }
 
 .input {
@@ -70,23 +71,30 @@
     max-width: 480px;
     height: 60px;
     flex-shrink: 0;
-    padding: 10px;
     border: 1px solid #848282;
     border-radius: 5px;
     font-family: Noto Sans KR, sans-serif;
     font-size: 16px;
     background: #FFF;
+    padding-left:15px;
+    padding-right: 15px;
+    box-sizing: border-box;
 }
 
 .inputError {
     width: 100%;
     max-width: 480px;
     height: 60px;
+    font-family: Noto Sans KR, sans-serif;
+    font-size: 16px;
     border: 1px solid red;
+    padding-left:15px;
+    padding-right: 15px;
+    box-sizing: border-box;
 }
 
 .submitButton {
-    width: 100%;
+    width: 480px;
     max-width: 480px;
     height: 60px;
     flex-shrink: 0;
@@ -99,7 +107,7 @@
     font-size: 18px;
     font-weight: 700;
     cursor: pointer;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .submitButton:disabled {
@@ -120,7 +128,14 @@
     font-family: Noto Sans KR, sans-serif;
     font-size: 14px;
     cursor: pointer;
-    margin: 0 10px;
+    margin: 0 5px;
+    padding: 5px 10px;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.findId:hover, .findPassword:hover, .join:hover {
+    background-color: #e0e0e0;
 }
 
 .socialLoginContainer {
@@ -134,7 +149,7 @@
 .hrContainer {
     display: flex;
     align-items: center;
-    width: 100%;
+    width: 500px;
     margin: 20px 0;
 }
 
@@ -152,7 +167,7 @@
 }
 
 .kakaoButton, .naverButton {
-    width: 100%; /* 상대적인 너비 사용 */
+    width: 480px;
     max-width: 480px;
     height: 60px;
     flex-shrink: 0;
@@ -162,13 +177,13 @@
     border-radius: 5px;
     font-family: Noto Sans KR, sans-serif;
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 700;
     cursor: pointer;
 }
 
 .kakaoButton {
     display: flex;
-    padding: 19px 0; /* 좌우 여백을 제거하여 중앙 정렬 */
+    padding: 19px 0;
     align-items: center;
     justify-content: center;
     gap: 15px;
@@ -181,5 +196,6 @@
     justify-content: center;
     align-items: center;
     gap: 15px;
+    color:#ffffff;
     background: #03C75A;
 }

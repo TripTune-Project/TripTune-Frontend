@@ -16,12 +16,14 @@
 }
 
 .logo {
-    margin-right: 224px;
-    margin-left: 109px;
+    margin:17px 109px;
+    width:183px;
+    height:57px;
+    flex-shrink: 0;
 }
 
 .headerLink {
-    display: flex;
+    display: inline-flex;
     justify-content: center;
     align-items: center;
     width: auto;
@@ -68,7 +70,7 @@
     text-decoration: none;
     cursor: pointer;
     margin-left: auto;
-    margin-right: 20px;
+    margin-right: 90px;
 }
 
 .headerLinkLogin img {

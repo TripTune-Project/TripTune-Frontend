@@ -62,9 +62,9 @@ const Header = () => {
   return (
     <>
       <ul className={styles.headerMenu}>
-        <li className={styles.logo}>
+        <li >
           <Link href="/">
-            <Image src={LogoImage} alt="로고" width={183} height={57}/>
+            <Image src={LogoImage} alt="로고" className={styles.logo}/>
           </Link>
         </li>
         <li className={styles.headerLink}>

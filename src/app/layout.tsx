@@ -6,9 +6,9 @@ import Head from 'next/head';
 import Header from './header';
 import styles from '../styles/Layout.module.css';
 import Image from 'next/image';
-import LogoImage from '../../public/Logo.png';
-
 import ReactGA from 'react-ga4';
+import favicon from "../../public/favicon.ico";
+import "../styles/global.css";
 
 ReactGA.initialize('YOUR_GA4_MEASUREMENT_ID');
 
@@ -44,7 +44,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 		</Head>
 		<body>
 		{isFindPage ? (
-			<div>{children}</div>
+			<>{children}</>
 		) : (
 			<div className={styles.main}>
 				<header className={styles.header}>
@@ -54,9 +54,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 					{isFindPage ? children : <div className={styles.content}>{children}</div>}
 				</main>
 				<footer className={styles.footer}>
-					<Image className={styles.logoImg} src={LogoImage} alt="로고" width={183} height={57}/>
-					<p className={styles.email}>Email: triptunehost@gmail.com</p>
-					<p className={styles.github}>Github: https://github.com/TripTune-Project</p>
+					<Image className={styles.logoImg} src={favicon} alt={"파비콘"}/>
+					<div className={styles.logoText}>TripTune</div>
+					<p className={styles.email}><b>Email</b>: triptunehost@gmail.com</p>
+					<p className={styles.github}><b>Github</b>: https://github.com/TripTune-Project</p>
 					<p className={styles.copyright}>Copyright © 2024 TripTune. All rights reserved.</p>
 				</footer>
 			</div>
