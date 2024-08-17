@@ -13,7 +13,7 @@
     border-radius: 0px 0px 0px 200px;
     background: linear-gradient(264deg, #edf9f7 3.98%, #f1f5ff 98.44%);
     top: 10%;
-    left: 10%;
+    left: 20%;
     z-index: -1;
 }
 
@@ -26,12 +26,10 @@
 }
 
 .onBoardingImg {
-    width: 98vw;
-    max-width: 1920px;
-    height: auto;
+    width: 1980px;
+    height: 610px;
     display: inline-block;
     margin:0;
-    max-height: 610px;
 }
 
 .onBoardingExplainDiv {
@@ -114,7 +112,7 @@
     flex-shrink: 0;
     border-radius: 20px;
     background: linear-gradient(313deg, #004A55 1.45%, #CCEAD5 98.55%);
-    margin-right:5px;
+    margin-right:20px;
     border:none;
 }
 
@@ -139,7 +137,7 @@
     margin-top: 10px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    margin-left:50px;
+    margin-left:37px;
 }
 
 .goLink:hover {
@@ -178,7 +176,7 @@
 }
 
 .chooseRecomend {
-    margin-left:109px;
+    margin-left:50px;
     color: #000;
     font-size: 40px;
     font-style: normal;
@@ -202,13 +200,14 @@
 }
 
 .onBoardChooseBtn {
-    margin-left: 109px;
+    margin-left: 49px;
     background: #a7cdcc;
+    color:#FFFFFF;
 }
 
 .onBoardChooseBtnMore {
     float: right;
-    margin-right: 60px;
+    margin-right: 50px;
 }
 
 .onBoardChooseBtn:hover,
@@ -247,6 +246,8 @@
     font-weight: 500;
     line-height: normal;
     margin-top: 10px;
+    text-align: left;
+    margin-left:30px;
 }
 
 .sliderTextPDetail {
@@ -256,6 +257,16 @@
     font-weight: 500;
     line-height: normal;
     margin-top: 5px;
+    text-align: left;
+    margin-left:30px;
+    display: flex;
+    align-items: center;
+}
+
+.sliderTextPDetail img {
+    vertical-align: middle;
+    display: inline-block;
+    margin-right: 5px;
 }
 
 .sliderContainer {

@@ -13,7 +13,7 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ isOpen, onClose, onConfirm })
 			<Box
 				sx={{
 					p: 4,
-					backgroundColor: 'white',
+					backgroundColor: '#ffffff',
 					borderRadius: 1,
 					boxShadow: 24,
 					position: 'absolute',

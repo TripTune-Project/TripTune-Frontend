@@ -158,6 +158,7 @@ const Home: React.FC = () => {
 									alt="돋보기 아이콘"
 									width={20}
 									height={20}
+									style={{marginLeft:"30px"}}
 								/>
 							</button>
 							</div>
@@ -211,7 +212,7 @@ const Home: React.FC = () => {
 			</div>
 			<div className={styles.recommendedDestinations}>
 				<h2 className={styles.chooseRecomend}>
-					<Image src={favicon} alt={"파비콘"}/>
+					<Image src={favicon} alt={"파비콘"} style={{marginLeft:"-15px"}}/>
 					추천 여행지
 				</h2>
 				<button className={styles.onBoardChooseBtn}>전체</button>
@@ -221,7 +222,6 @@ const Home: React.FC = () => {
 				<StyledSwiperContainer>
 					<Swiper
 						modules={[Navigation, Pagination]}
-						spaceBetween={5}
 						slidesPerView={4}
 						navigation={{
 							nextEl: '.swiper-button-next',

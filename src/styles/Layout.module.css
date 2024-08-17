@@ -33,23 +33,34 @@
 }
 
 .footer {
+    padding-top:5px;
     width: 100%;
-    max-width: 1920px;
     height: 324px;
+    max-width: 1920px;
     flex-shrink: 0;
     background: #363636;
 }
 
-.logoImg, .email, .github, .copyright {
-    margin-left: 202px;
+.logoImg, .logoText, .email, .github, .copyright {
+    margin-left: 170px;
     color: #FFF;
     font-family: 'Noto Sans KR', serif;
     font-size: 17px;
     font-style: normal;
-    font-weight: 700;
+    font-weight: 300;
     line-height: normal;
 }
 
 .logoImg {
-    margin-top: 53px;
+    margin-top: 40px;
+    margin-left: 145px;
+}
+
+.logoText {
+    font-size: 35px;
+    font-family: 'Noto Sans KR', serif;
+    font-weight: 500;
+    flex-shrink: 0;
+    color: #FFF;
+    margin-top: 0;
 }
