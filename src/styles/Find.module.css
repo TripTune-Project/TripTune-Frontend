@@ -43,18 +43,18 @@
     line-height: normal;
     background-color:#FFFFFF;
     border: 1px solid #848282;
-    border-bottom: 1px solid #76ADAC;
+    border-bottom: 3px solid #76ADAC;
     cursor: pointer;
 }
 
 .tabButton.activeTab {
-    border: 1px solid #76ADAC;
+    border: 3px solid #76ADAC;
     border-bottom: none;
     color: #000;
 }
 
 .tabButton:hover {
-    border: 1px solid #76ADAC;
+    border: 3px solid #76ADAC;
     color: #000;
 }
 
