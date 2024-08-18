@@ -5,20 +5,18 @@
     font-style: normal;
     font-weight: 400;
     line-height: normal;
-    margin-top: 83px;
-    margin-bottom:71px;
+    margin: 40px 0;
 }
 
 .pageContainer {
     width: 619px;
-    height: 755px;
+    height: 673px;
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     background-color: #FFFFFF;
-    margin:20px 136px;
 }
 
 .tabContainer {
@@ -43,18 +41,18 @@
     line-height: normal;
     background-color:#FFFFFF;
     border: 1px solid #848282;
-    border-bottom: 1px solid #76ADAC;
+    border-bottom: 3px solid #76ADAC;
     cursor: pointer;
 }
 
 .tabButton.activeTab {
-    border: 1px solid #76ADAC;
+    border: 3px solid #76ADAC;
     border-bottom: none;
     color: #000;
 }
 
 .tabButton:hover {
-    border: 1px solid #76ADAC;
+    border: 3px solid #76ADAC;
     color: #000;
 }
 
