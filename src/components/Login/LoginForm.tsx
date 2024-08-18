@@ -51,11 +51,11 @@ const LoginForm: React.FC = () => {
 	};
 	
 	const handleFindId = () => {
-		window.open('/Find?tab=findId', 'FindId', 'width=500,height=400');
+		window.open('/Find?tab=findId', 'FindId', 'width=619,height=673');
 	};
 	
 	const handleFindPassword = () => {
-		window.open('/Find?tab=findPassword', 'FindPassword', 'width=500,height=400');
+		window.open('/Find?tab=findPassword', 'FindPassword', 'width=619,height=673');
 	};
 	
 	const closeSnackbar = () => {
