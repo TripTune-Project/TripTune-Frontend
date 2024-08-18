@@ -3,7 +3,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width:100vw;
+    width: 100vw;
     height: 100vh;
     text-align: center;
 }
@@ -23,4 +23,76 @@
     color: blue;
     text-decoration: underline;
     cursor: pointer;
+}
+
+@media screen and (max-width: 1600px) {
+    .errorCode {
+        font-size: 4rem;
+    }
+    .errorMessage {
+        font-size: 1.3rem;
+    }
+    .homeLink {
+        font-size: 1rem;
+    }
+}
+
+@media screen and (max-width: 1280px) {
+    .errorCode {
+        font-size: 3.5rem;
+    }
+    .errorMessage {
+        font-size: 1.2rem;
+    }
+    .homeLink {
+        font-size: 0.9rem;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .errorCode {
+        font-size: 3rem;
+    }
+    .errorMessage {
+        font-size: 1rem;
+    }
+    .homeLink {
+        font-size: 0.8rem;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .errorCode {
+        font-size: 2.5rem;
+    }
+    .errorMessage {
+        font-size: 0.9rem;
+    }
+    .homeLink {
+        font-size: 0.75rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .errorCode {
+        font-size: 2rem;
+    }
+    .errorMessage {
+        font-size: 0.8rem;
+    }
+    .homeLink {
+        font-size: 0.7rem;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .errorCode {
+        font-size: 1.5rem;
+    }
+    .errorMessage {
+        font-size: 0.7rem;
+    }
+    .homeLink {
+        font-size: 0.6rem;
+    }
 }

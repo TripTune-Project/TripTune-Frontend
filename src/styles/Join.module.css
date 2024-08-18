@@ -45,7 +45,7 @@
     line-height: normal;
     text-align: center;
     margin-bottom: 54px;
-    margin-top:64px;
+    margin-top: 64px;
 }
 
 .inputGroup {
@@ -65,7 +65,7 @@
     border-radius: 5px;
     background: #FFF;
     font-size: 16px;
-    padding-left:15px;
+    padding-left: 15px;
 }
 
 .inputError {
@@ -75,7 +75,7 @@
     max-width: 480px;
     height: 55px;
     border: 1px solid red;
-    padding-left:15px;
+    padding-left: 15px;
 }
 
 .errorText {
@@ -111,7 +111,7 @@
 }
 
 .checkboxGroup {
-    margin-top:15px;
+    margin-top: 15px;
     display: flex;
     align-items: center;
     width: 100%;
@@ -119,7 +119,7 @@
 }
 
 .emailGroup {
-    margin:15px 0;
+    margin: 15px 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -135,7 +135,7 @@
     border-radius: 5px;
     background: #FFF;
     font-size: 16px;
-    padding-left:15px;
+    padding-left: 15px;
 }
 
 .emailButton {
@@ -172,7 +172,7 @@
     border-radius: 5px;
     background: #FFF;
     font-size: 16px;
-    padding-left:15px;
+    padding-left: 15px;
 }
 
 .verifyButton {
@@ -194,3 +194,102 @@
     opacity: 0.6;
 }
 
+@media screen and (max-width: 1600px) {
+    .joinContainer {
+        max-width: 700px;
+        height: 750px;
+    }
+    .joinTitle {
+        font-size: 36px;
+    }
+    .input, .inputError, .emailInput, .emailButton, .inputVerification, .verifyButton {
+        height: 50px;
+        font-size: 15px;
+    }
+}
+
+@media screen and (max-width: 1280px) {
+    .joinContainer {
+        max-width: 650px;
+        height: 700px;
+    }
+    .joinTitle {
+        font-size: 32px;
+    }
+    .input, .inputError, .emailInput, .emailButton, .inputVerification, .verifyButton {
+        height: 45px;
+        font-size: 14px;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .joinContainer {
+        max-width: 600px;
+        height: 650px;
+    }
+    .joinTitle {
+        font-size: 28px;
+    }
+    .input, .inputError, .emailInput, .emailButton, .inputVerification, .verifyButton {
+        height: 40px;
+        font-size: 13px;
+    }
+    .joinBackground::before {
+        width: 70%;
+        height: 500px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .joinContainer {
+        max-width: 550px;
+        height: auto;
+    }
+    .joinTitle {
+        font-size: 24px;
+    }
+    .input, .inputError, .emailInput, .emailButton, .inputVerification, .verifyButton {
+        height: 38px;
+        font-size: 12px;
+    }
+    .joinBackground::before {
+        width: 65%;
+        height: 450px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .joinContainer {
+        max-width: 360px;
+        padding: 15px;
+    }
+    .joinTitle {
+        font-size: 20px;
+    }
+    .input, .inputError, .emailInput, .emailButton, .inputVerification, .verifyButton {
+        height: 35px;
+        font-size: 11px;
+    }
+    .joinBackground::before {
+        width: 60%;
+        height: 400px;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .joinContainer {
+        max-width: 300px;
+        padding: 10px;
+    }
+    .joinTitle {
+        font-size: 18px;
+    }
+    .input, .inputError, .emailInput, .emailButton, .inputVerification, .verifyButton {
+        height: 30px;
+        font-size: 10px;
+    }
+    .joinBackground::before {
+        width: 55%;
+        height: 350px;
+    }
+}

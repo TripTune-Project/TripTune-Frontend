@@ -47,7 +47,7 @@
     line-height: normal;
     text-align: center;
     margin-bottom: 54px;
-    margin-top:64px;
+    margin-top: 64px;
 }
 
 .errorText {
@@ -76,7 +76,7 @@
     font-family: Noto Sans KR, sans-serif;
     font-size: 16px;
     background: #FFF;
-    padding-left:15px;
+    padding-left: 15px;
     padding-right: 15px;
     box-sizing: border-box;
 }
@@ -88,7 +88,7 @@
     font-family: Noto Sans KR, sans-serif;
     font-size: 16px;
     border: 1px solid red;
-    padding-left:15px;
+    padding-left: 15px;
     padding-right: 15px;
     box-sizing: border-box;
 }
@@ -196,6 +196,145 @@
     justify-content: center;
     align-items: center;
     gap: 15px;
-    color:#ffffff;
+    color: #ffffff;
     background: #03C75A;
+}
+
+@media screen and (max-width: 1600px) {
+    .loginTitle {
+        font-size: 36px;
+    }
+    .submitButton,
+    .kakaoButton,
+    .naverButton {
+        max-width: 440px;
+    }
+}
+
+@media screen and (max-width: 1280px) {
+    .loginTitle {
+        font-size: 32px;
+    }
+    .submitButton,
+    .kakaoButton,
+    .naverButton {
+        max-width: 400px;
+    }
+    .loginBackground::before {
+        width: 70%;
+        height: 500px;
+    }
+    .loginContainer {
+        max-width: 600px;
+        height: 700px;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .loginTitle {
+        font-size: 28px;
+    }
+    .submitButton,
+    .kakaoButton,
+    .naverButton {
+        max-width: 360px;
+    }
+    .loginBackground::before {
+        width: 65%;
+        height: 450px;
+    }
+    .loginContainer {
+        max-width: 500px;
+        height: 650px;
+        padding: 15px;
+    }
+    .input,
+    .inputError {
+        font-size: 14px;
+        height: 50px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .loginTitle {
+        font-size: 24px;
+    }
+    .submitButton,
+    .kakaoButton,
+    .naverButton {
+        max-width: 320px;
+    }
+    .loginBackground::before {
+        width: 60%;
+        height: 400px;
+    }
+    .loginContainer {
+        max-width: 450px;
+        height: auto;
+    }
+    .input,
+    .inputError {
+        font-size: 13px;
+        height: 45px;
+    }
+    .findId, .findPassword, .join {
+        font-size: 12px;
+    }
+}
+
+/* 480px 이하일 때 */
+@media screen and (max-width: 480px) {
+    .loginTitle {
+        font-size: 20px;
+    }
+    .submitButton,
+    .kakaoButton,
+    .naverButton {
+        max-width: 280px;
+        height: 50px;
+    }
+    .loginBackground::before {
+        width: 80%;
+        height: 350px;
+    }
+    .loginContainer {
+        max-width: 360px;
+        padding: 10px;
+    }
+    .input,
+    .inputError {
+        font-size: 12px;
+        height: 40px;
+    }
+    .findId, .findPassword, .join {
+        font-size: 11px;
+    }
+    .hrContainer {
+        width: 90%;
+    }
+}
+
+/* 320px 이하일 때 */
+@media screen and (max-width: 320px) {
+    .loginTitle {
+        font-size: 18px;
+    }
+    .submitButton,
+    .kakaoButton,
+    .naverButton {
+        max-width: 240px;
+        height: 45px;
+    }
+    .loginContainer {
+        max-width: 320px;
+        padding: 8px;
+    }
+    .input,
+    .inputError {
+        font-size: 11px;
+        height: 35px;
+    }
+    .findId, .findPassword, .join {
+        font-size: 10px;
+    }
 }

@@ -39,7 +39,7 @@
     font-style: normal;
     font-weight: 400;
     line-height: normal;
-    background-color:#FFFFFF;
+    background-color: #FFFFFF;
     border: 1px solid #848282;
     border-bottom: 3px solid #76ADAC;
     cursor: pointer;
@@ -138,7 +138,7 @@
     font-style: normal;
     font-weight: 400;
     line-height: normal;
-    margin-right:50px;
+    margin-right: 50px;
 }
 
 .FindIdBox {
@@ -225,4 +225,113 @@
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+}
+
+@media screen and (max-width: 1600px) {
+    .pageContainer {
+        width: 550px;
+        height: 600px;
+    }
+    .inputGroup, .submitButton, .FindIdBox, .alert, .hint {
+        width: 440px;
+    }
+    .tabButton {
+        width: 200px;
+        height: 55px;
+        font-size: 15px;
+    }
+    .FindTitle {
+        font-size: 36px;
+    }
+}
+
+@media screen and (max-width: 1280px) {
+    .pageContainer {
+        width: 500px;
+        height: 550px;
+    }
+    .inputGroup, .submitButton, .FindIdBox, .alert, .hint {
+        width: 400px;
+    }
+    .tabButton {
+        width: 180px;
+        height: 50px;
+        font-size: 14px;
+    }
+    .FindTitle {
+        font-size: 32px;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .pageContainer {
+        width: 450px;
+        height: 500px;
+    }
+    .inputGroup, .submitButton, .FindIdBox, .alert, .hint {
+        width: 360px;
+    }
+    .tabButton {
+        width: 160px;
+        height: 45px;
+        font-size: 13px;
+    }
+    .FindTitle {
+        font-size: 28px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .pageContainer {
+        width: 400px;
+        height: auto;
+    }
+    .inputGroup, .submitButton, .FindIdBox, .alert, .hint {
+        width: 320px;
+    }
+    .tabButton {
+        width: 140px;
+        height: 40px;
+        font-size: 12px;
+    }
+    .FindTitle {
+        font-size: 24px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .pageContainer {
+        width: 320px;
+        height: auto;
+        padding: 15px;
+    }
+    .inputGroup, .submitButton, .FindIdBox, .alert, .hint {
+        width: 280px;
+    }
+    .tabButton {
+        width: 120px;
+        height: 35px;
+        font-size: 11px;
+    }
+    .FindTitle {
+        font-size: 20px;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .pageContainer {
+        width: 280px;
+        padding: 10px;
+    }
+    .inputGroup, .submitButton, .FindIdBox, .alert, .hint {
+        width: 240px;
+    }
+    .tabButton {
+        width: 100px;
+        height: 30px;
+        font-size: 10px;
+    }
+    .FindTitle {
+        font-size: 18px;
+    }
 }

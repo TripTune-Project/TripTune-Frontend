@@ -16,9 +16,9 @@
 }
 
 .logo {
-    margin:17px 109px;
-    width:183px;
-    height:57px;
+    margin: 17px 109px;
+    width: 183px;
+    height: 57px;
     flex-shrink: 0;
 }
 
@@ -85,4 +85,129 @@
 .active {
     font-weight: 700;
     color: #000000;
+}
+
+@media screen and (max-width: 1600px) {
+    .headerMenu {
+        font-size: 15px;
+    }
+    .logo {
+        margin: 15px 90px;
+        width: 160px;
+        height: 50px;
+    }
+    .headerLink {
+        font-size: 18px;
+        padding: 0 18px;
+    }
+    .headerLinkLogin {
+        font-size: 16px;
+        margin-right: 80px;
+        padding: 8px 18px;
+    }
+}
+
+@media screen and (max-width: 1280px) {
+    .headerMenu {
+        font-size: 14px;
+    }
+    .logo {
+        margin: 12px 70px;
+        width: 140px;
+        height: 45px;
+    }
+    .headerLink {
+        font-size: 16px;
+        padding: 0 15px;
+    }
+    .headerLinkLogin {
+        font-size: 15px;
+        margin-right: 60px;
+        padding: 6px 16px;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .headerMenu {
+        flex-direction: column;
+        height: auto;
+        align-items: flex-start;
+    }
+    .logo {
+        margin: 10px 20px;
+        width: 120px;
+        height: 40px;
+    }
+    .headerLink {
+        font-size: 14px;
+        padding: 0 10px;
+        margin: 5px 0;
+    }
+    .headerLinkLogin {
+        font-size: 14px;
+        margin-right: 20px;
+        padding: 5px 12px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .headerMenu {
+        font-size: 13px;
+        padding: 0 10px;
+    }
+    .logo {
+        margin: 10px 10px;
+        width: 100px;
+        height: 35px;
+    }
+    .headerLink {
+        font-size: 12px;
+        padding: 0 8px;
+    }
+    .headerLinkLogin {
+        font-size: 12px;
+        margin-right: 10px;
+        padding: 5px 10px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .headerMenu {
+        font-size: 12px;
+        padding: 0 5px;
+    }
+    .logo {
+        margin: 8px 5px;
+        width: 80px;
+        height: 30px;
+    }
+    .headerLink {
+        font-size: 11px;
+        padding: 0 6px;
+    }
+    .headerLinkLogin {
+        font-size: 11px;
+        margin-right: 5px;
+        padding: 4px 8px;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .headerMenu {
+        font-size: 11px;
+    }
+    .logo {
+        margin: 5px 5px;
+        width: 70px;
+        height: 25px;
+    }
+    .headerLink {
+        font-size: 10px;
+        padding: 0 5px;
+    }
+    .headerLinkLogin {
+        font-size: 10px;
+        margin-right: 5px;
+        padding: 3px 6px;
+    }
 }
