@@ -67,7 +67,7 @@
 }
 
 .input {
-    width: 100%;
+    width: 480px;
     max-width: 480px;
     height: 60px;
     flex-shrink: 0;
@@ -94,7 +94,7 @@
 }
 
 .submitButton {
-    width: 480px;
+    width: 100%;
     max-width: 480px;
     height: 60px;
     flex-shrink: 0;
@@ -149,7 +149,8 @@
 .hrContainer {
     display: flex;
     align-items: center;
-    width: 500px;
+    width: 100%;
+    max-width: 500px;
     margin: 20px 0;
 }
 
@@ -167,7 +168,7 @@
 }
 
 .kakaoButton, .naverButton {
-    width: 480px;
+    width: 100%;
     max-width: 480px;
     height: 60px;
     flex-shrink: 0;
@@ -208,6 +209,10 @@
     .kakaoButton,
     .naverButton {
         max-width: 440px;
+    }
+    .loginContainer {
+        max-width: 700px;
+        height: 750px;
     }
 }
 
@@ -279,6 +284,9 @@
     }
     .findId, .findPassword, .join {
         font-size: 12px;
+    }
+    .hrContainer {
+        max-width: 320px;
     }
 }
 
