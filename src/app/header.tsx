@@ -8,13 +8,14 @@ import LogoutModal from "@/components/Logout/LogoutModal";
 import { Alert, Snackbar } from "@mui/material";
 import { logoutApi } from "@/api/logoutApi";
 import Button from '@mui/material/Button';
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import vector from "../../public/assets/icon/Vector.png";
 import Image from 'next/image';
 import LogoImage from "../../public/Logo.png";
 
 const Header = () => {
   const router = useRouter();
+  const pathname = usePathname();
   const userId = Cookies.get('userId');
   const [loginTrue, setLoginTrue] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -59,7 +60,7 @@ const Header = () => {
     router.push('/Login');
   }
   
-  const isActive = (path: string) => router.pathname === path ? styles.active : '';
+  const isActive = (path: string) => pathname === path ? styles.active : '';
   
   return (
     <>
