@@ -21,10 +21,10 @@ const Header = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
-  
+
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-  
+
   const handleLogout = async () => {
     closeModal();
     try {
@@ -35,79 +35,88 @@ const Header = () => {
       setAlertOpen(true);
     }
   };
-  
+
   const handleAlertClose = () => setAlertOpen(false);
-  
+
   const checkAuthStatus = () => {
     const accessToken = Cookies.get('trip-tune_at');
     const refreshToken = Cookies.get('trip-tune_rt');
-    
+
     if (accessToken && refreshToken) {
       setLoginTrue(true);
     } else {
       setLoginTrue(false);
     }
   };
-  
+
   useEffect(() => {
     checkAuthStatus();
     const interval = setInterval(checkAuthStatus, 1000);
-    
+
     return () => clearInterval(interval);
   }, []);
-  
+
   const handleLogin = () => {
     router.push('/Login');
   };
-  
-  const isActive = (path: string) => pathname === path ? styles.active : '';
-  
+
+  const isActive = (path: string) => (pathname === path ? styles.active : '');
+
   return (
     <>
       <ul className={styles.headerMenu}>
         <li>
-          <Link href="/">
-            <Image src={LogoImage}
-                   alt="로고"
-                   className={styles.logo}
-                   priority
+          <Link href='/'>
+            <Image
+              src={LogoImage}
+              alt='로고'
+              className={styles.logo}
+              priority
             />
           </Link>
         </li>
         <li className={`${styles.headerLink} ${isActive('/')}`}>
-          <Link href="/" className={styles.headerLinkA}>
+          <Link href='/' className={styles.headerLinkA}>
             홈 화면
           </Link>
         </li>
         <li className={`${styles.headerLink} ${isActive('/Schedule')}`}>
-          <Link href="/Schedule" className={styles.headerLinkA}>
+          <Link href='/Schedule' className={styles.headerLinkA}>
             일정 만들기
           </Link>
         </li>
         <li className={`${styles.headerLink} ${isActive('/Travel')}`}>
-          <Link href="/Travel" className={styles.headerLinkA}>
+          <Link href='/Travel' className={styles.headerLinkA}>
             여행지 탐색
           </Link>
         </li>
         <li className={`${styles.headerLink} ${isActive('/MyPage')}`}>
-          <Link href="/MyPage" className={styles.headerLinkA}>
+          <Link href='/MyPage' className={styles.headerLinkA}>
             마이 페이지
           </Link>
         </li>
         {loginTrue ? (
           <>
+            <li className={styles.headerLink}>{userId} 님</li>
             <li className={styles.headerLink}>
-              {userId} 님
-            </li>
-            <li className={styles.headerLink}>
-              <Button onClick={openModal} variant="text" size="large">로그아웃</Button>
+              <Button onClick={openModal} variant='text' size='large'>
+                로그아웃
+              </Button>
               <LogoutModal
                 isOpen={isModalOpen}
                 onClose={closeModal}
                 onConfirm={handleLogout}
               />
-              <Snackbar open={alertOpen} autoHideDuration={6000} onClose={handleAlertClose}>
-                <Alert onClose={handleAlertClose} severity="error" sx={{ width: '100%' }}>
+              <Snackbar
+                open={alertOpen}
+                autoHideDuration={6000}
+                onClose={handleAlertClose}
+              >
+                <Alert
+                  onClose={handleAlertClose}
+                  severity='error'
+                  sx={{ width: '100%' }}
+                >
                   {alertMessage}
                 </Alert>
               </Snackbar>
@@ -116,13 +125,7 @@ const Header = () => {
         ) : (
           <li className={styles.headerLinkLogin} onClick={handleLogin}>
             로그인
-            <Image
-              src={vector}
-              alt={'>'}
-              width={16}
-              height={16}
-              priority
-            />
+            <Image src={vector} alt={'>'} width={16} height={16} priority />
           </li>
         )}
       </ul>

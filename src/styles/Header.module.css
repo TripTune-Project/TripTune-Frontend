@@ -1,214 +1,214 @@
 .headerMenu {
-    width: 100%;
-    max-width: 100vw;
-    height: 5.69rem;
-    flex-shrink: 0;
-    color: #757575;
-    font-size: 0.83vw;
-    font-style: normal;
-    font-weight: 500;
-    letter-spacing: -0.32px;
-    padding: 0;
-    list-style: none;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  width: 100%;
+  max-width: 100vw;
+  height: 5.69rem;
+  flex-shrink: 0;
+  color: #757575;
+  font-size: 0.83vw;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: -0.32px;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .logo {
-    margin: 1vh 5.68vw; /* 상대적인 margin */
-    width: 183px;
-    height: 57px;
-    flex-shrink: 0;
+  margin: 1vh 5.68vw; /* 상대적인 margin */
+  width: 183px;
+  height: 57px;
+  flex-shrink: 0;
 }
 
 .headerLink {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    width: auto;
-    height: 3.75vh;
-    padding: 0 1vw;
-    color: #333;
-    text-align: center;
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 1.04vw;
-    font-weight: 400;
-    line-height: normal;
-    flex-direction: column;
-    flex-shrink: 0;
-    margin: 0 0.52vw;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: auto;
+  height: 3.75vh;
+  padding: 0 1vw;
+  color: #333;
+  text-align: center;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 1.04vw;
+  font-weight: 400;
+  line-height: normal;
+  flex-direction: column;
+  flex-shrink: 0;
+  margin: 0 0.52vw;
 }
 
 .headerLinkA {
-    color: #757575;
-    text-decoration: none;
-    font-size: 0.83vw;
+  color: #757575;
+  text-decoration: none;
+  font-size: 0.83vw;
 }
 
 .headerLinkA:hover {
-    font-weight: 700;
-    color: #000000;
+  font-weight: 700;
+  color: #000000;
 }
 
 .headerLinkLogin {
-    background-color: #F5F5F5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50vw;
-    padding: 1vh 1.04vw;
-    color: #555;
-    text-align: center;
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 0.94vw;
-    font-weight: 400;
-    line-height: normal;
-    position: relative;
-    z-index: 1;
-    letter-spacing: -0.32px;
-    text-decoration: none;
-    cursor: pointer;
-    margin-left: auto;
-    margin-right: 4.49vw;
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50vw;
+  padding: 1vh 1.04vw;
+  color: #555;
+  text-align: center;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 0.94vw;
+  font-weight: 400;
+  line-height: normal;
+  position: relative;
+  z-index: 1;
+  letter-spacing: -0.32px;
+  text-decoration: none;
+  cursor: pointer;
+  margin-left: auto;
+  margin-right: 4.49vw;
 }
 
 .headerLinkLogin img {
-    margin-left: 0.52vw;
+  margin-left: 0.52vw;
 }
 
 .headerLinkLogin:hover {
-    font-weight: 700;
-    color: #000000;
+  font-weight: 700;
+  color: #000000;
 }
 
 .active {
-    font-weight: 700;
-    color: #000000;
+  font-weight: 700;
+  color: #000000;
 }
 
 @media screen and (max-width: 1600px) {
-    .headerMenu {
-        font-size: 0.94vw;
-    }
-    .logo {
-        margin: 1vh 5vw;
-        width: 8.33vw;
-        height: 2.78vh;
-    }
-    .headerLink {
-        font-size: 1vw;
-        padding: 0 0.94vw;
-    }
-    .headerLinkLogin {
-        font-size: 0.88vw;
-        margin-right: 4.17vw;
-        padding: 0.83vh 0.94vw;
-    }
+  .headerMenu {
+    font-size: 0.94vw;
+  }
+  .logo {
+    margin: 1vh 5vw;
+    width: 8.33vw;
+    height: 2.78vh;
+  }
+  .headerLink {
+    font-size: 1vw;
+    padding: 0 0.94vw;
+  }
+  .headerLinkLogin {
+    font-size: 0.88vw;
+    margin-right: 4.17vw;
+    padding: 0.83vh 0.94vw;
+  }
 }
 
 @media screen and (max-width: 1280px) {
-    .headerMenu {
-        font-size: 1.09vw;
-    }
-    .logo {
-        margin: 0.83vh 4.17vw;
-        width: 7.29vw;
-        height: 2.34vh;
-    }
-    .headerLink {
-        font-size: 0.94vw;
-        padding: 0 0.78vw;
-    }
-    .headerLinkLogin {
-        font-size: 0.83vw;
-        margin-right: 3.13vw;
-        padding: 0.63vh 0.78vw;
-    }
+  .headerMenu {
+    font-size: 1.09vw;
+  }
+  .logo {
+    margin: 0.83vh 4.17vw;
+    width: 7.29vw;
+    height: 2.34vh;
+  }
+  .headerLink {
+    font-size: 0.94vw;
+    padding: 0 0.78vw;
+  }
+  .headerLinkLogin {
+    font-size: 0.83vw;
+    margin-right: 3.13vw;
+    padding: 0.63vh 0.78vw;
+  }
 }
 
 @media screen and (max-width: 1024px) {
-    .headerMenu {
-        flex-direction: column;
-        height: auto;
-        align-items: flex-start;
-    }
-    .logo {
-        margin: 0.63vh 1.56vw;
-        width: 6.25vw;
-        height: 2.08vh;
-    }
-    .headerLink {
-        font-size: 0.83vw;
-        padding: 0 0.52vw;
-        margin: 0.26vh 0;
-    }
-    .headerLinkLogin {
-        font-size: 0.83vw;
-        margin-right: 1.56vw;
-        padding: 0.52vh 0.63vw;
-    }
+  .headerMenu {
+    flex-direction: column;
+    height: auto;
+    align-items: flex-start;
+  }
+  .logo {
+    margin: 0.63vh 1.56vw;
+    width: 6.25vw;
+    height: 2.08vh;
+  }
+  .headerLink {
+    font-size: 0.83vw;
+    padding: 0 0.52vw;
+    margin: 0.26vh 0;
+  }
+  .headerLinkLogin {
+    font-size: 0.83vw;
+    margin-right: 1.56vw;
+    padding: 0.52vh 0.63vw;
+  }
 }
 
 @media screen and (max-width: 768px) {
-    .headerMenu {
-        font-size: 1.17vw;
-        padding: 0 1.04vw;
-    }
-    .logo {
-        margin: 1.04vh 1.04vw;
-        width: 5.21vw;
-        height: 1.82vh;
-    }
-    .headerLink {
-        font-size: 0.94vw;
-        padding: 0 0.63vw;
-    }
-    .headerLinkLogin {
-        font-size: 0.94vw;
-        margin-right: 1.04vw;
-        padding: 0.52vh 0.63vw;
-    }
+  .headerMenu {
+    font-size: 1.17vw;
+    padding: 0 1.04vw;
+  }
+  .logo {
+    margin: 1.04vh 1.04vw;
+    width: 5.21vw;
+    height: 1.82vh;
+  }
+  .headerLink {
+    font-size: 0.94vw;
+    padding: 0 0.63vw;
+  }
+  .headerLinkLogin {
+    font-size: 0.94vw;
+    margin-right: 1.04vw;
+    padding: 0.52vh 0.63vw;
+  }
 }
 
 @media screen and (max-width: 480px) {
-    .headerMenu {
-        font-size: 2.5vw;
-        padding: 0 1.04vw;
-    }
-    .logo {
-        margin: 1.04vh 1.04vw;
-        width: 16.67vw;
-        height: 5.21vh;
-    }
-    .headerLink {
-        font-size: 2.08vw;
-        padding: 0 1.04vw;
-    }
-    .headerLinkLogin {
-        font-size: 2.08vw;
-        margin-right: 1.04vw;
-        padding: 1.04vh 1.04vw;
-    }
+  .headerMenu {
+    font-size: 2.5vw;
+    padding: 0 1.04vw;
+  }
+  .logo {
+    margin: 1.04vh 1.04vw;
+    width: 16.67vw;
+    height: 5.21vh;
+  }
+  .headerLink {
+    font-size: 2.08vw;
+    padding: 0 1.04vw;
+  }
+  .headerLinkLogin {
+    font-size: 2.08vw;
+    margin-right: 1.04vw;
+    padding: 1.04vh 1.04vw;
+  }
 }
 
 @media screen and (max-width: 320px) {
-    .headerMenu {
-        font-size: 3.13vw;
-        padding: 0 1.04vw;
-    }
-    .logo {
-        margin: 1.04vh 1.04vw;
-        width: 21.88vw;
-        height: 6.77vh;
-    }
-    .headerLink {
-        font-size: 2.6vw;
-        padding: 0 1.04vw;
-    }
-    .headerLinkLogin {
-        font-size: 2.6vw;
-        margin-right: 1.04vw;
-        padding: 1.04vh 1.04vw;
-    }
+  .headerMenu {
+    font-size: 3.13vw;
+    padding: 0 1.04vw;
+  }
+  .logo {
+    margin: 1.04vh 1.04vw;
+    width: 21.88vw;
+    height: 6.77vh;
+  }
+  .headerLink {
+    font-size: 2.6vw;
+    padding: 0 1.04vw;
+  }
+  .headerLinkLogin {
+    font-size: 2.6vw;
+    margin-right: 1.04vw;
+    padding: 1.04vh 1.04vw;
+  }
 }

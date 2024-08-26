@@ -18,13 +18,13 @@ const ChangePassword = () => {
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [isRepasswordValid, setIsRepasswordValid] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
-  
+
   useEffect(() => {
     if (!passwordToken) {
       console.error('No passwordToken found');
     }
   }, [passwordToken]);
-  
+
   useEffect(() => {
     const passwordValid = validatePassword(password) === true;
     const repasswordValid = password === repassword;
@@ -32,23 +32,23 @@ const ChangePassword = () => {
     setIsRepasswordValid(repasswordValid);
     setIsFormValid(passwordValid && repasswordValid);
   }, [password, repassword]);
-  
+
   const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    
+
     if (!passwordToken) {
       alert('유효하지 않은 토큰입니다.');
       setLoading(false);
       return;
     }
-    
+
     if (password !== repassword) {
       alert('비밀번호가 일치하지 않습니다.');
       setLoading(false);
       return;
     }
-    
+
     try {
       const response = await fetch('/api/members/change-password', {
         method: 'PATCH',
@@ -57,9 +57,9 @@ const ChangePassword = () => {
         },
         body: JSON.stringify({ passwordToken, password, repassword }),
       });
-      
+
       const data = await response.json();
-      
+
       if (data.success) {
         alert('비밀번호가 성공적으로 변경되었습니다.');
         router.push('/Login');
@@ -73,24 +73,19 @@ const ChangePassword = () => {
       setLoading(false);
     }
   };
-  
+
   return (
     <div className={styles.pageContainer}>
       <h1 className={styles.FindTitle}>비밀번호 재설정</h1>
       <div className={styles.completeText}>
-        <Image
-          src={favicon}
-          alt={'파비콘'}
-          width={31}
-          height={20}
-          priority />
+        <Image src={favicon} alt={'파비콘'} width={31} height={20} priority />
         새롭게 설정할 비밀번호를 입력해 주세요.
       </div>
       <hr className={styles.hrStyle} />
       <p>새로운 비밀번호</p>
       <input
-        type="password"
-        id="password"
+        type='password'
+        id='password'
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         required
@@ -102,8 +97,8 @@ const ChangePassword = () => {
       )}
       <p> 비밀번호 재입력 </p>
       <input
-        type="password"
-        id="repassword"
+        type='password'
+        id='repassword'
         value={repassword}
         onChange={(e) => setRepassword(e.target.value)}
         required
@@ -114,7 +109,7 @@ const ChangePassword = () => {
         <div className={styles.errorText}>비밀번호가 일치하지 않습니다.</div>
       )}
       <button
-        type="submit"
+        type='submit'
         className={styles.submitButton}
         onClick={handlePasswordChange}
         disabled={!isFormValid || loading}

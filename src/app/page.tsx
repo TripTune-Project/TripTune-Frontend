@@ -17,74 +17,74 @@ import place from '../../public/assets/images/place.png';
 import picture from '../../public/assets/images/picture.png';
 
 const StyledSwiperContainer = styled.div`
-    overflow: hidden;
-    position: relative;
-    width: 100%;
-    max-width: 1850px;
-    margin: 0 auto;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  max-width: 1850px;
+  margin: 0 auto;
 `;
 
 const StyledSwiperButtonPrev = styled.div`
-    position: absolute;
-    top: 50%;
+  position: absolute;
+  top: 50%;
+  width: 60px;
+  height: 60px;
+  left: 10px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+  user-select: none;
+
+  &::after {
+    content: '';
+    display: block;
     width: 60px;
     height: 60px;
-    left: 10px;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    cursor: pointer;
-    z-index: 10;
-    user-select: none;
-
-    &::after {
-        content: '';
-        display: block;
-        width: 60px;
-        height: 60px;
-        background-size: cover;
-        background-image: url('/assets/images/left_btn.png');
-    }
+    background-size: cover;
+    background-image: url('/assets/images/left_btn.png');
+  }
 `;
 
 const StyledSwiperButtonNext = styled.div`
-    position: absolute;
-    top: 50%;
+  position: absolute;
+  top: 50%;
+  width: 60px;
+  height: 60px;
+  right: 10px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+  user-select: none;
+
+  &::after {
+    content: '';
+    display: block;
     width: 60px;
     height: 60px;
-    right: 10px;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    cursor: pointer;
-    z-index: 10;
-    user-select: none;
-
-    &::after {
-        content: '';
-        display: block;
-        width: 60px;
-        height: 60px;
-        background-size: cover;
-        background-image: url('/assets/images/right_btn.png');
-    }
+    background-size: cover;
+    background-image: url('/assets/images/right_btn.png');
+  }
 `;
 
 const Home: React.FC = () => {
   const router = useRouter();
-  
+
   const handleScheduleClick = () => {
     router.push('/Schedule');
   };
-  
+
   const handleTravelClick = () => {
     router.push('/Travel');
   };
-  
+
   const handleSearch = () => {
     router.push('/Search');
   };
-  
+
   const images = [
     {
       src: picture,
@@ -117,7 +117,7 @@ const Home: React.FC = () => {
       description: '서울 중구 동대문 디자인 플라자',
     },
   ];
-  
+
   return (
     <div className={styles.onBoard}>
       <div className={styles.onBoardingTop}>
@@ -125,8 +125,8 @@ const Home: React.FC = () => {
           <Image
             className={styles.onBoardingImg}
             src={travelImage}
-            alt="온보딩 이미지"
-            objectFit="cover"
+            alt='온보딩 이미지'
+            objectFit='cover'
             priority
           />
           <div className={styles.onBoardingContent}>
@@ -141,21 +141,18 @@ const Home: React.FC = () => {
             <div className={styles.onBoardingShow}>
               <div className={styles.onBoardingSearch}>
                 <select className={styles.filterSelect}>
-                  <option value="country">국가명</option>
-                  <option value="city">도시명</option>
+                  <option value='country'>국가명</option>
+                  <option value='city'>도시명</option>
                 </select>
                 <input
-                  type="text"
-                  placeholder="원하는 여행지를 검색하세요"
+                  type='text'
+                  placeholder='원하는 여행지를 검색하세요'
                   className={styles.searchInput}
                 />
-                <button
-                  className={styles.searchButton}
-                  onClick={handleSearch}
-                >
+                <button className={styles.searchButton} onClick={handleSearch}>
                   <Image
                     src={searchIcon}
-                    alt="돋보기 아이콘"
+                    alt='돋보기 아이콘'
                     width={20}
                     height={20}
                     style={{ marginLeft: '30px' }}
@@ -169,16 +166,16 @@ const Home: React.FC = () => {
                   <div className={styles.iconContainer}>
                     <div className={styles.goLink}>
                       <Image
-                        src="/assets/images/go.png"
-                        alt="바로가기"
+                        src='/assets/images/go.png'
+                        alt='바로가기'
                         width={50}
                         height={50}
                       />
                     </div>
                     <Image
-                      src="/assets/images/time.png"
+                      src='/assets/images/time.png'
                       className={styles.time}
-                      alt="일정 만들기"
+                      alt='일정 만들기'
                       width={98}
                       height={82}
                     />
@@ -190,16 +187,16 @@ const Home: React.FC = () => {
                   <div className={styles.iconContainer}>
                     <div className={styles.goLink}>
                       <Image
-                        src="/assets/images/go.png"
-                        alt="바로가기"
+                        src='/assets/images/go.png'
+                        alt='바로가기'
                         width={50}
                         height={50}
                       />
                     </div>
                     <Image
-                      src="/assets/images/travel.png"
+                      src='/assets/images/travel.png'
                       className={styles.travel}
-                      alt="여행지 탐색"
+                      alt='여행지 탐색'
                       width={98}
                       height={82}
                     />
@@ -246,19 +243,15 @@ const Home: React.FC = () => {
                   />
                   <p className={styles.sliderTextP}>{image.title}</p>
                   <p className={styles.sliderTextPDetail}>
-                    <Image
-                      src={place}
-                      alt={'place'}
-                      width={15}
-                      height={21}
-                    />&nbsp;
+                    <Image src={place} alt={'place'} width={15} height={21} />
+                    &nbsp;
                     {image.description}
                   </p>
                 </div>
               </SwiperSlide>
             ))}
-            <StyledSwiperButtonPrev className="swiper-button-prev" />
-            <StyledSwiperButtonNext className="swiper-button-next" />
+            <StyledSwiperButtonPrev className='swiper-button-prev' />
+            <StyledSwiperButtonNext className='swiper-button-next' />
           </Swiper>
         </StyledSwiperContainer>
       </div>

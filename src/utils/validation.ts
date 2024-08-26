@@ -9,7 +9,7 @@ export const validateEmail = (email: string): string | true => {
 export const validatePassword = (password: string): string | true => {
   const regex =
     /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,15}$/;
-  
+
   if (!regex.test(password)) {
     return '비밀번호는 8자 이상 15자 이하의 영문, 숫자, 특수문자 조합이어야 합니다.';
   }

@@ -13,8 +13,8 @@ interface AxiosProviderProps {
 
 export const AxiosProvider = ({ children }: AxiosProviderProps) => {
   useAxiosConfig(axiosInstance);
-  
-  return {children};
+
+  return { children };
 };
 
 export default axiosInstance;
