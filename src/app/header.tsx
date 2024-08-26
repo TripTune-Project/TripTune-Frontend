@@ -67,7 +67,7 @@ const Header = () => {
       <ul className={styles.headerMenu}>
         <li >
           <Link href="/">
-            <Image src={LogoImage} alt="로고" className={styles.logo}/>
+            <Image src={LogoImage} alt="로고" className={styles.logo} priority/>
           </Link>
         </li>
         <li className={`${styles.headerLink} ${isActive('/')}`}>
