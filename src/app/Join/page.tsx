@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import JoinForm from '../../components/Join/JoinForm';
 import Cookies from 'js-cookie';
-import {useRouter} from "next/navigation";
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
   const router = useRouter();

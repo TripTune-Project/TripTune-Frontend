@@ -130,7 +130,12 @@ const LoginForm: React.FC = () => {
 						<hr className={styles.hrStyle}/>
 					</div>
 					<button onClick={handleKakaoLogin} className={styles.kakaoButton}>
-						<Image src={kakaoImg} alt={"kakao"} width={21} height={21} />
+						<Image src={kakaoImg}
+						       alt={"kakao"}
+						       width={21}
+						       height={21}
+						       priority
+						/>
 						카카오로 시작하기
 					</button>
 					<button onClick={handleNaverLogin} className={styles.naverButton}>

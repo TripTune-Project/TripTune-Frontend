@@ -4,14 +4,14 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import styles from '../styles/Header.module.css';
 import Cookies from 'js-cookie';
-import LogoutModal from "@/components/Logout/LogoutModal";
-import { Alert, Snackbar } from "@mui/material";
-import { logoutApi } from "@/api/logoutApi";
+import LogoutModal from '@/components/Logout/LogoutModal';
+import { Alert, Snackbar } from '@mui/material';
+import { logoutApi } from '@/api/logoutApi';
 import Button from '@mui/material/Button';
-import { useRouter, usePathname } from "next/navigation";
-import vector from "../../public/assets/icon/Vector.png";
+import { useRouter, usePathname } from 'next/navigation';
+import vector from '../../public/assets/icon/Vector.png';
 import Image from 'next/image';
-import LogoImage from "../../public/Logo.png";
+import LogoImage from '../../public/Logo.png';
 
 const Header = () => {
   const router = useRouter();
@@ -29,7 +29,7 @@ const Header = () => {
     closeModal();
     try {
       await logoutApi();
-      router.push("/")
+      router.push('/');
     } catch (error) {
       setAlertMessage('로그아웃에 실패했습니다. 다시 시도해 주세요.');
       setAlertOpen(true);
@@ -58,16 +58,20 @@ const Header = () => {
   
   const handleLogin = () => {
     router.push('/Login');
-  }
+  };
   
   const isActive = (path: string) => pathname === path ? styles.active : '';
   
   return (
     <>
       <ul className={styles.headerMenu}>
-        <li >
+        <li>
           <Link href="/">
-            <Image src={LogoImage} alt="로고" className={styles.logo} priority/>
+            <Image src={LogoImage}
+                   alt="로고"
+                   className={styles.logo}
+                   priority
+            />
           </Link>
         </li>
         <li className={`${styles.headerLink} ${isActive('/')}`}>
@@ -103,7 +107,7 @@ const Header = () => {
                 onConfirm={handleLogout}
               />
               <Snackbar open={alertOpen} autoHideDuration={6000} onClose={handleAlertClose}>
-                <Alert onClose={handleAlertClose} severity="error" sx={{width: '100%'}}>
+                <Alert onClose={handleAlertClose} severity="error" sx={{ width: '100%' }}>
                   {alertMessage}
                 </Alert>
               </Snackbar>
@@ -112,7 +116,13 @@ const Header = () => {
         ) : (
           <li className={styles.headerLinkLogin} onClick={handleLogin}>
             로그인
-            <Image src={vector} alt={">"} width={16} height={16} />
+            <Image
+              src={vector}
+              alt={'>'}
+              width={16}
+              height={16}
+              priority
+            />
           </li>
         )}
       </ul>
