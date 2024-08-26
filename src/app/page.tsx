@@ -2,22 +2,19 @@
 
 import React from 'react';
 import Image from 'next/image';
-import {useRouter} from 'next/navigation';
-import {Swiper, SwiperSlide} from 'swiper/react';
+import { useRouter } from 'next/navigation';
+import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import {Navigation, Pagination} from 'swiper/modules';
+import { Navigation, Pagination } from 'swiper/modules';
 import styled from 'styled-components';
 import travelImage from '../../public/assets/travel-main.png';
 import favicon from '../../public/favicon.ico';
 import styles from '../styles/onBoard.module.css';
-import travel from '../../public/assets/images/travel.png';
-import time from '../../public/assets/images/time.png';
-import go from '../../public/assets/images/go.png';
-import picture from '../../public/assets/images/picture.png';
 import searchIcon from '../../public/assets/images/search-icon.png';
 import place from '../../public/assets/images/place.png';
+import picture from '../../public/assets/images/picture.png';
 
 const StyledSwiperContainer = styled.div`
     overflow: hidden;
@@ -89,33 +86,33 @@ const Home: React.FC = () => {
 	const images = [
 		{
 			src: picture,
-			alt: '광화문',
-			title: '광화문',
-			description: '서울 종로구 효자로 12 국립고궁박물관 1',
+			alt: '경복궁',
+			title: '경복궁',
+			description: '서울 종로구 경복궁',
 		},
 		{
 			src: picture,
-			alt: '광화문',
-			title: '광화문',
-			description: '서울 종로구 효자로 12 국립고궁박물관 2',
+			alt: '남산타워',
+			title: '남산타워',
+			description: '서울 용산구 남산타워',
 		},
 		{
 			src: picture,
-			alt: '광화문',
-			title: '광화문',
-			description: '서울 종로구 효자로 12 국립고궁박물관 3',
+			alt: '한라산',
+			title: '한라산',
+			description: '제주 서귀포시 한라산',
 		},
 		{
 			src: picture,
-			alt: '광화문',
-			title: '광화문',
-			description: '서울 종로구 효자로 12 국립고궁박물관 4',
+			alt: '해운대 해수욕장',
+			title: '해운대 해수욕장',
+			description: '부산 해운대구 해운대 해수욕장',
 		},
 		{
 			src: picture,
-			alt: '광화문',
-			title: '광화문',
-			description: '서울 종로구 효자로 12 국립고궁박물관 5',
+			alt: '동대문 디자인 플라자',
+			title: '동대문 디자인 플라자',
+			description: '서울 중구 동대문 디자인 플라자',
 		},
 	];
 	
@@ -153,30 +150,30 @@ const Home: React.FC = () => {
 									className={styles.searchButton}
 									onClick={handleSearch}
 								>
-								<Image
-									src={searchIcon}
-									alt="돋보기 아이콘"
-									width={20}
-									height={20}
-									style={{marginLeft:"30px"}}
-								/>
-							</button>
+									<Image
+										src={searchIcon}
+										alt="돋보기 아이콘"
+										width={20}
+										height={20}
+										style={{ marginLeft: "30px" }}
+									/>
+								</button>
 							</div>
 							<div className={styles.buttonContainer}>
 								<div className={styles.viewBtn} onClick={handleScheduleClick}>
 									<div className={styles.viewTitle}>일정 만들기</div>
-									<br/>
+									<br />
 									<div className={styles.iconContainer}>
 										<div className={styles.goLink}>
 											<Image
-												src={go}
+												src="/assets/images/go.png"
 												alt="바로가기"
 												width={50}
 												height={50}
 											/>
 										</div>
 										<Image
-											src={time}
+											src="/assets/images/time.png"
 											className={styles.time}
 											alt="일정 만들기"
 											width={98}
@@ -186,18 +183,18 @@ const Home: React.FC = () => {
 								</div>
 								<div className={styles.viewBtn} onClick={handleTravelClick}>
 									<div className={styles.viewTitle}>여행지 탐색</div>
-									<br/>
+									<br />
 									<div className={styles.iconContainer}>
 										<div className={styles.goLink}>
 											<Image
-												src={go}
+												src="/assets/images/go.png"
 												alt="바로가기"
 												width={50}
 												height={50}
 											/>
 										</div>
 										<Image
-											src={travel}
+											src="/assets/images/travel.png"
 											className={styles.travel}
 											alt="여행지 탐색"
 											width={98}
@@ -212,7 +209,7 @@ const Home: React.FC = () => {
 			</div>
 			<div className={styles.recommendedDestinations}>
 				<h2 className={styles.chooseRecomend}>
-					<Image src={favicon} alt={"파비콘"} style={{marginLeft:"-15px"}}/>
+					<Image src={favicon} alt={"파비콘"} style={{ marginLeft: "-15px" }} />
 					추천 여행지
 				</h2>
 				<button className={styles.onBoardChooseBtn}>전체</button>
@@ -252,8 +249,8 @@ const Home: React.FC = () => {
 								</div>
 							</SwiperSlide>
 						))}
-						<StyledSwiperButtonPrev className="swiper-button-prev"/>
-						<StyledSwiperButtonNext className="swiper-button-next"/>
+						<StyledSwiperButtonPrev className="swiper-button-prev" />
+						<StyledSwiperButtonNext className="swiper-button-next" />
 					</Swiper>
 				</StyledSwiperContainer>
 			</div>

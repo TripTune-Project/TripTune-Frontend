@@ -59,6 +59,8 @@ const Header = () => {
     router.push('/Login');
   }
   
+  const isActive = (path: string) => router.pathname === path ? styles.active : '';
+  
   return (
     <>
       <ul className={styles.headerMenu}>
@@ -67,22 +69,22 @@ const Header = () => {
             <Image src={LogoImage} alt="로고" className={styles.logo}/>
           </Link>
         </li>
-        <li className={styles.headerLink}>
+        <li className={`${styles.headerLink} ${isActive('/')}`}>
           <Link href="/" className={styles.headerLinkA}>
             홈 화면
           </Link>
         </li>
-        <li className={styles.headerLink}>
+        <li className={`${styles.headerLink} ${isActive('/Schedule')}`}>
           <Link href="/Schedule" className={styles.headerLinkA}>
             일정 만들기
           </Link>
         </li>
-        <li className={styles.headerLink}>
+        <li className={`${styles.headerLink} ${isActive('/Travel')}`}>
           <Link href="/Travel" className={styles.headerLinkA}>
             여행지 탐색
           </Link>
         </li>
-        <li className={styles.headerLink}>
+        <li className={`${styles.headerLink} ${isActive('/MyPage')}`}>
           <Link href="/MyPage" className={styles.headerLinkA}>
             마이 페이지
           </Link>
