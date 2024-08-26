@@ -16,7 +16,10 @@ export const requestEmailVerification = async (email: string) => {
 
 export const verifyEmail = async (email: string, authCode: string) => {
   try {
-    const response = await axios.post('/api/emails/verify', { email, authCode });
+    const response = await axios.post('/api/emails/verify', {
+      email,
+      authCode,
+    });
     return response.data.message;
   } catch (error) {
     if (error instanceof AxiosError && error.response) {

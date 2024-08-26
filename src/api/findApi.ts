@@ -14,7 +14,10 @@ export const requestFindId = async (email: string) => {
 
 export const requestFindPassword = async (email: string, userId: string) => {
   try {
-    const response = await axios.post('/api/members/find-password', { email, userId });
+    const response = await axios.post('/api/members/find-password', {
+      email,
+      userId,
+    });
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError && error.response?.data?.message) {

@@ -33,25 +33,27 @@ interface EmailVerificationProps {
 }
 
 const EmailVerification: React.FC<EmailVerificationProps> = ({
-                                                               register,
-                                                               getValues,
-                                                               setErrorMessage,
-                                                               setIsVerificationComplete,
-                                                               isVerificationComplete,
-                                                               errors,
-                                                               errorMessage,
-                                                             }) => {
+  register,
+  getValues,
+  setErrorMessage,
+  setIsVerificationComplete,
+  isVerificationComplete,
+  errors,
+  errorMessage,
+}) => {
   const [isVerificationSent, setIsVerificationSent] = useState(false);
   const [isEmailDisabled, setIsEmailDisabled] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [alertSeverity, setAlertSeverity] = useState<'success' | 'error'>('success');
+  const [alertSeverity, setAlertSeverity] = useState<'success' | 'error'>(
+    'success'
+  );
   const [loading, setLoading] = useState(false);
-  
+
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
   };
-  
+
   const handleEmailVerificationRequest = async (email: string) => {
     if (!validateEmail(email)) {
       setAlertSeverity('error');
@@ -67,7 +69,9 @@ const EmailVerification: React.FC<EmailVerificationProps> = ({
       setIsEmailDisabled(true);
       setErrorMessage('');
       setAlertSeverity('success');
-      setNotificationMessage('인증 코드가 발송되었습니다. 이메일을 확인해주세요.');
+      setNotificationMessage(
+        '인증 코드가 발송되었습니다. 이메일을 확인해주세요.'
+      );
       setOpenSnackbar(true);
     } catch (error) {
       if (error instanceof Error) {
@@ -77,17 +81,19 @@ const EmailVerification: React.FC<EmailVerificationProps> = ({
       } else {
         setErrorMessage('인증 코드 요청에 실패했습니다. 다시 시도해주세요.');
         setAlertSeverity('error');
-        setNotificationMessage('인증 코드 요청에 실패했습니다. 다시 시도해주세요.');
+        setNotificationMessage(
+          '인증 코드 요청에 실패했습니다. 다시 시도해주세요.'
+        );
       }
       setOpenSnackbar(true);
     } finally {
       setLoading(false);
     }
   };
-  
+
   const handleEmailVerification = async () => {
     const { email, authCode } = getValues();
-    
+
     if (!authCode || !/^\d+$/.test(authCode)) {
       setErrorMessage('인증 코드는 숫자로만 입력해주세요.');
       setAlertSeverity('error');
@@ -95,7 +101,7 @@ const EmailVerification: React.FC<EmailVerificationProps> = ({
       setOpenSnackbar(true);
       return;
     }
-    
+
     setLoading(true);
     try {
       await verifyEmail(email, authCode);
@@ -119,32 +125,35 @@ const EmailVerification: React.FC<EmailVerificationProps> = ({
       setLoading(false);
     }
   };
-  
+
   const getEmailErrorMessage = () => {
     if (errors.email) {
       return errors.email.message;
     }
     return '';
   };
-  
+
   return (
     <>
       <div className={styles.emailGroup}>
         <input
-          placeholder="이메일 인증"
+          placeholder='이메일 인증'
           {...register('email', {
             required: '이메일 인증을 입력해주세요.',
             validate: validateEmail,
           })}
           className={errors.email ? styles.inputError : styles.emailInput}
-          disabled={isEmailDisabled}  // 이메일 입력 비활성화
+          disabled={isEmailDisabled} // 이메일 입력 비활성화
         />
         <button
-          type="button"
+          type='button'
           onClick={() => handleEmailVerificationRequest(getValues('email'))}
           className={styles.emailButton}
           disabled={
-            !getValues('email') || !validateEmail(getValues('email')) || loading || isVerificationSent
+            !getValues('email') ||
+            !validateEmail(getValues('email')) ||
+            loading ||
+            isVerificationSent
           }
         >
           {loading ? <Loading /> : '인증 요청'}
@@ -156,7 +165,7 @@ const EmailVerification: React.FC<EmailVerificationProps> = ({
       {isVerificationSent && !isVerificationComplete && (
         <div className={styles.emailGroup}>
           <input
-            placeholder="인증 코드 입력"
+            placeholder='인증 코드 입력'
             {...register('authCode', {
               required: '인증 코드를 입력해주세요.',
             })}
@@ -165,10 +174,14 @@ const EmailVerification: React.FC<EmailVerificationProps> = ({
             }
           />
           <button
-            type="button"
+            type='button'
             onClick={handleEmailVerification}
             className={styles.verifyButton}
-            disabled={!getValues('authCode') || isNaN(Number(getValues('authCode'))) || loading}
+            disabled={
+              !getValues('authCode') ||
+              isNaN(Number(getValues('authCode'))) ||
+              loading
+            }
           >
             {loading ? <Loading /> : '인증 확인'}
           </button>
@@ -179,14 +192,18 @@ const EmailVerification: React.FC<EmailVerificationProps> = ({
           <p className={styles.verifiedText}>이메일이 인증되었습니다.</p>
         </div>
       )}
-      
+
       <Snackbar
         open={openSnackbar}
         autoHideDuration={3000}
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
       >
-        <Alert onClose={handleCloseSnackbar} severity={alertSeverity} sx={{ width: '100%' }}>
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={alertSeverity}
+          sx={{ width: '100%' }}
+        >
           {notificationMessage}
         </Alert>
       </Snackbar>

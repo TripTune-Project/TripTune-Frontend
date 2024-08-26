@@ -1,348 +1,373 @@
 .loginBackground {
-    margin: 0;
-    padding: 0;
-    flex-shrink: 0;
-    position: relative;
-    width: 100%;
-    display: flex;
-    justify-content: center;
+  margin: 0;
+  padding: 0;
+  flex-shrink: 0;
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .loginBackground::before {
-    content: '';
-    position: absolute;
-    width: 80%;
-    max-width: 1455px;
-    height: 601px;
-    border-radius: 0 0 0 200px;
-    background: linear-gradient(264deg, #EDF9F7 3.98%, #F1F5FF 98.44%);
-    top: 0;
-    left: 61.8%;
-    transform: translateX(-50%);
-    z-index: -1;
+  content: '';
+  position: absolute;
+  width: 80%;
+  max-width: 1455px;
+  height: 601px;
+  border-radius: 0 0 0 200px;
+  background: linear-gradient(264deg, #edf9f7 3.98%, #f1f5ff 98.44%);
+  top: 0;
+  left: 61.8%;
+  transform: translateX(-50%);
+  z-index: -1;
 }
 
 .loginContainer {
-    margin-top: 82px;
-    z-index: 1;
-    width: 80%;
-    max-width: 756px;
-    height: 814px;
-    flex-shrink: 0;
-    padding: 20px;
-    border-radius: 30px;
-    background: #FFF;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.30);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  margin-top: 82px;
+  z-index: 1;
+  width: 80%;
+  max-width: 756px;
+  height: 814px;
+  flex-shrink: 0;
+  padding: 20px;
+  border-radius: 30px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .loginTitle {
-    color: #000;
-    font-family: Noto Sans KR, serif;
-    font-size: 40px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-    text-align: center;
-    margin-bottom: 54px;
-    margin-top: 64px;
+  color: #000;
+  font-family:
+    Noto Sans KR,
+    serif;
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  text-align: center;
+  margin-bottom: 54px;
+  margin-top: 64px;
 }
 
 .errorText {
-    color: red;
-    font-family: Noto Sans KR, sans-serif;
-    font-size: 14px;
-    margin-top: 5px;
+  color: red;
+  font-family:
+    Noto Sans KR,
+    sans-serif;
+  font-size: 14px;
+  margin-top: 5px;
 }
 
 .inputGroup {
-    width: 100%;
-    max-width: 480px;
-    height: auto;
-    flex-shrink: 0;
-    margin-bottom: 15px;
-    position: relative;
+  width: 100%;
+  max-width: 480px;
+  height: auto;
+  flex-shrink: 0;
+  margin-bottom: 15px;
+  position: relative;
 }
 
 .input {
-    width: 480px;
-    max-width: 480px;
-    height: 60px;
-    flex-shrink: 0;
-    border: 1px solid #848282;
-    border-radius: 5px;
-    font-family: Noto Sans KR, sans-serif;
-    font-size: 16px;
-    background: #FFF;
-    padding-left: 15px;
-    padding-right: 15px;
-    box-sizing: border-box;
+  width: 480px;
+  max-width: 480px;
+  height: 60px;
+  flex-shrink: 0;
+  border: 1px solid #848282;
+  border-radius: 5px;
+  font-family:
+    Noto Sans KR,
+    sans-serif;
+  font-size: 16px;
+  background: #fff;
+  padding-left: 15px;
+  padding-right: 15px;
+  box-sizing: border-box;
 }
 
 .inputError {
-    width: 100%;
-    max-width: 480px;
-    height: 60px;
-    font-family: Noto Sans KR, sans-serif;
-    font-size: 16px;
-    border: 1px solid red;
-    padding-left: 15px;
-    padding-right: 15px;
-    box-sizing: border-box;
+  width: 100%;
+  max-width: 480px;
+  height: 60px;
+  font-family:
+    Noto Sans KR,
+    sans-serif;
+  font-size: 16px;
+  border: 1px solid red;
+  padding-left: 15px;
+  padding-right: 15px;
+  box-sizing: border-box;
 }
 
 .submitButton {
-    width: 100%;
-    max-width: 480px;
-    height: 60px;
-    flex-shrink: 0;
-    padding: 15px;
-    color: #FFF;
-    background-color: #A7CDCC;
-    border: none;
-    border-radius: 5px;
-    font-family: Noto Sans KR, sans-serif;
-    font-size: 18px;
-    font-weight: 700;
-    cursor: pointer;
-    margin-bottom: 15px;
+  width: 100%;
+  max-width: 480px;
+  height: 60px;
+  flex-shrink: 0;
+  padding: 15px;
+  color: #fff;
+  background-color: #a7cdcc;
+  border: none;
+  border-radius: 5px;
+  font-family:
+    Noto Sans KR,
+    sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: 15px;
 }
 
 .submitButton:disabled {
-    background: #ccc;
+  background: #ccc;
 }
 
 .linkContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    max-width: 480px;
-    margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 480px;
+  margin-top: 10px;
 }
 
-.findId, .findPassword, .join {
-    color: #333;
-    font-family: Noto Sans KR, sans-serif;
-    font-size: 14px;
-    cursor: pointer;
-    margin: 0 5px;
-    padding: 5px 10px;
-    text-align: center;
-    transition: background-color 0.3s ease;
+.findId,
+.findPassword,
+.join {
+  color: #333;
+  font-family:
+    Noto Sans KR,
+    sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  margin: 0 5px;
+  padding: 5px 10px;
+  text-align: center;
+  transition: background-color 0.3s ease;
 }
 
-.findId:hover, .findPassword:hover, .join:hover {
-    background-color: #e0e0e0;
+.findId:hover,
+.findPassword:hover,
+.join:hover {
+  background-color: #e0e0e0;
 }
 
 .socialLoginContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    width: 100%;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  align-items: center;
 }
 
 .hrContainer {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    max-width: 500px;
-    margin: 20px 0;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 500px;
+  margin: 20px 0;
 }
 
 .hrStyle {
-    flex: 1;
-    border: none;
-    border-top: 1px solid #333;
-    margin: 0 10px;
+  flex: 1;
+  border: none;
+  border-top: 1px solid #333;
+  margin: 0 10px;
 }
 
 .hrText {
-    font-size: 14px;
-    color: #333;
-    white-space: nowrap;
+  font-size: 14px;
+  color: #333;
+  white-space: nowrap;
 }
 
-.kakaoButton, .naverButton {
-    width: 100%;
-    max-width: 480px;
-    height: 60px;
-    flex-shrink: 0;
-    padding: 15px;
-    color: #363636;
-    border: none;
-    border-radius: 5px;
-    font-family: Noto Sans KR, sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
+.kakaoButton,
+.naverButton {
+  width: 100%;
+  max-width: 480px;
+  height: 60px;
+  flex-shrink: 0;
+  padding: 15px;
+  color: #363636;
+  border: none;
+  border-radius: 5px;
+  font-family:
+    Noto Sans KR,
+    sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
 }
 
 .kakaoButton {
-    display: flex;
-    padding: 19px 0;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-    background: #FEE500;
+  display: flex;
+  padding: 19px 0;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  background: #fee500;
 }
 
 .naverButton {
-    display: flex;
-    padding: 19px 0;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-    color: #ffffff;
-    background: #03C75A;
+  display: flex;
+  padding: 19px 0;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  color: #ffffff;
+  background: #03c75a;
 }
 
 @media screen and (max-width: 1600px) {
-    .loginTitle {
-        font-size: 36px;
-    }
-    .submitButton,
-    .kakaoButton,
-    .naverButton {
-        max-width: 440px;
-    }
-    .loginContainer {
-        max-width: 700px;
-        height: 750px;
-    }
+  .loginTitle {
+    font-size: 36px;
+  }
+  .submitButton,
+  .kakaoButton,
+  .naverButton {
+    max-width: 440px;
+  }
+  .loginContainer {
+    max-width: 700px;
+    height: 750px;
+  }
 }
 
 @media screen and (max-width: 1280px) {
-    .loginTitle {
-        font-size: 32px;
-    }
-    .submitButton,
-    .kakaoButton,
-    .naverButton {
-        max-width: 400px;
-    }
-    .loginBackground::before {
-        width: 70%;
-        height: 500px;
-    }
-    .loginContainer {
-        max-width: 600px;
-        height: 700px;
-    }
+  .loginTitle {
+    font-size: 32px;
+  }
+  .submitButton,
+  .kakaoButton,
+  .naverButton {
+    max-width: 400px;
+  }
+  .loginBackground::before {
+    width: 70%;
+    height: 500px;
+  }
+  .loginContainer {
+    max-width: 600px;
+    height: 700px;
+  }
 }
 
 @media screen and (max-width: 1024px) {
-    .loginTitle {
-        font-size: 28px;
-    }
-    .submitButton,
-    .kakaoButton,
-    .naverButton {
-        max-width: 360px;
-    }
-    .loginBackground::before {
-        width: 65%;
-        height: 450px;
-    }
-    .loginContainer {
-        max-width: 500px;
-        height: 650px;
-        padding: 15px;
-    }
-    .input,
-    .inputError {
-        font-size: 14px;
-        height: 50px;
-    }
+  .loginTitle {
+    font-size: 28px;
+  }
+  .submitButton,
+  .kakaoButton,
+  .naverButton {
+    max-width: 360px;
+  }
+  .loginBackground::before {
+    width: 65%;
+    height: 450px;
+  }
+  .loginContainer {
+    max-width: 500px;
+    height: 650px;
+    padding: 15px;
+  }
+  .input,
+  .inputError {
+    font-size: 14px;
+    height: 50px;
+  }
 }
 
 @media screen and (max-width: 768px) {
-    .loginTitle {
-        font-size: 24px;
-    }
-    .submitButton,
-    .kakaoButton,
-    .naverButton {
-        max-width: 320px;
-    }
-    .loginBackground::before {
-        width: 60%;
-        height: 400px;
-    }
-    .loginContainer {
-        max-width: 450px;
-        height: auto;
-    }
-    .input,
-    .inputError {
-        font-size: 13px;
-        height: 45px;
-    }
-    .findId, .findPassword, .join {
-        font-size: 12px;
-    }
-    .hrContainer {
-        max-width: 320px;
-    }
+  .loginTitle {
+    font-size: 24px;
+  }
+  .submitButton,
+  .kakaoButton,
+  .naverButton {
+    max-width: 320px;
+  }
+  .loginBackground::before {
+    width: 60%;
+    height: 400px;
+  }
+  .loginContainer {
+    max-width: 450px;
+    height: auto;
+  }
+  .input,
+  .inputError {
+    font-size: 13px;
+    height: 45px;
+  }
+  .findId,
+  .findPassword,
+  .join {
+    font-size: 12px;
+  }
+  .hrContainer {
+    max-width: 320px;
+  }
 }
 
 /* 480px 이하일 때 */
 @media screen and (max-width: 480px) {
-    .loginTitle {
-        font-size: 20px;
-    }
-    .submitButton,
-    .kakaoButton,
-    .naverButton {
-        max-width: 280px;
-        height: 50px;
-    }
-    .loginBackground::before {
-        width: 80%;
-        height: 350px;
-    }
-    .loginContainer {
-        max-width: 360px;
-        padding: 10px;
-    }
-    .input,
-    .inputError {
-        font-size: 12px;
-        height: 40px;
-    }
-    .findId, .findPassword, .join {
-        font-size: 11px;
-    }
-    .hrContainer {
-        width: 90%;
-    }
+  .loginTitle {
+    font-size: 20px;
+  }
+  .submitButton,
+  .kakaoButton,
+  .naverButton {
+    max-width: 280px;
+    height: 50px;
+  }
+  .loginBackground::before {
+    width: 80%;
+    height: 350px;
+  }
+  .loginContainer {
+    max-width: 360px;
+    padding: 10px;
+  }
+  .input,
+  .inputError {
+    font-size: 12px;
+    height: 40px;
+  }
+  .findId,
+  .findPassword,
+  .join {
+    font-size: 11px;
+  }
+  .hrContainer {
+    width: 90%;
+  }
 }
 
 /* 320px 이하일 때 */
 @media screen and (max-width: 320px) {
-    .loginTitle {
-        font-size: 18px;
-    }
-    .submitButton,
-    .kakaoButton,
-    .naverButton {
-        max-width: 240px;
-        height: 45px;
-    }
-    .loginContainer {
-        max-width: 320px;
-        padding: 8px;
-    }
-    .input,
-    .inputError {
-        font-size: 11px;
-        height: 35px;
-    }
-    .findId, .findPassword, .join {
-        font-size: 10px;
-    }
+  .loginTitle {
+    font-size: 18px;
+  }
+  .submitButton,
+  .kakaoButton,
+  .naverButton {
+    max-width: 240px;
+    height: 45px;
+  }
+  .loginContainer {
+    max-width: 320px;
+    padding: 8px;
+  }
+  .input,
+  .inputError {
+    font-size: 11px;
+    height: 35px;
+  }
+  .findId,
+  .findPassword,
+  .join {
+    font-size: 10px;
+  }
 }
