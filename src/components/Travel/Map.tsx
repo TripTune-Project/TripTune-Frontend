@@ -35,15 +35,18 @@ const Map: React.FC<MapProps> = ({ places }) => {
         bounds.extend(new google.maps.LatLng(place.latitude, place.longitude));
       });
       
-      mapRef.current.fitBounds(bounds);
-      
-      const listener = google.maps.event.addListenerOnce(mapRef.current, 'bounds_changed', () => {
-        const zoom = mapRef.current?.getZoom();
-        if (zoom && zoom > 10) {
-          mapRef.current.setZoom(10);
-        }
-        google.maps.event.removeListener(listener);
-      });
+      if (mapRef.current) {
+        mapRef.current.fitBounds(bounds);
+        
+        google.maps.event.addListenerOnce(mapRef.current, 'bounds_changed', () => {
+          if (mapRef.current) {
+            const zoom = mapRef.current.getZoom();
+            if (zoom !== undefined && zoom > 10) {
+              mapRef.current.setZoom(10);
+            }
+          }
+        });
+      }
     }
   }, [places]);
   
@@ -52,7 +55,7 @@ const Map: React.FC<MapProps> = ({ places }) => {
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={defaultCenter}
-        zoom={12}
+        zoom={10}
         onLoad={(map: google.maps.Map) => {
           mapRef.current = map;
         }}
