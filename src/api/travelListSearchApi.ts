@@ -1,11 +1,11 @@
 import axios, { AxiosResponse } from 'axios';
 
-interface TravelListLocationParams {
-  longitude: number;
-  latitude: number;
+interface TravelListSearchParams {
+  type: string;
+  keyword: string;
 }
 
-interface TravelListResult {
+interface TravelListSearchResult {
   placeId: number;
   country: string;
   city: string;
@@ -16,43 +16,44 @@ interface TravelListResult {
   longitude: number;
 }
 
-interface TravelListSuccessResponse {
+interface TravelListSearchSuccessResponse {
   success: true;
   data: {
     totalPages: number;
     currentPage: number;
     totalElements: number;
     pageSize: number;
-    content: TravelListResult[];
+    content: TravelListSearchResult[];
   };
   message: string;
 }
 
-interface TravelListEmptyResponse {
+interface TravelListSearchEmptyResponse {
   success: true;
   message: string;
 }
 
-interface TravelListErrorResponse {
+interface TravelListSearchErrorResponse {
   success: false;
   errorCode: number;
   message: string;
 }
 
-export const fetchTravelListByLocation = async (
-  params: TravelListLocationParams,
-  page: number = 1
-): Promise<TravelListSuccessResponse | TravelListEmptyResponse | TravelListErrorResponse> => {
+export const fetchTravelListSearch = async (
+  params: TravelListSearchParams
+): Promise<TravelListSearchSuccessResponse | TravelListSearchEmptyResponse | TravelListSearchErrorResponse> => {
   try {
-    const response: AxiosResponse<TravelListSuccessResponse | TravelListEmptyResponse> = await axios.post(
-      `/api/travels/list?page=${page}`,
-      params
+    const response: AxiosResponse<TravelListSearchSuccessResponse | TravelListSearchEmptyResponse> = await axios.get(
+      `/api/travels/search`,
+      {
+        params,
+      }
     );
     
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
-      const response: AxiosResponse<TravelListErrorResponse> = error.response;
+      const response: AxiosResponse<TravelListSearchErrorResponse> = error.response;
       return response.data;
     } else {
       return {

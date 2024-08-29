@@ -1,0 +1,40 @@
+.container {
+    display: flex;
+    height: 100%;
+}
+
+.listContainer {
+    width: 50%;
+    padding: 20px;
+    overflow-y: scroll;
+}
+
+.searchContainer {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.select {
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.button {
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.mapContainer {
+    width: 50%;
+}

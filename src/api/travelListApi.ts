@@ -1,8 +1,8 @@
 import axios, { AxiosResponse } from 'axios';
 
-interface TravelListParams {
-  type: string;
-  keyword: string;
+interface TravelListLocationParams {
+  longitude: number;
+  latitude: number;
 }
 
 interface TravelListResult {
@@ -39,15 +39,14 @@ interface TravelListErrorResponse {
   message: string;
 }
 
-export const fetchTravelList = async (
-  params: TravelListParams
+export const fetchTravelListByLocation = async (
+  params: TravelListLocationParams,
+  page: number = 1
 ): Promise<TravelListSuccessResponse | TravelListEmptyResponse | TravelListErrorResponse> => {
   try {
-    const response: AxiosResponse<TravelListSuccessResponse | TravelListEmptyResponse> = await axios.get(
-      `/api/travels/search`,
-      {
-        params,
-      }
+    const response: AxiosResponse<TravelListSuccessResponse | TravelListEmptyResponse> = await axios.post(
+      `/api/travels/list?page=${page}`,
+      params
     );
     
     return response.data;
