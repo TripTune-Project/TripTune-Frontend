@@ -1,10 +1,13 @@
-"use client";
+'use client';
 
 import { useState, useEffect } from 'react';
 import Pagination from '../../components/Travel/Pagination';
 import Map from '../../components/Travel/Map';
 import Image from 'next/image';
 import searchIcon from '../../../public/assets/images/search-icon.png';
+// import { fetchTravelListSearch } from '@/api/travelListSearchApi';
+// import { fetchTravelListByLocation } from '@/api/travelListApi';
+import styles from '../../styles/Travel.module.css';
 
 interface Place {
   placeId: number;
@@ -270,7 +273,10 @@ const TravelPage = () => {
   const [searchType, setSearchType] = useState('placeName');
   const [places, setPlaces] = useState<Place[]>([]);
   const [totalPages, setTotalPages] = useState(1);
+  const [isSearching, setIsSearching] = useState(false);
+  const [userCoordinates, setUserCoordinates] = useState({ latitude: 37.5642, longitude: 126.9976 });
   
+  // 백엔드 적용 전
   useEffect(() => {
     fetchPlaces(currentPage, searchTerm, searchType);
   }, [currentPage, searchTerm, searchType]);
@@ -309,11 +315,98 @@ const TravelPage = () => {
     setSearchTerm('');
   };
   
+  // 백엔드 적용 후
+  // useEffect(() => {
+  //   requestUserLocation();
+  // }, []);
+  //
+  // useEffect(() => {
+  //   if (isSearching) {
+  //     fetchPlacesBySearch(currentPage, searchTerm, searchType);
+  //   } else {
+  //     fetchPlacesByLocation(currentPage, userCoordinates.latitude, userCoordinates.longitude);
+  //   }
+  // }, [currentPage, searchTerm, searchType, isSearching, userCoordinates]);
+  //
+  // const requestUserLocation = () => {
+  //   if (navigator.geolocation) {
+  //     navigator.geolocation.getCurrentPosition(
+  //       (position) => {
+  //         setUserCoordinates({
+  //           latitude: position.coords.latitude,
+  //           longitude: position.coords.longitude,
+  //         });
+  //       },
+  //       (error) => {
+  //         console.warn('위치 권한 거부 또는 오류 발생:', error.message);
+  //         setUserCoordinates({ latitude: 37.5642, longitude: 126.9976 });
+  //       }
+  //     );
+  //   } else {
+  //     setUserCoordinates({ latitude: 37.5642, longitude: 126.9976 });
+  //   }
+  // };
+  //
+  // const fetchPlacesByLocation = async (page: number, latitude: number, longitude: number) => {
+  //   const params = {
+  //     latitude,
+  //     longitude,
+  //   };
+  //
+  //   const response = await fetchTravelListByLocation(params, page);
+  //
+  //   if (response.success) {
+  //     const { content, totalPages } = response.data;
+  //     setPlaces(content);
+  //     setPlaces(allPlaces);
+  //     setTotalPages(totalPages);
+  //   } else {
+  //     console.error(response.message);
+  //     setPlaces([]);
+  //     setTotalPages(1);
+  //   }
+  // };
+  //
+  // const fetchPlacesBySearch = async (page: number, term: string, type: string) => {
+  //   const params = {
+  //     type,
+  //     keyword: term,
+  //   };
+  //
+  //   const response = await fetchTravelListSearch(params);
+  //
+  //   if (response.success) {
+  //     const { content, totalPages } = response.data;
+  //     setPlaces(content);
+  //     setTotalPages(totalPages);
+  //   } else {
+  //     console.error(response.message);
+  //     setPlaces([]);
+  //     setTotalPages(1);
+  //   }
+  // };
+  //
+  // const handlePageChange = (page: number) => {
+  //   setCurrentPage(page);
+  // };
+  //
+  // const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setSearchTerm(event.target.value);
+  //   setIsSearching(event.target.value.trim() !== '');
+  //   setCurrentPage(1);
+  // };
+  //
+  // const handleSearchTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  //   setSearchType(event.target.value);
+  //   setSearchTerm('');
+  //   setIsSearching(false);
+  // };
+  
   return (
-    <div style={styles.container}>
-      <div style={styles.listContainer}>
-        <div style={styles.searchContainer}>
-          <select value={searchType} onChange={handleSearchTypeChange} style={styles.select}>
+    <div className={styles.container}>
+      <div className={styles.listContainer}>
+        <div className={styles.searchContainer}>
+          <select value={searchType} onChange={handleSearchTypeChange} className={styles.select}>
             <option value="placeName">장소명</option>
             <option value="country">국가명</option>
             <option value="city">도시명</option>
@@ -323,9 +416,9 @@ const TravelPage = () => {
             placeholder={`검색할 ${searchType === 'placeName' ? '장소명' : searchType === 'country' ? '국가명' : '도시명'}을 입력하세요`}
             value={searchTerm}
             onChange={handleSearch}
-            style={styles.input}
+            className={styles.input}
           />
-          <button onClick={() => console.log('Search button clicked')} style={styles.button}>
+          <button onClick={() => console.log('Search button clicked')} className={styles.button}>
             <Image src={searchIcon} alt="돋보기 아이콘" width={20} height={20} priority />
           </button>
         </div>
@@ -339,50 +432,14 @@ const TravelPage = () => {
             </li>
           ))}
         </ul>
-        <Pagination total={totalPages * PAGE_SIZE} currentPage={currentPage} pageSize={PAGE_SIZE} onPageChange={handlePageChange} />
+        <Pagination total={totalPages * PAGE_SIZE} currentPage={currentPage} pageSize={PAGE_SIZE}
+                    onPageChange={handlePageChange} />
       </div>
-      <div style={styles.mapContainer}>
+      <div className={styles.mapContainer}>
         <Map places={places} />
       </div>
     </div>
   );
-};
-
-const styles = {
-  container: {
-    display: 'flex',
-    height: '100%',
-  },
-  listContainer: {
-    width: '50%',
-    padding: '20px',
-    overflowY: 'scroll' as 'scroll',
-  },
-  searchContainer: {
-    display: 'flex',
-    marginBottom: '20px',
-  },
-  select: {
-    padding: '10px',
-    marginRight: '10px',
-    border: '1px solid #ccc',
-    borderRadius: '4px',
-  },
-  input: {
-    flex: 1,
-    padding: '10px',
-    border: '1px solid #ccc',
-    borderRadius: '4px',
-  },
-  button: {
-    backgroundColor: 'white',
-    border: 'none',
-    cursor: 'pointer',
-    marginLeft: '10px',
-  },
-  mapContainer: {
-    width: '50%',
-  },
 };
 
 export default TravelPage;

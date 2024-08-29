@@ -7,8 +7,8 @@ const containerStyle = {
 };
 
 const defaultCenter = {
-  lat: 37.5665,
-  lng: 126.978,
+  lat: 37.5636,
+  lng: 126.9976,
 };
 
 interface Place {
@@ -44,8 +44,8 @@ const Map = ({ places }: MapProps) => {
     
     google.maps.event.addListenerOnce(mapRef.current, 'bounds_changed', () => {
       const zoom = mapRef.current?.getZoom();
-      if (zoom !== undefined && zoom > 13) {
-        mapRef.current?.setZoom(13);
+      if (zoom !== undefined && zoom > 16) {
+        mapRef.current?.setZoom(16);
       }
     });
   }, [places]);
@@ -54,8 +54,8 @@ const Map = ({ places }: MapProps) => {
     <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}>
       <GoogleMap
         mapContainerStyle={containerStyle}
-        center={defaultCenter}
-        zoom={13}
+        center={places.length > 0 ? { lat: places[0].latitude, lng: places[0].longitude } : defaultCenter}
+        zoom={15}
         onLoad={handleMapLoad}
       >
         {places.map((place) => (
