@@ -1,53 +1,70 @@
-// components/Travel/Map.tsx
-import React, { useState, useEffect } from 'react';
-import { GoogleMap, LoadScript } from '@react-google-maps/api';
+import React, { useEffect, useRef, useCallback } from 'react';
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 
 const containerStyle = {
-  width: '100%', // 이 부분이 50%에서 100%로 변경되었습니다.
+  width: '100%',
   height: '100%',
 };
 
 const defaultCenter = {
-  lat: 37.5665, // 서울의 위도
-  lng: 126.978, // 서울의 경도
+  lat: 37.5665,
+  lng: 126.978,
 };
 
-const Map: React.FC = () => {
-  const [currentPosition, setCurrentPosition] = useState(defaultCenter);
+interface Place {
+  placeId: number;
+  country: string;
+  city: string;
+  district: string;
+  placeName: string;
+  latitude: number;
+  longitude: number;
+}
 
-  useEffect(() => {
-    const getUserLocation = () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
-            setCurrentPosition({
-              lat: latitude,
-              lng: longitude,
-            });
-          },
-          (error) => {
-            console.error("Error getting user's location: ", error);
-          }
-        );
-      } else {
-        console.error('Geolocation is not supported by this browser.');
-      }
-    };
+interface MapProps {
+  places: Place[];
+}
 
-    getUserLocation();
+const Map = ({ places }: MapProps) => {
+  const mapRef = useRef<google.maps.Map | null>(null);
+  
+  const handleMapLoad = useCallback((map: google.maps.Map) => {
+    mapRef.current = map;
   }, []);
-
+  
+  useEffect(() => {
+    if (!mapRef.current || places.length === 0) return;
+    
+    const bounds = new google.maps.LatLngBounds();
+    places.forEach((place) => {
+      bounds.extend(new google.maps.LatLng(place.latitude, place.longitude));
+    });
+    
+    mapRef.current.fitBounds(bounds);
+    
+    google.maps.event.addListenerOnce(mapRef.current, 'bounds_changed', () => {
+      const zoom = mapRef.current?.getZoom();
+      if (zoom !== undefined && zoom > 13) {
+        mapRef.current?.setZoom(13);
+      }
+    });
+  }, [places]);
+  
   return (
-    <LoadScript
-      googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}
-    >
+    <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}>
       <GoogleMap
         mapContainerStyle={containerStyle}
-        center={currentPosition}
-        zoom={10}
+        center={defaultCenter}
+        zoom={13}
+        onLoad={handleMapLoad}
       >
-        {/* 추가적인 마커나 기능은 여기서 추가할 수 있습니다 */}
+        {places.map((place) => (
+          <Marker
+            key={place.placeId}
+            position={{ lat: place.latitude, lng: place.longitude }}
+            title={place.placeName}
+          />
+        ))}
       </GoogleMap>
     </LoadScript>
   );

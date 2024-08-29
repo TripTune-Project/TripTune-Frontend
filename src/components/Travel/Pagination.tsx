@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 interface PaginationProps {
   total: number;
@@ -7,31 +7,30 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
 }
 
-const Pagination: React.FC<PaginationProps> = ({
-  total,
-  currentPage,
-  pageSize,
-  onPageChange,
-}) => {
+const Pagination = ({ total, currentPage, pageSize, onPageChange }: PaginationProps) => {
   const totalPages = Math.ceil(total / pageSize);
-  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
-
+  
+  const pages = Array.from({ length: totalPages }, (_, index) => index + 1);
+  
+  const renderPageButton = (page: number) => (
+    <button
+      key={page}
+      onClick={() => onPageChange(page)}
+      style={{
+        margin: '0 5px',
+        backgroundColor: page === currentPage ? '#ddd' : '#fff',
+      }}
+      aria-current={page === currentPage ? 'page' : undefined}
+    >
+      {page}
+    </button>
+  );
+  
   return (
-    <div>
-      {pages.map((page) => (
-        <button
-          key={page}
-          onClick={() => onPageChange(page)}
-          style={{
-            margin: '0 5px',
-            backgroundColor: page === currentPage ? '#ddd' : '#fff',
-          }}
-        >
-          {page}
-        </button>
-      ))}
+    <div role="navigation" aria-label="Pagination Navigation">
+      {pages.map(renderPageButton)}
     </div>
   );
 };
 
-export default Pagination;
+export default memo(Pagination);

@@ -27,7 +27,7 @@ interface ErrorResponse {
 
 export const fetchTravelData = async (): Promise<SuccessResponse | ErrorResponse> => {
   try {
-    const response: AxiosResponse<SuccessResponse> = await axios.get(`/api/home/search`);
+    const response: AxiosResponse<SuccessResponse> = await axios.get(`/api/home`);
     
     return response.data;
   } catch (error) {
