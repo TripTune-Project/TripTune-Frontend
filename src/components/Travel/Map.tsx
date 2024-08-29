@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 
 const containerStyle = {
@@ -25,29 +25,29 @@ interface MapProps {
   places: Place[];
 }
 
-const Map: React.FC<MapProps> = ({ places }) => {
+const Map = ({ places }: MapProps) => {
   const mapRef = useRef<google.maps.Map | null>(null);
   
+  const handleMapLoad = useCallback((map: google.maps.Map) => {
+    mapRef.current = map;
+  }, []);
+  
   useEffect(() => {
-    if (mapRef.current && places.length > 0) {
-      const bounds = new google.maps.LatLngBounds();
-      places.forEach((place) => {
-        bounds.extend(new google.maps.LatLng(place.latitude, place.longitude));
-      });
-      
-      if (mapRef.current) {
-        mapRef.current.fitBounds(bounds);
-        
-        google.maps.event.addListenerOnce(mapRef.current, 'bounds_changed', () => {
-          if (mapRef.current) {
-            const zoom = mapRef.current.getZoom();
-            if (zoom !== undefined && zoom > 10) {
-              mapRef.current.setZoom(10);
-            }
-          }
-        });
+    if (!mapRef.current || places.length === 0) return;
+    
+    const bounds = new google.maps.LatLngBounds();
+    places.forEach((place) => {
+      bounds.extend(new google.maps.LatLng(place.latitude, place.longitude));
+    });
+    
+    mapRef.current.fitBounds(bounds);
+    
+    google.maps.event.addListenerOnce(mapRef.current, 'bounds_changed', () => {
+      const zoom = mapRef.current?.getZoom();
+      if (zoom !== undefined && zoom > 13) {
+        mapRef.current?.setZoom(13);
       }
-    }
+    });
   }, [places]);
   
   return (
@@ -55,10 +55,8 @@ const Map: React.FC<MapProps> = ({ places }) => {
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={defaultCenter}
-        zoom={10}
-        onLoad={(map: google.maps.Map) => {
-          mapRef.current = map;
-        }}
+        zoom={13}
+        onLoad={handleMapLoad}
       >
         {places.map((place) => (
           <Marker
