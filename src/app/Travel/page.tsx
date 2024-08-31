@@ -23,7 +23,11 @@ interface Place {
 }
 
 const TravelPage = () => {
-  const [currentPage, setCurrentPage] = useState(1);
+  // TODO : 페이지를 직접 처리 하면 되지만 버튼 동작에 대한 페이징 처리가 안됨
+  // TODO : 사진과 좀 이쁘게 배치 할 수 있도록 하기
+  // TODO : 검색을 할때도 페이지 LIST 보내주는게 필요한지
+  // TODO : 사용자의 위치 지리에 따른 API 호출 인지 확인
+  const [currentPage, setCurrentPage] = useState(1); // 이거 페이지 작동 안됨
   const [searchTerm, setSearchTerm] = useState('');
   const [searchType, setSearchType] = useState('placeName');
   const [places, setPlaces] = useState<Place[]>([]);
