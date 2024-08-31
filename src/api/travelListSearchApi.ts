@@ -1,4 +1,5 @@
-import axios, { AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
+import axiosInstance from './axiosInstance';
 
 interface TravelListSearchParams {
   type: string;
@@ -43,19 +44,20 @@ export const fetchTravelListSearch = async (
   params: TravelListSearchParams
 ): Promise<TravelListSearchSuccessResponse | TravelListSearchEmptyResponse | TravelListSearchErrorResponse> => {
   try {
-    const response: AxiosResponse<TravelListSearchSuccessResponse | TravelListSearchEmptyResponse> = await axios.get(
+    const response: AxiosResponse<TravelListSearchSuccessResponse | TravelListSearchEmptyResponse> = await axiosInstance.get(
       `/api/travels/search`,
       {
         params,
       }
     );
-    
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error) && error.response) {
+    if (axiosInstance.isAxiosError(error) && error.response) {
       const response: AxiosResponse<TravelListSearchErrorResponse> = error.response;
+      console.error('API Error Response:', response.data);
       return response.data;
     } else {
+      console.error('Unexpected Error:', error);
       return {
         success: false,
         errorCode: 500,

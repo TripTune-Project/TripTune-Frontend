@@ -1,4 +1,5 @@
-import axios, { AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
+import axiosInstance from './axiosInstance';
 
 interface TravelListLocationParams {
   longitude: number;
@@ -44,17 +45,21 @@ export const fetchTravelListByLocation = async (
   page: number = 1
 ): Promise<TravelListSuccessResponse | TravelListEmptyResponse | TravelListErrorResponse> => {
   try {
-    const response: AxiosResponse<TravelListSuccessResponse | TravelListEmptyResponse> = await axios.post(
-      `/api/travels/list?page=${page}`,
+    const pageNum = Number(page);
+    
+    const response: AxiosResponse<TravelListSuccessResponse | TravelListEmptyResponse> = await axiosInstance.post(
+      `/api/travels/list?page=${pageNum}`,
       params
     );
     
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error) && error.response) {
+    if (axiosInstance.isAxiosError(error) && error.response) {
       const response: AxiosResponse<TravelListErrorResponse> = error.response;
+      console.error('API Error Response:', response.data);
       return response.data;
     } else {
+      console.error('Unexpected Error:', error);
       return {
         success: false,
         errorCode: 500,
