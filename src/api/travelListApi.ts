@@ -1,8 +1,9 @@
-import axios, { AxiosResponse } from 'axios';
+import { AxiosResponse, AxiosError, isAxiosError } from 'axios';
+import axiosInstance from './axiosInstance';
 
-interface TravelListParams {
-  type: string;
-  keyword: string;
+interface TravelListLocationParams {
+  longitude: number;
+  latitude: number;
 }
 
 interface TravelListResult {
@@ -14,6 +15,8 @@ interface TravelListResult {
   address: string;
   latitude: number;
   longitude: number;
+  detailAddress: string;
+  thumbnailUrl: string;
 }
 
 interface TravelListSuccessResponse {
@@ -39,28 +42,38 @@ interface TravelListErrorResponse {
   message: string;
 }
 
-export const fetchTravelList = async (
-  params: TravelListParams
+export const fetchTravelListByLocation = async (
+  params: TravelListLocationParams,
+  page: number = 1
 ): Promise<TravelListSuccessResponse | TravelListEmptyResponse | TravelListErrorResponse> => {
   try {
-    const response: AxiosResponse<TravelListSuccessResponse | TravelListEmptyResponse> = await axios.get(
-      `/api/travels/search`,
+    const pageNum = Number(page);
+    
+    const response: AxiosResponse<TravelListSuccessResponse | TravelListEmptyResponse> = await axiosInstance.get(
+      `/api/travels/list?page=${pageNum}`,
       {
-        params,
+          params,
       }
     );
     
     return response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error) && error.response) {
-      const response: AxiosResponse<TravelListErrorResponse> = error.response;
-      return response.data;
-    } else {
-      return {
-        success: false,
-        errorCode: 500,
-        message: '서버 내부 오류가 발생하였습니다.',
-      };
+  } catch (error: unknown) {
+    if (isAxiosError(error)) {
+      const axiosError = error as AxiosError<TravelListErrorResponse>;
+      const response = axiosError.response;
+      
+      if (response) {
+        console.error('API Error Response:', response.data);
+        return response.data;
+      }
     }
+    
+    // 예상치 못한 오류 처리
+    console.error('Unexpected Error:', error);
+    return {
+      success: false,
+      errorCode: 500,
+      message: '서버 내부 오류가 발생하였습니다.',
+    };
   }
 };

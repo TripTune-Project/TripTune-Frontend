@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import styles from '../../../styles/Find.module.css';
 import Image from 'next/image';
 import favicon from '../../../../public/favicon.ico';
-import Loading from '../../../components/Common/Loading';
+import VerificationLoading from '../../../components/Common/VerificationLoading';
 import { validatePassword } from '@/utils/validation';
 
 const ChangePassword = () => {
@@ -114,7 +114,7 @@ const ChangePassword = () => {
         onClick={handlePasswordChange}
         disabled={!isFormValid || loading}
       >
-        {loading ? <Loading /> : '비밀번호 변경'}
+        {loading ? <VerificationLoading /> : '비밀번호 변경'}
       </button>
     </div>
   );

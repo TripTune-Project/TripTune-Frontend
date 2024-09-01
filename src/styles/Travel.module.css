@@ -1,0 +1,115 @@
+.container {
+    margin-top:30px;
+    display: flex;
+    height: 100%;
+}
+
+.listContainer {
+    width: 50%;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.searchContainer {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.select {
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.button {
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.resetButton {
+    padding: 10px 20px;
+    margin-left: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.resetButton:hover {
+    background-color: #0056b3;
+}
+
+.placeList {
+    list-style: none;
+    padding: 0;
+}
+
+.placeItem {
+    display: flex;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.placeThumbnail {
+    margin-right: 20px;
+    width: 200px;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.thumbnailImage {
+    border-radius: 8px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.noImage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    width: 200px;
+    height: 200px;
+    font-size: 14px;
+    color: #999;
+    background-color: #e0e0e0;
+    border: 1px dashed #ccc;
+}
+
+.placeInfo {
+    flex: 1;
+}
+
+.placeName {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.placeAddress,
+.placeDetailAddress {
+    margin: 5px 0;
+    color: #555;
+}
+
+.mapContainer {
+    width: 50%;
+}

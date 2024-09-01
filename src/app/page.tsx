@@ -17,74 +17,74 @@ import place from '../../public/assets/images/place.png';
 import picture from '../../public/assets/images/picture.png';
 
 const StyledSwiperContainer = styled.div`
-  overflow: hidden;
-  position: relative;
-  width: 100%;
-  max-width: 1850px;
-  margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    max-width: 1850px;
+    margin: 0 auto;
 `;
 
 const StyledSwiperButtonPrev = styled.div`
-  position: absolute;
-  top: 50%;
-  width: 60px;
-  height: 60px;
-  left: 10px;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  cursor: pointer;
-  z-index: 10;
-  user-select: none;
-
-  &::after {
-    content: '';
-    display: block;
+    position: absolute;
+    top: 50%;
     width: 60px;
     height: 60px;
-    background-size: cover;
-    background-image: url('/assets/images/left_btn.png');
-  }
+    left: 10px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+    user-select: none;
+
+    &::after {
+        content: '';
+        display: block;
+        width: 60px;
+        height: 60px;
+        background-size: cover;
+        background-image: url('/assets/images/left_btn.png');
+    }
 `;
 
 const StyledSwiperButtonNext = styled.div`
-  position: absolute;
-  top: 50%;
-  width: 60px;
-  height: 60px;
-  right: 10px;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  cursor: pointer;
-  z-index: 10;
-  user-select: none;
-
-  &::after {
-    content: '';
-    display: block;
+    position: absolute;
+    top: 50%;
     width: 60px;
     height: 60px;
-    background-size: cover;
-    background-image: url('/assets/images/right_btn.png');
-  }
+    right: 10px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+    user-select: none;
+
+    &::after {
+        content: '';
+        display: block;
+        width: 60px;
+        height: 60px;
+        background-size: cover;
+        background-image: url('/assets/images/right_btn.png');
+    }
 `;
 
-const Home: React.FC = () => {
+const Home = () => {
   const router = useRouter();
-
+  
   const handleScheduleClick = () => {
     router.push('/Schedule');
   };
-
+  
   const handleTravelClick = () => {
     router.push('/Travel');
   };
-
+  
   const handleSearch = () => {
     router.push('/Search');
   };
-
+  
   const images = [
     {
       src: picture,
@@ -117,7 +117,7 @@ const Home: React.FC = () => {
       description: '서울 중구 동대문 디자인 플라자',
     },
   ];
-
+  
   return (
     <div className={styles.onBoard}>
       <div className={styles.onBoardingTop}>

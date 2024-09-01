@@ -3,15 +3,15 @@
 import React, { useEffect, useState, Suspense } from 'react';
 import { requestFindId, requestFindPassword } from '@/api/findApi';
 import { useRouter, useSearchParams } from 'next/navigation';
-import Loading from '../../components/Common/Loading';
+import VerificationLoading from '../../components/Common/VerificationLoading';
 import styles from '../../styles/Find.module.css';
 import { validateEmail, validateUserId } from '../../utils/validation';
 
-const FindPage: React.FC = () => {
+const FindPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const initialTab = searchParams.get('tab') || 'findId';
-
+  
   const [tab, setTab] = useState<'findId' | 'findPassword'>(
     initialTab as 'findId' | 'findPassword'
   );
@@ -26,16 +26,16 @@ const FindPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [isUserIdValid, setIsUserIdValid] = useState(false);
-
+  
   useEffect(() => {
     setTab(initialTab as 'findId' | 'findPassword');
   }, [initialTab]);
-
+  
   useEffect(() => {
     setIsEmailValid(validateEmail(email) === true);
     setIsUserIdValid(validateUserId(userId) === true);
   }, [email, userId]);
-
+  
   const handleTabChange = (tab: 'findId' | 'findPassword') => {
     setTab(tab);
     setEmail('');
@@ -44,18 +44,18 @@ const FindPage: React.FC = () => {
     setErrorMessage('');
     setAlertOpen(false);
   };
-
+  
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
   };
-
+  
   const handleUserIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUserId(event.target.value);
   };
-
+  
   const handleFindIdSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-
+    
     if (!isEmailValid) {
       setErrorMessage('유효한 이메일을 입력해주세요.');
       setAlertSeverity('error');
@@ -63,7 +63,7 @@ const FindPage: React.FC = () => {
       setTimeout(() => setAlertOpen(false), 5000);
       return;
     }
-
+    
     setLoading(true);
     try {
       const responseMessage = await requestFindId(email);
@@ -81,10 +81,10 @@ const FindPage: React.FC = () => {
       setLoading(false);
     }
   };
-
+  
   const handleFindPasswordSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-
+    
     if (!isEmailValid || !isUserIdValid) {
       setErrorMessage('유효한 이메일과 아이디를 입력해주세요.');
       setAlertSeverity('error');
@@ -92,7 +92,7 @@ const FindPage: React.FC = () => {
       setTimeout(() => setAlertOpen(false), 5000);
       return;
     }
-
+    
     setLoading(true);
     try {
       const responseMessage = await requestFindPassword(email, userId);
@@ -124,7 +124,7 @@ const FindPage: React.FC = () => {
       }, 5000);
     }
   };
-
+  
   return (
     <div className={styles.pageContainer}>
       <h1 className={styles.FindTitle}>아이디 / 비밀번호 찾기</h1>
@@ -163,7 +163,7 @@ const FindPage: React.FC = () => {
             onClick={handleFindIdSubmit}
             disabled={!isEmailValid || loading}
           >
-            {loading ? <Loading /> : '아이디 찾기'}
+            {loading ? <VerificationLoading /> : '아이디 찾기'}
           </button>
         </div>
       ) : (
@@ -200,7 +200,7 @@ const FindPage: React.FC = () => {
             onClick={handleFindPasswordSubmit}
             disabled={!isEmailValid || !isUserIdValid || loading}
           >
-            {loading ? <Loading /> : '비밀번호 찾기'}
+            {loading ? <VerificationLoading /> : '비밀번호 찾기'}
           </button>
         </div>
       )}

@@ -7,11 +7,7 @@ interface LogoutModalProps {
   onConfirm: () => void;
 }
 
-const LogoutModal: React.FC<LogoutModalProps> = ({
-  isOpen,
-  onClose,
-  onConfirm,
-}) => {
+const LogoutModal = ({ isOpen, onClose, onConfirm }: LogoutModalProps) => {
   return (
     <Modal open={isOpen} onClose={onClose}>
       <Box

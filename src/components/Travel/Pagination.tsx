@@ -1,4 +1,5 @@
-import React, { memo } from 'react';
+import React from 'react';
+import styles from '../../styles/Pagination.module.css';
 
 interface PaginationProps {
   total: number;
@@ -9,28 +10,50 @@ interface PaginationProps {
 
 const Pagination = ({ total, currentPage, pageSize, onPageChange }: PaginationProps) => {
   const totalPages = Math.ceil(total / pageSize);
-  
-  const pages = Array.from({ length: totalPages }, (_, index) => index + 1);
+  const maxPagesToShow = 5;
+  const startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+  const endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
   
   const renderPageButton = (page: number) => (
     <button
       key={page}
       onClick={() => onPageChange(page)}
-      style={{
-        margin: '0 5px',
-        backgroundColor: page === currentPage ? '#ddd' : '#fff',
-      }}
+      className={`${styles.pageButton} ${page === currentPage ? styles.active : ''}`}
       aria-current={page === currentPage ? 'page' : undefined}
     >
       {page}
     </button>
   );
   
+  const renderNavButton = (onClick: () => void, disabled: boolean, symbol: string, ariaLabel: string) => (
+    <button
+      onClick={onClick}
+      className={`${styles.navButton} ${disabled ? styles.disabled : ''}`}
+      disabled={disabled}
+      aria-label={ariaLabel}
+    >
+      {symbol}
+    </button>
+  );
+  
+  const generatePageButtons = () => {
+    const pages = [];
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(renderPageButton(i));
+    }
+    return pages;
+  };
+  
   return (
-    <div role="navigation" aria-label="Pagination Navigation">
-      {pages.map(renderPageButton)}
+    <div className={styles.paginationContainer} role="navigation" aria-label="Pagination Navigation">
+      {renderNavButton(() => onPageChange(1), currentPage === 1, '«', 'First Page')}
+      {renderNavButton(() => onPageChange(currentPage - 1), currentPage === 1, '‹', 'Previous Page')}
+      {generatePageButtons()}
+      {endPage < totalPages && <span className={styles.ellipsis}>...</span>}
+      {renderNavButton(() => onPageChange(currentPage + 1), currentPage === totalPages, '›', 'Next Page')}
+      {renderNavButton(() => onPageChange(totalPages), currentPage === totalPages, '»', 'Last Page')}
     </div>
   );
 };
 
-export default memo(Pagination);
+export default Pagination;

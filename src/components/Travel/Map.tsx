@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 
 const containerStyle = {
@@ -7,8 +7,8 @@ const containerStyle = {
 };
 
 const defaultCenter = {
-  lat: 37.5665,
-  lng: 126.978,
+  lat: 37.5636,
+  lng: 126.9976,
 };
 
 interface Place {
@@ -28,26 +28,38 @@ interface MapProps {
 const Map = ({ places }: MapProps) => {
   const mapRef = useRef<google.maps.Map | null>(null);
   
-  const handleMapLoad = useCallback((map: google.maps.Map) => {
+  const handleMapLoad = (map: google.maps.Map) => {
     mapRef.current = map;
-  }, []);
+    if (places.length > 0) {
+      setMapBounds(map);
+    } else {
+      map.setCenter(defaultCenter);
+      map.setZoom(15);
+    }
+  };
   
-  useEffect(() => {
-    if (!mapRef.current || places.length === 0) return;
+  const setMapBounds = (map: google.maps.Map | null) => {
+    if (!map || places.length === 0) return;
     
     const bounds = new google.maps.LatLngBounds();
     places.forEach((place) => {
       bounds.extend(new google.maps.LatLng(place.latitude, place.longitude));
     });
     
-    mapRef.current.fitBounds(bounds);
+    map.fitBounds(bounds);
     
-    google.maps.event.addListenerOnce(mapRef.current, 'bounds_changed', () => {
-      const zoom = mapRef.current?.getZoom();
-      if (zoom !== undefined && zoom > 13) {
-        mapRef.current?.setZoom(13);
+    google.maps.event.addListenerOnce(map, 'bounds_changed', () => {
+      const zoom = map.getZoom();
+      if (zoom !== undefined && zoom > 16) {
+        map.setZoom(16);
       }
     });
+  };
+  
+  useEffect(() => {
+    if (mapRef.current) {
+      setMapBounds(mapRef.current);
+    }
   }, [places]);
   
   return (
@@ -55,7 +67,7 @@ const Map = ({ places }: MapProps) => {
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={defaultCenter}
-        zoom={13}
+        zoom={15}
         onLoad={handleMapLoad}
       >
         {places.map((place) => (

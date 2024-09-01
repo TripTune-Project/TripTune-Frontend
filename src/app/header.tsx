@@ -21,10 +21,10 @@ const Header = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
-
+  
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-
+  
   const handleLogout = async () => {
     closeModal();
     try {
@@ -35,33 +35,33 @@ const Header = () => {
       setAlertOpen(true);
     }
   };
-
+  
   const handleAlertClose = () => setAlertOpen(false);
-
+  
   const checkAuthStatus = () => {
     const accessToken = Cookies.get('trip-tune_at');
     const refreshToken = Cookies.get('trip-tune_rt');
-
+    
     if (accessToken && refreshToken) {
       setLoginTrue(true);
     } else {
       setLoginTrue(false);
     }
   };
-
+  
   useEffect(() => {
     checkAuthStatus();
     const interval = setInterval(checkAuthStatus, 1000);
-
+    
     return () => clearInterval(interval);
   }, []);
-
+  
   const handleLogin = () => {
-    router.push('/Login');
+    router.push(`/Login?next=${encodeURIComponent(pathname)}`);
   };
-
+  
   const isActive = (path: string) => (pathname === path ? styles.active : '');
-
+  
   return (
     <>
       <ul className={styles.headerMenu}>
