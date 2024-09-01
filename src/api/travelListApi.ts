@@ -1,4 +1,4 @@
-import { AxiosResponse } from 'axios';
+import axios, { AxiosResponse, AxiosError } from 'axios';
 import axiosInstance from './axiosInstance';
 
 interface TravelListLocationParams {
@@ -53,9 +53,9 @@ export const fetchTravelListByLocation = async (
     );
     
     return response.data;
-  } catch (error) {
-    if (axiosInstance.isAxiosError(error) && error.response) {
-      const response: AxiosResponse<TravelListErrorResponse> = error.response;
+  } catch (error: unknown) {
+    if (error instanceof AxiosError && error.response) {
+      const response: axios.AxiosResponse<unknown, any> | undefined = error.response;
       console.error('API Error Response:', response.data);
       return response.data;
     } else {

@@ -1,4 +1,4 @@
-import { AxiosResponse } from 'axios';
+import { AxiosResponse, AxiosError, isAxiosError } from 'axios';
 import axiosInstance from './axiosInstance';
 
 interface TravelListSearchParams {
@@ -51,18 +51,20 @@ export const fetchTravelListSearch = async (
       }
     );
     return response.data;
-  } catch (error) {
-    if (axiosInstance.isAxiosError(error) && error.response) {
-      const response: AxiosResponse<TravelListSearchErrorResponse> = error.response;
-      console.error('API Error Response:', response.data);
-      return response.data;
-    } else {
-      console.error('Unexpected Error:', error);
-      return {
-        success: false,
-        errorCode: 500,
-        message: '서버 내부 오류가 발생하였습니다.',
-      };
+  } catch (error: unknown) {
+    if (isAxiosError(error)) {
+      const axiosError = error as AxiosError<TravelListSearchErrorResponse>;
+      if (axiosError.response) {
+        console.error('API Error Response:', axiosError.response.data);
+        return axiosError.response.data;
+      }
     }
+    
+    console.error('Unexpected Error:', error);
+    return {
+      success: false,
+      errorCode: 500,
+      message: '서버 내부 오류가 발생하였습니다.',
+    };
   }
 };
