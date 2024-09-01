@@ -1,5 +1,4 @@
-import { AxiosResponse, AxiosError, isAxiosError } from 'axios';
-import axiosInstance from './axiosInstance';
+import axios, { AxiosResponse, AxiosError, isAxiosError } from 'axios';
 
 interface TravelListLocationParams {
   longitude: number;
@@ -47,12 +46,13 @@ export const fetchTravelListByLocation = async (
   page: number = 1
 ): Promise<TravelListSuccessResponse | TravelListEmptyResponse | TravelListErrorResponse> => {
   try {
-    const pageNum = Number(page);
-    
-    const response: AxiosResponse<TravelListSuccessResponse | TravelListEmptyResponse> = await axiosInstance.get(
-      `/api/travels/list?page=${pageNum}`,
+    const response: AxiosResponse<TravelListSuccessResponse | TravelListEmptyResponse> = await axios.get(
+      `/api/travels/list`,
       {
-          params,
+        params: {
+          ...params,
+          page,
+        },
       }
     );
     
@@ -68,7 +68,6 @@ export const fetchTravelListByLocation = async (
       }
     }
     
-    // 예상치 못한 오류 처리
     console.error('Unexpected Error:', error);
     return {
       success: false,
