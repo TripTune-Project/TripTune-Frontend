@@ -1,4 +1,5 @@
-import axios, { AxiosResponse, AxiosError, isAxiosError } from 'axios';
+import { AxiosResponse, AxiosError, isAxiosError } from 'axios';
+import axiosInstance from './axiosInstance';
 
 interface TravelListSearchParams {
   type: string;
@@ -46,13 +47,12 @@ export const fetchTravelListSearch = async (
   page: number = 1
 ): Promise<TravelListSearchSuccessResponse | TravelListSearchEmptyResponse | TravelListSearchErrorResponse> => {
   try {
-    const response: AxiosResponse<TravelListSearchSuccessResponse | TravelListSearchEmptyResponse> = await axios.get(
-      `/api/travels/search`,
+    const pageNum = Number(page);
+    
+    const response: AxiosResponse<TravelListSearchSuccessResponse | TravelListSearchEmptyResponse> = await axiosInstance.get(
+      `/api/travels/search?page=${pageNum}`,
       {
-        params: {
-          ...params,
-          page,
-        },
+        params,
       }
     );
     

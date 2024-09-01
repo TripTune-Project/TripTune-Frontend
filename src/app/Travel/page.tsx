@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import Pagination from '../../components/Travel/Pagination';
 import Map from '../../components/Travel/Map';
 import Image from 'next/image';
-import searchIcon from '../../../public/assets/images/search-icon.png';
 import { fetchTravelListSearch } from '@/api/travelListSearchApi';
 import { fetchTravelListByLocation } from '@/api/travelListApi';
 import styles from '../../styles/Travel.module.css';
@@ -175,11 +174,11 @@ const TravelPage = () => {
               onChange={handleSearchInputChange}
               className={styles.input}
             />
-            <button onClick={handleSearch} className={styles.button}>
-              <Image src={searchIcon} alt="돋보기 아이콘" width={20} height={20} priority />
+            <button onClick={handleSearch} className={styles.searchButton}>
+              검색
             </button>
             <button onClick={handleResetSearch} className={styles.resetButton}>
-              찾기
+              초기화
             </button>
           </div>
           <ul className={styles.placeList}>
