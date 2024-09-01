@@ -21,7 +21,14 @@ const nextConfig = {
     return config;
   },
   images: {
-    domains: ['triptune.s3.ap-northeast-2.amazonaws.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'triptune.s3.ap-northeast-2.amazonaws.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
   },
 };
 

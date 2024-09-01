@@ -29,17 +29,20 @@
     border-radius: 4px;
 }
 
-.button {
-    background-color: white;
-    border: none;
+.searchButton {
+    background-color: #0056b3;
     cursor: pointer;
     margin-left: 10px;
+    padding: 10px 20px;
+    color: white;
+    border: none;
+    border-radius: 4px;
 }
 
 .resetButton {
     padding: 10px 20px;
     margin-left: 10px;
-    background-color: #007bff;
+    background-color: red;
     color: white;
     border: none;
     border-radius: 4px;
