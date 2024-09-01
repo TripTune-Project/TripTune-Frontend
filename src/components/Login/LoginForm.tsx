@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { useForm } from 'react-hook-form';
 import { validatePassword, validateUserId } from '@/utils/validation';
 import styles from '../../styles/Login.module.css';
@@ -11,6 +11,7 @@ import Snackbar from '@mui/material/Snackbar';
 import Image from 'next/image';
 import kakaoImg from '../../../public/assets/images/kakao.png';
 import naverImg from '../../../public/assets/images/naver.png';
+import Loading from '../../components/Common/Loading';
 
 interface LoginFormData {
   userId: string;
@@ -71,98 +72,100 @@ const LoginForm = () => {
   };
   
   return (
-    <div className={styles.loginBackground}>
-      <div className={styles.loginContainer}>
-        <div className={styles.loginTitle}>로그인</div>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className={styles.inputGroup}>
-            <input
-              placeholder='아이디'
-              {...register('userId', {
-                required: '아이디를 입력해주세요.',
-                validate: validateUserId,
-              })}
-              className={errors.userId ? styles.inputError : styles.input}
-            />
-            {errors.userId && (
-              <p className={styles.errorText}>{errors.userId.message}</p>
-            )}
+    <Suspense fallback={<Loading />}>
+      <div className={styles.loginBackground}>
+        <div className={styles.loginContainer}>
+          <div className={styles.loginTitle}>로그인</div>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className={styles.inputGroup}>
+              <input
+                placeholder='아이디'
+                {...register('userId', {
+                  required: '아이디를 입력해주세요.',
+                  validate: validateUserId,
+                })}
+                className={errors.userId ? styles.inputError : styles.input}
+              />
+              {errors.userId && (
+                <p className={styles.errorText}>{errors.userId.message}</p>
+              )}
+            </div>
+            <div className={styles.inputGroup}>
+              <input
+                type='password'
+                placeholder='비밀번호'
+                {...register('password', {
+                  required: '비밀번호를 입력해주세요.',
+                  validate: validatePassword,
+                })}
+                className={errors.password ? styles.inputError : styles.input}
+              />
+              {errors.password && (
+                <p className={styles.errorText}>{errors.password.message}</p>
+              )}
+            </div>
+            
+            <button
+              type='submit'
+              className={styles.submitButton}
+              disabled={!isValid}
+            >
+              로그인하기
+            </button>
+          </form>
+          {errorMessage && <p className={styles.errorText}>{errorMessage}</p>}
+          <div className={styles.linkContainer}>
+            <span className={styles.findId} onClick={handleFindId}>
+              아이디 찾기
+            </span>{' '}
+            {' | '}
+            <span className={styles.findPassword} onClick={handleFindPassword}>
+              비밀번호 찾기
+            </span>{' '}
+            {' | '}
+            <span className={styles.join} onClick={() => router.push('/Join')}>
+              회원가입
+            </span>
           </div>
-          <div className={styles.inputGroup}>
-            <input
-              type='password'
-              placeholder='비밀번호'
-              {...register('password', {
-                required: '비밀번호를 입력해주세요.',
-                validate: validatePassword,
-              })}
-              className={errors.password ? styles.inputError : styles.input}
-            />
-            {errors.password && (
-              <p className={styles.errorText}>{errors.password.message}</p>
-            )}
+          <div className={styles.socialLoginContainer}>
+            <div className={styles.hrContainer}>
+              <hr className={styles.hrStyle} />
+              <span className={styles.hrText}>간편 로그인</span>
+              <hr className={styles.hrStyle} />
+            </div>
+            <button onClick={handleKakaoLogin} className={styles.kakaoButton}>
+              <Image
+                src={kakaoImg}
+                alt={'kakao'}
+                width={21}
+                height={21}
+                priority
+              />
+              카카오로 시작하기
+            </button>
+            <button onClick={handleNaverLogin} className={styles.naverButton}>
+              <Image src={naverImg} alt={'naver'} width={21} height={21} />
+              네이버로 시작하기
+            </button>
           </div>
           
-          <button
-            type='submit'
-            className={styles.submitButton}
-            disabled={!isValid}
-          >
-            로그인하기
-          </button>
-        </form>
-        {errorMessage && <p className={styles.errorText}>{errorMessage}</p>}
-        <div className={styles.linkContainer}>
-          <span className={styles.findId} onClick={handleFindId}>
-            아이디 찾기
-          </span>{' '}
-          {' | '}
-          <span className={styles.findPassword} onClick={handleFindPassword}>
-            비밀번호 찾기
-          </span>{' '}
-          {' | '}
-          <span className={styles.join} onClick={() => router.push('/Join')}>
-            회원가입
-          </span>
-        </div>
-        <div className={styles.socialLoginContainer}>
-          <div className={styles.hrContainer}>
-            <hr className={styles.hrStyle} />
-            <span className={styles.hrText}>간편 로그인</span>
-            <hr className={styles.hrStyle} />
-          </div>
-          <button onClick={handleKakaoLogin} className={styles.kakaoButton}>
-            <Image
-              src={kakaoImg}
-              alt={'kakao'}
-              width={21}
-              height={21}
-              priority
-            />
-            카카오로 시작하기
-          </button>
-          <button onClick={handleNaverLogin} className={styles.naverButton}>
-            <Image src={naverImg} alt={'naver'} width={21} height={21} />
-            네이버로 시작하기
-          </button>
-        </div>
-        
-        <Snackbar
-          open={openSnackbar}
-          autoHideDuration={3000}
-          onClose={closeSnackbar}
-          anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-        >
-          <Alert
+          <Snackbar
+            open={openSnackbar}
+            autoHideDuration={3000}
             onClose={closeSnackbar}
-            severity='error'
-            sx={{ width: '100%' }}
+            anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
           >
-            {errorMessage}
-          </Alert>
-        </Snackbar>
+            <Alert
+              onClose={closeSnackbar}
+              severity='error'
+              sx={{ width: '100%' }}
+            >
+              {errorMessage}
+            </Alert>
+          </Snackbar>
+        </div>
       </div>
-    </div>
+    </Suspense>
   );
 };
 
