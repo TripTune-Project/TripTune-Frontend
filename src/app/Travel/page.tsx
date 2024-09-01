@@ -49,7 +49,7 @@ const TravelPage = () => {
   const [places, setPlaces] = useState<Place[]>([]);
   const [totalPages, setTotalPages] = useState(0);
   const [isSearching, setIsSearching] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [userCoordinates, setUserCoordinates] = useState<{ latitude: number; longitude: number } | null>(null);
   
   const checkAuthStatus = () => {
@@ -67,10 +67,10 @@ const TravelPage = () => {
   }, []);
   
   useEffect(() => {
-    if (userCoordinates) {
+    if (userCoordinates && !isSearching) {
       fetchPlaces();
     }
-  }, [userCoordinates, currentPage, isSearching, searchTerm, searchType]);
+  }, [userCoordinates, currentPage]);
   
   const requestUserLocation = () => {
     if (navigator.geolocation) {
@@ -133,6 +133,7 @@ const TravelPage = () => {
     if (searchTerm.trim()) {
       setIsSearching(true);
       setCurrentPage(1);
+      fetchPlaces();
     } else {
       alert('검색어를 입력해주세요.');
     }
@@ -150,6 +151,7 @@ const TravelPage = () => {
     setSearchTerm('');
     setIsSearching(false);
     setCurrentPage(1);
+    fetchPlaces();
   };
   
   return (
