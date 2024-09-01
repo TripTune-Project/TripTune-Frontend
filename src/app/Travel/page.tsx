@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Pagination from '../../components/Travel/Pagination';
 import Map from '../../components/Travel/Map';
 import Image from 'next/image';
@@ -8,6 +8,8 @@ import searchIcon from '../../../public/assets/images/search-icon.png';
 import { fetchTravelListSearch } from '@/api/travelListSearchApi';
 import { fetchTravelListByLocation } from '@/api/travelListApi';
 import styles from '../../styles/Travel.module.css';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 
 interface Place {
   placeId: number;
@@ -23,40 +25,39 @@ interface Place {
 }
 
 const TravelPage = () => {
-  // TODO : 페이지를 직접 처리 하면 되지만 버튼 동작에 대한 페이징 처리가 안됨
-  // TODO : 사진과 좀 이쁘게 배치 할 수 있도록 하기
-  // TODO : 검색을 할때도 페이지 LIST 보내주는게 필요한지
-  // TODO : 사용자의 위치 지리에 따른 API 호출 인지 확인
-  const [currentPage, setCurrentPage] = useState(1); // 이거 페이지 작동 안됨
+  const router = useRouter();
+  const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchType, setSearchType] = useState('placeName');
   const [places, setPlaces] = useState<Place[]>([]);
   const [totalPages, setTotalPages] = useState(0);
   const [isSearching, setIsSearching] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [userCoordinates, setUserCoordinates] = useState({ latitude: 37.5642, longitude: 126.9976 });
-  const hasFetchedInitialData = useRef(false);
+  const [userCoordinates, setUserCoordinates] = useState<{ latitude: number; longitude: number } | null>(null);
+  
+  const checkAuthStatus = () => {
+    const accessToken = Cookies.get('trip-tune_at');
+    const refreshToken = Cookies.get('trip-tune_rt');
+    
+    if (!accessToken || !refreshToken) {
+      router.push(`/Login?next=${encodeURIComponent('/Travel')}`);
+    }
+  };
   
   useEffect(() => {
+    checkAuthStatus();
     requestUserLocation();
   }, []);
   
   useEffect(() => {
-    if (!hasFetchedInitialData.current && userCoordinates.latitude && userCoordinates.longitude) {
-      fetchPlacesByLocation(1, userCoordinates.latitude, userCoordinates.longitude);
-      hasFetchedInitialData.current = true;
+    if (userCoordinates) {
+      if (isSearching) {
+        fetchPlacesBySearch(currentPage, searchTerm, searchType);
+      } else {
+        fetchPlacesByLocation(currentPage, userCoordinates.latitude, userCoordinates.longitude);
+      }
     }
-  }, [userCoordinates.latitude, userCoordinates.longitude]);
-  
-  useEffect(() => {
-    if (!hasFetchedInitialData.current) return;
-    
-    if (isSearching) {
-      fetchPlacesBySearch(currentPage, searchTerm, searchType);
-    } else {
-      fetchPlacesByLocation(currentPage, userCoordinates.latitude, userCoordinates.longitude);
-    }
-  }, [currentPage, isSearching, searchTerm, searchType]);
+  }, [userCoordinates, currentPage, isSearching, searchTerm, searchType]);
   
   const requestUserLocation = () => {
     if (navigator.geolocation) {
@@ -68,8 +69,12 @@ const TravelPage = () => {
           });
         },
         (error) => {
-          console.warn('위치 권한 거부 또는 오류 발생:', error.message);
           setUserCoordinates({ latitude: 37.5642, longitude: 126.9976 });
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 5000,
+          maximumAge: 0,
         }
       );
     } else {
@@ -79,23 +84,17 @@ const TravelPage = () => {
   
   const fetchPlacesByLocation = async (page: number, latitude: number, longitude: number) => {
     setIsLoading(true);
-    const params = {
-      latitude,
-      longitude,
-    };
     
     try {
-      const response = await fetchTravelListByLocation(params, page);
+      const response = await fetchTravelListByLocation({ latitude, longitude }, page);
       if (response.success && response.data && Array.isArray(response.data.content)) {
         setPlaces(response.data.content);
         setTotalPages(response.data.totalPages);
       } else {
-        console.error(response.message);
         setPlaces([]);
         setTotalPages(0);
       }
     } catch (error) {
-      console.error('데이터 로드 중 오류 발생:', error);
       setPlaces([]);
       setTotalPages(0);
     } finally {
@@ -105,23 +104,17 @@ const TravelPage = () => {
   
   const fetchPlacesBySearch = async (page: number, term: string, type: string) => {
     setIsLoading(true);
-    const params = {
-      type,
-      keyword: term,
-    };
     
     try {
-      const response = await fetchTravelListSearch(params);
+      const response = await fetchTravelListSearch({ type, keyword: term }, page);
       if (response.success && response.data && Array.isArray(response.data.content)) {
         setPlaces(response.data.content);
         setTotalPages(response.data.totalPages);
       } else {
-        console.error(response.message);
         setPlaces([]);
         setTotalPages(0);
       }
     } catch (error) {
-      console.error('데이터 로드 중 오류 발생:', error);
       setPlaces([]);
       setTotalPages(0);
     } finally {
@@ -130,7 +123,9 @@ const TravelPage = () => {
   };
   
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+    if (page !== currentPage) {
+      setCurrentPage(page);
+    }
   };
   
   const handleSearch = () => {
@@ -182,17 +177,21 @@ const TravelPage = () => {
               찾기
             </button>
           </div>
-          <ul>
+          <ul className={styles.placeList}>
             {Array.isArray(places) && places.map((place) => (
-              <li key={place.placeId}>
-                <h2>{place.placeName}</h2>
-                <p>{`${place.country} - ${place.city} - ${place.district}`}</p>
-                <p>{place.address} {place.detailAddress}</p>
-                {place.thumbnailUrl ? (
-                  <Image src={place.thumbnailUrl} alt={place.placeName} width={100} height={100} />
-                ) : (
-                  <div>이미지 없음</div>
-                )}
+              <li key={place.placeId} className={styles.placeItem}>
+                <div className={styles.placeThumbnail}>
+                  {place.thumbnailUrl ? (
+                    <Image src={place.thumbnailUrl} alt={place.placeName} width={200} height={200} className={styles.thumbnailImage} />
+                  ) : (
+                    <div className={styles.noImage}>이미지 없음</div>
+                  )}
+                </div>
+                <div className={styles.placeInfo}>
+                  <h2 className={styles.placeName}>{place.placeName}</h2>
+                  <p className={styles.placeAddress}>{`${place.country} / ${place.city} / ${place.district}`}</p>
+                  <p className={styles.placeDetailAddress}>{place.address} {place.detailAddress}</p>
+                </div>
               </li>
             ))}
           </ul>

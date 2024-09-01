@@ -2,9 +2,9 @@
 
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { validatePassword, validateUserId } from '../../utils/validation';
+import { validatePassword, validateUserId } from '@/utils/validation';
 import styles from '../../styles/Login.module.css';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import useLogin from '../../hooks/useLogin';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
@@ -17,12 +17,14 @@ interface LoginFormData {
   password: string;
 }
 
-const LoginForm: React.FC = () => {
+const LoginForm = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const next = searchParams.get('next') || '/';
   const { loginUser } = useLogin();
   const [errorMessage, setErrorMessage] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
-
+  
   const {
     register,
     handleSubmit,
@@ -30,32 +32,32 @@ const LoginForm: React.FC = () => {
   } = useForm<LoginFormData>({
     mode: 'onChange',
   });
-
+  
   const onSubmit = async (data: LoginFormData) => {
     try {
       await loginUser(data);
-      router.push('/');
+      router.push(next);
     } catch (error) {
       console.error('로그인 에러:', error);
       setErrorMessage('아이디 또는 비밀번호가 잘못되었습니다.');
       setOpenSnackbar(true);
     }
   };
-
+  
   const handleKakaoLogin = () => {
     window.location.href =
       'https://kauth.kakao.com/oauth/authorize?client_id=YOUR_KAKAO_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&response_type=code';
   };
-
+  
   const handleNaverLogin = () => {
     window.location.href =
       'https://nid.naver.com/oauth2.0/authorize?client_id=YOUR_NAVER_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&response_type=code';
   };
-
+  
   const handleFindId = () => {
     window.open('/Find?tab=findId', 'FindId', 'width=619,height=673');
   };
-
+  
   const handleFindPassword = () => {
     window.open(
       '/Find?tab=findPassword',
@@ -63,11 +65,11 @@ const LoginForm: React.FC = () => {
       'width=619,height=673'
     );
   };
-
+  
   const closeSnackbar = () => {
     setOpenSnackbar(false);
   };
-
+  
   return (
     <div className={styles.loginBackground}>
       <div className={styles.loginContainer}>
@@ -100,7 +102,7 @@ const LoginForm: React.FC = () => {
               <p className={styles.errorText}>{errors.password.message}</p>
             )}
           </div>
-
+          
           <button
             type='submit'
             className={styles.submitButton}
@@ -140,11 +142,11 @@ const LoginForm: React.FC = () => {
             카카오로 시작하기
           </button>
           <button onClick={handleNaverLogin} className={styles.naverButton}>
-            <Image src={naverImg} alt={'kakao'} width={21} height={21} />
+            <Image src={naverImg} alt={'naver'} width={21} height={21} />
             네이버로 시작하기
           </button>
         </div>
-
+        
         <Snackbar
           open={openSnackbar}
           autoHideDuration={3000}

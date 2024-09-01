@@ -1,11 +1,9 @@
-// TODO : 토큰 만료 되고나서 왜 자동으로 로그아웃 처리가 되는지
 import axios, { AxiosInstance, AxiosError } from 'axios';
 import Cookies from 'js-cookie';
-import Router from 'next/router';
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: '/',
-  timeout: 10000,
+  timeout: 5000,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -33,9 +31,14 @@ axiosInstance.interceptors.response.use(
       console.error('401 Unauthorized - 토큰이 만료되었습니다.');
       
       try {
-        const refreshToken = Cookies.get('refresh_token');
-        if (refreshToken) {
-          const response = await axios.post('/api/members/refresh', { token: refreshToken });
+        const accessToken = Cookies.get('trip-tune_at');
+        const refreshToken = Cookies.get('trip-tune_rt');
+        
+        if (accessToken && refreshToken) {
+          const response = await axios.post('/api/members/refresh', {
+            accessToken: accessToken,
+            refreshToken: refreshToken,
+          });
           
           const newToken = response.data.accessToken;
           Cookies.set('trip-tune_at', newToken);
@@ -45,23 +48,14 @@ axiosInstance.interceptors.response.use(
           }
           return axiosInstance(error.config);
         } else {
-          console.error('리프레시 토큰이 없습니다. 로그아웃 처리');
-          handleLogout();
+          console.error('필요한 토큰이 없습니다.');
         }
       } catch (refreshError) {
         console.error('토큰 갱신 실패:', refreshError);
-        handleLogout();
       }
     }
     return Promise.reject(error);
   }
 );
-
-const handleLogout = () => {
-  Cookies.remove('trip-tune_at');
-  Cookies.remove('refresh_token');
-  
-  Router.push('/login');
-};
 
 export default axiosInstance;
