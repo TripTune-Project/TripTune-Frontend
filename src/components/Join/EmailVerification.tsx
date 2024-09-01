@@ -11,7 +11,7 @@ import styles from '../../styles/Join.module.css';
 import { requestEmailVerification, verifyEmail } from '../../api/emailApi';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-import Loading from '../Common/Loading';
+import VerificationLoading from '../Common/VerificationLoading';
 
 interface JoinFormData {
   nickname: string;
@@ -156,7 +156,7 @@ const EmailVerification = ({
             isVerificationSent
           }
         >
-          {loading ? <Loading /> : '인증 요청'}
+          {loading ? <VerificationLoading /> : '인증 요청'}
         </button>
       </div>
       {errors.email && (
@@ -183,7 +183,7 @@ const EmailVerification = ({
               loading
             }
           >
-            {loading ? <Loading /> : '인증 확인'}
+            {loading ? <VerificationLoading /> : '인증 확인'}
           </button>
         </div>
       )}

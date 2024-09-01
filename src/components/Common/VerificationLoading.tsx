@@ -1,7 +1,7 @@
 import React from 'react';
-import styles from '../../styles/Loading.module.css';
+import styles from '../../styles/VerificationLoading.module.css';
 
-const Loading = () => {
+const VerificationLoading = () => {
   return (
     <div className={styles.loading}>
       <div className={styles.spinner}></div>
@@ -9,4 +9,4 @@ const Loading = () => {
   );
 };
 
-export default Loading;
+export default VerificationLoading;

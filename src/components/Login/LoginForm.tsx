@@ -11,7 +11,7 @@ import Snackbar from '@mui/material/Snackbar';
 import Image from 'next/image';
 import kakaoImg from '../../../public/assets/images/kakao.png';
 import naverImg from '../../../public/assets/images/naver.png';
-import Loading from '../../components/Common/Loading';
+import VerificationLoading from '../Common/VerificationLoading';
 
 interface LoginFormData {
   userId: string;
@@ -72,7 +72,7 @@ const LoginForm = () => {
   };
   
   return (
-    <Suspense fallback={<Loading />}>
+    <Suspense fallback={<VerificationLoading />}>
       <div className={styles.loginBackground}>
         <div className={styles.loginContainer}>
           <div className={styles.loginTitle}>로그인</div>

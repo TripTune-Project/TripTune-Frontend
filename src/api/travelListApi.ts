@@ -15,6 +15,8 @@ interface TravelListResult {
   address: string;
   latitude: number;
   longitude: number;
+  detailAddress:string;
+  thumbnailUrl:string;
 }
 
 interface TravelListSuccessResponse {

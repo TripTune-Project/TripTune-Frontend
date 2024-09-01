@@ -10,6 +10,7 @@ import { fetchTravelListByLocation } from '@/api/travelListApi';
 import styles from '../../styles/Travel.module.css';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
+import DataLoading from '../../components/Common/DataLoading';
 
 interface Place {
   placeId: number;
@@ -84,10 +85,8 @@ const TravelPage = () => {
   
   const fetchPlacesByLocation = async (page: number, latitude: number, longitude: number) => {
     setIsLoading(true);
-    
     try {
       const response = await fetchTravelListByLocation({ latitude, longitude }, page);
-      
       if (response.success && 'data' in response && Array.isArray(response.data.content)) {
         const mappedPlaces: Place[] = response.data.content.map((place) => ({
           placeId: place.placeId,
@@ -98,10 +97,9 @@ const TravelPage = () => {
           latitude: place.latitude,
           longitude: place.longitude,
           address: place.address,
-          detailAddress: '',
-          thumbnailUrl: '',
+          detailAddress: place.detailAddress || '',
+          thumbnailUrl: place.thumbnailUrl || '',
         }));
-        
         setPlaces(mappedPlaces);
         setTotalPages(response.data.totalPages);
       } else {
@@ -118,10 +116,8 @@ const TravelPage = () => {
   
   const fetchPlacesBySearch = async (term: string, type: string) => {
     setIsLoading(true);
-    
     try {
       const response = await fetchTravelListSearch({ type, keyword: term });
-      
       if (response.success && 'data' in response && Array.isArray(response.data.content)) {
         const mappedPlaces: Place[] = response.data.content.map((place) => ({
           placeId: place.placeId,
@@ -132,10 +128,9 @@ const TravelPage = () => {
           latitude: place.latitude,
           longitude: place.longitude,
           address: place.address,
-          detailAddress: '',
-          thumbnailUrl: '',
+          detailAddress: place.detailAddress || '',
+          thumbnailUrl: place.thumbnailUrl || '',
         }));
-        
         setPlaces(mappedPlaces);
         setTotalPages(response.data.totalPages);
       } else {
@@ -182,7 +177,7 @@ const TravelPage = () => {
   return (
     <div className={styles.container}>
       {isLoading ? (
-        <div className={styles.loading}>로딩 중...</div>
+        <DataLoading />
       ) : (
         <div className={styles.listContainer}>
           <div className={styles.searchContainer}>
@@ -206,7 +201,7 @@ const TravelPage = () => {
             </button>
           </div>
           <ul className={styles.placeList}>
-            {Array.isArray(places) && places.map((place) => (
+            {places.map((place) => (
               <li key={place.placeId} className={styles.placeItem}>
                 <div className={styles.placeThumbnail}>
                   {place.thumbnailUrl ? (

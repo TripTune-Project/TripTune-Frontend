@@ -4,7 +4,7 @@ import { useEffect, Suspense } from 'react';
 import LoginForm from '../../components/Login/LoginForm';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
-import Loading from '../../components/Common/Loading';
+import VerificationLoading from '../../components/Common/VerificationLoading';
 
 export default function Page() {
   const router = useRouter();
@@ -23,7 +23,7 @@ export default function Page() {
   }, [router]);
   
   return (
-    <Suspense fallback={<Loading />}>
+    <Suspense fallback={<VerificationLoading />}>
       <LoginForm />
     </Suspense>
   );

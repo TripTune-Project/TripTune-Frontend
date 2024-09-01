@@ -3,7 +3,7 @@
 import React, { useEffect, useState, Suspense } from 'react';
 import { requestFindId, requestFindPassword } from '@/api/findApi';
 import { useRouter, useSearchParams } from 'next/navigation';
-import Loading from '../../components/Common/Loading';
+import VerificationLoading from '../../components/Common/VerificationLoading';
 import styles from '../../styles/Find.module.css';
 import { validateEmail, validateUserId } from '../../utils/validation';
 
@@ -163,7 +163,7 @@ const FindPage = () => {
             onClick={handleFindIdSubmit}
             disabled={!isEmailValid || loading}
           >
-            {loading ? <Loading /> : '아이디 찾기'}
+            {loading ? <VerificationLoading /> : '아이디 찾기'}
           </button>
         </div>
       ) : (
@@ -200,7 +200,7 @@ const FindPage = () => {
             onClick={handleFindPasswordSubmit}
             disabled={!isEmailValid || !isUserIdValid || loading}
           >
-            {loading ? <Loading /> : '비밀번호 찾기'}
+            {loading ? <VerificationLoading /> : '비밀번호 찾기'}
           </button>
         </div>
       )}
