@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import axios, { AxiosInstance, AxiosError, AxiosResponse, InternalAxiosRequestConfig, AxiosRequestHeaders } from 'axios';
 import Cookies from 'js-cookie';
 
 const axiosInstance: AxiosInstance = axios.create({
@@ -44,10 +44,10 @@ axiosInstance.interceptors.response.use(
           Cookies.set('trip-tune_at', newToken);
           
           if (error.config) {
-            if (!error.config.headers) {
-              error.config.headers = {};
-            }
-            error.config.headers['Authorization'] = `Bearer ${newToken}`;
+            const headers: AxiosRequestHeaders = error.config.headers || {};
+            headers['Authorization'] = `Bearer ${newToken}`;
+            error.config.headers = headers;
+            
             return axiosInstance(error.config);
           } else {
             console.error('에러의 config가 정의되지 않았습니다.');
