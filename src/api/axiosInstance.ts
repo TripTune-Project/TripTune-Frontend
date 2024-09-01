@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosError } from 'axios';
+import axios, { AxiosInstance, AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import Cookies from 'js-cookie';
 
 const axiosInstance: AxiosInstance = axios.create({
@@ -10,24 +10,24 @@ const axiosInstance: AxiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use(
-  (config) => {
+  (config: AxiosRequestConfig) => {
     const token = Cookies.get('trip-tune_at');
-    if (token) {
+    if (token && config.headers) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => {
+  (error: AxiosError) => {
     return Promise.reject(error);
   }
 );
 
 axiosInstance.interceptors.response.use(
-  (response) => {
+  (response: AxiosResponse) => {
     return response;
   },
   async (error: AxiosError) => {
-    if (error.response && error.response.status === 401) {
+    if (error.response?.status === 401) {
       console.error('401 Unauthorized - 토큰이 만료되었습니다.');
       
       try {
@@ -43,10 +43,15 @@ axiosInstance.interceptors.response.use(
           const newToken = response.data.accessToken;
           Cookies.set('trip-tune_at', newToken);
           
-          if (error.config.headers) {
+          if (error.config) {
+            if (!error.config.headers) {
+              error.config.headers = {};
+            }
             error.config.headers['Authorization'] = `Bearer ${newToken}`;
+            return axiosInstance(error.config);
+          } else {
+            console.error('에러의 config가 정의되지 않았습니다.');
           }
-          return axiosInstance(error.config);
         } else {
           console.error('필요한 토큰이 없습니다.');
         }
