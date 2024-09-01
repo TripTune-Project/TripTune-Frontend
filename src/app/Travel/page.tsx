@@ -52,11 +52,7 @@ const TravelPage = () => {
   
   useEffect(() => {
     if (userCoordinates) {
-      if (isSearching) {
-        fetchPlacesBySearch(searchTerm, searchType);
-      } else {
-        fetchPlacesByLocation(currentPage, userCoordinates.latitude, userCoordinates.longitude);
-      }
+      fetchPlaces();
     }
   }, [userCoordinates, currentPage, isSearching, searchTerm, searchType]);
   
@@ -69,7 +65,7 @@ const TravelPage = () => {
             longitude: position.coords.longitude,
           });
         },
-        (error) => {
+        () => {
           setUserCoordinates({ latitude: 37.5642, longitude: 126.9976 });
         },
         {
@@ -83,66 +79,45 @@ const TravelPage = () => {
     }
   };
   
-  const fetchPlacesByLocation = async (page: number, latitude: number, longitude: number) => {
+  const fetchPlaces = async () => {
     setIsLoading(true);
     try {
-      const response = await fetchTravelListByLocation({ latitude, longitude }, page);
-      if (response.success && 'data' in response && Array.isArray(response.data.content)) {
-        const mappedPlaces: Place[] = response.data.content.map((place) => ({
-          placeId: place.placeId,
-          country: place.country,
-          city: place.city,
-          district: place.district,
-          placeName: place.placeName,
-          latitude: place.latitude,
-          longitude: place.longitude,
-          address: place.address,
-          detailAddress: place.detailAddress || '',
-          thumbnailUrl: place.thumbnailUrl || '',
-        }));
-        setPlaces(mappedPlaces);
+      const response = isSearching
+        ? await fetchTravelListSearch({ type: searchType, keyword: searchTerm })
+        : await fetchTravelListByLocation(
+          { latitude: userCoordinates!.latitude, longitude: userCoordinates!.longitude },
+          currentPage
+        );
+      
+      if (response?.success && Array.isArray(response.data.content)) {
+        setPlaces(response.data.content.map(mapPlaceData));
         setTotalPages(response.data.totalPages);
       } else {
-        setPlaces([]);
-        setTotalPages(0);
+        resetPlaces();
       }
-    } catch (error) {
-      setPlaces([]);
-      setTotalPages(0);
+    } catch {
+      resetPlaces();
     } finally {
       setIsLoading(false);
     }
   };
   
-  const fetchPlacesBySearch = async (term: string, type: string) => {
-    setIsLoading(true);
-    try {
-      const response = await fetchTravelListSearch({ type, keyword: term });
-      if (response.success && 'data' in response && Array.isArray(response.data.content)) {
-        const mappedPlaces: Place[] = response.data.content.map((place) => ({
-          placeId: place.placeId,
-          country: place.country,
-          city: place.city,
-          district: place.district,
-          placeName: place.placeName,
-          latitude: place.latitude,
-          longitude: place.longitude,
-          address: place.address,
-          detailAddress: place.detailAddress || '',
-          thumbnailUrl: place.thumbnailUrl || '',
-        }));
-        setPlaces(mappedPlaces);
-        setTotalPages(response.data.totalPages);
-      } else {
-        setPlaces([]);
-        setTotalPages(0);
-      }
-    } catch (error) {
-      setPlaces([]);
-      setTotalPages(0);
-    } finally {
-      setIsLoading(false);
-    }
+  const mapPlaceData = (place: any): Place => ({
+    placeId: place.placeId,
+    country: place.country,
+    city: place.city,
+    district: place.district,
+    placeName: place.placeName,
+    latitude: place.latitude,
+    longitude: place.longitude,
+    address: place.address,
+    detailAddress: place.detailAddress || '',
+    thumbnailUrl: place.thumbnailUrl || '',
+  });
+  
+  const resetPlaces = () => {
+    setPlaces([]);
+    setTotalPages(0);
   };
   
   const handlePageChange = (page: number) => {
@@ -152,7 +127,7 @@ const TravelPage = () => {
   };
   
   const handleSearch = () => {
-    if (searchTerm.trim() !== '') {
+    if (searchTerm.trim()) {
       setIsSearching(true);
       setCurrentPage(1);
     } else {
@@ -188,7 +163,9 @@ const TravelPage = () => {
             </select>
             <input
               type="text"
-              placeholder={`검색할 ${searchType === 'placeName' ? '장소명' : searchType === 'country' ? '국가명' : '도시명'}을 입력하세요`}
+              placeholder={`검색할 ${
+                searchType === 'placeName' ? '장소명' : searchType === 'country' ? '국가명' : '도시명'
+              }을 입력하세요`}
               value={searchTerm}
               onChange={handleSearchInputChange}
               className={styles.input}
@@ -205,7 +182,13 @@ const TravelPage = () => {
               <li key={place.placeId} className={styles.placeItem}>
                 <div className={styles.placeThumbnail}>
                   {place.thumbnailUrl ? (
-                    <Image src={place.thumbnailUrl} alt={place.placeName} width={200} height={200} className={styles.thumbnailImage} />
+                    <Image
+                      src={place.thumbnailUrl}
+                      alt={place.placeName}
+                      width={200}
+                      height={200}
+                      className={styles.thumbnailImage}
+                    />
                   ) : (
                     <div className={styles.noImage}>이미지 없음</div>
                   )}
@@ -213,17 +196,14 @@ const TravelPage = () => {
                 <div className={styles.placeInfo}>
                   <h2 className={styles.placeName}>{place.placeName}</h2>
                   <p className={styles.placeAddress}>{`${place.country} / ${place.city} / ${place.district}`}</p>
-                  <p className={styles.placeDetailAddress}>{place.address} {place.detailAddress}</p>
+                  <p className={styles.placeDetailAddress}>
+                    {place.address} {place.detailAddress}
+                  </p>
                 </div>
               </li>
             ))}
           </ul>
-          <Pagination
-            total={totalPages * 5}
-            currentPage={currentPage}
-            pageSize={5}
-            onPageChange={handlePageChange}
-          />
+          <Pagination total={totalPages * 5} currentPage={currentPage} pageSize={5} onPageChange={handlePageChange} />
         </div>
       )}
       <div className={styles.mapContainer}>

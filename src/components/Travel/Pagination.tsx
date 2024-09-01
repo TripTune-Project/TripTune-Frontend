@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React from 'react';
 import styles from '../../styles/Pagination.module.css';
 
 interface PaginationProps {
@@ -10,7 +10,7 @@ interface PaginationProps {
 
 const Pagination = ({ total, currentPage, pageSize, onPageChange }: PaginationProps) => {
   const totalPages = Math.ceil(total / pageSize);
-  const maxPagesToShow = 5; // 최대 표시할 페이지 수
+  const maxPagesToShow = 5;
   const startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
   const endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
   
@@ -25,60 +25,35 @@ const Pagination = ({ total, currentPage, pageSize, onPageChange }: PaginationPr
     </button>
   );
   
-  const goToFirstPage = () => onPageChange(1);
-  const goToLastPage = () => onPageChange(totalPages);
-  const prevPage = () => {
-    if (currentPage > 1) onPageChange(currentPage - 1);
-  };
+  const renderNavButton = (onClick: () => void, disabled: boolean, symbol: string, ariaLabel: string) => (
+    <button
+      onClick={onClick}
+      className={`${styles.navButton} ${disabled ? styles.disabled : ''}`}
+      disabled={disabled}
+      aria-label={ariaLabel}
+    >
+      {symbol}
+    </button>
+  );
   
-  const nextPage = () => {
-    if (currentPage < totalPages) onPageChange(currentPage + 1);
+  const generatePageButtons = () => {
+    const pages = [];
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(renderPageButton(i));
+    }
+    return pages;
   };
-  
-  // 페이지 버튼 리스트 생성
-  const pages = [];
-  for (let i = startPage; i <= endPage; i++) {
-    pages.push(i);
-  }
   
   return (
     <div className={styles.paginationContainer} role="navigation" aria-label="Pagination Navigation">
-      <button
-        onClick={goToFirstPage}
-        className={`${styles.navButton} ${currentPage === 1 ? styles.disabled : ''}`}
-        disabled={currentPage === 1}
-        aria-label="First Page"
-      >
-        &laquo;
-      </button>
-      <button
-        onClick={prevPage}
-        className={`${styles.navButton} ${currentPage === 1 ? styles.disabled : ''}`}
-        disabled={currentPage === 1}
-        aria-label="Previous Page"
-      >
-        &lt;
-      </button>
-      {pages.map(renderPageButton)}
+      {renderNavButton(() => onPageChange(1), currentPage === 1, '«', 'First Page')}
+      {renderNavButton(() => onPageChange(currentPage - 1), currentPage === 1, '‹', 'Previous Page')}
+      {generatePageButtons()}
       {endPage < totalPages && <span className={styles.ellipsis}>...</span>}
-      <button
-        onClick={nextPage}
-        className={`${styles.navButton} ${currentPage === totalPages ? styles.disabled : ''}`}
-        disabled={currentPage === totalPages}
-        aria-label="Next Page"
-      >
-        &gt;
-      </button>
-      <button
-        onClick={goToLastPage}
-        className={`${styles.navButton} ${currentPage === totalPages ? styles.disabled : ''}`}
-        disabled={currentPage === totalPages}
-        aria-label="Last Page"
-      >
-        &raquo;
-      </button>
+      {renderNavButton(() => onPageChange(currentPage + 1), currentPage === totalPages, '›', 'Next Page')}
+      {renderNavButton(() => onPageChange(totalPages), currentPage === totalPages, '»', 'Last Page')}
     </div>
   );
 };
 
-export default memo(Pagination);
+export default Pagination;

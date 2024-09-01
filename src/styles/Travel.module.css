@@ -65,20 +65,34 @@
 
 .placeThumbnail {
     margin-right: 20px;
+    width: 200px;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 .thumbnailImage {
     border-radius: 8px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .noImage {
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 8px;
     width: 200px;
     height: 200px;
-    background-color: #f0f0f0;
-    border-radius: 8px;
+    font-size: 14px;
+    color: #999;
+    background-color: #e0e0e0;
+    border: 1px dashed #ccc;
 }
 
 .placeInfo {
