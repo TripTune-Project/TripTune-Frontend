@@ -23,7 +23,7 @@ interface JoinFormData {
   authCode?: string;
 }
 
-const JoinForm: React.FC = () => {
+const JoinForm = () => {
   const {
     register,
     handleSubmit,
@@ -31,7 +31,7 @@ const JoinForm: React.FC = () => {
     getValues,
     formState: { errors, isValid },
   } = useForm<JoinFormData>({ mode: 'onChange' });
-
+  
   const [isVerificationComplete, setIsVerificationComplete] = useState(false);
   const [isAgreed, setIsAgreed] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -40,13 +40,13 @@ const JoinForm: React.FC = () => {
   const [alertSeverity, setAlertSeverity] = useState<'success' | 'error'>(
     'success'
   );
-
+  
   const router = useRouter();
-
+  
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
   };
-
+  
   const onSubmit = async (data: JoinFormData) => {
     if (!isVerificationComplete) {
       setNotificationMessage('이메일 인증을 완료해주세요.');
@@ -55,7 +55,7 @@ const JoinForm: React.FC = () => {
       setOpenSnackbar(true);
       return;
     }
-
+    
     try {
       const { authCode, ...submitData } = data;
       await joinMember(submitData);
@@ -64,7 +64,7 @@ const JoinForm: React.FC = () => {
       );
       setAlertSeverity('success');
       setOpenSnackbar(true);
-
+      
       setTimeout(() => {
         router.push('/Login');
       }, 3000);
@@ -80,11 +80,11 @@ const JoinForm: React.FC = () => {
       setOpenSnackbar(true);
     }
   };
-
+  
   const handleAgreementChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsAgreed(e.target.checked);
   };
-
+  
   return (
     <div className={styles.joinBackground}>
       <div className={styles.joinContainer}>

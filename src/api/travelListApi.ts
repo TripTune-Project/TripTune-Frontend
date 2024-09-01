@@ -1,4 +1,4 @@
-import axios, { AxiosResponse, AxiosError } from 'axios';
+import { AxiosResponse, AxiosError, isAxiosError } from 'axios';
 import axiosInstance from './axiosInstance';
 
 interface TravelListLocationParams {
@@ -54,17 +54,23 @@ export const fetchTravelListByLocation = async (
     
     return response.data;
   } catch (error: unknown) {
-    if (error instanceof AxiosError && error.response) {
-      const response: axios.AxiosResponse<unknown, any> | undefined = error.response;
-      console.error('API Error Response:', response.data);
-      return response.data;
-    } else {
-      console.error('Unexpected Error:', error);
-      return {
-        success: false,
-        errorCode: 500,
-        message: '서버 내부 오류가 발생하였습니다.',
-      };
+    if (isAxiosError(error)) {
+      const axiosError = error as AxiosError<TravelListErrorResponse>;
+      const response = axiosError.response;
+      
+      // response가 존재하는지 확인 후 처리
+      if (response) {
+        console.error('API Error Response:', response.data);
+        return response.data;
+      }
     }
+    
+    // 예상치 못한 오류 처리
+    console.error('Unexpected Error:', error);
+    return {
+      success: false,
+      errorCode: 500,
+      message: '서버 내부 오류가 발생하였습니다.',
+    };
   }
 };
