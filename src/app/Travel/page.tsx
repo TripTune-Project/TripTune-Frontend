@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import Pagination from '../../components/Travel/Pagination';
 import Map from '../../components/Travel/Map';
 import Image from 'next/image';
@@ -25,6 +25,22 @@ interface Place {
   thumbnailUrl: string;
 }
 
+interface TravelListSearchResponse {
+  success: boolean;
+  data?: {
+    content: Place[];
+    totalPages: number;
+  };
+}
+
+interface TravelListLocationResponse {
+  success: boolean;
+  data?: {
+    content: Place[];
+    totalPages: number;
+  };
+}
+
 const TravelPage = () => {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
@@ -36,19 +52,19 @@ const TravelPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [userCoordinates, setUserCoordinates] = useState<{ latitude: number; longitude: number } | null>(null);
   
-  const checkAuthStatus = useCallback(() => {
+  const checkAuthStatus = () => {
     const accessToken = Cookies.get('trip-tune_at');
     const refreshToken = Cookies.get('trip-tune_rt');
     
     if (!accessToken || !refreshToken) {
       router.push(`/Login?next=${encodeURIComponent('/Travel')}`);
     }
-  }, [router]);
+  };
   
   useEffect(() => {
     checkAuthStatus();
     requestUserLocation();
-  }, [checkAuthStatus]);
+  }, []);
   
   useEffect(() => {
     if (userCoordinates) {
@@ -82,15 +98,15 @@ const TravelPage = () => {
   const fetchPlaces = async () => {
     setIsLoading(true);
     try {
-      const response = isSearching
-        ? await fetchTravelListSearch({ type: searchType, keyword: searchTerm })
+      const response: TravelListSearchResponse | TravelListLocationResponse = isSearching
+        ? await fetchTravelListSearch({ type: searchType, keyword: searchTerm }, currentPage)
         : await fetchTravelListByLocation(
           { latitude: userCoordinates!.latitude, longitude: userCoordinates!.longitude },
           currentPage
         );
       
-      if (response?.success && Array.isArray(response.data.content)) {
-        setPlaces(response.data.content.map(mapPlaceData));
+      if (response.success && response.data) {
+        setPlaces(response.data.content);
         setTotalPages(response.data.totalPages);
       } else {
         resetPlaces();
@@ -101,19 +117,6 @@ const TravelPage = () => {
       setIsLoading(false);
     }
   };
-  
-  const mapPlaceData = (place: any): Place => ({
-    placeId: place.placeId,
-    country: place.country,
-    city: place.city,
-    district: place.district,
-    placeName: place.placeName,
-    latitude: place.latitude,
-    longitude: place.longitude,
-    address: place.address,
-    detailAddress: place.detailAddress || '',
-    thumbnailUrl: place.thumbnailUrl || '',
-  });
   
   const resetPlaces = () => {
     setPlaces([]);

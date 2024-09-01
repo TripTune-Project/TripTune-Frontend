@@ -15,8 +15,8 @@ interface TravelListResult {
   address: string;
   latitude: number;
   longitude: number;
-  detailAddress:string;
-  thumbnailUrl:string;
+  detailAddress: string;
+  thumbnailUrl: string;
 }
 
 interface TravelListSuccessResponse {
@@ -49,9 +49,11 @@ export const fetchTravelListByLocation = async (
   try {
     const pageNum = Number(page);
     
-    const response: AxiosResponse<TravelListSuccessResponse | TravelListEmptyResponse> = await axiosInstance.post(
+    const response: AxiosResponse<TravelListSuccessResponse | TravelListEmptyResponse> = await axiosInstance.get(
       `/api/travels/list?page=${pageNum}`,
-      params
+      {
+          params,
+      }
     );
     
     return response.data;
@@ -60,7 +62,6 @@ export const fetchTravelListByLocation = async (
       const axiosError = error as AxiosError<TravelListErrorResponse>;
       const response = axiosError.response;
       
-      // response가 존재하는지 확인 후 처리
       if (response) {
         console.error('API Error Response:', response.data);
         return response.data;

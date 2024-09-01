@@ -15,8 +15,8 @@ interface TravelListSearchResult {
   address: string;
   latitude: number;
   longitude: number;
-  detailAddress:string;
-  thumbnailUrl:string;
+  detailAddress: string;
+  thumbnailUrl: string;
 }
 
 interface TravelListSearchSuccessResponse {
@@ -43,15 +43,19 @@ interface TravelListSearchErrorResponse {
 }
 
 export const fetchTravelListSearch = async (
-  params: TravelListSearchParams
+  params: TravelListSearchParams,
+  page: number = 1
 ): Promise<TravelListSearchSuccessResponse | TravelListSearchEmptyResponse | TravelListSearchErrorResponse> => {
   try {
+    const pageNum = Number(page);
+    
     const response: AxiosResponse<TravelListSearchSuccessResponse | TravelListSearchEmptyResponse> = await axiosInstance.get(
-      `/api/travels/search`,
+      `/api/travels/search?page=${pageNum}`,
       {
         params,
       }
     );
+    
     return response.data;
   } catch (error: unknown) {
     if (isAxiosError(error)) {
