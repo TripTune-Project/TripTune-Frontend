@@ -218,6 +218,10 @@ const TravelPage = () => {
     setAlertOpen(false);
   };
   
+  const handleDetailClick = (placeId: number) => {
+    router.push(`/Travel/${placeId}`);
+  };
+  
   return (
     <div className={styles.container}>
       {isLoading ? (
@@ -250,7 +254,11 @@ const TravelPage = () => {
           </div>
           <ul className={styles.placeList}>
             {places.map((place) => (
-              <li key={place.placeId} className={styles.placeItem}>
+              <li
+                key={place.placeId}
+                className={styles.placeItem}
+                onClick={() => handleDetailClick(place.placeId)}
+              >
                 <div className={styles.placeThumbnail}>
                   {place.thumbnailUrl ? (
                     <Image
@@ -270,7 +278,15 @@ const TravelPage = () => {
                   <p className={styles.placeDetailAddress}>
                     {place.address} {place.detailAddress}
                   </p>
-                  <button className={styles.contentBtn}>{place.placeName} 상세보기</button>
+                  <button
+                    className={styles.contentBtn}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDetailClick(place.placeId);
+                    }}
+                  >
+                    {place.placeName} 상세보기
+                  </button>
                 </div>
               </li>
             ))}
