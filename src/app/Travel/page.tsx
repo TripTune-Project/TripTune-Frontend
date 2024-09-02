@@ -57,6 +57,7 @@ const TravelPage = () => {
     
     if (!accessToken || !refreshToken) {
       setShowLoginModal(true);
+      resetPlaces();
     }
   }, []);
   
@@ -161,6 +162,9 @@ const TravelPage = () => {
   const resetPlaces = () => {
     setPlaces([]);
     setTotalPages(0);
+    setCurrentPage(1);
+    setSearchTerm('');
+    setIsSearching(false);
   };
   
   const handlePageChange = (page: number) => {
