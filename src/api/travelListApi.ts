@@ -51,9 +51,7 @@ export const fetchTravelListByLocation = async (
     
     const response: AxiosResponse<TravelListSuccessResponse | TravelListEmptyResponse> = await axiosInstance.post(
       `/api/travels/list?page=${pageNum}`,
-      {
         params,
-      }
     );
     
     return response.data;
