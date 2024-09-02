@@ -190,6 +190,8 @@ const TravelPage = () => {
     
     if (regex.test(input)) {
       setSearchTerm(input);
+    } else {
+      alert('한글과 영어만 입력 가능합니다.');
     }
   };
   
@@ -209,7 +211,7 @@ const TravelPage = () => {
     router.push(`/Login?next=${encodeURIComponent('/Travel')}`);
   };
   
-  const handleAlertClose = (event?: React.SyntheticEvent<Element, Event> | undefined, reason?: string) => {
+  const handleAlertClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return;
     }
