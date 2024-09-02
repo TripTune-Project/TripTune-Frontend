@@ -184,7 +184,13 @@ const TravelPage = () => {
   };
   
   const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
+    const input = event.target.value;
+    
+    const regex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z]*$/;
+    
+    if (regex.test(input)) {
+      setSearchTerm(input);
+    }
   };
   
   const handleSearchTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
