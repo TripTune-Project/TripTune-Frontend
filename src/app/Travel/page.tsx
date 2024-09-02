@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Pagination from '../../components/Travel/Pagination';
 import Map from '../../components/Travel/Map';
 import Image from 'next/image';
@@ -10,6 +10,9 @@ import styles from '../../styles/Travel.module.css';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import DataLoading from '../../components/Common/DataLoading';
+import LoginModal from '../../components/Common/LoginModal';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 interface Place {
   placeId: number;
@@ -24,15 +27,7 @@ interface Place {
   thumbnailUrl: string;
 }
 
-interface TravelListSearchResponse {
-  success: boolean;
-  data?: {
-    content: Place[];
-    totalPages: number;
-  };
-}
-
-interface TravelListLocationResponse {
+interface TravelListResponse {
   success: boolean;
   data?: {
     content: Place[];
@@ -50,26 +45,60 @@ const TravelPage = () => {
   const [isSearching, setIsSearching] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [userCoordinates, setUserCoordinates] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertSeverity, setAlertSeverity] = useState<'success' | 'error' | 'warning' | 'info'>('info');
   
-  const checkAuthStatus = () => {
+  const checkAuthStatus = useCallback(() => {
     const accessToken = Cookies.get('trip-tune_at');
     const refreshToken = Cookies.get('trip-tune_rt');
     
     if (!accessToken || !refreshToken) {
-      router.push(`/Login?next=${encodeURIComponent('/Travel')}`);
+      setShowLoginModal(true);
+      resetPlaces();
     }
-  };
+  }, []);
+  
+  const checkGeolocationPermission = useCallback(async () => {
+    try {
+      const result = await navigator.permissions.query({ name: 'geolocation' });
+      switch (result.state) {
+        case 'granted':
+          setAlertMessage('위치 권한이 허용되었습니다.');
+          setAlertSeverity('success');
+          requestUserLocation();
+          break;
+        case 'prompt':
+          setAlertMessage('위치 권한을 요청 중입니다.');
+          setAlertSeverity('info');
+          requestUserLocation();
+          break;
+        case 'denied':
+          setAlertMessage('위치 권한이 차단되었습니다. 기본 위치를 사용합니다.');
+          setAlertSeverity('warning');
+          setUserCoordinates({ latitude: 37.5642, longitude: 126.9976 });
+          break;
+        default:
+          break;
+      }
+      setAlertOpen(true);
+    } catch (error) {
+      console.error('위치 권한 상태 확인 오류:', error);
+    }
+  }, []);
   
   useEffect(() => {
     checkAuthStatus();
-    requestUserLocation();
-  }, []);
+    checkGeolocationPermission();
+  }, [checkAuthStatus, checkGeolocationPermission]);
   
   useEffect(() => {
     if (userCoordinates && !isSearching) {
       fetchPlaces();
     }
-  }, [userCoordinates, currentPage]);
+  }, [userCoordinates, currentPage, isSearching]);
   
   const requestUserLocation = () => {
     if (navigator.geolocation) {
@@ -81,7 +110,7 @@ const TravelPage = () => {
           });
         },
         () => {
-          setUserCoordinates({ latitude: 37.5642, longitude: 126.9976 });
+          handleLocationError('위치 권한이 거부되었습니다. 기본 위치를 사용합니다.');
         },
         {
           enableHighAccuracy: true,
@@ -90,14 +119,22 @@ const TravelPage = () => {
         }
       );
     } else {
-      setUserCoordinates({ latitude: 37.5642, longitude: 126.9976 });
+      handleLocationError('브라우저가 위치 정보를 지원하지 않습니다. 기본 위치를 사용합니다.');
     }
+  };
+  
+  const handleLocationError = (message: string) => {
+    setAlertMessage(message);
+    setAlertSeverity('warning');
+    setAlertOpen(true);
+    setUserCoordinates({ latitude: 37.5642, longitude: 126.9976 });
   };
   
   const fetchPlaces = async () => {
     setIsLoading(true);
+    setErrorMessage(null);
     try {
-      const response: TravelListSearchResponse | TravelListLocationResponse = isSearching
+      const response: TravelListResponse = isSearching
         ? await fetchTravelListSearch({ type: searchType, keyword: searchTerm }, currentPage)
         : await fetchTravelListByLocation(
           { latitude: userCoordinates!.latitude, longitude: userCoordinates!.longitude },
@@ -107,10 +144,15 @@ const TravelPage = () => {
       if (response.success && response.data) {
         setPlaces(response.data.content);
         setTotalPages(response.data.totalPages);
+        if (response.data.content.length === 0) {
+          setErrorMessage('검색 결과가 없습니다.');
+        }
       } else {
+        setErrorMessage('데이터를 불러오는 중 오류가 발생했습니다.');
         resetPlaces();
       }
     } catch {
+      setErrorMessage('네트워크 에러가 발생했습니다. 다시 시도해주세요.');
       resetPlaces();
     } finally {
       setIsLoading(false);
@@ -120,6 +162,9 @@ const TravelPage = () => {
   const resetPlaces = () => {
     setPlaces([]);
     setTotalPages(0);
+    setCurrentPage(1);
+    setSearchTerm('');
+    setIsSearching(false);
   };
   
   const handlePageChange = (page: number) => {
@@ -139,7 +184,15 @@ const TravelPage = () => {
   };
   
   const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
+    const input = event.target.value;
+    
+    const regex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z]*$/;
+    
+    if (regex.test(input)) {
+      setSearchTerm(input);
+    } else {
+      alert('한글과 영어만 입력 가능합니다.');
+    }
   };
   
   const handleSearchTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -153,10 +206,24 @@ const TravelPage = () => {
     fetchPlaces();
   };
   
+  const handleCloseLoginModal = () => {
+    setShowLoginModal(false);
+    router.push(`/Login?next=${encodeURIComponent('/Travel')}`);
+  };
+  
+  const handleAlertClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setAlertOpen(false);
+  };
+  
   return (
     <div className={styles.container}>
       {isLoading ? (
         <DataLoading />
+      ) : errorMessage ? (
+        <div className={styles.errorMessage}>{errorMessage}</div>
       ) : (
         <div className={styles.listContainer}>
           <div className={styles.searchContainer}>
@@ -203,6 +270,7 @@ const TravelPage = () => {
                   <p className={styles.placeDetailAddress}>
                     {place.address} {place.detailAddress}
                   </p>
+                  <button className={styles.contentBtn}>{place.placeName} 상세보기</button>
                 </div>
               </li>
             ))}
@@ -213,6 +281,12 @@ const TravelPage = () => {
       <div className={styles.mapContainer}>
         <Map places={places} />
       </div>
+      {showLoginModal && <LoginModal onClose={handleCloseLoginModal} />}
+      <Snackbar open={alertOpen} autoHideDuration={3000} onClose={handleAlertClose}>
+        <Alert onClose={handleAlertClose} severity={alertSeverity}>
+          {alertMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
