@@ -1,7 +1,8 @@
 .container {
-    margin-top:30px;
+    margin-top: 30px;
     display: flex;
     height: 100%;
+    flex-wrap: wrap;
 }
 
 .listContainer {
@@ -12,50 +13,48 @@
 
 .searchContainer {
     display: flex;
+    flex-wrap: wrap;
     margin-bottom: 20px;
 }
 
-.select {
+.select,
+.input {
     padding: 10px;
-    margin-right: 10px;
+    margin: 5px 5px 5px 0;
     border: 1px solid #ccc;
     border-radius: 4px;
+    flex: 1;
+    min-width: 100px;
 }
 
-.input {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ccc;
+.searchButton,
+.resetButton {
+    padding: 10px 20px;
+    margin-left: 5px;
+    border: none;
     border-radius: 4px;
+    cursor: pointer;
 }
 
 .searchButton {
     background-color: #0056b3;
-    cursor: pointer;
-    margin-left: 10px;
-    padding: 10px 20px;
     color: white;
-    border: none;
-    border-radius: 4px;
 }
 
 .resetButton {
-    padding: 10px 20px;
-    margin-left: 10px;
     background-color: red;
     color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
 }
 
-.resetButton:hover {
-    background-color: #0056b3;
+.resetButton:hover,
+.searchButton:hover {
+    background-color: #003d82;
 }
 
 .placeList {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
 .placeItem {
@@ -64,6 +63,7 @@
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 8px;
+    align-items: flex-start;
 }
 
 .placeThumbnail {
@@ -90,8 +90,8 @@
     align-items: center;
     justify-content: center;
     border-radius: 8px;
-    width: 200px;
-    height: 200px;
+    width: 100%;
+    height: 100%;
     font-size: 14px;
     color: #999;
     background-color: #e0e0e0;
@@ -105,6 +105,7 @@
 .placeName {
     font-size: 18px;
     font-weight: bold;
+    margin-bottom: 8px;
 }
 
 .placeAddress,
@@ -113,6 +114,85 @@
     color: #555;
 }
 
+.contentBtn {
+    padding: 10px 15px;
+    margin-top: 10px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.contentBtn:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
+
+.contentBtn:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.5);
+}
+
 .mapContainer {
     width: 50%;
+    padding: 20px;
+    height: auto;
+}
+
+@media (max-width: 1200px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .listContainer,
+    .mapContainer {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .placeItem {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .placeThumbnail {
+        width: 100%;
+        height: auto;
+        max-height: 200px;
+    }
+
+    .placeInfo {
+        text-align: center;
+    }
+
+    .contentBtn {
+        width: 80%;
+    }
+}
+
+@media (max-width: 480px) {
+    .input,
+    .select,
+    .searchButton,
+    .resetButton {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .searchContainer {
+        flex-direction: column;
+    }
+}
+
+.errorMessage {
+    color: red;
+    text-align: center;
+    padding: 10px;
+    background-color: #ffe0e0;
+    border: 1px solid #ffcccc;
+    border-radius: 4px;
 }
