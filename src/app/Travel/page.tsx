@@ -25,6 +25,7 @@ interface Place {
   address: string;
   detailAddress: string;
   thumbnailUrl: string;
+  distance: string;
 }
 
 interface TravelListResponse {
@@ -170,8 +171,24 @@ const TravelPage = () => {
   const handlePageChange = (page: number) => {
     if (page !== currentPage) {
       setCurrentPage(page);
+      
+      setTimeout(() => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth',
+        });
+      }, 0);
     }
   };
+  
+  useEffect(() => {
+    setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+    }, 0);
+  }, [currentPage]);
   
   const handleSearch = () => {
     if (searchTerm.trim()) {
@@ -222,6 +239,35 @@ const TravelPage = () => {
     router.push(`/Travel/${placeId}`);
   };
   
+  const calculateTravelTime = (distance: string) => {
+    if (!distance || typeof distance !== 'string') {
+      return {
+        walking: '도보 거리 정보 없음',
+        driving: '차로 거리 정보 없음',
+      };
+    }
+    
+    const distanceInKm = parseFloat(distance.replace('km', '').trim());
+    
+    if (isNaN(distanceInKm)) {
+      return {
+        walking: '도보 거리 정보 없음',
+        driving: '차로 거리 정보 없음',
+      };
+    }
+    
+    const walkingSpeed = 5;
+    const drivingSpeed = 50;
+    
+    const walkingTime = Math.round((distanceInKm / walkingSpeed) * 60);
+    const drivingTime = Math.round((distanceInKm / drivingSpeed) * 60);
+    
+    return {
+      walking: `도보 ${walkingTime}분 (${distance})`,
+      driving: `차로 ${drivingTime}분 (${distance})`,
+    };
+  };
+  
   return (
     <div className={styles.container}>
       {isLoading ? (
@@ -253,43 +299,53 @@ const TravelPage = () => {
             </button>
           </div>
           <ul className={styles.placeList}>
-            {places.map((place) => (
-              <li
-                key={place.placeId}
-                className={styles.placeItem}
-                onClick={() => handleDetailClick(place.placeId)}
-              >
-                <div className={styles.placeThumbnail}>
-                  {place.thumbnailUrl ? (
-                    <Image
-                      src={place.thumbnailUrl}
-                      alt={place.placeName}
-                      width={200}
-                      height={200}
-                      className={styles.thumbnailImage}
-                    />
-                  ) : (
-                    <div className={styles.noImage}>이미지 없음</div>
-                  )}
-                </div>
-                <div className={styles.placeInfo}>
-                  <h2 className={styles.placeName}>{place.placeName}</h2>
-                  <p className={styles.placeAddress}>{`${place.country} / ${place.city} / ${place.district}`}</p>
-                  <p className={styles.placeDetailAddress}>
-                    {place.address} {place.detailAddress}
-                  </p>
-                  <button
-                    className={styles.contentBtn}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDetailClick(place.placeId);
-                    }}
-                  >
-                    {place.placeName} 상세보기
-                  </button>
-                </div>
-              </li>
-            ))}
+            {places.map((place) => {
+              const { walking, driving } = calculateTravelTime(place.distance);
+              return (
+                <li
+                  key={place.placeId}
+                  className={styles.placeItem}
+                  onClick={() => handleDetailClick(place.placeId)}
+                >
+                  <div className={styles.placeThumbnail}>
+                    {place.thumbnailUrl ? (
+                      <Image
+                        src={place.thumbnailUrl}
+                        alt={place.placeName}
+                        width={150}
+                        height={150}
+                        className={styles.thumbnailImage}
+                        priority
+                      />
+                    ) : (
+                      <div className={styles.noImage}>이미지 없음</div>
+                    )}
+                  </div>
+                  <div className={styles.placeInfo}>
+                    <h2 className={styles.placeName}>{place.placeName}</h2>
+                    <p className={styles.placeAddress}>{`${place.country} / ${place.city} / ${place.district}`}</p>
+                    <p className={styles.placeDetailAddress}>
+                      {place.address} {place.detailAddress}
+                    </p>
+                    <div className={styles.timeAndDistance}>
+                      <button
+                        className={styles.contentBtn}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDetailClick(place.placeId);
+                        }}
+                      >
+                        {place.placeName} 상세보기
+                      </button>
+                      <div className={styles.distanceInfo}>
+                        <span>{walking}</span>
+                        <span>{driving}</span>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
           </ul>
           <Pagination total={totalPages * 5} currentPage={currentPage} pageSize={5} onPageChange={handlePageChange} />
         </div>

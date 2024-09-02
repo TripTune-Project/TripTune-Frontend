@@ -182,7 +182,7 @@ const Home = () => {
                   </div>
                 </div>
                 <div className={styles.viewBtn} onClick={handleTravelClick}>
-                  <div className={styles.viewTitle}>여행지 탐색</div>
+                  <div className={styles.viewTitle} >여행지 탐색</div>
                   <br />
                   <div className={styles.iconContainer}>
                     <div className={styles.goLink}>
