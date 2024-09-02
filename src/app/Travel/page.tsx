@@ -203,7 +203,7 @@ const TravelPage = () => {
     router.push(`/Login?next=${encodeURIComponent('/Travel')}`);
   };
   
-  const handleAlertClose = (event?: React.SyntheticEvent, reason?: string) => {
+  const handleAlertClose = (event?: React.SyntheticEvent<Element, Event> | undefined, reason?: string) => {
     if (reason === 'clickaway') {
       return;
     }
