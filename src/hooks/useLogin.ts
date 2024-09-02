@@ -15,8 +15,8 @@ const useLogin = () => {
       try {
         const response = await axios.post('/api/members/login', data);
         const { accessToken, refreshToken, userId } = response.data.data;
-
-        setEncryptedCookie('trip-tune_at', accessToken, 7);
+        
+        setEncryptedCookie('trip-tune_at', accessToken, 5 / (24 * 60));
         setEncryptedCookie('trip-tune_rt', refreshToken, 7);
         setEncryptedCookie('userId', userId, 7);
 
