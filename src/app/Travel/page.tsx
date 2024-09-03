@@ -13,6 +13,7 @@ import DataLoading from '../../components/Common/DataLoading';
 import LoginModal from '../../components/Common/LoginModal';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+import axiosInstance from '@/utils/axiosInstance';
 
 interface Place {
   placeId: number;
@@ -92,6 +93,16 @@ const TravelPage = () => {
   useEffect(() => {
     checkAuthStatus();
     checkGeolocationPermission();
+    
+    const handleShowLoginModal = () => {
+      setShowLoginModal(true);
+    };
+    
+    window.addEventListener('showLoginModal', handleShowLoginModal);
+    
+    return () => {
+      window.removeEventListener('showLoginModal', handleShowLoginModal);
+    };
   }, [checkAuthStatus, checkGeolocationPermission]);
   
   useEffect(() => {
