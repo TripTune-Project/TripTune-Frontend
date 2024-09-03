@@ -13,7 +13,6 @@ import DataLoading from '../../components/Common/DataLoading';
 import LoginModal from '../../components/Common/LoginModal';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-import axiosInstance from '@/utils/axiosInstance';
 
 interface Place {
   placeId: number;
