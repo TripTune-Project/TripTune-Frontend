@@ -57,6 +57,11 @@ axiosInstance.interceptors.response.use(
         }
       } catch (refreshError) {
         console.error('토큰 갱신 실패:', refreshError);
+        
+        if (typeof window !== 'undefined') {
+          const event = new CustomEvent('showLoginModal');
+          window.dispatchEvent(event);
+        }
       }
     }
     return Promise.reject(error);

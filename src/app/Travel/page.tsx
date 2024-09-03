@@ -93,6 +93,16 @@ const TravelPage = () => {
   useEffect(() => {
     checkAuthStatus();
     checkGeolocationPermission();
+    
+    const handleShowLoginModal = () => {
+      setShowLoginModal(true);
+    };
+    
+    window.addEventListener('showLoginModal', handleShowLoginModal);
+    
+    return () => {
+      window.removeEventListener('showLoginModal', handleShowLoginModal);
+    };
   }, [checkAuthStatus, checkGeolocationPermission]);
   
   useEffect(() => {
