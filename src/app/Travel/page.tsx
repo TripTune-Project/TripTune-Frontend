@@ -56,7 +56,7 @@ const TravelPage = () => {
     const accessToken = Cookies.get('trip-tune_at');
     const refreshToken = Cookies.get('trip-tune_rt');
     
-    if (!accessToken || !refreshToken) {
+    if (!accessToken && !refreshToken) {
       setShowLoginModal(true);
       resetPlaces();
     }

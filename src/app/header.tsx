@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import styles from '../styles/Header.module.css';
 import Cookies from 'js-cookie';
@@ -12,6 +12,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import vector from '../../public/assets/icon/Vector.png';
 import Image from 'next/image';
 import LogoImage from '../../public/Logo.png';
+import axiosInstance from '../api/axiosInstance';
 
 const Header = () => {
   const router = useRouter();
@@ -29,6 +30,9 @@ const Header = () => {
     closeModal();
     try {
       await logoutApi();
+      Cookies.remove('trip-tune_at');
+      Cookies.remove('trip-tune_rt');
+      Cookies.remove('userId');
       router.push('/');
     } catch (error) {
       setAlertMessage('로그아웃에 실패했습니다. 다시 시도해 주세요.');
@@ -38,23 +42,39 @@ const Header = () => {
   
   const handleAlertClose = () => setAlertOpen(false);
   
-  const checkAuthStatus = () => {
+  const checkAuthStatus = useCallback(async () => {
     const accessToken = Cookies.get('trip-tune_at');
     const refreshToken = Cookies.get('trip-tune_rt');
     
-    if (accessToken && refreshToken) {
+    if (accessToken) {
       setLoginTrue(true);
+    } else if (refreshToken) {
+      try {
+        const { data } = await axiosInstance.post('/api/members/refresh', {
+          accessToken,
+          refreshToken,
+        });
+        
+        Cookies.set('trip-tune_at', data.accessToken, { expires: 5 / (24 * 60) });
+        Cookies.set('trip-tune_rt', data.refreshToken, { expires: 7 });
+        setLoginTrue(true);
+      } catch (refreshError) {
+        console.error('토큰 갱신 실패:', refreshError);
+        setLoginTrue(false);
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('showLoginModal'));
+        }
+      }
     } else {
       setLoginTrue(false);
     }
-  };
+  }, []);
   
   useEffect(() => {
     checkAuthStatus();
-    const interval = setInterval(checkAuthStatus, 1000);
-    
+    const interval = setInterval(checkAuthStatus, 60000);
     return () => clearInterval(interval);
-  }, []);
+  }, [checkAuthStatus]);
   
   const handleLogin = () => {
     router.push(`/Login?next=${encodeURIComponent(pathname)}`);
@@ -66,32 +86,27 @@ const Header = () => {
     <>
       <ul className={styles.headerMenu}>
         <li>
-          <Link href='/'>
-            <Image
-              src={LogoImage}
-              alt='로고'
-              className={styles.logo}
-              priority
-            />
+          <Link href="/">
+            <Image src={LogoImage} alt="로고" className={styles.logo} priority />
           </Link>
         </li>
         <li className={`${styles.headerLink} ${isActive('/')}`}>
-          <Link href='/' className={styles.headerLinkA}>
+          <Link href="/" className={styles.headerLinkA}>
             홈 화면
           </Link>
         </li>
         <li className={`${styles.headerLink} ${isActive('/Schedule')}`}>
-          <Link href='/Schedule' className={styles.headerLinkA}>
+          <Link href="/Schedule" className={styles.headerLinkA}>
             일정 만들기
           </Link>
         </li>
         <li className={`${styles.headerLink} ${isActive('/Travel')}`}>
-          <Link href='/Travel' className={styles.headerLinkA}>
+          <Link href="/Travel" className={styles.headerLinkA}>
             여행지 탐색
           </Link>
         </li>
         <li className={`${styles.headerLink} ${isActive('/MyPage')}`}>
-          <Link href='/MyPage' className={styles.headerLinkA}>
+          <Link href="/MyPage" className={styles.headerLinkA}>
             마이 페이지
           </Link>
         </li>
@@ -99,7 +114,7 @@ const Header = () => {
           <>
             <li className={styles.headerLink}>{userId} 님</li>
             <li className={styles.headerLink}>
-              <Button onClick={openModal} variant='text' size='large'>
+              <Button onClick={openModal} variant="text" size="large">
                 로그아웃
               </Button>
               <LogoutModal
@@ -107,16 +122,8 @@ const Header = () => {
                 onClose={closeModal}
                 onConfirm={handleLogout}
               />
-              <Snackbar
-                open={alertOpen}
-                autoHideDuration={6000}
-                onClose={handleAlertClose}
-              >
-                <Alert
-                  onClose={handleAlertClose}
-                  severity='error'
-                  sx={{ width: '100%' }}
-                >
+              <Snackbar open={alertOpen} autoHideDuration={6000} onClose={handleAlertClose}>
+                <Alert onClose={handleAlertClose} severity="error" sx={{ width: '100%' }}>
                   {alertMessage}
                 </Alert>
               </Snackbar>

@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosError, AxiosResponse, InternalAxiosRequestConfig, AxiosRequestHeaders } from 'axios';
+import axios, { AxiosInstance, AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import Cookies from 'js-cookie';
 
 const axiosInstance: AxiosInstance = axios.create({
@@ -27,8 +27,9 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   async (error: AxiosError) => {
-    if (error.response?.status === 401) {
-      console.error('401 Unauthorized - 토큰이 만료되었습니다.');
+    const originalRequest = error.config;
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
       
       const accessToken = Cookies.get('trip-tune_at');
       const refreshToken = Cookies.get('trip-tune_rt');
@@ -40,13 +41,11 @@ axiosInstance.interceptors.response.use(
             refreshToken,
           });
           
-          const newAccessToken = data.accessToken;
-          Cookies.set('trip-tune_at', newAccessToken);
+          Cookies.set('trip-tune_at', data.accessToken, { expires: 5 / (24 * 60) });
+          Cookies.set('trip-tune_rt', data.refreshToken, { expires: 7 });
           
-          if (error.config) {
-            error.config.headers['Authorization'] = `Bearer ${newAccessToken}`;
-            return axiosInstance.request(error.config);
-          }
+          originalRequest.headers['Authorization'] = `Bearer ${data.accessToken}`;
+          return axiosInstance(originalRequest);
         } catch (refreshError) {
           console.error('토큰 갱신 실패:', refreshError);
           if (typeof window !== 'undefined') {
