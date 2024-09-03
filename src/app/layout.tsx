@@ -46,7 +46,6 @@ const Layout = ({ children }: LayoutProps) => {
       <link rel='icon' href='/favicon.ico' />
     </Head>
     <body>
-    {/* QueryClientProvider로 애플리케이션을 감싸고 QueryClient를 전달합니다. */}
     <QueryClientProvider client={queryClient}>
       {isFindPage ? (
         <>{children}</>
