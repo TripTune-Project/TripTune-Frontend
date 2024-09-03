@@ -30,37 +30,33 @@ axiosInstance.interceptors.response.use(
     if (error.response?.status === 401) {
       console.error('401 Unauthorized - 토큰이 만료되었습니다.');
       
-      try {
-        const accessToken = Cookies.get('trip-tune_at');
-        const refreshToken = Cookies.get('trip-tune_rt');
-        
-        if (accessToken && refreshToken) {
-          const response = await axios.post('/api/members/refresh', {
-            accessToken: accessToken,
-            refreshToken: refreshToken,
+      const accessToken = Cookies.get('trip-tune_at');
+      const refreshToken = Cookies.get('trip-tune_rt');
+      
+      if (accessToken && refreshToken) {
+        try {
+          const { data } = await axios.post('/api/members/refresh', {
+            accessToken,
+            refreshToken,
           });
           
-          const newToken = response.data.accessToken;
-          Cookies.set('trip-tune_at', newToken);
+          const newAccessToken = data.accessToken;
+          Cookies.set('trip-tune_at', newAccessToken);
           
           if (error.config) {
-            const headers: AxiosRequestHeaders = error.config.headers || {};
-            headers['Authorization'] = `Bearer ${newToken}`;
-            error.config.headers = headers;
-            
-            return axiosInstance(error.config);
-          } else {
-            console.error('에러의 config가 정의되지 않았습니다.');
+            error.config.headers['Authorization'] = `Bearer ${newAccessToken}`;
+            return axiosInstance.request(error.config);
           }
-        } else {
-          console.error('필요한 토큰이 없습니다.');
+        } catch (refreshError) {
+          console.error('토큰 갱신 실패:', refreshError);
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('showLoginModal'));
+          }
         }
-      } catch (refreshError) {
-        console.error('토큰 갱신 실패:', refreshError);
-        
+      } else {
+        console.error('필요한 토큰이 없습니다.');
         if (typeof window !== 'undefined') {
-          const event = new CustomEvent('showLoginModal');
-          window.dispatchEvent(event);
+          window.dispatchEvent(new CustomEvent('showLoginModal'));
         }
       }
     }
