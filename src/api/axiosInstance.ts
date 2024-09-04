@@ -1,5 +1,6 @@
-import axios, { AxiosInstance, AxiosError, AxiosResponse, InternalAxiosRequestConfig, AxiosRequestHeaders } from 'axios';
+import axios, { AxiosInstance, AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import Cookies from 'js-cookie';
+import useSaveLocalContent from '@/hooks/useSaveLocalContent';
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: '/',
@@ -9,63 +10,97 @@ const axiosInstance: AxiosInstance = axios.create({
   },
 });
 
+let isRefreshing = false;
+const failedQueue: { resolve: (token: string) => void; reject: (error: AxiosError) => void }[] = [];
+
+const processQueue = (error: AxiosError | null, token: string | null = null) => {
+  failedQueue.forEach(({ resolve, reject }) => {
+    if (error) {
+      reject(error);
+    } else if (token) {
+      resolve(token);
+    }
+  });
+  failedQueue.length = 0;
+};
+
+const triggerLoginModal = () => {
+  if (typeof window !== 'undefined') {
+    const event = new CustomEvent('showLoginModal');
+    window.dispatchEvent(event);
+  }
+};
+
+const setAuthorizationHeader = (config: InternalAxiosRequestConfig, token: string) => {
+  if (config.headers) {
+    config.headers['Authorization'] = `Bearer ${token}`;
+  }
+};
+
+const refreshAccessToken = async (): Promise<string> => {
+  const { setEncryptedCookie } = useSaveLocalContent();
+  const refreshToken = Cookies.get('trip-tune_rt');
+  if (!refreshToken) throw new Error('Refresh token not available');
+  
+  const response = await axios.post('/api/members/refresh', { refreshToken });
+  const newAccessToken = response.data.accessToken;
+  setEncryptedCookie('trip-tune_at', newAccessToken, 5 / (24 * 60));
+  return newAccessToken;
+};
+
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = Cookies.get('trip-tune_at');
-    if (token && config.headers) {
-      config.headers['Authorization'] = `Bearer ${token}`;
+    if (token) {
+      setAuthorizationHeader(config, token);
     }
     return config;
   },
-  (error: AxiosError) => {
-    return Promise.reject(error);
-  }
+  (error: AxiosError) => Promise.reject(error),
 );
 
 axiosInstance.interceptors.response.use(
-  (response: AxiosResponse) => {
-    return response;
-  },
+  (response: AxiosResponse) => response,
   async (error: AxiosError) => {
-    if (error.response?.status === 401) {
-      console.error('401 Unauthorized - 토큰이 만료되었습니다.');
+    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+    
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      
+      if (!Cookies.get('trip-tune_rt')) {
+        triggerLoginModal();
+        return Promise.reject(error);
+      }
+      
+      if (isRefreshing) {
+        return new Promise<string>((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        })
+          .then((token) => {
+            setAuthorizationHeader(originalRequest, token);
+            return axiosInstance(originalRequest);
+          })
+          .catch((queueError) => Promise.reject(queueError));
+      }
+      
+      isRefreshing = true;
       
       try {
-        const accessToken = Cookies.get('trip-tune_at');
-        const refreshToken = Cookies.get('trip-tune_rt');
-        
-        if (accessToken && refreshToken) {
-          const response = await axios.post('/api/members/refresh', {
-            accessToken: accessToken,
-            refreshToken: refreshToken,
-          });
-          
-          const newToken = response.data.accessToken;
-          Cookies.set('trip-tune_at', newToken);
-          
-          if (error.config) {
-            const headers: AxiosRequestHeaders = error.config.headers || {};
-            headers['Authorization'] = `Bearer ${newToken}`;
-            error.config.headers = headers;
-            
-            return axiosInstance(error.config);
-          } else {
-            console.error('에러의 config가 정의되지 않았습니다.');
-          }
-        } else {
-          console.error('필요한 토큰이 없습니다.');
-        }
+        const newAccessToken = await refreshAccessToken();
+        processQueue(null, newAccessToken);
+        setAuthorizationHeader(originalRequest, newAccessToken);
+        return axiosInstance(originalRequest);
       } catch (refreshError) {
-        console.error('토큰 갱신 실패:', refreshError);
-        
-        if (typeof window !== 'undefined') {
-          const event = new CustomEvent('showLoginModal');
-          window.dispatchEvent(event);
-        }
+        processQueue(refreshError, null);
+        triggerLoginModal();
+        return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
       }
     }
+    
     return Promise.reject(error);
-  }
+  },
 );
 
 export default axiosInstance;

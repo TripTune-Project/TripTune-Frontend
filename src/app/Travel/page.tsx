@@ -1,18 +1,20 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import Pagination from '../../components/Travel/Pagination';
 import Map from '../../components/Travel/Map';
 import Image from 'next/image';
 import { fetchTravelListSearch } from '@/api/travelListSearchApi';
 import { fetchTravelListByLocation } from '@/api/travelListApi';
 import styles from '../../styles/Travel.module.css';
-import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import DataLoading from '../../components/Common/DataLoading';
 import LoginModal from '../../components/Common/LoginModal';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+import useSaveLocalContent from '@/hooks/useSaveLocalContent';
+import useAuth from '@/hooks/useAuth';
+import useGeolocation from '@/hooks/useGeolocation';
 
 interface Place {
   placeId: number;
@@ -38,6 +40,7 @@ interface TravelListResponse {
 
 const TravelPage = () => {
   const router = useRouter();
+  const { setEncryptedCookie } = useSaveLocalContent();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchType, setSearchType] = useState('placeName');
@@ -45,101 +48,37 @@ const TravelPage = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [isSearching, setIsSearching] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [userCoordinates, setUserCoordinates] = useState<{ latitude: number; longitude: number } | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertSeverity, setAlertSeverity] = useState<'success' | 'error' | 'warning' | 'info'>('info');
   
-  const checkAuthStatus = useCallback(() => {
-    const accessToken = Cookies.get('trip-tune_at');
-    const refreshToken = Cookies.get('trip-tune_rt');
-    
-    if (!accessToken || !refreshToken) {
-      setShowLoginModal(true);
-      resetPlaces();
-    }
-  }, []);
+  const resetPlaces = () => {
+    setPlaces([]);
+    setTotalPages(0);
+    setCurrentPage(1);
+    setSearchTerm('');
+    setIsSearching(false);
+  };
   
-  const checkGeolocationPermission = useCallback(async () => {
-    try {
-      const result = await navigator.permissions.query({ name: 'geolocation' });
-      switch (result.state) {
-        case 'granted':
-          setAlertMessage('위치 권한이 허용되었습니다.');
-          setAlertSeverity('success');
-          requestUserLocation();
-          break;
-        case 'prompt':
-          setAlertMessage('위치 권한을 요청 중입니다.');
-          setAlertSeverity('info');
-          requestUserLocation();
-          break;
-        case 'denied':
-          setAlertMessage('위치 권한이 차단되었습니다. 기본 위치를 사용합니다.');
-          setAlertSeverity('warning');
-          setUserCoordinates({ latitude: 37.5642, longitude: 126.9976 });
-          break;
-        default:
-          break;
-      }
-      setAlertOpen(true);
-    } catch (error) {
-      console.error('위치 권한 상태 확인 오류:', error);
-    }
-  }, []);
+  const { checkAuthStatus } = useAuth(setEncryptedCookie, resetPlaces);
+  const { userCoordinates, errorMessage: geoErrorMessage, permissionState } = useGeolocation();
   
   useEffect(() => {
     checkAuthStatus();
-    checkGeolocationPermission();
-    
-    const handleShowLoginModal = () => {
-      setShowLoginModal(true);
-    };
-    
-    window.addEventListener('showLoginModal', handleShowLoginModal);
-    
-    return () => {
-      window.removeEventListener('showLoginModal', handleShowLoginModal);
-    };
-  }, [checkAuthStatus, checkGeolocationPermission]);
+    if (geoErrorMessage) {
+      setAlertMessage(geoErrorMessage);
+      setAlertSeverity('warning');
+      setAlertOpen(true);
+    }
+  }, [geoErrorMessage]);
   
   useEffect(() => {
-    if (userCoordinates && !isSearching) {
+    if (userCoordinates && !isLoading) {
       fetchPlaces();
     }
-  }, [userCoordinates, currentPage, isSearching]);
-  
-  const requestUserLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setUserCoordinates({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          });
-        },
-        () => {
-          handleLocationError('위치 권한이 거부되었습니다. 기본 위치를 사용합니다.');
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 5000,
-          maximumAge: 0,
-        }
-      );
-    } else {
-      handleLocationError('브라우저가 위치 정보를 지원하지 않습니다. 기본 위치를 사용합니다.');
-    }
-  };
-  
-  const handleLocationError = (message: string) => {
-    setAlertMessage(message);
-    setAlertSeverity('warning');
-    setAlertOpen(true);
-    setUserCoordinates({ latitude: 37.5642, longitude: 126.9976 });
-  };
+  }, [userCoordinates, currentPage]);
   
   const fetchPlaces = async () => {
     setIsLoading(true);
@@ -170,18 +109,9 @@ const TravelPage = () => {
     }
   };
   
-  const resetPlaces = () => {
-    setPlaces([]);
-    setTotalPages(0);
-    setCurrentPage(1);
-    setSearchTerm('');
-    setIsSearching(false);
-  };
-  
   const handlePageChange = (page: number) => {
     if (page !== currentPage) {
       setCurrentPage(page);
-      
       setTimeout(() => {
         window.scrollTo({
           top: 0,
@@ -212,7 +142,6 @@ const TravelPage = () => {
   
   const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const input = event.target.value;
-    
     const regex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z]*$/;
     
     if (regex.test(input)) {

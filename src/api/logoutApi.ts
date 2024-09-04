@@ -21,11 +21,9 @@ export const logoutApi = async () => {
       if (response.status !== 200) {
         throw new Error('Logout failed');
       }
-
       Cookies.remove('trip-tune_at');
       Cookies.remove('trip-tune_rt');
       Cookies.remove('userId');
-      window.location.href = '/';
     } catch (error) {
       throw new Error('Logout failed');
     }

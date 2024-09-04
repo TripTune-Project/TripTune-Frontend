@@ -3,32 +3,60 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import styles from '../styles/Header.module.css';
-import Cookies from 'js-cookie';
 import LogoutModal from '@/components/Logout/LogoutModal';
 import { Alert, Snackbar } from '@mui/material';
-import { logoutApi } from '@/api/logoutApi';
 import Button from '@mui/material/Button';
 import { useRouter, usePathname } from 'next/navigation';
-import vector from '../../public/assets/icon/Vector.png';
 import Image from 'next/image';
+import vector from '../../public/assets/icon/Vector.png';
 import LogoImage from '../../public/Logo.png';
+import useSaveLocalContent from '@/hooks/useSaveLocalContent';
+import { logoutApi } from '@/api/logoutApi';
+import useAuth from '@/hooks/useAuth';
 
 const Header = () => {
   const router = useRouter();
   const pathname = usePathname();
-  const userId = Cookies.get('userId');
-  const [loginTrue, setLoginTrue] = useState<boolean>(false);
+  const { setEncryptedCookie } = useSaveLocalContent();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
+  const [isLogoutClicked, setIsLogoutClicked] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+  const [userId, setUserId] = useState('');
+  
+  const { checkAuthStatus } = useAuth(setEncryptedCookie, () => {
+    setIsLoggedIn(false);
+    setUserId('');
+  });
+  
+  useEffect(() => {
+    checkAuthStatus();
+    
+    const handleAuthChange = () => {
+      checkAuthStatus();
+    };
+    
+    window.addEventListener('storage', handleAuthChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleAuthChange);
+    };
+  }, [checkAuthStatus, isLogoutClicked]);
   
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
   
   const handleLogout = async () => {
+    setIsLogoutClicked(true);
     closeModal();
+    await performLogout();
+  };
+  
+  const performLogout = async () => {
     try {
       await logoutApi();
+      setIsLoggedIn(false);
       router.push('/');
     } catch (error) {
       setAlertMessage('로그아웃에 실패했습니다. 다시 시도해 주세요.');
@@ -38,41 +66,20 @@ const Header = () => {
   
   const handleAlertClose = () => setAlertOpen(false);
   
-  const checkAuthStatus = () => {
-    const accessToken = Cookies.get('trip-tune_at');
-    const refreshToken = Cookies.get('trip-tune_rt');
-    
-    if (accessToken && refreshToken) {
-      setLoginTrue(true);
-    } else {
-      setLoginTrue(false);
-    }
-  };
-  
-  useEffect(() => {
-    checkAuthStatus();
-    const interval = setInterval(checkAuthStatus, 1000);
-    
-    return () => clearInterval(interval);
-  }, []);
-  
   const handleLogin = () => {
     router.push(`/Login?next=${encodeURIComponent(pathname)}`);
   };
   
   const isActive = (path: string) => (pathname === path ? styles.active : '');
   
+  if (isLoggedIn === null) return null;
+  
   return (
     <>
       <ul className={styles.headerMenu}>
         <li>
           <Link href='/'>
-            <Image
-              src={LogoImage}
-              alt='로고'
-              className={styles.logo}
-              priority
-            />
+            <Image src={LogoImage} alt='로고' className={styles.logo} priority />
           </Link>
         </li>
         <li className={`${styles.headerLink} ${isActive('/')}`}>
@@ -95,28 +102,16 @@ const Header = () => {
             마이 페이지
           </Link>
         </li>
-        {loginTrue ? (
+        {isLoggedIn ? (
           <>
             <li className={styles.headerLink}>{userId} 님</li>
             <li className={styles.headerLink}>
               <Button onClick={openModal} variant='text' size='large'>
                 로그아웃
               </Button>
-              <LogoutModal
-                isOpen={isModalOpen}
-                onClose={closeModal}
-                onConfirm={handleLogout}
-              />
-              <Snackbar
-                open={alertOpen}
-                autoHideDuration={6000}
-                onClose={handleAlertClose}
-              >
-                <Alert
-                  onClose={handleAlertClose}
-                  severity='error'
-                  sx={{ width: '100%' }}
-                >
+              <LogoutModal isOpen={isModalOpen} onClose={closeModal} onConfirm={handleLogout} />
+              <Snackbar open={alertOpen} autoHideDuration={6000} onClose={handleAlertClose}>
+                <Alert onClose={handleAlertClose} severity='error' sx={{ width: '100%' }}>
                   {alertMessage}
                 </Alert>
               </Snackbar>
