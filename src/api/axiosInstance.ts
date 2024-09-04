@@ -11,9 +11,9 @@ const axiosInstance: AxiosInstance = axios.create({
 });
 
 let isRefreshing = false;
-const failedQueue: { resolve: (token: string) => void; reject: (error: AxiosError<unknown, any>) => void }[] = [];
+const failedQueue: { resolve: (token: string) => void; reject: (error: AxiosError<unknown>) => void }[] = [];
 
-const processQueue = (error: AxiosError<unknown, any> | null, token: string | null = null) => {
+const processQueue = (error: AxiosError<unknown> | null, token: string | null = null) => {
   failedQueue.forEach(({ resolve, reject }) => {
     if (error) {
       reject(error);
@@ -56,7 +56,7 @@ axiosInstance.interceptors.request.use(
     }
     return config;
   },
-  (error: AxiosError) => Promise.reject(error),
+  (error: AxiosError<unknown>) => Promise.reject(error),
 );
 
 axiosInstance.interceptors.response.use(
@@ -80,7 +80,12 @@ axiosInstance.interceptors.response.use(
             setAuthorizationHeader(originalRequest, token);
             return axiosInstance(originalRequest);
           })
-          .catch((queueError: AxiosError<unknown, any>) => Promise.reject(queueError));
+          .catch((queueError: unknown) => {
+            if (queueError instanceof AxiosError) {
+              return Promise.reject(queueError);
+            }
+            return Promise.reject(new Error('Unknown error occurred in queue'));
+          });
       }
       
       isRefreshing = true;
@@ -90,10 +95,15 @@ axiosInstance.interceptors.response.use(
         processQueue(null, newAccessToken);
         setAuthorizationHeader(originalRequest, newAccessToken);
         return axiosInstance(originalRequest);
-      } catch (refreshError: AxiosError<unknown, any>) {
-        processQueue(refreshError, null);
-        triggerLoginModal();
-        return Promise.reject(refreshError);
+      } catch (refreshError: unknown) {
+        if (refreshError instanceof AxiosError) {
+          processQueue(refreshError, null);
+          triggerLoginModal();
+          return Promise.reject(refreshError);
+        }
+    
+        processQueue(null, null);
+        return Promise.reject(new Error('Unknown error occurred during token refresh'));
       } finally {
         isRefreshing = false;
       }
