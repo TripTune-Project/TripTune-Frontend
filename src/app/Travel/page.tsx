@@ -12,7 +12,7 @@ import DataLoading from '../../components/Common/DataLoading';
 import LoginModal from '../../components/Common/LoginModal';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-import useSaveLocalContent from '@/hooks/useSaveLocalContent';
+import useSaveLocalContent from '@/utils/saveLocalContent';
 import useAuth from '@/hooks/useAuth';
 import useGeolocation from '@/hooks/useGeolocation';
 

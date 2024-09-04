@@ -10,7 +10,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
 import vector from '../../public/assets/icon/Vector.png';
 import LogoImage from '../../public/Logo.png';
-import useSaveLocalContent from '@/hooks/useSaveLocalContent';
+import useSaveLocalContent from '@/utils/saveLocalContent';
 import { logoutApi } from '@/api/logoutApi';
 import useAuth from '@/hooks/useAuth';
 

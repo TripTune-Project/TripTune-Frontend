@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import Cookies from 'js-cookie';
-import useSaveLocalContent from '@/hooks/useSaveLocalContent';
+import useSaveLocalContent from '@/utils/saveLocalContent';
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: '/',

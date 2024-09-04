@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios';
-import useSaveLocalContent from './useSaveLocalContent';
+import useSaveLocalContent from '../utils/saveLocalContent';
 
 interface LoginData {
   userId: string;
