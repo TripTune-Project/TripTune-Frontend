@@ -2,10 +2,13 @@ import { useEffect } from 'react';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 
-const useAuth = (setEncryptedCookie, resetPlaces) => {
+const useAuth = (
+  setEncryptedCookie: (name: string, value: string, expiration: number) => void,
+  resetPlaces: () => void,
+) => {
   const router = useRouter();
   
-  const isTokenExpired = (token) => {
+  const isTokenExpired = (token: string) => {
     try {
       const [, payload] = token.split('.');
       const decoded = JSON.parse(atob(payload));
