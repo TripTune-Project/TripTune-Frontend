@@ -13,6 +13,7 @@ import LogoImage from '../../public/Logo.png';
 import saveLocalContent from '@/utils/saveLocalContent';
 import { logoutApi } from '@/api/logoutApi';
 import useAuth from '@/hooks/useAuth';
+import Cookies from 'js-cookie';
 
 const Header = () => {
   const router = useRouter();
@@ -22,7 +23,7 @@ const Header = () => {
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [isLogoutClicked, setIsLogoutClicked] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [userId, setUserId] = useState('');
   
   const resetAuthState = () => {
@@ -33,6 +34,15 @@ const Header = () => {
   const { checkAuthStatus } = useAuth(setEncryptedCookie, resetAuthState);
   
   useEffect(() => {
+    const refreshToken = Cookies.get('trip-tune_rt');
+    
+    if (refreshToken) {
+      setIsLoggedIn(true);
+      setUserId(Cookies.get('userId'));
+    } else {
+      setIsLoggedIn(false);
+    }
+    
     checkAuthStatus();
     
     const handleAuthChange = () => {
@@ -74,8 +84,6 @@ const Header = () => {
   };
   
   const isActive = (path: string) => (pathname === path ? styles.active : '');
-  
-  if (isLoggedIn === null) return null;
   
   return (
     <>
