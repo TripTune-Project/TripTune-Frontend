@@ -21,7 +21,7 @@ const ChangePassword = () => {
 
   useEffect(() => {
     if (!passwordToken) {
-      console.error('No passwordToken found');
+      console.error('passwordToken을 찾을 수 없습니다.');
     }
   }, [passwordToken]);
 
@@ -67,7 +67,7 @@ const ChangePassword = () => {
         alert('비밀번호 변경에 실패했습니다.');
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('에러:', error);
       alert('비밀번호 변경에 실패했습니다.');
     } finally {
       setLoading(false);

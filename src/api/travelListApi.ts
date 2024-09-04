@@ -62,12 +62,12 @@ export const fetchTravelListByLocation = async (
       const response = axiosError.response;
       
       if (response) {
-        console.error('API Error Response:', response.data);
+        console.error('API 오류 응답:', response.data);
         return response.data;
       }
     }
     
-    console.error('Unexpected Error:', error);
+    console.error('예기치 않은 오류:', error);
     return {
       success: false,
       errorCode: 500,

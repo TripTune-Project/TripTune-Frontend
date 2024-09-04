@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 
 const containerStyle = {
@@ -27,18 +27,11 @@ interface MapProps {
 
 const Map = ({ places }: MapProps) => {
   const mapRef = useRef<google.maps.Map | null>(null);
+  const [zoom, setZoom] = useState(16);
+  const [center, setCenter] = useState(defaultCenter);
+  const [mapLoaded, setMapLoaded] = useState(false);
   
-  const handleMapLoad = (map: google.maps.Map) => {
-    mapRef.current = map;
-    if (places.length > 0) {
-      setMapBounds(map);
-    } else {
-      map.setCenter(defaultCenter);
-      map.setZoom(15);
-    }
-  };
-  
-  const setMapBounds = (map: google.maps.Map | null) => {
+  const setMapBounds = (map: google.maps.Map) => {
     if (!map || places.length === 0) return;
     
     const bounds = new google.maps.LatLngBounds();
@@ -47,28 +40,69 @@ const Map = ({ places }: MapProps) => {
     });
     
     map.fitBounds(bounds);
-    
     google.maps.event.addListenerOnce(map, 'bounds_changed', () => {
-      const zoom = map.getZoom();
-      if (zoom !== undefined && zoom > 16) {
+      const currentZoom = map.getZoom();
+      if (currentZoom !== undefined && currentZoom < 16) {
         map.setZoom(16);
       }
     });
   };
   
+  const handleMapLoad = (map: google.maps.Map) => {
+    mapRef.current = map;
+    setMapLoaded(true);
+    if (places.length > 0) {
+      setMapBounds(map);
+    } else {
+      map.setCenter(defaultCenter);
+      map.setZoom(16);
+    }
+  };
+  
   useEffect(() => {
-    if (mapRef.current) {
+    if (mapRef.current && mapLoaded) {
       setMapBounds(mapRef.current);
     }
-  }, [places]);
+  }, [places, mapLoaded]);
+  
+  const handleZoomChanged = () => {
+    if (mapRef.current) {
+      const newZoom = mapRef.current.getZoom();
+      
+      if (typeof newZoom === 'number') {
+        if (newZoom < 16) {
+          mapRef.current.setZoom(16);
+        } else if (newZoom !== zoom) {
+          setZoom(newZoom);
+        }
+      } else {
+        console.error('확대/축소 수준이 정의되지 않았거나 유효한 숫자가 아닙니다.');
+      }
+    }
+  };
+  
+  const handleCenterChanged = () => {
+    if (mapRef.current) {
+      const newCenter = mapRef.current.getCenter();
+      if (newCenter) {
+        const lat = newCenter.lat();
+        const lng = newCenter.lng();
+        if (lat !== center.lat || lng !== center.lng) {
+          setCenter({ lat, lng });
+        }
+      }
+    }
+  };
   
   return (
     <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}>
       <GoogleMap
         mapContainerStyle={containerStyle}
-        center={defaultCenter}
-        zoom={15}
+        center={center}
+        zoom={zoom}
         onLoad={handleMapLoad}
+        onZoomChanged={handleZoomChanged}
+        onCenterChanged={handleCenterChanged}
       >
         {places.map((place) => (
           <Marker
