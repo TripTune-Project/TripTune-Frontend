@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios';
-import useSaveLocalContent from '../utils/saveLocalContent';
+import saveLocalContent from '../utils/saveLocalContent';
 
 interface LoginData {
   userId: string;
@@ -7,7 +7,7 @@ interface LoginData {
 }
 
 const useLogin = () => {
-  const { setEncryptedCookie } = useSaveLocalContent();
+  const { setEncryptedCookie } = saveLocalContent();
   
   const saveTokens = (accessToken: string, refreshToken: string, userId: string) => {
     setEncryptedCookie('trip-tune_at', accessToken, 5 / (24 * 60));

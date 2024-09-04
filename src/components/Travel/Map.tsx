@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 
 const containerStyle = {
@@ -31,17 +31,6 @@ const Map = ({ places }: MapProps) => {
   const [center, setCenter] = useState(defaultCenter);
   const [mapLoaded, setMapLoaded] = useState(false);
   
-  const handleMapLoad = (map: google.maps.Map) => {
-    mapRef.current = map;
-    setMapLoaded(true);
-    if (places.length > 0) {
-      setMapBounds(map);
-    } else {
-      map.setCenter(defaultCenter);
-      map.setZoom(16);
-    }
-  };
-  
   const setMapBounds = (map: google.maps.Map) => {
     if (!map || places.length === 0) return;
     
@@ -59,13 +48,24 @@ const Map = ({ places }: MapProps) => {
     });
   };
   
+  const handleMapLoad = (map: google.maps.Map) => {
+    mapRef.current = map;
+    setMapLoaded(true);
+    if (places.length > 0) {
+      setMapBounds(map);
+    } else {
+      map.setCenter(defaultCenter);
+      map.setZoom(16);
+    }
+  };
+  
   useEffect(() => {
     if (mapRef.current && mapLoaded) {
       setMapBounds(mapRef.current);
     }
   }, [places, mapLoaded]);
   
-  const handleZoomChanged = useCallback(() => {
+  const handleZoomChanged = () => {
     if (mapRef.current) {
       const newZoom = mapRef.current.getZoom();
       if (newZoom !== undefined && newZoom < 16) {
@@ -74,9 +74,9 @@ const Map = ({ places }: MapProps) => {
         setZoom(newZoom);
       }
     }
-  }, [zoom]);
+  };
   
-  const handleCenterChanged = useCallback(() => {
+  const handleCenterChanged = () => {
     if (mapRef.current) {
       const newCenter = mapRef.current.getCenter();
       if (newCenter) {
@@ -87,7 +87,7 @@ const Map = ({ places }: MapProps) => {
         }
       }
     }
-  }, [center]);
+  };
   
   return (
     <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}>

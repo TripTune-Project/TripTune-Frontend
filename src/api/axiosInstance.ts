@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import Cookies from 'js-cookie';
-import useSaveLocalContent from '@/utils/saveLocalContent';
+import saveLocalContent from '@/utils/saveLocalContent';
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: '/',
@@ -38,7 +38,7 @@ const setAuthorizationHeader = (config: InternalAxiosRequestConfig, token: strin
 };
 
 const refreshAccessToken = async (): Promise<string> => {
-  const { setEncryptedCookie } = useSaveLocalContent();
+  const { setEncryptedCookie } = saveLocalContent();
   const refreshToken = Cookies.get('trip-tune_rt');
   if (!refreshToken) throw new Error('Refresh token not available');
   

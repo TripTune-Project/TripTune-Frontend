@@ -12,7 +12,7 @@ import DataLoading from '../../components/Common/DataLoading';
 import LoginModal from '../../components/Common/LoginModal';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-import useSaveLocalContent from '@/utils/saveLocalContent';
+import saveLocalContent from '@/utils/saveLocalContent';
 import useAuth from '@/hooks/useAuth';
 import useGeolocation from '@/hooks/useGeolocation';
 
@@ -40,7 +40,7 @@ interface TravelListResponse {
 
 const TravelPage = () => {
   const router = useRouter();
-  const { setEncryptedCookie } = useSaveLocalContent();
+  const { setEncryptedCookie } = saveLocalContent();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchType, setSearchType] = useState('placeName');
@@ -72,7 +72,7 @@ const TravelPage = () => {
       setAlertSeverity('warning');
       setAlertOpen(true);
     }
-  }, [geoErrorMessage]);
+  }, [checkAuthStatus, geoErrorMessage]);
   
   useEffect(() => {
     if (userCoordinates && !isLoading) {
