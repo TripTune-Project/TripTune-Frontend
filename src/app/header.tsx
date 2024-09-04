@@ -24,7 +24,7 @@ const Header = () => {
   const [alertMessage, setAlertMessage] = useState('');
   const [isLogoutClicked, setIsLogoutClicked] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [userId, setUserId] = useState('');
+  const [userId, setUserId] = useState<string>('');
   
   const resetAuthState = () => {
     setIsLoggedIn(false);
@@ -37,8 +37,16 @@ const Header = () => {
     const refreshToken = Cookies.get('trip-tune_rt');
     
     if (refreshToken) {
-      setIsLoggedIn(true);
-      setUserId(Cookies.get('userId'));
+      const storedUserId = Cookies.get('userId');
+      
+      if (storedUserId) {
+        setIsLoggedIn(true);
+        setUserId(storedUserId);
+      } else {
+        setAlertMessage('로그인 정보가 손상되었습니다. 다시 로그인해 주세요.');
+        setAlertOpen(true);
+        resetAuthState();
+      }
     } else {
       setIsLoggedIn(false);
     }
