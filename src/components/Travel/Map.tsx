@@ -68,10 +68,15 @@ const Map = ({ places }: MapProps) => {
   const handleZoomChanged = () => {
     if (mapRef.current) {
       const newZoom = mapRef.current.getZoom();
-      if (newZoom !== undefined && newZoom < 16) {
-        mapRef.current.setZoom(16);
-      } else if (newZoom !== zoom) {
-        setZoom(newZoom);
+      
+      if (typeof newZoom === 'number') {
+        if (newZoom < 16) {
+          mapRef.current.setZoom(16);
+        } else if (newZoom !== zoom) {
+          setZoom(newZoom);
+        }
+      } else {
+        console.error('확대/축소 수준이 정의되지 않았거나 유효한 숫자가 아닙니다.');
       }
     }
   };

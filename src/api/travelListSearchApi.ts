@@ -62,12 +62,12 @@ export const fetchTravelListSearch = async (
     if (isAxiosError(error)) {
       const axiosError = error as AxiosError<TravelListSearchErrorResponse>;
       if (axiosError.response) {
-        console.error('API Error Response:', axiosError.response.data);
+        console.error('API 오류 응답:', axiosError.response.data);
         return axiosError.response.data;
       }
     }
     
-    console.error('Unexpected Error:', error);
+    console.error('예기치 않은 오류:', error);
     return {
       success: false,
       errorCode: 500,
