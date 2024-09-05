@@ -1,3 +1,4 @@
+// 백엔드 적용 api 전 코드
 'use client';
 
 import React from 'react';
@@ -156,3 +157,194 @@ const TravelDetail = () => {
 };
 
 export default TravelDetail;
+
+
+// 백엔드 적용 api 코드
+// 'use client';
+//
+// import React, { useEffect, useState } from 'react';
+// import Image from 'next/image';
+// import { Swiper, SwiperSlide } from 'swiper/react';
+// import 'swiper/css';
+// import styled from 'styled-components';
+// import 'swiper/css/navigation';
+// import 'swiper/css/pagination';
+// import { Navigation, Pagination } from 'swiper/modules';
+// import styles from '../../../styles/Travel.module.css';
+// import favicon from '../../../../public/favicon.ico';
+// import placeIcon from '../../../../public/assets/images/place.png';
+// import { fetchTravelDetail } from '@/api/travelApi';
+// import { useRouter } from 'next/navigation';
+// import { TravelPlaceDetail, TravelDetailSuccessResponse, TravelApiErrorResponse } from '@/types/travelType';
+//
+// const StyledSwiperContainer = styled.div`
+//   overflow: hidden;
+//   position: relative;
+//   width: 100%;
+//   max-width: 1850px;
+//   margin: 0 auto;
+// `;
+//
+// const StyledSwiperButtonPrev = styled.div`
+//   position: absolute;
+//   top: 50%;
+//   width: 60px;
+//   height: 60px;
+//   left: 10px;
+//   transform: translateY(-50%);
+//   background: none;
+//   border: none;
+//   cursor: pointer;
+//   z-index: 10;
+//   user-select: none;
+//
+//   &::after {
+//     content: '';
+//     display: block;
+//     width: 60px;
+//     height: 60px;
+//     background-size: cover;
+//     background-image: url('/assets/images/left_btn.png');
+//   }
+// `;
+//
+// const StyledSwiperButtonNext = styled.div`
+//   position: absolute;
+//   top: 50%;
+//   width: 60px;
+//   height: 60px;
+//   right: 10px;
+//   transform: translateY(-50%);
+//   background: none;
+//   border: none;
+//   cursor: pointer;
+//   z-index: 10;
+//   user-select: none;
+//
+//   &::after {
+//     content: '';
+//     display: block;
+//     width: 60px;
+//     height: 60px;
+//     background-size: cover;
+//     background-image: url('/assets/images/right_btn.png');
+//   }
+// `;
+//
+// const TravelDetail = ({ placeId }: { placeId: number }) => {
+//   const [placeDetail, setPlaceDetail] = useState<TravelPlaceDetail | null>(null);
+//   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+//   const router = useRouter();
+//
+//   useEffect(() => {
+//     const fetchDetail = async () => {
+//       try {
+//         const response: TravelDetailSuccessResponse | TravelApiErrorResponse = await fetchTravelDetail(placeId);
+//
+//         if (response.success && response.data) {
+//           setPlaceDetail(response.data);
+//         } else {
+//           setErrorMessage(response.message || '데이터를 불러오는 중 오류가 발생했습니다.');
+//         }
+//       } catch (error) {
+//         setErrorMessage('네트워크 에러가 발생했습니다. 다시 시도해주세요.');
+//         console.error('Error fetching travel detail:', error);
+//       }
+//     };
+//
+//     fetchDetail();
+//   }, [placeId]);
+//
+//   if (!placeDetail) {
+//     return <div>로딩 중...</div>;
+//   }
+//
+//   return (
+//     <div className={styles.travelDetailContent}>
+//       <h1 className={styles.chooseRecomend}>여행지 탐색 : 상세보기</h1>
+//       <div className={styles.topSection}>
+//         <div className={styles.leftSection}>
+//           <StyledSwiperContainer>
+//             {placeDetail.imageList.length > 0 ? (
+//               <Swiper
+//                 modules={[Navigation, Pagination]}
+//                 slidesPerView={1}
+//                 navigation={{
+//                   nextEl: '.swiper-button-next',
+//                   prevEl: '.swiper-button-prev',
+//                 }}
+//                 loop
+//               >
+//                 {placeDetail.imageList.map((image, index) => (
+//                   <SwiperSlide key={index}>
+//                     <Image src={image.imageUrl} alt={image.imageName} width={400} height={280} className={styles.detailSliderImg} />
+//                   </SwiperSlide>
+//                 ))}
+//                 <StyledSwiperButtonPrev className="swiper-button-prev" />
+//                 <StyledSwiperButtonNext className="swiper-button-next" />
+//               </Swiper>
+//             ) : (
+//               <p>이미지가 없습니다.</p>
+//             )}
+//           </StyledSwiperContainer>
+//         </div>
+//         <div className={styles.rightSection}>
+//           <p className={styles.country}>country : {placeDetail.country}</p>
+//           <p className={styles.city}>city : {placeDetail.city}</p>
+//           <p className={styles.district}>district : {placeDetail.district}</p>
+//           <p className={styles.placeName}>placeName: {placeDetail.placeName}</p>
+//           <p className={styles.address}>
+//             address: {placeDetail.address} {placeDetail.detailAddress}
+//           </p>
+//           <p className={styles.description}>
+//             description: {placeDetail.description}
+//           </p>
+//         </div>
+//       </div>
+//       <div className={styles.buttonContainer}>
+//         <button className={styles.backBtn} onClick={() => router.back()}>뒤로 가기</button>
+//         <button className={styles.ChooseBtn}>내 일정 담기</button>
+//         <button className={styles.bookmarkBtn}>북마크</button>
+//       </div>
+//       {placeDetail.recommandedTravelList && placeDetail.recommandedTravelList.length > 0 ? (
+//         <div className={styles.recommendedDestinations}>
+//           <h2 className={styles.chooseRecomend}>
+//             <Image src={favicon} alt={'파비콘'} style={{ marginLeft: '-15px' }} priority />
+//             여행지 탐색 : 추천 여행지
+//           </h2>
+//           <StyledSwiperContainer>
+//             <Swiper
+//               modules={[Navigation, Pagination]}
+//               slidesPerView={4}
+//               navigation={{
+//                 nextEl: '.swiper-button-next',
+//                 prevEl: '.swiper-button-prev',
+//               }}
+//               loop
+//             >
+//               {placeDetail.recommandedTravelList.map((rec, index) => (
+//                 <SwiperSlide key={index}>
+//                   <div className={styles.imgSliderContainer}>
+//                     <Image src={rec.ThumbnailUrl} alt={rec.placeName} width={400} height={280} className={styles.sliderImg} />
+//                     <p className={styles.sliderTextP}>{rec.placeName}</p>
+//                     <p className={styles.sliderTextPDetail}>
+//                       <Image src={placeIcon} alt={'place'} width={15} height={21} />
+//                       &nbsp;{rec.country} / {rec.city} / {rec.district}
+//                     </p>
+//                   </div>
+//                 </SwiperSlide>
+//               ))}
+//               <StyledSwiperButtonPrev className="swiper-button-prev" />
+//               <StyledSwiperButtonNext className="swiper-button-next" />
+//             </Swiper>
+//           </StyledSwiperContainer>
+//         </div>
+//       ) : (
+//         <p className={styles.noRecommendations}>추천 여행지가 없습니다.</p>
+//       )}
+//       {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>}
+//     </div>
+//   );
+// };
+//
+// export default TravelDetail;
