@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { TravelPlace } from '@/types/travelType';
 
 const containerStyle = {
   width: '100%',
@@ -11,18 +12,8 @@ const defaultCenter = {
   lng: 126.9976,
 };
 
-interface Place {
-  placeId: number;
-  country: string;
-  city: string;
-  district: string;
-  placeName: string;
-  latitude: number;
-  longitude: number;
-}
-
 interface MapProps {
-  places: Place[];
+  places: TravelPlace[];
 }
 
 const Map = ({ places }: MapProps) => {
