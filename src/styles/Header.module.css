@@ -16,7 +16,7 @@
 }
 
 .logo {
-  margin: 1vh 5.68vw; /* 상대적인 margin */
+  margin: 1vh 5.68vw;
   width: 183px;
   height: 57px;
   flex-shrink: 0;
