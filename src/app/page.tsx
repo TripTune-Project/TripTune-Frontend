@@ -140,10 +140,6 @@ const Home = () => {
             </div>
             <div className={styles.onBoardingShow}>
               <div className={styles.onBoardingSearch}>
-                <select className={styles.filterSelect}>
-                  <option value='country'>국가명</option>
-                  <option value='city'>도시명</option>
-                </select>
                 <input
                   type='text'
                   placeholder='원하는 여행지를 검색하세요'
