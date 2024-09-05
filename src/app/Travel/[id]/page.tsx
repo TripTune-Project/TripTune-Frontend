@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
-import styles from '../../../styles/TravelDetail.module.css';
+import styles from '../../../styles/Travel.module.css';
 import favicon from '../../../../public/favicon.ico';
 import place from '../../../../public/assets/images/place.png';
 import picture from '../../../../public/assets/images/picture.png';

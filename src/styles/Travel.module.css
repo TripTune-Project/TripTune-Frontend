@@ -1,3 +1,55 @@
+/* 페이지내이션*/
+.paginationContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    gap: 5px;
+}
+
+.pageButton {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.pageButton:hover {
+    background-color: #f0f0f0;
+}
+
+.pageButton.active {
+    background-color: #0070f3;
+    color: white;
+    border: 1px solid #0070f3;
+}
+
+.navButton {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.navButton:hover {
+    background-color: #f0f0f0;
+}
+
+.navButton.disabled {
+    background-color: #f9f9f9;
+    color: #ccc;
+    cursor: not-allowed;
+}
+
+.ellipsis {
+    padding: 5px;
+    font-size: 16px;
+    color: #999;
+}
+
+/* Travel 모듈 */
 .container {
     margin-top: 30px;
     display: flex;
@@ -247,4 +299,332 @@
     background-color: #ffe0e0;
     border: 1px solid #ffcccc;
     border-radius: 4px;
+}
+/* 여행지 탐색 상세 조회 */
+.travelDetailContent {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+.topSection {
+    display: flex;
+    width: 100%;
+    height: 50vh;
+}
+
+.leftSection {
+    width: 50%;
+    height: 100%;
+    padding: 0 20px;
+}
+
+.rightSection {
+    width: 50%;
+    height: 100%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.country, .city, .district, .placeName, .address, .description {
+    margin: 10px 0;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 20px;
+    color: #333;
+    line-height: 1.5;
+    font-weight: bold;
+}
+
+.recommendedDestinations {
+    text-align: left;
+    margin-top: 76px;
+}
+
+.chooseRecomend {
+    margin-left: 50px;
+    color: #000;
+    font-size: 2vw;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    font-family: 'Noto Sans KR', sans-serif;
+    margin-bottom: 20px;
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: center;
+    gap: 300px;
+    margin-top: 100px;
+}
+
+.backBtn, .ChooseBtn, .bookmarkBtn {
+    width: 120px;
+    height: 45px;
+    border-radius: 5px;
+    border: none;
+    background-color: #f0f0f0;
+    color: #333;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.backBtn:hover, .ChooseBtn:hover, .bookmarkBtn:hover {
+    background-color: #d0d0d0;
+}
+
+.travelDetailChooseBtnMore,
+.travelDetailNoChooseBtn,
+.travelDetailChooseBtn {
+    width: 90px;
+    height: 38px;
+    border-radius: 40px;
+    border: none;
+    background: #e8e8e8;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.travelDetailChooseBtn {
+    background: #a7cdcc;
+    color: #ffffff;
+}
+
+.travelDetailChooseBtnMore {
+    float: right;
+    margin-right: 85px;
+    position: absolute;
+    right: 0;
+}
+
+.travelDetailChooseBtn:hover,
+.travelDetailNoChooseBtn:hover,
+.travelDetailChooseBtnMore:hover {
+    background-color: #d0d0d0;
+}
+
+.imgSliderContainer {
+    margin-top: 39px;
+    flex: 1;
+    width: 90%;
+    max-width: 400px;
+    background: #ffffff;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.sliderImg {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    object-fit: cover;
+    border-radius: 30px 0 0 0;
+}
+
+.detailSliderImg {
+    margin-left: 85px;
+    width: 600px;
+    height: auto;
+    object-fit: cover;
+}
+
+.sliderTextP {
+    color: #000;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 25px;
+    font-weight: 500;
+    line-height: normal;
+    margin-top: 10px;
+    text-align: left;
+    margin-left: 30px;
+}
+
+.sliderTextPDetail {
+    color: #848282;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: normal;
+    margin-top: 5px;
+    text-align: left;
+    margin-left: 30px;
+    display: flex;
+    align-items: center;
+}
+
+.sliderTextPDetail img {
+    vertical-align: middle;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.sliderContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    width: 100%;
+    cursor: grab;
+    flex-wrap: wrap;
+}
+
+.sliderContainer:active {
+    cursor: grabbing;
+}
+
+.sliderButton {
+    background: none;
+    border: none;
+    color: #333;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 10px 20px;
+    user-select: none;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+}
+
+.sliderButton:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.imgSliderExplain {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.travelDetailingContent {
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.travelDetailingText {
+    flex: 1;
+    text-align: left;
+    color: #fff;
+    padding-right: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 50%;
+}
+
+.viewTitle {
+    margin-left: 41px;
+    color: #555;
+    font-family: Noto Sans KR, sans-serif;
+    font-size: 25px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.iconContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+@media (max-width: 1024px) {
+    .topSection {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .leftSection, .rightSection {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .buttonContainer {
+        gap: 100px;
+        margin-top: 50px;
+    }
+
+    .backBtn, .ChooseBtn, .bookmarkBtn {
+        width: 100px;
+        height: 40px;
+        font-size: 14px;
+    }
+
+    .detailSliderImg {
+        margin-left: 0;
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .topSection {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .leftSection, .rightSection {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .buttonContainer {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        margin-top: 30px;
+    }
+
+    .backBtn, .ChooseBtn, .bookmarkBtn {
+        width: 90px;
+        height: 35px;
+        font-size: 12px;
+    }
+
+    .chooseRecomend {
+        margin-left: 20px;
+        font-size: 5vw;
+    }
+
+    .detailSliderImg {
+        margin-left: 0;
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .buttonContainer {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .backBtn, .ChooseBtn, .bookmarkBtn {
+        width: 80px;
+        height: 30px;
+        font-size: 11px;
+    }
+
+    .chooseRecomend {
+        margin-left: 10px;
+        font-size: 6vw;
+    }
+
+    .country, .city, .district, .placeName, .address, .description {
+        font-size: 16px;
+    }
 }
