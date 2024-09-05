@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useState, useEffect } from 'react';
 import Pagination from '../../components/Travel/Pagination';
@@ -11,7 +11,6 @@ import { useRouter } from 'next/navigation';
 import DataLoading from '../../components/Common/DataLoading';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-import saveLocalContent from '@/utils/saveLocalContent';
 import useGeolocation from '@/hooks/useGeolocation';
 
 interface Place {
@@ -38,7 +37,6 @@ interface TravelListResponse {
 
 const TravelPage = () => {
   const router = useRouter();
-  const { setEncryptedCookie } = saveLocalContent();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [places, setPlaces] = useState<Place[]>([]);
@@ -82,7 +80,7 @@ const TravelPage = () => {
         ? await fetchTravelListSearch({ keyword: searchTerm }, currentPage)
         : await fetchTravelListByLocation(
           { latitude: userCoordinates!.latitude, longitude: userCoordinates!.longitude },
-          currentPage
+          currentPage,
         );
       
       if (response.success && response.data) {
@@ -106,6 +104,17 @@ const TravelPage = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+  
+  const handleMyLocationClick = () => {
+    if (!userCoordinates) {
+      setAlertMessage('위치 정보를 가져올 수 없습니다. 권한을 확인해 주세요.');
+      setAlertSeverity('warning');
+      setAlertOpen(true);
+      return;
+    }
+    
+    fetchPlaces();
   };
   
   const handlePageChange = (page: number) => {
@@ -190,88 +199,97 @@ const TravelPage = () => {
   };
   
   return (
-    <div className={styles.container}>
-      {isLoading ? (
-        <DataLoading />
-      ) : errorMessage ? (
-        <div className={styles.errorMessage}>{errorMessage}</div>
-      ) : (
-        <div className={styles.listContainer}>
-          <div className={styles.searchContainer}>
-            <input
-              type="text"
-              placeholder="검색할 키워드를 입력 해주세요."
-              value={searchTerm}
-              onChange={handleSearchInputChange}
-              className={styles.input}
-            />
-            <button onClick={handleSearch} className={styles.searchButton}>
-              검색
-            </button>
-            <button onClick={handleResetSearch} className={styles.resetButton}>
-              초기화
-            </button>
-          </div>
-          <ul className={styles.placeList}>
-            {places.map((place) => {
-              const { walking, driving } = calculateTravelTime(place.distance);
-              return (
-                <li
-                  key={place.placeId}
-                  className={styles.placeItem}
-                  onClick={() => handleDetailClick(place.placeId)}
-                >
-                  <div className={styles.placeThumbnail}>
-                    {place.thumbnailUrl ? (
-                      <Image
-                        src={place.thumbnailUrl}
-                        alt={place.placeName}
-                        width={150}
-                        height={150}
-                        className={styles.thumbnailImage}
-                        priority
-                      />
-                    ) : (
-                      <div className={styles.noImage}>이미지 없음</div>
-                    )}
-                  </div>
-                  <div className={styles.placeInfo}>
-                    <h2 className={styles.placeName}>{place.placeName}</h2>
-                    <p className={styles.placeAddress}>{`${place.country} / ${place.city} / ${place.district}`}</p>
-                    <p className={styles.placeDetailAddress}>
-                      {place.address} {place.detailAddress}
-                    </p>
-                    <div className={styles.timeAndDistance}>
-                      <button
-                        className={styles.contentBtn}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDetailClick(place.placeId);
-                        }}
-                      >
-                        {place.placeName} 상세보기
-                      </button>
-                      <div className={styles.distanceInfo}>
-                        <span>{walking}</span> | <span>{driving}</span>
+    <>
+      <div className={styles.container}>
+        {isLoading ? (
+          <DataLoading />
+        ) : errorMessage ? (
+          <div className={styles.errorMessage}>{errorMessage}</div>
+        ) : (
+          <div className={styles.listContainer}>
+            <div className={styles.headerContainer}>
+              <h1 className={styles.travelSearch}>여행지 탐색 : 검색 리스트 조회</h1>
+              {/* "내 위치" 버튼 클릭 시 위치 정보 갱신 함수 호출 */}
+              <button className={styles.mylocation} onClick={handleMyLocationClick}>
+                내 위치
+              </button>
+            </div>
+            <div className={styles.searchContainer}>
+              <input
+                type="text"
+                placeholder="검색할 키워드를 입력 해주세요."
+                value={searchTerm}
+                onChange={handleSearchInputChange}
+                className={styles.input}
+              />
+              <button onClick={handleSearch} className={styles.searchButton}>
+                검색
+              </button>
+              <button onClick={handleResetSearch} className={styles.resetButton}>
+                초기화
+              </button>
+            </div>
+            <ul className={styles.placeList}>
+              {places.map((place) => {
+                const { walking, driving } = calculateTravelTime(place.distance);
+                return (
+                  <li
+                    key={place.placeId}
+                    className={styles.placeItem}
+                    onClick={() => handleDetailClick(place.placeId)}
+                  >
+                    <div className={styles.placeThumbnail}>
+                      {place.thumbnailUrl ? (
+                        <Image
+                          src={place.thumbnailUrl}
+                          alt={place.placeName}
+                          width={150}
+                          height={150}
+                          className={styles.thumbnailImage}
+                          priority
+                        />
+                      ) : (
+                        <div className={styles.noImage}>이미지 없음</div>
+                      )}
+                    </div>
+                    <div className={styles.placeInfo}>
+                      <h2 className={styles.placeName}>{place.placeName}</h2>
+                      <p className={styles.placeAddress}>{`${place.country} / ${place.city} / ${place.district}`}</p>
+                      <p className={styles.placeDetailAddress}>
+                        {place.address} {place.detailAddress}
+                      </p>
+                      <div className={styles.timeAndDistance}>
+                        <button
+                          className={styles.contentBtn}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDetailClick(place.placeId);
+                          }}
+                        >
+                          {place.placeName} 상세보기
+                        </button>
+                        <div className={styles.distanceInfo}>
+                          <span>{walking}</span> | <span>{driving}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
-          <Pagination total={totalPages * 5} currentPage={currentPage} pageSize={5} onPageChange={handlePageChange} />
+                  </li>
+                );
+              })}
+            </ul>
+            <Pagination total={totalPages * 5} currentPage={currentPage} pageSize={5} onPageChange={handlePageChange} />
+          </div>
+        )}
+        <div className={styles.mapContainer}>
+          <Map places={places} />
         </div>
-      )}
-      <div className={styles.mapContainer}>
-        <Map places={places} />
+        <Snackbar open={alertOpen} autoHideDuration={3000} onClose={handleAlertClose}>
+          <Alert onClose={handleAlertClose} severity={alertSeverity}>
+            {alertMessage}
+          </Alert>
+        </Snackbar>
       </div>
-      <Snackbar open={alertOpen} autoHideDuration={3000} onClose={handleAlertClose}>
-        <Alert onClose={handleAlertClose} severity={alertSeverity}>
-          {alertMessage}
-        </Alert>
-      </Snackbar>
-    </div>
+    </>
   );
 };
 
