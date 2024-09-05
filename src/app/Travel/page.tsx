@@ -88,7 +88,7 @@ const TravelPage = () => {
       if (response.success && response.data) {
         const processedPlaces = response.data.content.map((place) => ({
           ...place,
-          distance: Math.floor(parseFloat(place.distance) * 10) / 10,
+          distance: Math.floor(place.distance * 10) / 10,
         }));
         
         setPlaces(processedPlaces);
@@ -177,7 +177,6 @@ const TravelPage = () => {
     }
     
     const distanceInKm = Math.floor(distance * 10) / 10;
-    
     const walkingSpeed = 5;
     const drivingSpeed = 50;
     
@@ -253,7 +252,7 @@ const TravelPage = () => {
                         {place.placeName} 상세보기
                       </button>
                       <div className={styles.distanceInfo}>
-                        <span>{String(walking)}</span> | <span>{String(driving)}</span> {/* 문자열로 변환 */}
+                        <span>{walking}</span> | <span>{driving}</span>
                       </div>
                     </div>
                   </div>
