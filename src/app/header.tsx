@@ -37,10 +37,10 @@ const Header = () => {
     const refreshToken = Cookies.get('trip-tune_rt');
     
     if (refreshToken) {
+      setIsLoggedIn(true);
       const storedUserId = Cookies.get('userId');
       
       if (storedUserId) {
-        setIsLoggedIn(true);
         setUserId(storedUserId);
       } else {
         setAlertMessage('로그인 정보가 손상되었습니다. 다시 로그인해 주세요.');

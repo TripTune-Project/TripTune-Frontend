@@ -9,11 +9,9 @@ import { fetchTravelListByLocation } from '@/api/travelListApi';
 import styles from '../../styles/Travel.module.css';
 import { useRouter } from 'next/navigation';
 import DataLoading from '../../components/Common/DataLoading';
-import LoginModal from '../../components/Common/LoginModal';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import saveLocalContent from '@/utils/saveLocalContent';
-import useAuth from '@/hooks/useAuth';
 import useGeolocation from '@/hooks/useGeolocation';
 
 interface Place {
@@ -27,7 +25,7 @@ interface Place {
   address: string;
   detailAddress: string;
   thumbnailUrl: string;
-  distance: string;
+  distance: number;
 }
 
 interface TravelListResponse {
@@ -43,13 +41,11 @@ const TravelPage = () => {
   const { setEncryptedCookie } = saveLocalContent();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchType, setSearchType] = useState('placeName');
   const [places, setPlaces] = useState<Place[]>([]);
   const [totalPages, setTotalPages] = useState(0);
   const [isSearching, setIsSearching] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [showLoginModal, setShowLoginModal] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertSeverity, setAlertSeverity] = useState<'success' | 'error' | 'warning' | 'info'>('info');
@@ -62,17 +58,15 @@ const TravelPage = () => {
     setIsSearching(false);
   };
   
-  const { checkAuthStatus } = useAuth(setEncryptedCookie, resetPlaces);
   const { userCoordinates, errorMessage: geoErrorMessage, permissionState } = useGeolocation();
   
   useEffect(() => {
-    checkAuthStatus();
     if (geoErrorMessage) {
       setAlertMessage(geoErrorMessage);
       setAlertSeverity('warning');
       setAlertOpen(true);
     }
-  }, [checkAuthStatus, geoErrorMessage]);
+  }, [geoErrorMessage]);
   
   useEffect(() => {
     if (userCoordinates && !isLoading) {
@@ -85,14 +79,19 @@ const TravelPage = () => {
     setErrorMessage(null);
     try {
       const response: TravelListResponse = isSearching
-        ? await fetchTravelListSearch({ type: searchType, keyword: searchTerm }, currentPage)
+        ? await fetchTravelListSearch({ keyword: searchTerm }, currentPage)
         : await fetchTravelListByLocation(
           { latitude: userCoordinates!.latitude, longitude: userCoordinates!.longitude },
           currentPage
         );
       
       if (response.success && response.data) {
-        setPlaces(response.data.content);
+        const processedPlaces = response.data.content.map((place) => ({
+          ...place,
+          distance: Math.floor(parseFloat(place.distance) * 10) / 10,
+        }));
+        
+        setPlaces(processedPlaces);
         setTotalPages(response.data.totalPages);
         if (response.data.content.length === 0) {
           setErrorMessage('검색 결과가 없습니다.');
@@ -142,17 +141,13 @@ const TravelPage = () => {
   
   const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const input = event.target.value;
-    const regex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z]*$/;
+    const regex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]*$/;
     
     if (regex.test(input)) {
       setSearchTerm(input);
     } else {
-      alert('한글과 영어만 입력 가능합니다.');
+      alert('특수문자는 사용할 수 없습니다. 다른 검색어를 입력해 주세요.');
     }
-  };
-  
-  const handleSearchTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSearchType(event.target.value);
   };
   
   const handleResetSearch = () => {
@@ -160,11 +155,6 @@ const TravelPage = () => {
     setIsSearching(false);
     setCurrentPage(1);
     fetchPlaces();
-  };
-  
-  const handleCloseLoginModal = () => {
-    setShowLoginModal(false);
-    router.push(`/Login?next=${encodeURIComponent('/Travel')}`);
   };
   
   const handleAlertClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
@@ -178,22 +168,15 @@ const TravelPage = () => {
     router.push(`/Travel/${placeId}`);
   };
   
-  const calculateTravelTime = (distance: string) => {
-    if (!distance || typeof distance !== 'string') {
+  const calculateTravelTime = (distance: number) => {
+    if (isNaN(distance)) {
       return {
         walking: '도보 거리 정보 없음',
         driving: '차로 거리 정보 없음',
       };
     }
     
-    const distanceInKm = parseFloat(distance.replace('km', '').trim());
-    
-    if (isNaN(distanceInKm)) {
-      return {
-        walking: '도보 거리 정보 없음',
-        driving: '차로 거리 정보 없음',
-      };
-    }
+    const distanceInKm = Math.floor(distance * 10) / 10;
     
     const walkingSpeed = 5;
     const drivingSpeed = 50;
@@ -202,8 +185,8 @@ const TravelPage = () => {
     const drivingTime = Math.round((distanceInKm / drivingSpeed) * 60);
     
     return {
-      walking: `도보 ${walkingTime}분 (${distance})`,
-      driving: `차로 ${drivingTime}분 (${distance})`,
+      walking: `도보 ${walkingTime}분 (${distanceInKm} km)`,
+      driving: `차로 ${drivingTime}분 (${distanceInKm} km)`,
     };
   };
   
@@ -216,16 +199,9 @@ const TravelPage = () => {
       ) : (
         <div className={styles.listContainer}>
           <div className={styles.searchContainer}>
-            <select value={searchType} onChange={handleSearchTypeChange} className={styles.select}>
-              <option value="placeName">장소명</option>
-              <option value="country">국가명</option>
-              <option value="city">도시명</option>
-            </select>
             <input
               type="text"
-              placeholder={`검색할 ${
-                searchType === 'placeName' ? '장소명' : searchType === 'country' ? '국가명' : '도시명'
-              }을 입력하세요`}
+              placeholder="검색할 키워드를 입력 해주세요."
               value={searchTerm}
               onChange={handleSearchInputChange}
               className={styles.input}
@@ -277,7 +253,7 @@ const TravelPage = () => {
                         {place.placeName} 상세보기
                       </button>
                       <div className={styles.distanceInfo}>
-                        <span>{walking}</span>
+                        <span>{walking}</span> |
                         <span>{driving}</span>
                       </div>
                     </div>
@@ -292,7 +268,6 @@ const TravelPage = () => {
       <div className={styles.mapContainer}>
         <Map places={places} />
       </div>
-      {showLoginModal && <LoginModal onClose={handleCloseLoginModal} />}
       <Snackbar open={alertOpen} autoHideDuration={3000} onClose={handleAlertClose}>
         <Alert onClose={handleAlertClose} severity={alertSeverity}>
           {alertMessage}

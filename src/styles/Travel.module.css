@@ -16,7 +16,6 @@
     margin-bottom: 20px;
 }
 
-.select,
 .input {
     padding: 10px;
     margin: 5px 5px 5px 0;
@@ -198,7 +197,6 @@
 
 @media (max-width: 480px) {
     .input,
-    .select,
     .searchButton,
     .resetButton {
         width: 100%;
