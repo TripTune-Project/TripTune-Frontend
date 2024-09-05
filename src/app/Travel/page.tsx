@@ -253,8 +253,7 @@ const TravelPage = () => {
                         {place.placeName} 상세보기
                       </button>
                       <div className={styles.distanceInfo}>
-                        <span>{walking}</span> |
-                        <span>{driving}</span>
+                        <span>{String(walking)}</span> | <span>{String(driving)}</span> {/* 문자열로 변환 */}
                       </div>
                     </div>
                   </div>
