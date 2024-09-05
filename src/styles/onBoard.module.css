@@ -63,7 +63,7 @@
 }
 
 .onBoardingSearch {
-  width: 80%;
+  width: 100%;
   max-width: 781px;
   height: 74px;
   flex-shrink: 0;
@@ -93,7 +93,6 @@
   font-size: 16px;
   color: #333;
   border: none;
-  border-left: 2px solid #004a55;
   outline: none;
 }
 
