@@ -1,5 +1,4 @@
-import { AxiosResponse, AxiosError, isAxiosError } from 'axios';
-import axiosInstance from './axiosInstance';
+import axios, { AxiosResponse, AxiosError, isAxiosError } from 'axios';
 
 interface TravelListLocationParams {
   longitude: number;
@@ -50,7 +49,7 @@ export const fetchTravelListByLocation = async (
   try {
     const pageNum = Number(page);
     
-    const response: AxiosResponse<TravelListSuccessResponse | TravelListEmptyResponse> = await axiosInstance.post(
+    const response: AxiosResponse<TravelListSuccessResponse | TravelListEmptyResponse> = await axios.post(
       `/api/travels/list?page=${pageNum}`,
         params,
     );
