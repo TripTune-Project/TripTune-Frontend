@@ -20,6 +20,7 @@ import {
   TravelApiResponse,
   TravelApiErrorResponse,
 } from '@/types/travelType';
+
 const TravelPage = () => {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
@@ -34,7 +35,7 @@ const TravelPage = () => {
   const [alertSeverity, setAlertSeverity] = useState<
     'success' | 'error' | 'warning' | 'info'
   >('info');
-
+  
   const resetPlaces = () => {
     setPlaces([]);
     setTotalPages(0);
@@ -42,9 +43,9 @@ const TravelPage = () => {
     setSearchTerm('');
     setIsSearching(false);
   };
-
+  
   const { userCoordinates, errorMessage: geoErrorMessage } = useGeolocation();
-
+  
   useEffect(() => {
     if (geoErrorMessage) {
       setAlertMessage(geoErrorMessage);
@@ -52,44 +53,48 @@ const TravelPage = () => {
       setAlertOpen(true);
     }
   }, [geoErrorMessage]);
-
+  
   useEffect(() => {
     if (userCoordinates && !isLoading) {
       fetchPlaces();
     }
   }, [userCoordinates, currentPage]);
-
+  
   const fetchPlaces = async () => {
     setIsLoading(true);
     setErrorMessage(null);
-
+    
     try {
       const response: TravelApiResponse | TravelApiErrorResponse = isSearching
-        ? await fetchTravelListSearch({ keyword: searchTerm }, currentPage)
+        ? await fetchTravelListSearch({
+          keyword: searchTerm,
+          latitude: userCoordinates?.latitude ?? 0,
+          longitude: userCoordinates?.longitude ?? 0,
+        }, currentPage)
         : await fetchTravelListByLocation(
-            {
-              latitude: userCoordinates?.latitude ?? 0,
-              longitude: userCoordinates?.longitude ?? 0,
-            },
-            currentPage
-          );
-
+          {
+            latitude: userCoordinates?.latitude ?? 0,
+            longitude: userCoordinates?.longitude ?? 0,
+          },
+          currentPage,
+        );
+      
       if (response.success && response.data) {
         const processedPlaces = response.data.content.map((place) => ({
           ...place,
           distance: Math.floor(place.distance * 10) / 10,
         }));
-
+        
         setPlaces(processedPlaces);
         setTotalPages(response.data.totalPages);
-
+        
         if (response.data.content.length === 0) {
           setErrorMessage('검색 결과가 없습니다.');
         }
       } else {
         const errorResponse = response as TravelApiErrorResponse;
         setErrorMessage(
-          errorResponse.message || '데이터를 불러오는 중 오류가 발생했습니다.'
+          errorResponse.message || '데이터를 불러오는 중 오류가 발생했습니다.',
         );
         resetPlaces();
       }
@@ -100,7 +105,7 @@ const TravelPage = () => {
       setIsLoading(false);
     }
   };
-
+  
   const handleMyLocationClick = () => {
     if (!userCoordinates) {
       setAlertMessage('위치 정보를 가져올 수 없습니다. 권한을 확인해 주세요.');
@@ -108,10 +113,10 @@ const TravelPage = () => {
       setAlertOpen(true);
       return;
     }
-
+    
     fetchPlaces();
   };
-
+  
   const handlePageChange = (page: number) => {
     if (page !== currentPage) {
       setCurrentPage(page);
@@ -123,7 +128,7 @@ const TravelPage = () => {
       }, 0);
     }
   };
-
+  
   useEffect(() => {
     setTimeout(() => {
       window.scrollTo({
@@ -132,7 +137,7 @@ const TravelPage = () => {
       });
     }, 0);
   }, [currentPage]);
-
+  
   const handleSearch = () => {
     if (searchTerm.trim()) {
       setIsSearching(true);
@@ -142,41 +147,41 @@ const TravelPage = () => {
       alert('검색어를 입력해주세요.');
     }
   };
-
+  
   const handleSearchInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const input = event.target.value;
     const regex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]*$/;
-
+    
     if (regex.test(input)) {
       setSearchTerm(input);
     } else {
       alert('특수문자는 사용할 수 없습니다. 다른 검색어를 입력해 주세요.');
     }
   };
-
+  
   const handleResetSearch = () => {
     setSearchTerm('');
     setIsSearching(false);
     setCurrentPage(1);
     fetchPlaces();
   };
-
+  
   const handleAlertClose = (
     event?: React.SyntheticEvent | Event,
-    reason?: string
+    reason?: string,
   ) => {
     if (reason === 'clickaway') {
       return;
     }
     setAlertOpen(false);
   };
-
+  
   const handleDetailClick = (placeId: number) => {
     router.push(`/Travel/${placeId}`);
   };
-
+  
   const calculateTravelTime = (distance: number) => {
     if (isNaN(distance)) {
       return {
@@ -184,40 +189,40 @@ const TravelPage = () => {
         driving: '차로 거리 정보 없음',
       };
     }
-
+    
     const distanceInKm = Math.floor(distance * 10) / 10;
     const walkingSpeed = 5;
     const drivingSpeed = 50;
-
+    
     const walkingTime = Math.round((distanceInKm / walkingSpeed) * 60);
     const drivingTime = Math.round((distanceInKm / drivingSpeed) * 60);
-
+    
     return {
       walking: `도보 ${walkingTime}분 (${distanceInKm} km)`,
       driving: `차로 ${drivingTime}분 (${distanceInKm} km)`,
     };
   };
-
+  
   return (
     <>
       <Head>
         <title>여행지 탐색 | 검색 리스트 조회</title>
         <meta
-          name='description'
-          content='여행지를 검색하고 위치를 기반으로 추천받아보세요. 원하는 키워드로 검색하거나 내 위치에서 가까운 여행지를 찾아볼 수 있습니다.'
+          name="description"
+          content="여행지를 검색하고 위치를 기반으로 추천받아보세요. 원하는 키워드로 검색하거나 내 위치에서 가까운 여행지를 찾아볼 수 있습니다."
         />
         <meta
-          name='keywords'
-          content='여행, 여행지 검색, 위치 기반 추천, 내 위치, 여행지 추천, 여행 정보'
+          name="keywords"
+          content="여행, 여행지 검색, 위치 기반 추천, 내 위치, 여행지 추천, 여행 정보"
         />
-        <meta property='og:title' content='여행지 탐색 | 검색 리스트 조회' />
+        <meta property="og:title" content="여행지 탐색 | 검색 리스트 조회" />
         <meta
-          property='og:description'
-          content='여행지를 검색하고 위치를 기반으로 추천받아보세요. 원하는 키워드로 검색하거나 내 위치에서 가까운 여행지를 찾아볼 수 있습니다.'
+          property="og:description"
+          content="여행지를 검색하고 위치를 기반으로 추천받아보세요. 원하는 키워드로 검색하거나 내 위치에서 가까운 여행지를 찾아볼 수 있습니다."
         />
-        <meta property='og:image' content='/assets/Logo.png' />
-        <meta property='og:url' content='https://triptune.netlify.app/Travel' />
-        <meta name='viewport' content='width=device-width, initial-scale=1' />
+        <meta property="og:image" content="/assets/Logo.png" />
+        <meta property="og:url" content="https://triptune.netlify.app/Travel" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <div className={styles.container}>
         {isLoading ? (
@@ -239,8 +244,8 @@ const TravelPage = () => {
             </div>
             <div className={styles.searchContainer}>
               <input
-                type='text'
-                placeholder='검색할 키워드를 입력 해주세요.'
+                type="text"
+                placeholder="검색할 키워드를 입력 해주세요."
                 value={searchTerm}
                 onChange={handleSearchInputChange}
                 className={styles.input}
@@ -258,7 +263,7 @@ const TravelPage = () => {
             <ul className={styles.placeList}>
               {places.map((place) => {
                 const { walking, driving } = calculateTravelTime(
-                  place.distance
+                  place.distance,
                 );
                 return (
                   <li
