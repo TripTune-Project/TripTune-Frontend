@@ -1,6 +1,7 @@
 'use client';
 
 import React, { Suspense, useEffect, useState } from 'react';
+import Head from 'next/head';
 import { useSearchParams, useRouter } from 'next/navigation';
 import styles from '../../../styles/Find.module.css';
 import Image from 'next/image';
@@ -18,13 +19,13 @@ const ChangePassword = () => {
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [isRepasswordValid, setIsRepasswordValid] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
-
+  
   useEffect(() => {
     if (!passwordToken) {
       console.error('passwordToken을 찾을 수 없습니다.');
     }
   }, [passwordToken]);
-
+  
   useEffect(() => {
     const passwordValid = validatePassword(password) === true;
     const repasswordValid = password === repassword;
@@ -32,23 +33,23 @@ const ChangePassword = () => {
     setIsRepasswordValid(repasswordValid);
     setIsFormValid(passwordValid && repasswordValid);
   }, [password, repassword]);
-
+  
   const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
+    
     if (!passwordToken) {
       alert('유효하지 않은 토큰입니다.');
       setLoading(false);
       return;
     }
-
+    
     if (password !== repassword) {
       alert('비밀번호가 일치하지 않습니다.');
       setLoading(false);
       return;
     }
-
+    
     try {
       const response = await fetch('/api/members/change-password', {
         method: 'PATCH',
@@ -57,9 +58,9 @@ const ChangePassword = () => {
         },
         body: JSON.stringify({ passwordToken, password, repassword }),
       });
-
+      
       const data = await response.json();
-
+      
       if (data.success) {
         alert('비밀번호가 성공적으로 변경되었습니다.');
         router.push('/Login');
@@ -73,50 +74,63 @@ const ChangePassword = () => {
       setLoading(false);
     }
   };
-
+  
   return (
-    <div className={styles.pageContainer}>
-      <h1 className={styles.FindTitle}>비밀번호 재설정</h1>
-      <div className={styles.completeText}>
-        <Image src={favicon} alt={'파비콘'} width={31} height={20} priority />
-        새롭게 설정할 비밀번호를 입력해 주세요.
+    <>
+      <Head>
+        <title>Reset Password | TripTune</title>
+        <meta name="description" content="Reset your TripTune account password securely. Follow the steps to set a new password and regain access to your account." />
+        <meta name="keywords" content="reset password, change password, TripTune, account security" />
+        <meta property="og:title" content="Reset Password | TripTune" />
+        <meta property="og:description" content="Reset your TripTune account password securely. Follow the steps to set a new password and regain access to your account." />
+        <meta property="og:image" content="/assets/Logo.png" />
+        <meta property="og:url" content="https://triptune.netlify.app/Find/ChangePassword" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel='icon' href='/favicon.ico' />
+      </Head>
+      <div className={styles.pageContainer}>
+        <h1 className={styles.FindTitle}>비밀번호 재설정</h1>
+        <div className={styles.completeText}>
+          <Image src={favicon} alt={'파비콘'} width={31} height={20} priority />
+          새롭게 설정할 비밀번호를 입력해 주세요.
+        </div>
+        <hr className={styles.hrStyle} />
+        <p>새로운 비밀번호</p>
+        <input
+          type='password'
+          id='password'
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          placeholder={'비밀번호 (영문 대/소문자, 숫자, 특수문자 조합 8~15자리)'}
+          className={styles.input}
+        />
+        {!isPasswordValid && password && (
+          <div className={styles.errorText}>유효한 비밀번호 형식이 아닙니다.</div>
+        )}
+        <p> 비밀번호 재입력 </p>
+        <input
+          type='password'
+          id='repassword'
+          value={repassword}
+          onChange={(e) => setRepassword(e.target.value)}
+          required
+          placeholder={'비밀번호 재입력'}
+          className={styles.input}
+        />
+        {!isRepasswordValid && repassword && (
+          <div className={styles.errorText}>비밀번호가 일치하지 않습니다.</div>
+        )}
+        <button
+          type='submit'
+          className={styles.submitButton}
+          onClick={handlePasswordChange}
+          disabled={!isFormValid || loading}
+        >
+          {loading ? <VerificationLoading /> : '비밀번호 변경'}
+        </button>
       </div>
-      <hr className={styles.hrStyle} />
-      <p>새로운 비밀번호</p>
-      <input
-        type='password'
-        id='password'
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-        placeholder={'비밀번호 (영문 대/소문자, 숫자, 특수문자 조합 8~15자리)'}
-        className={styles.input}
-      />
-      {!isPasswordValid && password && (
-        <div className={styles.errorText}>유효한 비밀번호 형식이 아닙니다.</div>
-      )}
-      <p> 비밀번호 재입력 </p>
-      <input
-        type='password'
-        id='repassword'
-        value={repassword}
-        onChange={(e) => setRepassword(e.target.value)}
-        required
-        placeholder={'비밀번호 재입력'}
-        className={styles.input}
-      />
-      {!isRepasswordValid && repassword && (
-        <div className={styles.errorText}>비밀번호가 일치하지 않습니다.</div>
-      )}
-      <button
-        type='submit'
-        className={styles.submitButton}
-        onClick={handlePasswordChange}
-        disabled={!isFormValid || loading}
-      >
-        {loading ? <VerificationLoading /> : '비밀번호 변경'}
-      </button>
-    </div>
+    </>
   );
 };
 

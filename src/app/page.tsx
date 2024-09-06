@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -120,6 +121,20 @@ const Home = () => {
   
   return (
     <div className={styles.onBoard}>
+      <Head>
+        <title>TripTune - Explore and Plan Your Travel</title>
+        <meta name="description"
+              content="Discover top travel destinations and plan your trips with TripTune. Start your journey with personalized travel plans and recommendations." />
+        <meta name="keywords"
+              content="travel, trip planning, explore destinations, TripTune, travel ideas, itinerary" />
+        <meta property="og:title" content="TripTune - Explore and Plan Your Travel" />
+        <meta property="og:description"
+              content="Discover top travel destinations and plan your trips with TripTune. Start your journey with personalized travel plans and recommendations." />
+        <meta property="og:image" content="/assets/Logo.png" />
+        <meta property="og:url" content="https://triptune.netlify.app" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <div className={styles.onBoardingTop}>
         <div className={styles.onBoardingView}>
           <Image

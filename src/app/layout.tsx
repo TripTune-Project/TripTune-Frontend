@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { usePathname } from 'next/navigation';
 import Head from 'next/head';
 import Header from './header';
@@ -11,7 +11,12 @@ import logoImg from '../../public/white_Logo.png';
 import '../styles/global.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-ReactGA.initialize('YOUR_GA4_MEASUREMENT_ID');
+// 환경 변수에서 Google Analytics Measurement ID 가져오기
+const GA4_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID;
+
+if (GA4_MEASUREMENT_ID) {
+  ReactGA.initialize(GA4_MEASUREMENT_ID);
+}
 
 const queryClient = new QueryClient();
 
@@ -24,11 +29,11 @@ const Layout = ({ children }: LayoutProps) => {
   const isFindPage = pathname.includes('Find');
   
   return (
-    <html lang="en">
+    <html lang="ko">
     <Head>
       <script
         async
-        src={`https://www.googletagmanager.com/gtag/js?id=YOUR_GA4_MEASUREMENT_ID`}
+        src={`https://www.googletagmanager.com/gtag/js?id=${GA4_MEASUREMENT_ID}`}
       ></script>
       <script
         dangerouslySetInnerHTML={{
@@ -36,7 +41,7 @@ const Layout = ({ children }: LayoutProps) => {
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-              gtag('config', 'YOUR_GA4_MEASUREMENT_ID', {
+              gtag('config', '${GA4_MEASUREMENT_ID}', {
                 page_path: window.location.pathname,
               });
             `,

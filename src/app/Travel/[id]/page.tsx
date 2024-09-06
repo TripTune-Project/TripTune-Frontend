@@ -1,7 +1,8 @@
 // 백엔드 적용 api 전 코드
-'use client';
+"use client";
 
 import React from 'react';
+import Head from 'next/head';
 import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -68,17 +69,30 @@ const StyledSwiperButtonNext = styled.div`
     }
 `;
 
-const images = [
-  { src: picture, alt: '경복궁', title: '경복궁', description: '서울 종로구 경복궁' },
-  { src: picture, alt: '남산타워', title: '남산타워', description: '서울 용산구 남산타워' },
-  { src: picture, alt: '한라산', title: '한라산', description: '제주 서귀포시 한라산' },
-  { src: picture, alt: '해운대 해수욕장', title: '해운대 해수욕장', description: '부산 해운대구 해운대 해수욕장' },
-  { src: picture, alt: '동대문 디자인 플라자', title: '동대문 디자인 플라자', description: '서울 중구 동대문 디자인 플라자' },
-];
-
-const TravelDetail = () => {
+const TravelDetail = ({ travelData }) => {
+  const images = [
+    { src: picture, alt: '경복궁', title: '경복궁', description: '서울 종로구 경복궁' },
+    { src: picture, alt: '남산타워', title: '남산타워', description: '서울 용산구 남산타워' },
+    { src: picture, alt: '한라산', title: '한라산', description: '제주 서귀포시 한라산' },
+    { src: picture, alt: '해운대 해수욕장', title: '해운대 해수욕장', description: '부산 해운대구 해운대 해수욕장' },
+    { src: picture, alt: '동대문 디자인 플라자', title: '동대문 디자인 플라자', description: '서울 중구 동대문 디자인 플라자' },
+  ];
+  
   return (
     <div className={styles.travelDetailContent}>
+      <Head>
+        <title>{`여행지 상세보기 | ${travelData.placeName}`}</title>
+        <meta name="description"
+              content={`Explore detailed information about ${travelData.placeName} located in ${travelData.city}, ${travelData.country}.`} />
+        <meta name="keywords" content={`여행지, ${travelData.city}, ${travelData.placeName}, 추천 여행지, 여행 정보`} />
+        <meta property="og:title" content={`여행지 상세보기 | ${travelData.placeName}`} />
+        <meta property="og:description"
+              content={`Explore detailed information about ${travelData.placeName} located in ${travelData.city}, ${travelData.country}.`} />
+        <meta property="og:image" content={"/assets/Logo.png"} />
+        <meta property="og:url" content={`https://triptune.com/travel/${travelData.placeId}`} />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <h1 className={styles.chooseRecomend}>여행지 탐색 : 상세보기</h1>
       <div className={styles.topSection}>
         <div className={styles.leftSection}>
@@ -103,15 +117,15 @@ const TravelDetail = () => {
           </StyledSwiperContainer>
         </div>
         <div className={styles.rightSection}>
-          <p className={styles.country}>country : 한국</p>
-          <p className={styles.city}>city : 서울</p>
-          <p className={styles.district}>district : 영등포구</p>
-          <p className={styles.placeName}>placeName: 여의도 한강공원</p>
+          <p className={styles.country}>country : {travelData.country}</p>
+          <p className={styles.city}>city : {travelData.city}</p>
+          <p className={styles.district}>district : {travelData.district}</p>
+          <p className={styles.placeName}>placeName: {travelData.placeName}</p>
           <p className={styles.address}>
-            address: 서울 영등포구 여의동로 330 한강사업본부 여의도안내센터
+            address: {travelData.address} {travelData.detailAddress}
           </p>
           <p className={styles.description}>
-            description: 여행지에 대한 설명입니다.
+            description: {travelData.description}
           </p>
         </div>
       </div>
@@ -156,13 +170,28 @@ const TravelDetail = () => {
   );
 };
 
+export async function getServerSideProps(context) {
+  const { id } = context.params;
+  
+  const res = await fetch(`https://api.triptune.com/travel/${id}`);
+  const travelData = await res.json();
+  
+  return {
+    props: {
+      travelData,
+    },
+  };
+}
+
 export default TravelDetail;
 
 
 // 백엔드 적용 api 코드
-// 'use client';
+//
+// "use client";
 //
 // import React, { useEffect, useState } from 'react';
+// import Head from 'next/head';
 // import Image from 'next/image';
 // import { Swiper, SwiperSlide } from 'swiper/react';
 // import 'swiper/css';
@@ -261,6 +290,20 @@ export default TravelDetail;
 //
 //   return (
 //     <div className={styles.travelDetailContent}>
+//       <Head>
+//         <title>{placeDetail.placeName} 상세보기 | 여행지 탐색</title>
+//         <meta name="description"
+//               content={`Explore detailed information about ${placeDetail.placeName} located in ${placeDetail.city}, ${placeDetail.country}.`} />
+//         <meta name="keywords"
+//               content={`여행지, 상세보기, ${placeDetail.placeName}, ${placeDetail.city}, ${placeDetail.country}, 관광`} />
+//         <meta property="og:title" content={`${placeDetail.placeName} 상세보기 | 여행지 탐색`} />
+//         <meta property="og:description"
+//               content={`Explore detailed information about ${placeDetail.placeName} located in ${placeDetail.city}, ${placeDetail.country}.`} />
+//         <meta property="og:image" content="/assets/Logo.png" />
+//         <meta property="og:url" content={`https://triptune.com/travel/${placeDetail.placeId}`} />
+//         <meta name="viewport" content="width=device-width, initial-scale=1" />
+//         <link rel="icon" href="/favicon.ico" />
+//       </Head>
 //       <h1 className={styles.chooseRecomend}>여행지 탐색 : 상세보기</h1>
 //       <div className={styles.topSection}>
 //         <div className={styles.leftSection}>

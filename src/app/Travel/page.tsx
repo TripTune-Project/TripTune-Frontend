@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import Head from 'next/head';
 import Pagination from '../../components/Travel/Pagination';
 import Map from '../../components/Travel/Map';
 import Image from 'next/image';
@@ -181,6 +182,17 @@ const TravelPage = () => {
   
   return (
     <>
+      <Head>
+        <title>여행지 탐색 | 검색 리스트 조회</title>
+        <meta name="description" content="여행지를 검색하고 위치를 기반으로 추천받아보세요. 원하는 키워드로 검색하거나 내 위치에서 가까운 여행지를 찾아볼 수 있습니다." />
+        <meta name="keywords" content="여행, 여행지 검색, 위치 기반 추천, 내 위치, 여행지 추천, 여행 정보" />
+        <meta property="og:title" content="여행지 탐색 | 검색 리스트 조회" />
+        <meta property="og:description"
+              content="여행지를 검색하고 위치를 기반으로 추천받아보세요. 원하는 키워드로 검색하거나 내 위치에서 가까운 여행지를 찾아볼 수 있습니다." />
+        <meta property="og:image" content="/assets/Logo.png" />
+        <meta property="og:url" content="https://triptune.netlify.app/Travel" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>
       <div className={styles.container}>
         {isLoading ? (
           <DataLoading />
