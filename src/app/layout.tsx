@@ -30,6 +30,15 @@ const Layout = ({ children }: LayoutProps) => {
   return (
     <html lang="ko">
     <Head>
+      <title>TripTune</title>
+      <meta name="description" content="TripTune은 여행자들을 위한 일정 플랫폼 서비스 입니다." />
+      <link rel="icon" href="/favicon.ico" />
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+      <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet"
+      />
       <script
         async
         src={`https://www.googletagmanager.com/gtag/js?id=${GA4_MEASUREMENT_ID}`}
@@ -45,14 +54,6 @@ const Layout = ({ children }: LayoutProps) => {
               });
             `,
         }}
-      />
-      <title>TripTune</title>
-      <link rel="icon" href="/favicon.ico" />
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
-      <link rel="preconnect" href="https://fonts.gstatic.com" />
-      <link
-        href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;600;700;800;900&display=swap"
-        rel="stylesheet"
       />
     </Head>
     <body>
