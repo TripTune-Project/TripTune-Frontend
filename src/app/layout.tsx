@@ -11,6 +11,7 @@ import logoImg from '../../public/white_Logo.png';
 import '../styles/global.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
+// Google Analytics Measurement ID 가져오기
 const GA4_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID;
 
 if (GA4_MEASUREMENT_ID) {
@@ -47,7 +48,13 @@ const Layout = ({ children }: LayoutProps) => {
         }}
       />
       <title>TripTune</title>
-      <link rel='icon' href='/favicon.ico' />
+      <link rel="icon" href="/favicon.ico" />
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+      <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet"
+      />
     </Head>
     <body>
     <QueryClientProvider client={queryClient}>
@@ -59,17 +66,13 @@ const Layout = ({ children }: LayoutProps) => {
             <Header />
           </header>
           <main className={styles.section}>
-            {isFindPage ? (
-              children
-            ) : (
-              <div className={styles.content}>{children}</div>
-            )}
+            <div className={styles.content}>{children}</div>
           </main>
           <footer className={styles.footer}>
             <Image
               className={styles.logoImg}
               src={logoImg}
-              alt={'logoImg'}
+              alt="logoImg"
               priority
             />
             <p className={styles.email}>
