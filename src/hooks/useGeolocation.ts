@@ -2,10 +2,14 @@ import { useState, useEffect } from 'react';
 import { Coordinates } from '@/types';
 
 const useGeolocation = () => {
-  const [userCoordinates, setUserCoordinates] = useState<Coordinates | null>(null);
+  const [userCoordinates, setUserCoordinates] = useState<Coordinates | null>(
+    null
+  );
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [permissionState, setPermissionState] = useState<'granted' | 'prompt' | 'denied' | null>(null);
-  
+  const [permissionState, setPermissionState] = useState<
+    'granted' | 'prompt' | 'denied' | null
+  >(null);
+
   const handlePermissionChange = (state: 'granted' | 'prompt' | 'denied') => {
     if (state === 'granted' || state === 'prompt') {
       requestUserLocation();
@@ -14,12 +18,12 @@ const useGeolocation = () => {
       setUserCoordinates({ latitude: 37.5642, longitude: 126.9976 });
     }
   };
-  
+
   const handleLocationError = (message: string) => {
     setErrorMessage(message);
     setUserCoordinates({ latitude: 37.5642, longitude: 126.9976 });
   };
-  
+
   const requestUserLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -30,7 +34,9 @@ const useGeolocation = () => {
           });
         },
         () => {
-          handleLocationError('위치 권한이 거부되었습니다. 기본 위치를 사용합니다.');
+          handleLocationError(
+            '위치 권한이 거부되었습니다. 기본 위치를 사용합니다.'
+          );
         },
         {
           enableHighAccuracy: true,
@@ -39,10 +45,12 @@ const useGeolocation = () => {
         }
       );
     } else {
-      handleLocationError('브라우저가 위치 정보를 지원하지 않습니다. 기본 위치를 사용합니다.');
+      handleLocationError(
+        '브라우저가 위치 정보를 지원하지 않습니다. 기본 위치를 사용합니다.'
+      );
     }
   };
-  
+
   const checkGeolocationPermission = async () => {
     try {
       const result = await navigator.permissions.query({ name: 'geolocation' });
@@ -53,11 +61,11 @@ const useGeolocation = () => {
       setErrorMessage('위치 권한 상태 확인 중 오류가 발생했습니다.');
     }
   };
-  
+
   useEffect(() => {
     checkGeolocationPermission();
   }, []);
-  
+
   return { userCoordinates, errorMessage, permissionState };
 };
 

@@ -1,3 +1,5 @@
+import { Coordinates } from '@/types/index';
+
 export interface ApiResponse<T> {
   success: boolean;
   data?: T;
@@ -39,12 +41,14 @@ export interface TravelPlaceDetail extends TravelPlace {
   }[];
 }
 
-export interface TravelListSearchParams {
+export interface TravelListSearchParams extends Coordinates {
   keyword: string;
 }
 
 export type TravelApiResponse = ApiResponse<PaginatedResponse<TravelPlace>>;
-export type TravelListSearchSuccessResponse = ApiResponse<PaginatedResponse<TravelPlace>>;
+export type TravelListSearchSuccessResponse = ApiResponse<
+  PaginatedResponse<TravelPlace>
+>;
 export type TravelDetailSuccessResponse = ApiResponse<TravelPlaceDetail>;
 
 export interface TravelApiEmptyResponse extends ApiResponse<null> {

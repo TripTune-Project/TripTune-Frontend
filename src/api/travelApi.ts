@@ -4,7 +4,7 @@ import {
   TravelListSearchParams,
   TravelListSearchSuccessResponse,
   TravelApiResponse,
-  TravelApiErrorResponse
+  TravelApiErrorResponse,
 } from '@/types/travelType';
 import { Coordinates } from '@/types';
 
@@ -48,12 +48,9 @@ export const fetchTravelListSearch = async (
   try {
     const pageNum = Number(page);
     
-    const response: AxiosResponse<TravelListSearchSuccessResponse> = await axios.get(
-      `/api/travels/search?page=${pageNum}`,
-      {
-        params,
-      },
-    );
+    const response: AxiosResponse<TravelListSearchSuccessResponse> =
+      await axios.post(`/api/travels/search?page=${pageNum}`,
+        params);
     
     return response.data;
   } catch (error: unknown) {
@@ -78,9 +75,8 @@ export const fetchTravelDetail = async (
   placeId: number,
 ): Promise<TravelDetailSuccessResponse | TravelApiErrorResponse> => {
   try {
-    const response: AxiosResponse<TravelDetailSuccessResponse> = await axios.get(
-      `/api/travels/${placeId}`,
-    );
+    const response: AxiosResponse<TravelDetailSuccessResponse> =
+      await axios.get(`/api/travels/${placeId}`);
     
     return response.data;
   } catch (error: unknown) {

@@ -1,4 +1,9 @@
-import axios, { AxiosInstance, AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import axios, {
+  AxiosInstance,
+  AxiosError,
+  AxiosResponse,
+  InternalAxiosRequestConfig,
+} from 'axios';
 import Cookies from 'js-cookie';
 import saveLocalContent from '@/utils/saveLocalContent';
 
@@ -11,9 +16,15 @@ const axiosInstance: AxiosInstance = axios.create({
 });
 
 let isRefreshing = false;
-const failedQueue: { resolve: (token: string) => void; reject: (error: AxiosError<unknown>) => void }[] = [];
+const failedQueue: {
+  resolve: (token: string) => void;
+  reject: (error: AxiosError<unknown>) => void;
+}[] = [];
 
-const processQueue = (error: AxiosError<unknown> | null, token: string | null = null) => {
+const processQueue = (
+  error: AxiosError<unknown> | null,
+  token: string | null = null
+) => {
   failedQueue.forEach(({ resolve, reject }) => {
     if (error) {
       reject(error);
@@ -31,7 +42,10 @@ const triggerLoginModal = () => {
   }
 };
 
-const setAuthorizationHeader = (config: InternalAxiosRequestConfig, token: string) => {
+const setAuthorizationHeader = (
+  config: InternalAxiosRequestConfig,
+  token: string
+) => {
   if (config.headers) {
     config.headers['Authorization'] = `Bearer ${token}`;
   }
@@ -41,7 +55,7 @@ const refreshAccessToken = async (): Promise<string> => {
   const { setEncryptedCookie } = saveLocalContent();
   const refreshToken = Cookies.get('trip-tune_rt');
   if (!refreshToken) throw new Error('Refresh token not available');
-  
+
   const response = await axios.post('/api/members/refresh', { refreshToken });
   const newAccessToken = response.data.accessToken;
   setEncryptedCookie('trip-tune_at', newAccessToken, 5 / (24 * 60));
@@ -56,22 +70,24 @@ axiosInstance.interceptors.request.use(
     }
     return config;
   },
-  (error: AxiosError<unknown>) => Promise.reject(error),
+  (error: AxiosError<unknown>) => Promise.reject(error)
 );
 
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error: AxiosError) => {
-    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
-    
+    const originalRequest = error.config as InternalAxiosRequestConfig & {
+      _retry?: boolean;
+    };
+
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      
+
       if (!Cookies.get('trip-tune_rt')) {
         triggerLoginModal();
         return Promise.reject(error);
       }
-      
+
       if (isRefreshing) {
         return new Promise<string>((resolve, reject) => {
           failedQueue.push({ resolve, reject });
@@ -87,9 +103,9 @@ axiosInstance.interceptors.response.use(
             return Promise.reject(new Error('Unknown error occurred in queue'));
           });
       }
-      
+
       isRefreshing = true;
-      
+
       try {
         const newAccessToken = await refreshAccessToken();
         processQueue(null, newAccessToken);
@@ -101,16 +117,18 @@ axiosInstance.interceptors.response.use(
           triggerLoginModal();
           return Promise.reject(refreshError);
         }
-    
+
         processQueue(null, null);
-        return Promise.reject(new Error('Unknown error occurred during token refresh'));
+        return Promise.reject(
+          new Error('Unknown error occurred during token refresh')
+        );
       } finally {
         isRefreshing = false;
       }
     }
-    
+
     return Promise.reject(error);
-  },
+  }
 );
 
 export default axiosInstance;

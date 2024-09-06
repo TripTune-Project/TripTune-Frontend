@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -15,76 +16,70 @@ import styles from '../styles/onBoard.module.css';
 import searchIcon from '../../public/assets/images/search-icon.png';
 import place from '../../public/assets/images/place.png';
 import picture from '../../public/assets/images/picture.png';
-
 const StyledSwiperContainer = styled.div`
-    overflow: hidden;
-    position: relative;
-    width: 100%;
-    max-width: 1850px;
-    margin: 0 auto;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  max-width: 1850px;
+  margin: 0 auto;
 `;
-
 const StyledSwiperButtonPrev = styled.div`
-    position: absolute;
-    top: 50%;
+  position: absolute;
+  top: 50%;
+  width: 60px;
+  height: 60px;
+  left: 10px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+  user-select: none;
+  &::after {
+    content: '';
+    display: block;
     width: 60px;
     height: 60px;
-    left: 10px;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    cursor: pointer;
-    z-index: 10;
-    user-select: none;
-
-    &::after {
-        content: '';
-        display: block;
-        width: 60px;
-        height: 60px;
-        background-size: cover;
-        background-image: url('/assets/images/left_btn.png');
-    }
+    background-size: cover;
+    background-image: url('/assets/images/left_btn.png');
+  }
 `;
-
 const StyledSwiperButtonNext = styled.div`
-    position: absolute;
-    top: 50%;
+  position: absolute;
+  top: 50%;
+  width: 60px;
+  height: 60px;
+  right: 10px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+  user-select: none;
+  &::after {
+    content: '';
+    display: block;
     width: 60px;
     height: 60px;
-    right: 10px;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    cursor: pointer;
-    z-index: 10;
-    user-select: none;
-
-    &::after {
-        content: '';
-        display: block;
-        width: 60px;
-        height: 60px;
-        background-size: cover;
-        background-image: url('/assets/images/right_btn.png');
-    }
+    background-size: cover;
+    background-image: url('/assets/images/right_btn.png');
+  }
 `;
-
 const Home = () => {
   const router = useRouter();
-  
+
   const handleScheduleClick = () => {
     router.push('/Schedule');
   };
-  
+
   const handleTravelClick = () => {
     router.push('/Travel');
   };
-  
+
   const handleSearch = () => {
     router.push('/Search');
   };
-  
+
   const images = [
     {
       src: picture,
@@ -117,9 +112,32 @@ const Home = () => {
       description: '서울 중구 동대문 디자인 플라자',
     },
   ];
-  
+
   return (
     <div className={styles.onBoard}>
+      <Head>
+        <title>TripTune - Explore and Plan Your Travel</title>
+        <meta
+          name='description'
+          content='Discover top travel destinations and plan your trips with TripTune. Start your journey with personalized travel plans and recommendations.'
+        />
+        <meta
+          name='keywords'
+          content='travel, trip planning, explore destinations, TripTune, travel ideas, itinerary'
+        />
+        <meta
+          property='og:title'
+          content='TripTune - Explore and Plan Your Travel'
+        />
+        <meta
+          property='og:description'
+          content='Discover top travel destinations and plan your trips with TripTune. Start your journey with personalized travel plans and recommendations.'
+        />
+        <meta property='og:image' content='/assets/Logo.png' />
+        <meta property='og:url' content='https://triptune.netlify.app' />
+        <meta name='viewport' content='width=device-width, initial-scale=1' />
+        <link rel='icon' href='/favicon.ico' />
+      </Head>
       <div className={styles.onBoardingTop}>
         <div className={styles.onBoardingView}>
           <Image
@@ -178,7 +196,7 @@ const Home = () => {
                   </div>
                 </div>
                 <div className={styles.viewBtn} onClick={handleTravelClick}>
-                  <div className={styles.viewTitle} >여행지 탐색</div>
+                  <div className={styles.viewTitle}>여행지 탐색</div>
                   <br />
                   <div className={styles.iconContainer}>
                     <div className={styles.goLink}>
@@ -254,5 +272,4 @@ const Home = () => {
     </div>
   );
 };
-
 export default Home;

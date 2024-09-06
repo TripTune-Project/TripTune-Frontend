@@ -1,17 +1,25 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect } from 'react';
+import Head from 'next/head';
 import Pagination from '../../components/Travel/Pagination';
 import Map from '../../components/Travel/Map';
 import Image from 'next/image';
-import { fetchTravelListSearch, fetchTravelListByLocation } from '@/api/travelApi';
+import {
+  fetchTravelListSearch,
+  fetchTravelListByLocation,
+} from '@/api/travelApi';
 import styles from '../../styles/Travel.module.css';
 import { useRouter } from 'next/navigation';
 import DataLoading from '../../components/Common/DataLoading';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import useGeolocation from '@/hooks/useGeolocation';
-import { TravelPlace, TravelApiResponse, TravelApiErrorResponse } from '@/types/travelType';
+import {
+  TravelPlace,
+  TravelApiResponse,
+  TravelApiErrorResponse,
+} from '@/types/travelType';
 
 const TravelPage = () => {
   const router = useRouter();
@@ -24,7 +32,9 @@ const TravelPage = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
-  const [alertSeverity, setAlertSeverity] = useState<'success' | 'error' | 'warning' | 'info'>('info');
+  const [alertSeverity, setAlertSeverity] = useState<
+    'success' | 'error' | 'warning' | 'info'
+  >('info');
   
   const resetPlaces = () => {
     setPlaces([]);
@@ -56,9 +66,16 @@ const TravelPage = () => {
     
     try {
       const response: TravelApiResponse | TravelApiErrorResponse = isSearching
-        ? await fetchTravelListSearch({ keyword: searchTerm }, currentPage)
+        ? await fetchTravelListSearch({
+          keyword: searchTerm,
+          latitude: userCoordinates?.latitude ?? 0,
+          longitude: userCoordinates?.longitude ?? 0,
+        }, currentPage)
         : await fetchTravelListByLocation(
-          { latitude: userCoordinates?.latitude ?? 0, longitude: userCoordinates?.longitude ?? 0 },
+          {
+            latitude: userCoordinates?.latitude ?? 0,
+            longitude: userCoordinates?.longitude ?? 0,
+          },
           currentPage,
         );
       
@@ -76,7 +93,9 @@ const TravelPage = () => {
         }
       } else {
         const errorResponse = response as TravelApiErrorResponse;
-        setErrorMessage(errorResponse.message || '데이터를 불러오는 중 오류가 발생했습니다.');
+        setErrorMessage(
+          errorResponse.message || '데이터를 불러오는 중 오류가 발생했습니다.',
+        );
         resetPlaces();
       }
     } catch (error) {
@@ -129,7 +148,9 @@ const TravelPage = () => {
     }
   };
   
-  const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const input = event.target.value;
     const regex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]*$/;
     
@@ -147,7 +168,10 @@ const TravelPage = () => {
     fetchPlaces();
   };
   
-  const handleAlertClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+  const handleAlertClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string,
+  ) => {
     if (reason === 'clickaway') {
       return;
     }
@@ -181,6 +205,25 @@ const TravelPage = () => {
   
   return (
     <>
+      <Head>
+        <title>여행지 탐색 | 검색 리스트 조회</title>
+        <meta
+          name="description"
+          content="여행지를 검색하고 위치를 기반으로 추천받아보세요. 원하는 키워드로 검색하거나 내 위치에서 가까운 여행지를 찾아볼 수 있습니다."
+        />
+        <meta
+          name="keywords"
+          content="여행, 여행지 검색, 위치 기반 추천, 내 위치, 여행지 추천, 여행 정보"
+        />
+        <meta property="og:title" content="여행지 탐색 | 검색 리스트 조회" />
+        <meta
+          property="og:description"
+          content="여행지를 검색하고 위치를 기반으로 추천받아보세요. 원하는 키워드로 검색하거나 내 위치에서 가까운 여행지를 찾아볼 수 있습니다."
+        />
+        <meta property="og:image" content="/assets/Logo.png" />
+        <meta property="og:url" content="https://triptune.netlify.app/Travel" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>
       <div className={styles.container}>
         {isLoading ? (
           <DataLoading />
@@ -189,8 +232,13 @@ const TravelPage = () => {
         ) : (
           <div className={styles.listContainer}>
             <div className={styles.headerContainer}>
-              <h1 className={styles.travelSearch}>여행지 탐색 : 검색 리스트 조회</h1>
-              <button className={styles.mylocation} onClick={handleMyLocationClick}>
+              <h1 className={styles.travelSearch}>
+                여행지 탐색 : 검색 리스트 조회
+              </h1>
+              <button
+                className={styles.mylocation}
+                onClick={handleMyLocationClick}
+              >
                 내 위치
               </button>
             </div>
@@ -205,13 +253,18 @@ const TravelPage = () => {
               <button onClick={handleSearch} className={styles.searchButton}>
                 검색
               </button>
-              <button onClick={handleResetSearch} className={styles.resetButton}>
+              <button
+                onClick={handleResetSearch}
+                className={styles.resetButton}
+              >
                 초기화
               </button>
             </div>
             <ul className={styles.placeList}>
               {places.map((place) => {
-                const { walking, driving } = calculateTravelTime(place.distance);
+                const { walking, driving } = calculateTravelTime(
+                  place.distance,
+                );
                 return (
                   <li
                     key={place.placeId}
@@ -234,7 +287,9 @@ const TravelPage = () => {
                     </div>
                     <div className={styles.placeInfo}>
                       <h2 className={styles.placeName}>{place.placeName}</h2>
-                      <p className={styles.placeAddress}>{`${place.country} / ${place.city} / ${place.district}`}</p>
+                      <p
+                        className={styles.placeAddress}
+                      >{`${place.country} / ${place.city} / ${place.district}`}</p>
                       <p className={styles.placeDetailAddress}>
                         {place.address} {place.detailAddress}
                       </p>
@@ -257,13 +312,22 @@ const TravelPage = () => {
                 );
               })}
             </ul>
-            <Pagination total={totalPages * 5} currentPage={currentPage} pageSize={5} onPageChange={handlePageChange} />
+            <Pagination
+              total={totalPages * 5}
+              currentPage={currentPage}
+              pageSize={5}
+              onPageChange={handlePageChange}
+            />
           </div>
         )}
         <div className={styles.mapContainer}>
           <Map places={places} />
         </div>
-        <Snackbar open={alertOpen} autoHideDuration={3000} onClose={handleAlertClose}>
+        <Snackbar
+          open={alertOpen}
+          autoHideDuration={3000}
+          onClose={handleAlertClose}
+        >
           <Alert onClose={handleAlertClose} severity={alertSeverity}>
             {alertMessage}
           </Alert>
@@ -272,5 +336,4 @@ const TravelPage = () => {
     </>
   );
 };
-
 export default TravelPage;

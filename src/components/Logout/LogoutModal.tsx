@@ -1,5 +1,12 @@
 import React from 'react';
-import { Modal, Box, Button, Typography, Stack, IconButton } from '@mui/material';
+import {
+  Modal,
+  Box,
+  Button,
+  Typography,
+  Stack,
+  IconButton,
+} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 interface LogoutModalProps {
@@ -26,27 +33,27 @@ const LogoutModal = ({ isOpen, onClose, onConfirm }: LogoutModalProps) => {
           outline: 'none',
         }}
       >
-        <Stack direction="row" justifyContent="flex-end">
+        <Stack direction='row' justifyContent='flex-end'>
           <IconButton onClick={onClose}>
             <CloseIcon />
           </IconButton>
         </Stack>
-        <Typography variant="h6" component="h2" gutterBottom>
+        <Typography variant='h6' component='h2' gutterBottom>
           로그아웃 하시겠습니까?
         </Typography>
-        <Typography variant="body2" color="text.secondary" mb={3}>
+        <Typography variant='body2' color='text.secondary' mb={3}>
           현재 세션이 종료되고 다시 로그인해야 합니다.
         </Typography>
-        <Stack direction="row" spacing={2} justifyContent="center">
+        <Stack direction='row' spacing={2} justifyContent='center'>
           <Button
             onClick={onConfirm}
-            variant="contained"
-            color="error"
-            size="large"
+            variant='contained'
+            color='error'
+            size='large'
             sx={{
-              textTransform: 'none',
-              borderRadius: '8px',
-              boxShadow: 'none',
+              'textTransform': 'none',
+              'borderRadius': '8px',
+              'boxShadow': 'none',
               '&:hover': {
                 boxShadow: 'none',
                 backgroundColor: '#d32f2f',
@@ -57,14 +64,14 @@ const LogoutModal = ({ isOpen, onClose, onConfirm }: LogoutModalProps) => {
           </Button>
           <Button
             onClick={onClose}
-            variant="outlined"
-            color="primary"
-            size="large"
+            variant='outlined'
+            color='primary'
+            size='large'
             sx={{
-              textTransform: 'none',
-              borderRadius: '8px',
-              boxShadow: 'none',
-              borderColor: '#1976d2',
+              'textTransform': 'none',
+              'borderRadius': '8px',
+              'boxShadow': 'none',
+              'borderColor': '#1976d2',
               '&:hover': {
                 borderColor: '#115293',
                 backgroundColor: 'rgba(25, 118, 210, 0.04)',

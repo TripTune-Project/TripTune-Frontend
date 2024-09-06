@@ -8,12 +8,17 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
 }
 
-const Pagination = ({ total, currentPage, pageSize, onPageChange }: PaginationProps) => {
+const Pagination = ({
+  total,
+  currentPage,
+  pageSize,
+  onPageChange,
+}: PaginationProps) => {
   const totalPages = Math.ceil(total / pageSize);
   const maxPagesToShow = 5;
   const startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
   const endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
-  
+
   const renderPageButton = (page: number) => (
     <button
       key={page}
@@ -24,8 +29,13 @@ const Pagination = ({ total, currentPage, pageSize, onPageChange }: PaginationPr
       {page}
     </button>
   );
-  
-  const renderNavButton = (onClick: () => void, disabled: boolean, symbol: string, ariaLabel: string) => (
+
+  const renderNavButton = (
+    onClick: () => void,
+    disabled: boolean,
+    symbol: string,
+    ariaLabel: string
+  ) => (
     <button
       onClick={onClick}
       className={`${styles.navButton} ${disabled ? styles.disabled : ''}`}
@@ -35,7 +45,7 @@ const Pagination = ({ total, currentPage, pageSize, onPageChange }: PaginationPr
       {symbol}
     </button>
   );
-  
+
   const generatePageButtons = () => {
     const pages = [];
     for (let i = startPage; i <= endPage; i++) {
@@ -43,15 +53,39 @@ const Pagination = ({ total, currentPage, pageSize, onPageChange }: PaginationPr
     }
     return pages;
   };
-  
+
   return (
-    <div className={styles.paginationContainer} role="navigation" aria-label="Pagination Navigation">
-      {renderNavButton(() => onPageChange(1), currentPage === 1, '«', 'First Page')}
-      {renderNavButton(() => onPageChange(currentPage - 1), currentPage === 1, '‹', 'Previous Page')}
+    <div
+      className={styles.paginationContainer}
+      role='navigation'
+      aria-label='Pagination Navigation'
+    >
+      {renderNavButton(
+        () => onPageChange(1),
+        currentPage === 1,
+        '«',
+        'First Page'
+      )}
+      {renderNavButton(
+        () => onPageChange(currentPage - 1),
+        currentPage === 1,
+        '‹',
+        'Previous Page'
+      )}
       {generatePageButtons()}
       {endPage < totalPages && <span className={styles.ellipsis}>...</span>}
-      {renderNavButton(() => onPageChange(currentPage + 1), currentPage === totalPages, '›', 'Next Page')}
-      {renderNavButton(() => onPageChange(totalPages), currentPage === totalPages, '»', 'Last Page')}
+      {renderNavButton(
+        () => onPageChange(currentPage + 1),
+        currentPage === totalPages,
+        '›',
+        'Next Page'
+      )}
+      {renderNavButton(
+        () => onPageChange(totalPages),
+        currentPage === totalPages,
+        '»',
+        'Last Page'
+      )}
     </div>
   );
 };

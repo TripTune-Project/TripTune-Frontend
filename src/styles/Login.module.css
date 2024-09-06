@@ -311,7 +311,6 @@
   }
 }
 
-/* 480px 이하일 때 */
 @media screen and (max-width: 480px) {
   .loginTitle {
     font-size: 20px;
@@ -345,7 +344,6 @@
   }
 }
 
-/* 320px 이하일 때 */
 @media screen and (max-width: 320px) {
   .loginTitle {
     font-size: 18px;

@@ -21,15 +21,15 @@ const Map = ({ places }: MapProps) => {
   const [zoom, setZoom] = useState(16);
   const [center, setCenter] = useState(defaultCenter);
   const [mapLoaded, setMapLoaded] = useState(false);
-  
+
   const setMapBounds = (map: google.maps.Map) => {
     if (!map || places.length === 0) return;
-    
+
     const bounds = new google.maps.LatLngBounds();
     places.forEach((place) => {
       bounds.extend(new google.maps.LatLng(place.latitude, place.longitude));
     });
-    
+
     map.fitBounds(bounds);
     google.maps.event.addListenerOnce(map, 'bounds_changed', () => {
       const currentZoom = map.getZoom();
@@ -38,7 +38,7 @@ const Map = ({ places }: MapProps) => {
       }
     });
   };
-  
+
   const handleMapLoad = (map: google.maps.Map) => {
     mapRef.current = map;
     setMapLoaded(true);
@@ -49,17 +49,17 @@ const Map = ({ places }: MapProps) => {
       map.setZoom(16);
     }
   };
-  
+
   useEffect(() => {
     if (mapRef.current && mapLoaded) {
       setMapBounds(mapRef.current);
     }
   }, [places, mapLoaded]);
-  
+
   const handleZoomChanged = () => {
     if (mapRef.current) {
       const newZoom = mapRef.current.getZoom();
-      
+
       if (typeof newZoom === 'number') {
         if (newZoom < 16) {
           mapRef.current.setZoom(16);
@@ -67,11 +67,13 @@ const Map = ({ places }: MapProps) => {
           setZoom(newZoom);
         }
       } else {
-        console.error('확대/축소 수준이 정의되지 않았거나 유효한 숫자가 아닙니다.');
+        console.error(
+          '확대/축소 수준이 정의되지 않았거나 유효한 숫자가 아닙니다.'
+        );
       }
     }
   };
-  
+
   const handleCenterChanged = () => {
     if (mapRef.current) {
       const newCenter = mapRef.current.getCenter();
@@ -84,9 +86,11 @@ const Map = ({ places }: MapProps) => {
       }
     }
   };
-  
+
   return (
-    <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}>
+    <LoadScript
+      googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}
+    >
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={center}
