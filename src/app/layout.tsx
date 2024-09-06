@@ -31,7 +31,7 @@ const Layout = ({ children }: LayoutProps) => {
     <html lang="ko">
     <Head>
       <title>TripTune</title>
-      <meta name="description" content="TripTune은 여행자들을 위한 일정 플랫폼 서비스 입니다." />
+      <meta name="description" content=" TripTune 은 여행자들을 위한 일정 플랫폼 서비스 입니다." />
       <link rel="icon" href="/favicon.ico" />
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
