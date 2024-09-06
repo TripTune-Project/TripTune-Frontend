@@ -1,5 +1,4 @@
 'use client';
-
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import styles from '../styles/Header.module.css';
@@ -14,7 +13,6 @@ import saveLocalContent from '@/utils/saveLocalContent';
 import { logoutApi } from '@/api/logoutApi';
 import useAuth from '@/hooks/useAuth';
 import Cookies from 'js-cookie';
-
 const Header = () => {
   const router = useRouter();
   const pathname = usePathname();
@@ -25,21 +23,21 @@ const Header = () => {
   const [isLogoutClicked, setIsLogoutClicked] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [userId, setUserId] = useState<string>('');
-  
+
   const resetAuthState = () => {
     setIsLoggedIn(false);
     setUserId('');
   };
-  
+
   const { checkAuthStatus } = useAuth(setEncryptedCookie, resetAuthState);
-  
+
   useEffect(() => {
     const refreshToken = Cookies.get('trip-tune_rt');
-    
+
     if (refreshToken) {
       setIsLoggedIn(true);
       const storedUserId = Cookies.get('userId');
-      
+
       if (storedUserId) {
         setUserId(storedUserId);
       } else {
@@ -50,29 +48,29 @@ const Header = () => {
     } else {
       setIsLoggedIn(false);
     }
-    
+
     checkAuthStatus();
-    
+
     const handleAuthChange = () => {
       checkAuthStatus();
     };
-    
+
     window.addEventListener('storage', handleAuthChange);
-    
+
     return () => {
       window.removeEventListener('storage', handleAuthChange);
     };
   }, [checkAuthStatus, isLogoutClicked]);
-  
+
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-  
+
   const handleLogout = async () => {
     setIsLogoutClicked(true);
     closeModal();
     await performLogout();
   };
-  
+
   const performLogout = async () => {
     try {
       await logoutApi();
@@ -84,21 +82,28 @@ const Header = () => {
       setAlertOpen(true);
     }
   };
-  
+
   const handleAlertClose = () => setAlertOpen(false);
-  
+
   const handleLogin = () => {
     router.push(`/Login?next=${encodeURIComponent(pathname)}`);
   };
-  
+
   const isActive = (path: string) => (pathname === path ? styles.active : '');
-  
+
   return (
     <>
       <ul className={styles.headerMenu}>
         <li>
           <Link href='/'>
-            <Image src={LogoImage} alt='로고' className={styles.logo} priority />
+            <Image
+              src={LogoImage}
+              alt='로고'
+              className={styles.logo}
+              width={183}
+              height={57}
+              priority
+            />
           </Link>
         </li>
         <li className={`${styles.headerLink} ${isActive('/')}`}>
@@ -128,9 +133,21 @@ const Header = () => {
               <Button onClick={openModal} variant='text' size='large'>
                 로그아웃
               </Button>
-              <LogoutModal isOpen={isModalOpen} onClose={closeModal} onConfirm={handleLogout} />
-              <Snackbar open={alertOpen} autoHideDuration={6000} onClose={handleAlertClose}>
-                <Alert onClose={handleAlertClose} severity='error' sx={{ width: '100%' }}>
+              <LogoutModal
+                isOpen={isModalOpen}
+                onClose={closeModal}
+                onConfirm={handleLogout}
+              />
+              <Snackbar
+                open={alertOpen}
+                autoHideDuration={6000}
+                onClose={handleAlertClose}
+              >
+                <Alert
+                  onClose={handleAlertClose}
+                  severity='error'
+                  sx={{ width: '100%' }}
+                >
                   {alertMessage}
                 </Alert>
               </Snackbar>
@@ -146,5 +163,4 @@ const Header = () => {
     </>
   );
 };
-
 export default Header;

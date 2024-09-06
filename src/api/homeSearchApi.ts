@@ -36,12 +36,15 @@ interface ErrorResponse {
   message: string;
 }
 
-export const searchPlaces = async (params: SearchParams): Promise<SuccessResponse | EmptyResultResponse | ErrorResponse> => {
+export const searchPlaces = async (
+  params: SearchParams
+): Promise<SuccessResponse | EmptyResultResponse | ErrorResponse> => {
   try {
-    const response: AxiosResponse<SuccessResponse | EmptyResultResponse> = await axios.get(`/api/home/search`, {
-      params
-    });
-    
+    const response: AxiosResponse<SuccessResponse | EmptyResultResponse> =
+      await axios.get(`/api/home/search`, {
+        params,
+      });
+
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
@@ -51,7 +54,7 @@ export const searchPlaces = async (params: SearchParams): Promise<SuccessRespons
       return {
         success: false,
         errorCode: 500,
-        message: '서버 내부 오류가 발생하였습니다.'
+        message: '서버 내부 오류가 발생하였습니다.',
       };
     }
   }

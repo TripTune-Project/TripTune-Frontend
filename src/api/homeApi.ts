@@ -25,10 +25,13 @@ interface ErrorResponse {
   message: string;
 }
 
-export const fetchTravelData = async (): Promise<SuccessResponse | ErrorResponse> => {
+export const fetchTravelData = async (): Promise<
+  SuccessResponse | ErrorResponse
+> => {
   try {
-    const response: AxiosResponse<SuccessResponse> = await axios.get(`/api/home`);
-    
+    const response: AxiosResponse<SuccessResponse> =
+      await axios.get(`/api/home`);
+
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
@@ -38,7 +41,7 @@ export const fetchTravelData = async (): Promise<SuccessResponse | ErrorResponse
       return {
         success: false,
         errorCode: 500,
-        message: '서버 내부 오류가 발생하였습니다.'
+        message: '서버 내부 오류가 발생하였습니다.',
       };
     }
   }

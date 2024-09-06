@@ -44,7 +44,9 @@ export interface TravelListSearchParams {
 }
 
 export type TravelApiResponse = ApiResponse<PaginatedResponse<TravelPlace>>;
-export type TravelListSearchSuccessResponse = ApiResponse<PaginatedResponse<TravelPlace>>;
+export type TravelListSearchSuccessResponse = ApiResponse<
+  PaginatedResponse<TravelPlace>
+>;
 export type TravelDetailSuccessResponse = ApiResponse<TravelPlaceDetail>;
 
 export interface TravelApiEmptyResponse extends ApiResponse<null> {
