@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { usePathname } from 'next/navigation';
+import Head from 'next/head';
 import Header from './header';
 import styles from '../styles/Layout.module.css';
 import Image from 'next/image';
@@ -27,6 +28,28 @@ const Layout = ({ children }: LayoutProps) => {
   const isFindPage = pathname.includes('Find');
   
   return (
+    <html lang="ko">
+    <Head>
+      <script
+        async
+        src={`https://www.googletagmanager.com/gtag/js?id=${GA4_MEASUREMENT_ID}`}
+      ></script>
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${GA4_MEASUREMENT_ID}', {
+                page_path: window.location.pathname,
+              });
+            `,
+        }}
+      />
+      <title>TripTune</title>
+      <link rel='icon' href='/favicon.ico' />
+    </Head>
+    <body>
     <QueryClientProvider client={queryClient}>
       {isFindPage ? (
         <>{children}</>
@@ -62,6 +85,8 @@ const Layout = ({ children }: LayoutProps) => {
         </div>
       )}
     </QueryClientProvider>
+    </body>
+    </html>
   );
 };
 
