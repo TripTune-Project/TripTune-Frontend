@@ -49,9 +49,8 @@ export const fetchTravelListSearch = async (
     const pageNum = Number(page);
 
     const response: AxiosResponse<TravelListSearchSuccessResponse> =
-      await axios.get(`/api/travels/search?page=${pageNum}`, {
-        params,
-      });
+      await axios.post(`/api/travels/search?page=${pageNum}`,
+        params);
 
     return response.data;
   } catch (error: unknown) {
