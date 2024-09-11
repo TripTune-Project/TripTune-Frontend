@@ -8,19 +8,18 @@ export const logoutApi = async () => {
     try {
       const response = await axios.patch(
         '/api/members/logout',
-        {
-          userId: userId,
-        },
+        { userId },
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         }
       );
-
+      
       if (response.status !== 200) {
         throw new Error('Logout failed');
       }
+      
       Cookies.remove('trip-tune_at');
       Cookies.remove('trip-tune_rt');
       Cookies.remove('userId');
