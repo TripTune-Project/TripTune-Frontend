@@ -82,7 +82,7 @@ const Header = () => {
     router.push(`/Login?next=${encodeURIComponent(pathname)}`);
   };
   
-  const isActive = (path) => (pathname === path ? styles.active : '');
+  const isActive = (path: string) => (pathname === path ? styles.active : '');
   
   return (
     <>
