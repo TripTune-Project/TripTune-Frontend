@@ -5,7 +5,7 @@ import axios, {
   InternalAxiosRequestConfig,
 } from 'axios';
 import Cookies from 'js-cookie';
-import saveLocalContent from '@/utils/saveLocalContent';
+import { refreshApi } from '@/api/refreshApi';
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: '/',
@@ -51,17 +51,6 @@ const setAuthorizationHeader = (
   }
 };
 
-const refreshAccessToken = async (): Promise<string> => {
-  const { setEncryptedCookie } = saveLocalContent();
-  const refreshToken = Cookies.get('trip-tune_rt');
-  if (!refreshToken) throw new Error('Refresh token not available');
-
-  const response = await axios.post('/api/members/refresh', { refreshToken });
-  const newAccessToken = response.data.accessToken;
-  setEncryptedCookie('trip-tune_at', newAccessToken, 5 / (24 * 60));
-  return newAccessToken;
-};
-
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = Cookies.get('trip-tune_at');
@@ -79,15 +68,15 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config as InternalAxiosRequestConfig & {
       _retry?: boolean;
     };
-
+    
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-
+      
       if (!Cookies.get('trip-tune_rt')) {
         triggerLoginModal();
         return Promise.reject(error);
       }
-
+      
       if (isRefreshing) {
         return new Promise<string>((resolve, reject) => {
           failedQueue.push({ resolve, reject });
@@ -103,11 +92,11 @@ axiosInstance.interceptors.response.use(
             return Promise.reject(new Error('Unknown error occurred in queue'));
           });
       }
-
+      
       isRefreshing = true;
-
+      
       try {
-        const newAccessToken = await refreshAccessToken();
+        const newAccessToken = await refreshApi();
         processQueue(null, newAccessToken);
         setAuthorizationHeader(originalRequest, newAccessToken);
         return axiosInstance(originalRequest);
@@ -117,7 +106,7 @@ axiosInstance.interceptors.response.use(
           triggerLoginModal();
           return Promise.reject(refreshError);
         }
-
+        
         processQueue(null, null);
         return Promise.reject(
           new Error('Unknown error occurred during token refresh')
@@ -126,7 +115,7 @@ axiosInstance.interceptors.response.use(
         isRefreshing = false;
       }
     }
-
+    
     return Promise.reject(error);
   }
 );
