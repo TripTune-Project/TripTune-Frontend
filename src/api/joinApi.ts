@@ -9,7 +9,7 @@ interface JoinMemberData {
 
 export const joinMember = async (data: JoinMemberData): Promise<any> => {
   try {
-    const responseData = await post('/members/join', data);
+    const responseData = await post('/api/members/join', data);
     return responseData;
   } catch (error) {
     throw new Error(
