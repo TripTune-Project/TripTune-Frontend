@@ -1,32 +1,33 @@
-import axios, { AxiosError } from 'axios';
+import { post } from './api';
 
-export const requestEmailVerification = async (email: string) => {
+export const requestEmailVerification = async (
+  email: string
+): Promise<string> => {
   try {
-    const response = await axios.post('/api/emails/verify-request', { email });
-    return response.data.message;
+    const data = await post<{ message: string }>('/emails/verify-request', {
+      email,
+    });
+    return data.message;
   } catch (error) {
-    if (error instanceof AxiosError && error.response) {
-      if (error.response.data && error.response.data.message) {
-        throw new Error(error.response.data.message);
-      }
-    }
-    throw new Error('인증 코드 요청에 실패했습니다.');
+    throw new Error(
+      error instanceof Error ? error.message : '인증 코드 요청에 실패했습니다.'
+    );
   }
 };
 
-export const verifyEmail = async (email: string, authCode: string) => {
+export const verifyEmail = async (
+  email: string,
+  authCode: string
+): Promise<string> => {
   try {
-    const response = await axios.post('/api/emails/verify', {
+    const data = await post<{ message: string }>('/emails/verify', {
       email,
       authCode,
     });
-    return response.data.message;
+    return data.message;
   } catch (error) {
-    if (error instanceof AxiosError && error.response) {
-      if (error.response.data && error.response.data.message) {
-        throw new Error(error.response.data.message);
-      }
-    }
-    throw new Error('인증 코드 유효성 검사 실패');
+    throw new Error(
+      error instanceof Error ? error.message : '인증 코드 유효성 검사 실패'
+    );
   }
 };

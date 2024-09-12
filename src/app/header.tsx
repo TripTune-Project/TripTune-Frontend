@@ -24,46 +24,46 @@ const Header = () => {
   const [isLogoutClicked, setIsLogoutClicked] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userId, setUserId] = useState('');
-  
+
   const { checkAuthStatus } = useAuth(setEncryptedCookie);
-  
+
   useEffect(() => {
     const storedUserId = Cookies.get('userId');
     if (storedUserId) {
       setIsLoggedIn(true);
       setUserId(storedUserId);
     }
-    
+
     const refreshToken = Cookies.get('trip-tune_rt');
     if (refreshToken) {
-      refreshApi().catch(error => {
+      refreshApi().catch((error) => {
         console.error('토큰 갱신에 실패했습니다:', error);
       });
     }
   }, []);
-  
+
   useEffect(() => {
     checkAuthStatus();
-    
+
     const handleAuthChange = () => {
       checkAuthStatus();
     };
-    
+
     window.addEventListener('storage', handleAuthChange);
     return () => {
       window.removeEventListener('storage', handleAuthChange);
     };
   }, [checkAuthStatus, isLogoutClicked]);
-  
+
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-  
+
   const handleLogout = async () => {
     setIsLogoutClicked(true);
     closeModal();
     await performLogout();
   };
-  
+
   const performLogout = async () => {
     try {
       await logoutApi();
@@ -75,23 +75,23 @@ const Header = () => {
       setAlertOpen(true);
     }
   };
-  
+
   const handleAlertClose = () => setAlertOpen(false);
-  
+
   const handleLogin = () => {
     router.push(`/Login?next=${encodeURIComponent(pathname)}`);
   };
-  
+
   const isActive = (path: string) => (pathname === path ? styles.active : '');
-  
+
   return (
     <>
       <ul className={styles.headerMenu}>
         <li>
-          <Link href="/">
+          <Link href='/'>
             <Image
               src={LogoImage}
-              alt="로고"
+              alt='로고'
               className={styles.logo}
               width={183}
               height={57}
@@ -100,22 +100,22 @@ const Header = () => {
           </Link>
         </li>
         <li className={`${styles.headerLink} ${isActive('/')}`}>
-          <Link href="/" className={styles.headerLinkA}>
+          <Link href='/' className={styles.headerLinkA}>
             홈 화면
           </Link>
         </li>
         <li className={`${styles.headerLink} ${isActive('/Schedule')}`}>
-          <Link href="/Schedule" className={styles.headerLinkA}>
+          <Link href='/Schedule' className={styles.headerLinkA}>
             일정 만들기
           </Link>
         </li>
         <li className={`${styles.headerLink} ${isActive('/Travel')}`}>
-          <Link href="/Travel" className={styles.headerLinkA}>
+          <Link href='/Travel' className={styles.headerLinkA}>
             여행지 탐색
           </Link>
         </li>
         <li className={`${styles.headerLink} ${isActive('/MyPage')}`}>
-          <Link href="/MyPage" className={styles.headerLinkA}>
+          <Link href='/MyPage' className={styles.headerLinkA}>
             마이 페이지
           </Link>
         </li>
@@ -123,7 +123,7 @@ const Header = () => {
           <>
             <li className={styles.headerLink}>{userId} 님</li>
             <li className={styles.headerLink}>
-              <Button onClick={openModal} variant="text" size="large">
+              <Button onClick={openModal} variant='text' size='large'>
                 로그아웃
               </Button>
               <LogoutModal
@@ -138,7 +138,7 @@ const Header = () => {
               >
                 <Alert
                   onClose={handleAlertClose}
-                  severity="error"
+                  severity='error'
                   sx={{ width: '100%' }}
                 >
                   {alertMessage}

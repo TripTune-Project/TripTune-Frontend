@@ -10,6 +10,13 @@ import ReactGA from 'react-ga4';
 import logoImg from '../../public/white_Logo.png';
 import '../styles/global.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Noto_Sans_KR } from 'next/font/google';
+
+const notoSansKR = Noto_Sans_KR({
+  subsets: ['latin'],
+  weight: ['100', '300', '400', '500', '600', '700', '800', '900'],
+  display: 'swap',
+});
 
 const GA4_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID;
 
@@ -22,12 +29,13 @@ const queryClient = new QueryClient();
 interface LayoutProps {
   children: React.ReactNode;
 }
+
 const Layout = ({ children }: LayoutProps) => {
   const pathname = usePathname();
   const isFindPage = pathname.includes('Find');
 
   return (
-    <html lang='ko'>
+    <html lang='ko' className={notoSansKR.className}>
       <Head>
         <title>TripTune</title>
         <meta
@@ -35,16 +43,6 @@ const Layout = ({ children }: LayoutProps) => {
           content='TripTune은 여행자들을 위한 일정 플랫폼 서비스 입니다.'
         />
         <link rel='icon' href='/favicon.ico' />
-        <link rel='preconnect' href='https://fonts.googleapis.com' />
-        <link
-          rel='preconnect'
-          href='https://fonts.gstatic.com'
-          crossOrigin=''
-        />
-        <link
-          href='https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;600;700;800;900&display=swap'
-          rel='stylesheet'
-        />
         <script
           async
           src={`https://www.googletagmanager.com/gtag/js?id=${GA4_MEASUREMENT_ID}`}
@@ -101,4 +99,5 @@ const Layout = ({ children }: LayoutProps) => {
     </html>
   );
 };
+
 export default Layout;

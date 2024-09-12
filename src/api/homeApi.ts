@@ -1,48 +1,65 @@
-import axios, { AxiosResponse } from 'axios';
+import { get } from './api';
+import {
+  EmptyResultResponse,
+  ErrorResponse,
+  SearchParams,
+  SearchSuccessResponse,
+  SuccessResponse,
+} from '@/types/homeType';
 
-interface Place {
-  placeId: number;
-  country: string;
-  city: string;
-  district: string;
-  placeName: string;
-  ThumbnailUrl: string;
-}
-
-interface SuccessResponse {
-  success: true;
-  data: {
-    popularityList: Place[];
-    domesticList: Place[];
-    internationalList: Place[];
-  };
-  message: string;
-}
-
-interface ErrorResponse {
-  success: false;
-  errorCode: number;
-  message: string;
-}
+const convertToRecord = (params: SearchParams): Record<string, string> => {
+  return Object.entries(params).reduce(
+    (acc, [key, value]) => {
+      acc[key] = String(value);
+      return acc;
+    },
+    {} as Record<string, string>
+  );
+};
 
 export const fetchTravelData = async (): Promise<
   SuccessResponse | ErrorResponse
 > => {
   try {
-    const response: AxiosResponse<SuccessResponse> =
-      await axios.get(`/api/home`);
-
-    return response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error) && error.response) {
-      const response: AxiosResponse<ErrorResponse> = error.response;
-      return response.data;
-    } else {
+    const data = await get<SuccessResponse>('/home');
+    return data;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
       return {
         success: false,
         errorCode: 500,
         message: '서버 내부 오류가 발생하였습니다.',
       };
     }
+    return {
+      success: false,
+      errorCode: (error as any).errorCode || 500,
+      message: (error as any).message || '알 수 없는 오류가 발생하였습니다.',
+    };
+  }
+};
+
+export const searchPlaces = async (
+  params: SearchParams
+): Promise<SearchSuccessResponse | EmptyResultResponse | ErrorResponse> => {
+  try {
+    const queryParams = new URLSearchParams(convertToRecord(params)).toString();
+    const data = await get<SearchSuccessResponse | EmptyResultResponse>(
+      `/home/search?${queryParams}`
+    );
+    return data;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return {
+        success: false,
+        errorCode: 500,
+        message: '서버 내부 오류가 발생하였습니다.',
+      };
+    }
+    return {
+      success: false,
+      errorCode: (error as any).errorCode || 500,
+      message: (error as any).message || '알 수 없는 오류가 발생하였습니다.',
+    };
   }
 };

@@ -1,19 +1,22 @@
-import axios from 'axios';
+import { post } from './api';
 import Cookies from 'js-cookie';
 import saveLocalContent from '@/utils/saveLocalContent';
 
 export const refreshApi = async (): Promise<string> => {
   const { setEncryptedCookie } = saveLocalContent();
   const refreshToken = Cookies.get('trip-tune_rt');
+
   if (!refreshToken) throw new Error('리프레시 토큰을 사용할 수 없습니다.');
-  
+
   try {
-    const response = await axios.post('/api/members/refresh', { refreshToken });
-    const newAccessToken = response.data.accessToken;
-    setEncryptedCookie('trip-tune_at', newAccessToken, 5 / (24 * 60));
+    const data = await post<{ accessToken: string }>('/members/refresh', {
+      refreshToken,
+    });
+    const newAccessToken = data.accessToken;
+    setEncryptedCookie('trip-tune_at', newAccessToken, 5 / (24 * 60)); // 쿠키 만료시간 설정
     return newAccessToken;
   } catch (error) {
     console.error('액세스 토큰 갱신 에러:', error);
-    throw error;
+    throw new Error('액세스 토큰 갱신에 실패했습니다.');
   }
 };
