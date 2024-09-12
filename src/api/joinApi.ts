@@ -12,6 +12,10 @@ export const joinMember = async (data: JoinMemberData): Promise<any> => {
     const responseData = await post('/members/join', data);
     return responseData;
   } catch (error) {
-    throw new Error(error instanceof Error ? error.message : '회원가입에 실패했습니다. 다시 시도해주세요.');
+    throw new Error(
+      error instanceof Error
+        ? error.message
+        : '회원가입에 실패했습니다. 다시 시도해주세요.'
+    );
   }
 };

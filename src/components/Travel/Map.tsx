@@ -20,7 +20,7 @@ const Map = ({ places }: MapProps) => {
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [zoom, setZoom] = useState(16);
   const [center, setCenter] = useState(defaultCenter);
-  
+
   const loadGoogleMapsScript = useCallback(() => {
     const existingScript = document.getElementById('google-maps-script');
     if (!existingScript) {
@@ -51,7 +51,7 @@ const Map = ({ places }: MapProps) => {
       }
     }
   }, []);
-  
+
   useEffect(() => {
     if (map) {
       const bounds = new google.maps.LatLngBounds();
@@ -63,39 +63,47 @@ const Map = ({ places }: MapProps) => {
         });
         bounds.extend(marker.getPosition() as google.maps.LatLng);
       });
-      
+
       if (places.length > 0) {
         map.fitBounds(bounds);
       } else {
         map.setCenter(defaultCenter);
         map.setZoom(16);
       }
-      
-      const zoomListener = google.maps.event.addListener(map, 'zoom_changed', () => {
-        const newZoom = map.getZoom();
-        if (typeof newZoom === 'number') {
-          setZoom(newZoom);
+
+      const zoomListener = google.maps.event.addListener(
+        map,
+        'zoom_changed',
+        () => {
+          const newZoom = map.getZoom();
+          if (typeof newZoom === 'number') {
+            setZoom(newZoom);
+          }
         }
-      });
-      
-      const centerListener = google.maps.event.addListener(map, 'center_changed', () => {
-        const newCenter = map.getCenter();
-        if (newCenter) {
-          setCenter({ lat: newCenter.lat(), lng: newCenter.lng() });
+      );
+
+      const centerListener = google.maps.event.addListener(
+        map,
+        'center_changed',
+        () => {
+          const newCenter = map.getCenter();
+          if (newCenter) {
+            setCenter({ lat: newCenter.lat(), lng: newCenter.lng() });
+          }
         }
-      });
-      
+      );
+
       return () => {
         google.maps.event.removeListener(zoomListener);
         google.maps.event.removeListener(centerListener);
       };
     }
   }, [map, places]);
-  
+
   useEffect(() => {
     loadGoogleMapsScript();
   }, [loadGoogleMapsScript]);
-  
+
   return <div ref={mapContainerRef} style={containerStyle} />;
 };
 

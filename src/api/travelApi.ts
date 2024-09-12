@@ -12,10 +12,15 @@ import { Coordinates } from '@/types';
 export const fetchTravelListByLocation = async (
   params: Coordinates,
   page: number = 1
-): Promise<TravelApiResponse | TravelApiEmptyResponse | TravelApiErrorResponse> => {
+): Promise<
+  TravelApiResponse | TravelApiEmptyResponse | TravelApiErrorResponse
+> => {
   try {
     const pageNum = Number(page);
-    const data = await post<TravelApiResponse>(`/travels/list?page=${pageNum}`, params);
+    const data = await post<TravelApiResponse>(
+      `/travels/list?page=${pageNum}`,
+      params
+    );
     if (!data.data || data.data.content.length === 0) {
       return {
         success: true,
@@ -36,7 +41,11 @@ export const fetchTravelListByLocation = async (
 export const fetchTravelListSearch = async (
   params: TravelListSearchParams,
   page: number = 1
-): Promise<TravelListSearchSuccessResponse | TravelApiEmptyResponse | TravelApiErrorResponse> => {
+): Promise<
+  | TravelListSearchSuccessResponse
+  | TravelApiEmptyResponse
+  | TravelApiErrorResponse
+> => {
   try {
     const pageNum = Number(page);
     const data = await post<TravelListSearchSuccessResponse>(

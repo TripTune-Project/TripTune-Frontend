@@ -7,17 +7,34 @@ import {
   SuccessResponse,
 } from '@/types/homeType';
 
+const convertToRecord = (params: SearchParams): Record<string, string> => {
+  return Object.entries(params).reduce(
+    (acc, [key, value]) => {
+      acc[key] = String(value);
+      return acc;
+    },
+    {} as Record<string, string>
+  );
+};
+
 export const fetchTravelData = async (): Promise<
   SuccessResponse | ErrorResponse
 > => {
   try {
     const data = await get<SuccessResponse>('/home');
     return data;
-  } catch (error) {
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return {
+        success: false,
+        errorCode: 500,
+        message: '서버 내부 오류가 발생하였습니다.',
+      };
+    }
     return {
       success: false,
-      errorCode: error instanceof Error ? 500 : error.errorCode,
-      message: error instanceof Error ? '서버 내부 오류가 발생하였습니다.' : error.message,
+      errorCode: (error as any).errorCode || 500,
+      message: (error as any).message || '알 수 없는 오류가 발생하였습니다.',
     };
   }
 };
@@ -26,16 +43,23 @@ export const searchPlaces = async (
   params: SearchParams
 ): Promise<SearchSuccessResponse | EmptyResultResponse | ErrorResponse> => {
   try {
-    const queryParams = new URLSearchParams(params).toString();
+    const queryParams = new URLSearchParams(convertToRecord(params)).toString();
     const data = await get<SearchSuccessResponse | EmptyResultResponse>(
       `/home/search?${queryParams}`
     );
     return data;
-  } catch (error) {
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return {
+        success: false,
+        errorCode: 500,
+        message: '서버 내부 오류가 발생하였습니다.',
+      };
+    }
     return {
       success: false,
-      errorCode: error instanceof Error ? 500 : error.errorCode,
-      message: error instanceof Error ? '서버 내부 오류가 발생하였습니다.' : error.message,
+      errorCode: (error as any).errorCode || 500,
+      message: (error as any).message || '알 수 없는 오류가 발생하였습니다.',
     };
   }
 };

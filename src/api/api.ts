@@ -26,12 +26,12 @@ export const fetchData = async <T>(
       ...options.headers,
     },
   });
-  
+
   if (!response.ok) {
     const errorData = await response.json();
     throw new Error(errorData.message || 'API 요청 실패');
   }
-  
+
   return response.json();
 };
 

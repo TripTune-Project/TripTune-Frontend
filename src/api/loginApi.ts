@@ -26,22 +26,20 @@ export const loginUser = async (data: LoginData) => {
       },
       body: JSON.stringify(data),
     });
-    
+
     if (!response.ok) {
       const errorData = await response.json();
       const errorMessage = errorData.message || '로그인 실패';
       throw new Error(errorMessage);
     }
-    
+
     const responseData = await response.json();
     const { accessToken, refreshToken, userId } = responseData.data;
-    
+
     saveTokens(accessToken, refreshToken, userId);
-    
+
     return responseData;
   } catch (error) {
-    throw new Error(
-      error instanceof Error ? error.message : '로그인 실패'
-    );
+    throw new Error(error instanceof Error ? error.message : '로그인 실패');
   }
 };

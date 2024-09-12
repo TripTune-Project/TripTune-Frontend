@@ -1,7 +1,17 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchTravelListByLocation, fetchTravelListSearch, fetchTravelDetail } from '@/api/travelApi';
+import {
+  fetchTravelListByLocation,
+  fetchTravelListSearch,
+  fetchTravelDetail,
+} from '@/api/travelApi';
+import { Coordinates } from '@/types';
+import { TravelListSearchParams } from '@/types/travelType';
 
-export const useTravelListByLocation = (params, page = 1, enabled = true) => {
+export const useTravelListByLocation = (
+  params: Coordinates,
+  page: number = 1,
+  enabled: boolean = true
+) => {
   return useQuery({
     queryKey: ['travelList', params, page],
     queryFn: () => fetchTravelListByLocation(params, page),
@@ -9,7 +19,11 @@ export const useTravelListByLocation = (params, page = 1, enabled = true) => {
   });
 };
 
-export const useTravelListSearch = (params, page = 1, enabled = false) => {
+export const useTravelListSearch = (
+  params: TravelListSearchParams,
+  page: number = 1,
+  enabled: boolean = false
+) => {
   return useQuery({
     queryKey: ['travelListSearch', params, page],
     queryFn: () => fetchTravelListSearch(params, page),
@@ -17,9 +31,9 @@ export const useTravelListSearch = (params, page = 1, enabled = false) => {
   });
 };
 
-export const useTravelDetail = (placeId) => {
+export const useTravelDetail = (placeId: number) => {
   return useQuery({
     queryKey: ['travelDetail', placeId],
-    queryFn: () => fetchTravelDetail(placeId)
+    queryFn: () => fetchTravelDetail(placeId),
   });
 };

@@ -5,11 +5,13 @@ import saveLocalContent from '@/utils/saveLocalContent';
 export const refreshApi = async (): Promise<string> => {
   const { setEncryptedCookie } = saveLocalContent();
   const refreshToken = Cookies.get('trip-tune_rt');
-  
+
   if (!refreshToken) throw new Error('리프레시 토큰을 사용할 수 없습니다.');
-  
+
   try {
-    const data = await post<{ accessToken: string }>('/members/refresh', { refreshToken });
+    const data = await post<{ accessToken: string }>('/members/refresh', {
+      refreshToken,
+    });
     const newAccessToken = data.accessToken;
     setEncryptedCookie('trip-tune_at', newAccessToken, 5 / (24 * 60)); // 쿠키 만료시간 설정
     return newAccessToken;
