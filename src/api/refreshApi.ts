@@ -9,7 +9,7 @@ export const refreshApi = async (): Promise<string> => {
   if (!refreshToken) throw new Error('리프레시 토큰을 사용할 수 없습니다.');
 
   try {
-    const data = await post<{ accessToken: string }>('/api/members/refresh', {
+    const data = await post<{ accessToken: string }>('/members/refresh', {
       refreshToken,
     });
     const newAccessToken = data.accessToken;

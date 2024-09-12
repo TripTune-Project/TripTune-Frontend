@@ -19,7 +19,7 @@ const saveTokens = (
 
 export const loginUser = async (data: LoginData) => {
   try {
-    const response = await fetch('/api/members/login', {
+    const response = await fetch('/members/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

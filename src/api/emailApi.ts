@@ -4,7 +4,7 @@ export const requestEmailVerification = async (
   email: string
 ): Promise<string> => {
   try {
-    const data = await post<{ message: string }>('/api/emails/verify-request', {
+    const data = await post<{ message: string }>('/emails/verify-request', {
       email,
     });
     return data.message;

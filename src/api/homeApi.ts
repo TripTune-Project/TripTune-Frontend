@@ -21,7 +21,7 @@ export const fetchTravelData = async (): Promise<
   SuccessResponse | ErrorResponse
 > => {
   try {
-    const data = await get<SuccessResponse>('/api/member/home');
+    const data = await get<SuccessResponse>('/home');
     return data;
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -45,7 +45,7 @@ export const searchPlaces = async (
   try {
     const queryParams = new URLSearchParams(convertToRecord(params)).toString();
     const data = await get<SearchSuccessResponse | EmptyResultResponse>(
-      `/api/home/search?${queryParams}`
+      `/home/search?${queryParams}`
     );
     return data;
   } catch (error: unknown) {

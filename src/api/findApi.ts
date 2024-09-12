@@ -2,7 +2,7 @@ import { post } from './api';
 
 export const requestFindId = async (email: string): Promise<any> => {
   try {
-    const data = await post('/api/members/find-id', { email });
+    const data = await post('/members/find-id', { email });
     return data;
   } catch (error) {
     throw new Error(
@@ -16,7 +16,7 @@ export const requestFindPassword = async (
   userId: string
 ): Promise<any> => {
   try {
-    const data = await post('/api/members/find-password', { email, userId });
+    const data = await post('/members/find-password', { email, userId });
     return data;
   } catch (error) {
     throw new Error(

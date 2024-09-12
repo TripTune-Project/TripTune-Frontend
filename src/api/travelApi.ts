@@ -18,7 +18,7 @@ export const fetchTravelListByLocation = async (
   try {
     const pageNum = Number(page);
     const data = await post<TravelApiResponse>(
-      `/api/travels/list?page=${pageNum}`,
+      `/travels/list?page=${pageNum}`,
       params
     );
     if (!data.data || data.data.content.length === 0) {
@@ -49,7 +49,7 @@ export const fetchTravelListSearch = async (
   try {
     const pageNum = Number(page);
     const data = await post<TravelListSearchSuccessResponse>(
-      `/api/travels/search?page=${pageNum}`,
+      `/travels/search?page=${pageNum}`,
       params
     );
     if (!data.data || data.data.content.length === 0) {
@@ -73,7 +73,7 @@ export const fetchTravelDetail = async (
   placeId: number
 ): Promise<TravelDetailSuccessResponse | TravelApiErrorResponse> => {
   try {
-    const data = await get<TravelDetailSuccessResponse>(`/api/travels/${placeId}`);
+    const data = await get<TravelDetailSuccessResponse>(`/travels/${placeId}`);
     return data;
   } catch (error) {
     console.error('예기치 않은 오류:', error);
