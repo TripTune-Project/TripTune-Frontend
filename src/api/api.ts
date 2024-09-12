@@ -1,4 +1,4 @@
-const BASE_URL = 'http://13.209.177.247:8080/api';
+const BASE_URL = `${process.env.NEXT_PUBLIC_GA4_BACKEND_PROXY}`
 
 const fetchOptions: RequestInit = {
   headers: {
