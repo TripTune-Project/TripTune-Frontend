@@ -17,9 +17,7 @@ export const fetchData = async <T>(
   endpoint: string,
   options: FetchOptions = {}
 ): Promise<T> => {
-  // undefined/api/travels/list?page=1 url:
   const url = `${BASE_URL}${endpoint}`;
-  console.log(url, "url: undefined/api/travels/list?page=1 url:")
   const response = await fetch(url, {
     ...fetchOptions,
     ...options,
