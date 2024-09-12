@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Head from 'next/head';
 import Pagination from '../../components/Travel/Pagination';
 import Map from '../../components/Travel/Map';
@@ -10,20 +10,26 @@ import DataLoading from '../../components/Common/DataLoading';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import useGeolocation from '@/hooks/useGeolocation';
-import {
-  useTravelListByLocation,
-  useTravelListSearch,
-} from '@/hooks/useTravel';
+import { useTravelListByLocation, useTravelListSearch } from '@/hooks/useTravel';
 import styles from '../../styles/Travel.module.css';
+import { useTravelStore } from '@/store/travelStore';
+import { useDebounce } from '@/hooks/useDebounce';
 
 const TravelPage = () => {
   const router = useRouter();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [isSearching, setIsSearching] = useState(false);
-  const [alertOpen, setAlertOpen] = useState(false);
-  const [alertMessage, setAlertMessage] = useState('');
-  const [alertSeverity, setAlertSeverity] = useState('info');
+  
+  const {
+    currentPage,
+    searchTerm,
+    isSearching,
+    setCurrentPage,
+    setSearchTerm,
+    setIsSearching,
+  } = useTravelStore();
+  
+  const [alertOpen, setAlertOpen] = React.useState(false);
+  const [alertMessage, setAlertMessage] = React.useState('');
+  const [alertSeverity, setAlertSeverity] = React.useState('info');
   
   const { userCoordinates, errorMessage: geoErrorMessage } = useGeolocation();
   
@@ -54,6 +60,8 @@ const TravelPage = () => {
     isSearching
   );
   
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+  
   useEffect(() => {
     if (geoErrorMessage) {
       setAlertMessage(geoErrorMessage);
@@ -68,6 +76,17 @@ const TravelPage = () => {
     }
   }, [userCoordinates, currentPage, isSearching, refetchLocation]);
   
+  useEffect(() => {
+    if (debouncedSearchTerm.trim()) {
+      setIsSearching(true);
+      setCurrentPage(1);
+      refetchSearch();
+    } else if (debouncedSearchTerm === '') {
+      setIsSearching(false);
+      refetchLocation();
+    }
+  }, [debouncedSearchTerm, refetchSearch, refetchLocation, setCurrentPage, setIsSearching]);
+  
   const handleSearch = () => {
     if (searchTerm.trim()) {
       setIsSearching(true);
@@ -78,9 +97,7 @@ const TravelPage = () => {
     }
   };
   
-  const handleSearchInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const input = event.target.value;
     const regex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]*$/;
     
@@ -91,6 +108,12 @@ const TravelPage = () => {
     }
   };
   
+  const handleSearchKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      handleSearch();
+    }
+  };
+  
   const handleResetSearch = () => {
     setSearchTerm('');
     setIsSearching(false);
@@ -98,10 +121,7 @@ const TravelPage = () => {
     refetchLocation();
   };
   
-  const handleAlertClose = (
-    event?: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
+  const handleAlertClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return;
     }
@@ -136,7 +156,7 @@ const TravelPage = () => {
   const places = isSearching
     ? searchData?.data?.content
     : locationData?.data?.content;
-
+  
   const totalPages = isSearching
     ? searchData?.data?.totalPages
     : locationData?.data?.totalPages;
@@ -159,10 +179,6 @@ const TravelPage = () => {
           content="여행지를 검색하고 위치를 기반으로 추천받아보세요. 원하는 키워드로 검색하거나 내 위치에서 가까운 여행지를 찾아볼 수 있습니다."
         />
         <meta property="og:image" content="/assets/Logo.png" />
-        <meta
-          property="og:url"
-          content="https://triptune.netlify.app/Travel"
-        />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <div className={styles.container}>
@@ -187,6 +203,7 @@ const TravelPage = () => {
                 placeholder="검색할 키워드를 입력 해주세요."
                 value={searchTerm}
                 onChange={handleSearchInputChange}
+                onKeyPress={handleSearchKeyPress}
                 className={styles.input}
               />
               <button onClick={handleSearch} className={styles.searchButton}>
@@ -197,63 +214,67 @@ const TravelPage = () => {
               </button>
             </div>
             <ul className={styles.placeList}>
-              {places?.map((place) => {
-                const { walking, driving } = calculateTravelTime(
-                  place.distance
-                );
-                return (
-                  <li
-                    key={place.placeId}
-                    className={styles.placeItem}
-                    onClick={() => handleDetailClick(place.placeId)}
-                  >
-                    <div className={styles.placeThumbnail}>
-                      {place.thumbnailUrl ? (
-                        <Image
-                          src={place.thumbnailUrl}
-                          alt={place.placeName}
-                          width={150}
-                          height={150}
-                          className={styles.thumbnailImage}
-                          priority
-                        />
-                      ) : (
-                        <div className={styles.noImage}>이미지 없음</div>
-                      )}
-                    </div>
-                    <div className={styles.placeInfo}>
-                      <h2 className={styles.placeName}>{place.placeName}</h2>
-                      <p className={styles.placeAddress}>
-                        {`${place.country} / ${place.city} / ${place.district}`}
-                      </p>
-                      <p className={styles.placeDetailAddress}>
-                        {place.address} {place.detailAddress}
-                      </p>
-                      <div className={styles.timeAndDistance}>
-                        <button
-                          className={styles.contentBtn}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDetailClick(place.placeId);
-                          }}
-                        >
-                          {place.placeName} 상세보기
-                        </button>
-                        <div className={styles.distanceInfo}>
-                          <span>{walking}</span> | <span>{driving}</span>
+              {places && places.length > 0 ? (
+                places.map((place) => {
+                  const { walking, driving } = calculateTravelTime(place.distance);
+                  return (
+                    <li
+                      key={place.placeId}
+                      className={styles.placeItem}
+                      onClick={() => handleDetailClick(place.placeId)}
+                    >
+                      <div className={styles.placeThumbnail}>
+                        {place.thumbnailUrl ? (
+                          <Image
+                            src={place.thumbnailUrl}
+                            alt={place.placeName}
+                            width={150}
+                            height={150}
+                            className={styles.thumbnailImage}
+                            priority
+                          />
+                        ) : (
+                          <div className={styles.noImage}>이미지 없음</div>
+                        )}
+                      </div>
+                      <div className={styles.placeInfo}>
+                        <h2 className={styles.placeName}>{place.placeName}</h2>
+                        <p className={styles.placeAddress}>
+                          {`${place.country} / ${place.city} / ${place.district}`}
+                        </p>
+                        <p className={styles.placeDetailAddress}>
+                          {place.address} {place.detailAddress}
+                        </p>
+                        <div className={styles.timeAndDistance}>
+                          <button
+                            className={styles.contentBtn}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDetailClick(place.placeId);
+                            }}
+                          >
+                            {place.placeName} 상세보기
+                          </button>
+                          <div className={styles.distanceInfo}>
+                            <span>{walking}</span> | <span>{driving}</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </li>
-                );
-              })}
+                    </li>
+                  );
+                })
+              ) : (
+                <p className={styles.noResults}>검색 결과가 없습니다.</p>
+              )}
             </ul>
-            <Pagination
-              total={totalPages * 5}
-              currentPage={currentPage}
-              pageSize={5}
-              onPageChange={setCurrentPage}
-            />
+            {places && places.length > 0 && (
+              <Pagination
+                total={totalPages * 5}
+                currentPage={currentPage}
+                pageSize={5}
+                onPageChange={setCurrentPage}
+              />
+            )}
           </div>
         )}
         <div className={styles.mapContainer}>
