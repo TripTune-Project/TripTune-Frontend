@@ -1,24 +1,17 @@
-import axios from 'axios';
+import { patch } from './api';
 import Cookies from 'js-cookie';
 
-export const logoutApi = async () => {
+export const logoutApi = async (): Promise<void> => {
   const accessToken = Cookies.get('trip-tune_at');
   const userId = Cookies.get('userId');
+  
   if (accessToken) {
     try {
-      const response = await axios.patch(
-        '/api/members/logout',
-        { userId },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      
-      if (response.status !== 200) {
-        throw new Error('Logout failed');
-      }
+      await patch('/members/logout', { userId }, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
       
       Cookies.remove('trip-tune_at');
       Cookies.remove('trip-tune_rt');

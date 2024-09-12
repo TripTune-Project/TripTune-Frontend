@@ -5,13 +5,13 @@ import { useForm } from 'react-hook-form';
 import { validatePassword, validateUserId } from '@/utils/validation';
 import styles from '../../styles/Login.module.css';
 import { useRouter, useSearchParams } from 'next/navigation';
-import useLogin from '../../hooks/useLogin';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import Image from 'next/image';
 import kakaoImg from '../../../public/assets/images/kakao.png';
 import naverImg from '../../../public/assets/images/naver.png';
 import VerificationLoading from '../Common/VerificationLoading';
+import { loginUser } from '@/api/loginApi';
 
 interface LoginFormData {
   userId: string;
@@ -22,7 +22,6 @@ const LoginForm = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const next = searchParams.get('next') || '/';
-  const { loginUser } = useLogin();
   const [errorMessage, setErrorMessage] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
 

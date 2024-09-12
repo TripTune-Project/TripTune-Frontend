@@ -1,48 +1,41 @@
-import axios, { AxiosResponse } from 'axios';
-
-interface Place {
-  placeId: number;
-  country: string;
-  city: string;
-  district: string;
-  placeName: string;
-  ThumbnailUrl: string;
-}
-
-interface SuccessResponse {
-  success: true;
-  data: {
-    popularityList: Place[];
-    domesticList: Place[];
-    internationalList: Place[];
-  };
-  message: string;
-}
-
-interface ErrorResponse {
-  success: false;
-  errorCode: number;
-  message: string;
-}
+import { get } from './api';
+import {
+  EmptyResultResponse,
+  ErrorResponse,
+  SearchParams,
+  SearchSuccessResponse,
+  SuccessResponse,
+} from '@/types/homeType';
 
 export const fetchTravelData = async (): Promise<
   SuccessResponse | ErrorResponse
 > => {
   try {
-    const response: AxiosResponse<SuccessResponse> =
-      await axios.get(`/api/home`);
-
-    return response.data;
+    const data = await get<SuccessResponse>('/home');
+    return data;
   } catch (error) {
-    if (axios.isAxiosError(error) && error.response) {
-      const response: AxiosResponse<ErrorResponse> = error.response;
-      return response.data;
-    } else {
-      return {
-        success: false,
-        errorCode: 500,
-        message: '서버 내부 오류가 발생하였습니다.',
-      };
-    }
+    return {
+      success: false,
+      errorCode: error instanceof Error ? 500 : error.errorCode,
+      message: error instanceof Error ? '서버 내부 오류가 발생하였습니다.' : error.message,
+    };
+  }
+};
+
+export const searchPlaces = async (
+  params: SearchParams
+): Promise<SearchSuccessResponse | EmptyResultResponse | ErrorResponse> => {
+  try {
+    const queryParams = new URLSearchParams(params).toString();
+    const data = await get<SearchSuccessResponse | EmptyResultResponse>(
+      `/home/search?${queryParams}`
+    );
+    return data;
+  } catch (error) {
+    return {
+      success: false,
+      errorCode: error instanceof Error ? 500 : error.errorCode,
+      message: error instanceof Error ? '서버 내부 오류가 발생하였습니다.' : error.message,
+    };
   }
 };
