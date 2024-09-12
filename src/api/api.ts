@@ -1,4 +1,4 @@
-const BASE_URL = `${process.env.NEXT_PUBLIC_GA4_BACKEND_PROXY}`
+const BASE_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}`;
 
 const fetchOptions: RequestInit = {
   headers: {
@@ -17,7 +17,9 @@ export const fetchData = async <T>(
   endpoint: string,
   options: FetchOptions = {}
 ): Promise<T> => {
+  // undefined/api/travels/list?page=1 url:
   const url = `${BASE_URL}${endpoint}`;
+  console.log(url, "url: undefined/api/travels/list?page=1 url:")
   const response = await fetch(url, {
     ...fetchOptions,
     ...options,
