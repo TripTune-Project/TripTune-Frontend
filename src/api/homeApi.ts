@@ -21,7 +21,7 @@ export const fetchHomeData = async (): Promise<
   SuccessResponse | ErrorResponse
 > => {
   try {
-    const response = await axios.get<SuccessResponse>('http://13.209.177.247:8080/api/home');
+    const response = await axios.get<SuccessResponse>('/api/home');
     return response.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -45,7 +45,7 @@ export const searchHomePlaces = async (
   try {
     const queryParams = new URLSearchParams(convertToRecord(params)).toString();
     const response = await axios.get<SearchSuccessResponse | EmptyResultResponse>(
-      `http://13.209.177.247:8080/api/home/search?${queryParams}`
+      `/api/home/search?${queryParams}`
     );
     return response.data;
   } catch (error: unknown) {

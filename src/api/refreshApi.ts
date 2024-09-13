@@ -9,7 +9,7 @@ export const refreshApi = async (): Promise<string> => {
 
   try {
     const response = await axios.post(
-      'http://13.209.177.247:8080/api/members/refresh',
+      '/api/members/refresh',
       { refreshToken }
     );
     const newAccessToken = response.data.accessToken;

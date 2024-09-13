@@ -7,7 +7,7 @@ export const logoutApi = async () => {
   if (accessToken) {
     try {
       const response = await axios.patch(
-        'http://13.209.177.247:8080/api/members/logout',
+        '/api/members/logout',
         { userId },
         {
           headers: {

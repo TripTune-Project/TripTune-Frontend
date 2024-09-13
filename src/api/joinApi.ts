@@ -10,7 +10,7 @@ interface JoinMemberData {
 export const joinMember = async (data: JoinMemberData) => {
   try {
     const response = await axios.post(
-      'http://13.209.177.247:8080/api/members/join',
+      '/api/members/join',
       data
     );
     return response.data;

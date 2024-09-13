@@ -16,7 +16,7 @@ export const fetchTravelListByLocation = async (
     const pageNum = Number(page);
 
     const response: AxiosResponse<TravelApiResponse> = await axios.post(
-      `http://13.209.177.247:8080/api/travels/list?page=${pageNum}`,
+      `/api/travels/list?page=${pageNum}`,
       params
     );
 
@@ -50,7 +50,7 @@ export const fetchTravelListSearch = async (
 
     const response: AxiosResponse<TravelListSearchSuccessResponse> =
       await axios.post(
-        `http://13.209.177.247:8080/api/travels/search?page=${pageNum}`,
+        `/api/travels/search?page=${pageNum}`,
         params
       );
 
@@ -78,7 +78,7 @@ export const fetchTravelDetail = async (
 ): Promise<TravelDetailSuccessResponse | TravelApiErrorResponse> => {
   try {
     const response: AxiosResponse<TravelDetailSuccessResponse> =
-      await axios.get(`http://13.209.177.247:8080/api/travels/${placeId}`);
+      await axios.get(`/api/travels/${placeId}`);
 
     return response.data;
   } catch (error: unknown) {

@@ -31,7 +31,7 @@ export const loginUser = async (
 ): Promise<LoginResponse['data']> => {
   try {
     const response = await axios.post<LoginResponse>(
-      'http://13.209.177.247:8080/api/members/login',
+      '/api/members/login',
       data,
       {
         headers: {
