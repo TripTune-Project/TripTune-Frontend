@@ -42,7 +42,7 @@ export const get = <T>(endpoint: string, options?: FetchOptions) => {
 
 export const post = <T>(
   endpoint: string,
-  body: unknown,
+  body: object,
   options?: FetchOptions
 ) => {
   return fetchData<T>(endpoint, {
@@ -54,7 +54,7 @@ export const post = <T>(
 
 export const put = <T>(
   endpoint: string,
-  body: unknown,
+  body: object,
   options?: FetchOptions
 ) => {
   return fetchData<T>(endpoint, {

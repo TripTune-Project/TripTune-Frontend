@@ -1,4 +1,3 @@
-'use client';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import styles from '../styles/Header.module.css';
@@ -25,11 +24,11 @@ const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userId, setUserId] = useState('');
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [requestQueue, setRequestQueue] = useState([]);
+  const [requestQueue, setRequestQueue] = useState<(() => void)[]>([]);
   
   const { checkAuthStatus } = useAuth();
   
-  const fetchWithRefresh = async (url, options) => {
+  const fetchWithRefresh = async (url: string, options: RequestInit) => {
     try {
       const response = await fetch(url, options);
       if (response.status === 401 && !isRefreshing) {

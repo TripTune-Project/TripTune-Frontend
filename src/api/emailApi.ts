@@ -20,7 +20,7 @@ export const verifyEmail = async (
   authCode: string
 ): Promise<string> => {
   try {
-    const data = await post<{ message: string }>('/api/emails/verify', {
+    const data = await post<{ message: string }>('/emails/verify', {
       email,
       authCode,
     });

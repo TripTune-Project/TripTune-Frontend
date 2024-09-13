@@ -7,10 +7,15 @@ interface JoinMemberData {
   email: string;
 }
 
-export const joinMember = async (data: JoinMemberData): Promise<any> => {
+interface JoinMemberResponse {
+  success: boolean;
+  message: string;
+  userId: string;
+}
+
+export const joinMember = async (data: JoinMemberData): Promise<JoinMemberResponse> => {
   try {
-    const responseData = await post('/members/join', data);
-    return responseData;
+    return await post<JoinMemberResponse>('/members/join', data);
   } catch (error) {
     throw new Error(
       error instanceof Error

@@ -21,20 +21,13 @@ export const fetchTravelData = async (): Promise<
   SuccessResponse | ErrorResponse
 > => {
   try {
-    const data = await get<SuccessResponse>('/home');
-    return data;
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      return {
-        success: false,
-        errorCode: 500,
-        message: '서버 내부 오류가 발생하였습니다.',
-      };
-    }
+    return await get<SuccessResponse>('/home');
+  } catch (error) {
+    console.error('예기치 않은 오류:', error);
     return {
       success: false,
-      errorCode: (error as any).errorCode || 500,
-      message: (error as any).message || '알 수 없는 오류가 발생하였습니다.',
+      errorCode: 500,
+      message: '서버 내부 오류가 발생하였습니다.',
     };
   }
 };
@@ -44,22 +37,15 @@ export const searchPlaces = async (
 ): Promise<SearchSuccessResponse | EmptyResultResponse | ErrorResponse> => {
   try {
     const queryParams = new URLSearchParams(convertToRecord(params)).toString();
-    const data = await get<SearchSuccessResponse | EmptyResultResponse>(
+    return await get<SearchSuccessResponse | EmptyResultResponse>(
       `/home/search?${queryParams}`
     );
-    return data;
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      return {
-        success: false,
-        errorCode: 500,
-        message: '서버 내부 오류가 발생하였습니다.',
-      };
-    }
+  } catch (error) {
+    console.error('예기치 않은 오류:', error);
     return {
       success: false,
-      errorCode: (error as any).errorCode || 500,
-      message: (error as any).message || '알 수 없는 오류가 발생하였습니다.',
+      errorCode: 500,
+      message: '서버 내부 오류가 발생하였습니다.',
     };
   }
 };

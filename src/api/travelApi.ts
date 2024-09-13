@@ -1,11 +1,11 @@
-import { post, get } from './api';
+import { get, post } from './api';
 import {
+  TravelApiEmptyResponse,
+  TravelApiErrorResponse,
+  TravelApiResponse,
   TravelDetailSuccessResponse,
   TravelListSearchParams,
   TravelListSearchSuccessResponse,
-  TravelApiResponse,
-  TravelApiErrorResponse,
-  TravelApiEmptyResponse,
 } from '@/types/travelType';
 import { Coordinates } from '@/types';
 
@@ -73,8 +73,7 @@ export const fetchTravelDetail = async (
   placeId: number
 ): Promise<TravelDetailSuccessResponse | TravelApiErrorResponse> => {
   try {
-    const data = await get<TravelDetailSuccessResponse>(`/travels/${placeId}`);
-    return data;
+    return await get<TravelDetailSuccessResponse>(`/travels/${placeId}`);
   } catch (error) {
     console.error('예기치 않은 오류:', error);
     return {
