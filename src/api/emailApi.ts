@@ -2,7 +2,7 @@ import axios, { AxiosError } from 'axios';
 
 export const requestEmailVerification = async (email: string) => {
   try {
-    const response = await axios.post('/api/emails/verify-request', { email });
+    const response = await axios.post('http://13.209.177.247:8080/api/emails/verify-request', { email });
     return response.data.message;
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
