@@ -9,10 +9,11 @@ export const refreshApi = async (): Promise<string> => {
   if (!refreshToken) throw new Error('리프레시 토큰을 사용할 수 없습니다.');
   
   try {
-    const data = await post<{ accessToken: string }>('/members/refresh', {
+    const response = await post<{ data: { accessToken: string } }>('/members/refresh', {
       refreshToken,
     });
-    const newAccessToken = data.accessToken;
+    
+    const newAccessToken = response.data.accessToken;
     setEncryptedCookie('trip-tune_at', newAccessToken, 5 / (24 * 60));
     return newAccessToken;
   } catch (error) {
