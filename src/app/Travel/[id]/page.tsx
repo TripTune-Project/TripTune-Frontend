@@ -207,6 +207,7 @@ export default TravelDetail;
 // import styles from '../../styles/Travel.module.css';
 // import favicon from '../../../public/favicon.ico';
 // import placeIcon from '../../../public/assets/images/place.png';
+// import { useTravelDetail } from '@/hooks/useTravelQueries';
 //
 // const StyledSwiperContainer = styled.div`
 //     overflow: hidden;
@@ -262,8 +263,13 @@ export default TravelDetail;
 //     }
 // `;
 //
-// const TravelDetail = ({ travelData }) => {
-//   const { placeName, country, city, district, address, detailAddress, description, imageList, recommandedTravelList } = travelData;
+// const TravelDetail = ({ placeId }) => {
+//   const { data, isLoading, error } = useTravelDetail(placeId);
+//
+//   if (isLoading) return <p>Loading...</p>;
+//   if (error) return <p>Error: {error.message}</p>;
+//
+//   const { placeName, country, city, district, address, detailAddress, description, imageList, recommandedTravelList } = data?.data || {};
 //
 //   return (
 //     <div className={styles.travelDetailContent}>

@@ -5,14 +5,6 @@ const nextConfig = {
   compiler: {
     styledComponents: true,
   },
-  async rewrites() {
-    return [
-      {
-        source: '/:path*',
-        destination: 'http://13.209.177.247:8080/:path*',
-      },
-    ];
-  },
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
@@ -29,6 +21,14 @@ const nextConfig = {
         pathname: '/**',
       },
     ],
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'http://13.209.177.247:8080/api/:path*',
+      },
+    ];
   },
 };
 
