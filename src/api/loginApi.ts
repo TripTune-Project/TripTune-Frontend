@@ -1,8 +1,17 @@
+import axios from 'axios';
 import saveLocalContent from '../utils/saveLocalContent';
 
 interface LoginData {
   userId: string;
   password: string;
+}
+
+interface LoginResponse {
+  data: {
+    accessToken: string;
+    refreshToken: string;
+    userId: string;
+  };
 }
 
 const { setEncryptedCookie } = saveLocalContent();
@@ -17,29 +26,35 @@ const saveTokens = (
   setEncryptedCookie('userId', userId, 7);
 };
 
-export const loginUser = async (data: LoginData) => {
+export const loginUser = async (
+  data: LoginData
+): Promise<LoginResponse['data']> => {
   try {
-    const response = await fetch('/members/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
+    const response = await axios.post<LoginResponse>(
+      '/api/members/login',
+      data,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      const errorMessage = errorData.message || '로그인 실패';
-      throw new Error(errorMessage);
-    }
-
-    const responseData = await response.json();
-    const { accessToken, refreshToken, userId } = responseData.data;
+    const { accessToken, refreshToken, userId } = response.data.data;
 
     saveTokens(accessToken, refreshToken, userId);
 
-    return responseData;
+    return response.data.data;
   } catch (error) {
-    throw new Error(error instanceof Error ? error.message : '로그인 실패');
+    if (axios.isAxiosError(error)) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        throw new Error(error.response.data.message);
+      }
+    }
+    throw new Error('로그인에 실패했습니다. 다시 시도해주세요.');
   }
 };

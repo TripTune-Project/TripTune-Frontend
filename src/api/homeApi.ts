@@ -1,4 +1,4 @@
-import { get } from './api';
+import axios from 'axios';
 import {
   EmptyResultResponse,
   ErrorResponse,
@@ -17,12 +17,12 @@ const convertToRecord = (params: SearchParams): Record<string, string> => {
   );
 };
 
-export const fetchTravelData = async (): Promise<
+export const fetchHomeData = async (): Promise<
   SuccessResponse | ErrorResponse
 > => {
   try {
-    const data = await get<SuccessResponse>('/home');
-    return data;
+    const response = await axios.get<SuccessResponse>('/api/home');
+    return response.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
       return {
@@ -39,15 +39,15 @@ export const fetchTravelData = async (): Promise<
   }
 };
 
-export const searchPlaces = async (
+export const searchHomePlaces = async (
   params: SearchParams
-): Promise<SearchSuccessResponse | EmptyResultResponse | ErrorResponse> => {
+): Promise<unknown> => {
   try {
     const queryParams = new URLSearchParams(convertToRecord(params)).toString();
-    const data = await get<SearchSuccessResponse | EmptyResultResponse>(
-      `/home/search?${queryParams}`
+    const response = await axios.get<SearchSuccessResponse | EmptyResultResponse>(
+      `/api/home/search?${queryParams}`
     );
-    return data;
+    return response.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
       return {

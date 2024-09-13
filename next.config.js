@@ -5,6 +5,15 @@ const nextConfig = {
   compiler: {
     styledComponents: true,
   },
+  // todo : axios 에서는 rewrite를 쓰면 source 처리가 동적 페이지에서는 동작 하지 않음
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'http://13.209.177.247:8080/api/:path*',
+      },
+    ];
+  },
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
@@ -21,14 +30,6 @@ const nextConfig = {
         pathname: '/**',
       },
     ],
-  },
-  async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: 'http://13.209.177.247:8080/api/:path*',
-      },
-    ];
   },
 };
 

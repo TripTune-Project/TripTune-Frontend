@@ -1,4 +1,4 @@
-import { post } from './api';
+import axios, { AxiosError } from 'axios';
 
 interface JoinMemberData {
   nickname: string;
@@ -7,15 +7,19 @@ interface JoinMemberData {
   email: string;
 }
 
-export const joinMember = async (data: JoinMemberData): Promise<any> => {
+export const joinMember = async (data: JoinMemberData) => {
   try {
-    const responseData = await post('/members/join', data);
-    return responseData;
-  } catch (error) {
-    throw new Error(
-      error instanceof Error
-        ? error.message
-        : '회원가입에 실패했습니다. 다시 시도해주세요.'
+    const response = await axios.post(
+      '/api/members/join',
+      data
     );
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError && error.response) {
+      if (error.response.data && error.response.data.message) {
+        throw new Error(error.response.data.message);
+      }
+    }
+    throw new Error('회원가입에 실패했습니다. 다시 시도해주세요.');
   }
 };
