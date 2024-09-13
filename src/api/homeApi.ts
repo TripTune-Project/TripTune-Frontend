@@ -1,87 +1,51 @@
-import axios, { AxiosResponse } from 'axios';
+import { get } from './api';
+import {
+  EmptyResultResponse,
+  ErrorResponse,
+  SearchParams,
+  SearchSuccessResponse,
+  SuccessResponse,
+} from '@/types/homeType';
 
-interface Place {
-  placeId: number;
-  country: string;
-  city: string;
-  district: string;
-  placeName: string;
-  ThumbnailUrl: string;
-}
+const convertToRecord = (params: SearchParams): Record<string, string> => {
+  return Object.entries(params).reduce(
+    (acc, [key, value]) => {
+      acc[key] = String(value);
+      return acc;
+    },
+    {} as Record<string, string>
+  );
+};
 
-interface SearchParams {
-  type: string;
-  keyword: string;
-}
-
-interface SearchResult {
-  placeId: number;
-  country: string;
-  city: string;
-  district: string;
-  placeName: string;
-}
-
-interface FetchSuccessResponse {
-  success: true;
-  data: {
-    popularityList: Place[];
-    domesticList: Place[];
-    internationalList: Place[];
-  };
-  message: string;
-}
-
-interface SearchSuccessResponse {
-  success: true;
-  data: {
-    totalPages: number;
-    currentPage: number;
-    totalCount: number;
-    pageSize: number;
-    searchList: SearchResult[];
-  };
-  message: string;
-}
-
-interface EmptyResultResponse {
-  success: true;
-  message: string;
-}
-
-interface ErrorResponse {
-  success: false;
-  errorCode: number;
-  message: string;
-}
-
-type ApiResponse =
-  | FetchSuccessResponse
-  | SearchSuccessResponse
-  | EmptyResultResponse
-  | ErrorResponse;
-
-export const fetchData = async (
-  endpoint: string,
-  params?: SearchParams
-): Promise<ApiResponse> => {
+export const fetchTravelData = async (): Promise<
+  SuccessResponse | ErrorResponse
+> => {
   try {
-    const response: AxiosResponse<ApiResponse> = await axios.get(
-      `http://13.209.177.247:8080/api/${endpoint}`,
-      { params }
-    );
-
-    return response.data;
+    return await get<SuccessResponse>('/home');
   } catch (error) {
-    if (axios.isAxiosError(error) && error.response) {
-      const response: AxiosResponse<ErrorResponse> = error.response;
-      return response.data;
-    } else {
-      return {
-        success: false,
-        errorCode: 500,
-        message: '서버 내부 오류가 발생하였습니다.',
-      };
-    }
+    console.error('예기치 않은 오류:', error);
+    return {
+      success: false,
+      errorCode: 500,
+      message: '서버 내부 오류가 발생하였습니다.',
+    };
+  }
+};
+
+export const searchPlaces = async (
+  params: SearchParams
+): Promise<SearchSuccessResponse | EmptyResultResponse | ErrorResponse> => {
+  try {
+    const queryParams = new URLSearchParams(convertToRecord(params)).toString();
+    return await get<SearchSuccessResponse | EmptyResultResponse>(
+      `/home/search?${queryParams}`
+    );
+  } catch (error) {
+    console.error('예기치 않은 오류:', error);
+    return {
+      success: false,
+      errorCode: 500,
+      message: '서버 내부 오류가 발생하였습니다.',
+    };
   }
 };
