@@ -93,7 +93,6 @@ const Map = ({ places }: MapProps) => {
     >
       <GoogleMap
         mapContainerStyle={containerStyle}
-        center={center}
         zoom={zoom}
         onLoad={handleMapLoad}
         onZoomChanged={handleZoomChanged}
