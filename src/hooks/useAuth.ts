@@ -1,11 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import Cookies from 'js-cookie';
 import { refreshApi } from '@/api/refreshApi';
 
-const useAuth = (
-  setEncryptedCookie: (name: string, value: string, expiration: number) => void
-) => {
-  const isTokenExpired = (token: string) => {
+const useAuth = () => {
+  const isRefreshing = useRef(false);
+  
+  const isTokenExpired = useCallback((token: string) => {
     try {
       const [, payload] = token.split('.');
       const decoded = JSON.parse(atob(payload));
@@ -13,34 +13,38 @@ const useAuth = (
     } catch (error) {
       return true;
     }
-  };
+  }, []);
   
-  const showLoginModal = () => {
+  const showLoginModal = useCallback(() => {
     const event = new CustomEvent('showLoginModal');
     window.dispatchEvent(event);
-  };
-
-  const checkAuthStatus = async () => {
+  }, []);
+  
+  const checkAuthStatus = useCallback(async () => {
     const accessToken = Cookies.get('trip-tune_at');
     const refreshToken = Cookies.get('trip-tune_rt');
-
+    
     if (!accessToken || isTokenExpired(accessToken)) {
-      if (refreshToken) {
+      if (refreshToken && !isRefreshing.current) {
+        isRefreshing.current = true;
         try {
           await refreshApi();
+          console.log('토큰 갱신 성공');
         } catch {
           showLoginModal();
+        } finally {
+          isRefreshing.current = false;
         }
-      } else {
+      } else if (!refreshToken) {
         showLoginModal();
       }
     }
-  };
-
+  }, [isTokenExpired, showLoginModal]);
+  
   useEffect(() => {
     checkAuthStatus();
-  }, [setEncryptedCookie]);
-
+  }, [checkAuthStatus]);
+  
   return { checkAuthStatus };
 };
 
