@@ -3,7 +3,6 @@
   "homepage": "https://triptune.netlify.app",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://13.209.177.247:8080",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

@@ -22,7 +22,7 @@ const nextConfig = {
       },
     ],
   },
-  // TODO : FETCH는 사용 해야할 듯
+  // todo : 이걸 써야할지 말지를 모르겠음
   async rewrites() {
     return [
       {
