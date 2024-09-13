@@ -10,7 +10,7 @@ import { TravelListSearchParams } from '@/types/travelType';
 export const useTravelListByLocation = (
   params: Coordinates,
   page: number = 1,
-  enabled: boolean = true
+  enabled: boolean = false
 ) => {
   return useQuery({
     queryKey: ['travelList', params, page],

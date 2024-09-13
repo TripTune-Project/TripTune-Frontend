@@ -70,7 +70,7 @@ export const fetchData = async (
       `http://13.209.177.247:8080/api/${endpoint}`,
       { params }
     );
-    
+
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {

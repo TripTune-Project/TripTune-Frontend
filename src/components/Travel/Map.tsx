@@ -17,10 +17,10 @@ interface MapProps {
 
 const Map = ({ places }: MapProps) => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
-  const [map, setMap] = useState<google.maps.Map | null>(null);
+  const mapRef = useRef<google.maps.Map | null>(null);
   const [zoom, setZoom] = useState(16);
   const [center, setCenter] = useState(defaultCenter);
-  
+
   const loadGoogleMapsScript = useCallback(() => {
     const existingScript = document.getElementById('google-maps-script');
     if (!existingScript) {
@@ -29,30 +29,31 @@ const Map = ({ places }: MapProps) => {
       script.id = 'google-maps-script';
       script.async = true;
       script.onload = () => {
-        if (mapContainerRef.current) {
-          const googleMap = new google.maps.Map(mapContainerRef.current, {
+        if (mapContainerRef.current && !mapRef.current) {
+          mapRef.current = new google.maps.Map(mapContainerRef.current, {
             center: defaultCenter,
             zoom: 16,
           });
-          setMap(googleMap);
         }
       };
       script.onerror = () => {
         console.error('Google Maps API 로드에 실패했습니다.');
       };
       document.head.appendChild(script);
-    } else {
-      if (window.google && mapContainerRef.current) {
-        const googleMap = new google.maps.Map(mapContainerRef.current, {
-          center: defaultCenter,
-          zoom: 16,
-        });
-        setMap(googleMap);
-      }
+    } else if (window.google && mapContainerRef.current && !mapRef.current) {
+      mapRef.current = new google.maps.Map(mapContainerRef.current, {
+        center: defaultCenter,
+        zoom: 16,
+      });
     }
   }, []);
-  
+
   useEffect(() => {
+    loadGoogleMapsScript();
+  }, [loadGoogleMapsScript]);
+
+  useEffect(() => {
+    const map = mapRef.current;
     if (map) {
       const bounds = new google.maps.LatLngBounds();
       places.forEach((place) => {
@@ -63,47 +64,40 @@ const Map = ({ places }: MapProps) => {
         });
         bounds.extend(marker.getPosition() as google.maps.LatLng);
       });
-      
-      if (places.length > 0) {
-        map.fitBounds(bounds);
-      } else {
-        map.setCenter(defaultCenter);
-        map.setZoom(16);
-      }
-      
-      const zoomListener = google.maps.event.addListener(
-        map,
-        'zoom_changed',
-        () => {
-          const newZoom = map.getZoom();
-          if (typeof newZoom === 'number') {
-            setZoom(newZoom);
-          }
+      map.fitBounds(bounds);
+    }
+  }, [places]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (map) {
+      const handleZoomChange = () => {
+        const newZoom = map.getZoom();
+        if (typeof newZoom === 'number') {
+          setZoom(newZoom);
         }
-      );
-      
-      const centerListener = google.maps.event.addListener(
-        map,
+      };
+
+      const handleCenterChange = () => {
+        const newCenter = map.getCenter();
+        if (newCenter) {
+          setCenter({ lat: newCenter.lat(), lng: newCenter.lng() });
+        }
+      };
+
+      const zoomListener = map.addListener('zoom_changed', handleZoomChange);
+      const centerListener = map.addListener(
         'center_changed',
-        () => {
-          const newCenter = map.getCenter();
-          if (newCenter) {
-            setCenter({ lat: newCenter.lat(), lng: newCenter.lng() });
-          }
-        }
+        handleCenterChange
       );
-      
+
       return () => {
         google.maps.event.removeListener(zoomListener);
         google.maps.event.removeListener(centerListener);
       };
     }
-  }, [map, places]);
-  
-  useEffect(() => {
-    loadGoogleMapsScript();
-  }, [loadGoogleMapsScript]);
-  
+  }, []);
+
   return <div ref={mapContainerRef} style={containerStyle} />;
 };
 

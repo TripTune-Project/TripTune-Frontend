@@ -6,9 +6,12 @@ export const refreshApi = async (): Promise<string> => {
   const { setEncryptedCookie } = saveLocalContent();
   const refreshToken = Cookies.get('trip-tune_rt');
   if (!refreshToken) throw new Error('리프레시 토큰을 사용할 수 없습니다.');
-  
+
   try {
-    const response = await axios.post('http://13.209.177.247:8080/api/members/refresh', { refreshToken });
+    const response = await axios.post(
+      'http://13.209.177.247:8080/api/members/refresh',
+      { refreshToken }
+    );
     const newAccessToken = response.data.accessToken;
     setEncryptedCookie('trip-tune_at', newAccessToken, 5 / (24 * 60));
     return newAccessToken;

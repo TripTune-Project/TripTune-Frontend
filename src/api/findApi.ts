@@ -2,7 +2,10 @@ import axios, { AxiosError } from 'axios';
 
 export const requestFindId = async (email: string) => {
   try {
-    const response = await axios.post('http://13.209.177.247:8080/api/members/find-id', { email });
+    const response = await axios.post(
+      'http://13.209.177.247:8080/api/members/find-id',
+      { email }
+    );
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError && error.response?.data?.message) {
