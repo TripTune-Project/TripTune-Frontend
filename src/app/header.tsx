@@ -24,46 +24,72 @@ const Header = () => {
   const [isLogoutClicked, setIsLogoutClicked] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userId, setUserId] = useState('');
-
+  const [isRefreshing, setIsRefreshing] = useState(false); // 토큰 갱신 중인지 상태 관리
+  const [requestQueue, setRequestQueue] = useState([]); // 요청 대기열
+  
   const { checkAuthStatus } = useAuth(setEncryptedCookie);
-
+  
+  // 401 에러 시 fetch 요청을 중단하고 토큰 갱신
+  const fetchWithRefresh = async (url, options) => {
+    try {
+      const response = await fetch(url, options);
+      if (response.status === 401 && !isRefreshing) {
+        setIsRefreshing(true);
+        try {
+          await refreshApi(); // 토큰 갱신 시도
+          setIsRefreshing(false);
+          // 대기 중인 요청을 재시도
+          requestQueue.forEach(cb => cb());
+          setRequestQueue([]);
+        } catch (refreshError) {
+          console.error('토큰 갱신 실패:', refreshError);
+          setIsRefreshing(false);
+        }
+      } else if (response.status === 401 && isRefreshing) {
+        // 토큰 갱신 중이라면 대기
+        return new Promise((resolve, reject) => {
+          setRequestQueue(prevQueue => [
+            ...prevQueue,
+            () => fetchWithRefresh(url, options).then(resolve).catch(reject),
+          ]);
+        });
+      }
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  };
+  
   useEffect(() => {
     const storedUserId = Cookies.get('userId');
     if (storedUserId) {
       setIsLoggedIn(true);
       setUserId(storedUserId);
     }
-
-    const refreshToken = Cookies.get('trip-tune_rt');
-    if (refreshToken) {
-      refreshApi().catch((error) => {
-        console.error('토큰 갱신에 실패했습니다:', error);
-      });
-    }
   }, []);
-
+  
   useEffect(() => {
     checkAuthStatus();
-
+    
     const handleAuthChange = () => {
       checkAuthStatus();
     };
-
+    
     window.addEventListener('storage', handleAuthChange);
     return () => {
       window.removeEventListener('storage', handleAuthChange);
     };
   }, [checkAuthStatus, isLogoutClicked]);
-
+  
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-
+  
   const handleLogout = async () => {
     setIsLogoutClicked(true);
     closeModal();
     await performLogout();
   };
-
+  
   const performLogout = async () => {
     try {
       await logoutApi();
@@ -75,15 +101,15 @@ const Header = () => {
       setAlertOpen(true);
     }
   };
-
+  
   const handleAlertClose = () => setAlertOpen(false);
-
+  
   const handleLogin = () => {
     router.push(`/Login?next=${encodeURIComponent(pathname)}`);
   };
-
+  
   const isActive = (path: string) => (pathname === path ? styles.active : '');
-
+  
   return (
     <>
       <ul className={styles.headerMenu}>
