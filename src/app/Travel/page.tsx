@@ -187,6 +187,13 @@ const TravelPage = () => {
     ? (searchData?.data?.totalPages ?? 0)
     : (locationData?.data?.totalPages ?? 0);
   
+  const handlePageChange = (page:number) => {
+    setCurrentPage(page);
+    console.log('Page changed to:', page);
+    window.scrollTo(0, 0);
+    console.log('Scroll executed');
+  };
+  
   return (
     <>
       <Head>
@@ -303,10 +310,7 @@ const TravelPage = () => {
                 total={totalPages * 5}
                 currentPage={currentPage}
                 pageSize={5}
-                onPageChange={(page) => {
-                  setCurrentPage(page);
-                  window.scrollTo(0, 0);
-                }}
+                onPageChange={handlePageChange}
               />
             )}
           </div>
