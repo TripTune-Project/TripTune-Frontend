@@ -5,13 +5,13 @@ import { useForm } from 'react-hook-form';
 import { validatePassword, validateUserId } from '@/utils/validation';
 import styles from '../../styles/Login.module.css';
 import { useRouter, useSearchParams } from 'next/navigation';
-import useLogin from '../../hooks/useLogin';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import Image from 'next/image';
 import kakaoImg from '../../../public/assets/images/kakao.png';
 import naverImg from '../../../public/assets/images/naver.png';
 import VerificationLoading from '../Common/VerificationLoading';
+import { loginUser } from '@/api/loginApi';
 
 interface LoginFormData {
   userId: string;
@@ -22,10 +22,9 @@ const LoginForm = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const next = searchParams.get('next') || '/';
-  const { loginUser } = useLogin();
   const [errorMessage, setErrorMessage] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
-
+  
   const {
     register,
     handleSubmit,
@@ -33,7 +32,7 @@ const LoginForm = () => {
   } = useForm<LoginFormData>({
     mode: 'onChange',
   });
-
+  
   const onSubmit = async (data: LoginFormData) => {
     try {
       await loginUser(data);
@@ -44,21 +43,21 @@ const LoginForm = () => {
       setOpenSnackbar(true);
     }
   };
-
+  
   const handleKakaoLogin = () => {
     window.location.href =
       'https://kauth.kakao.com/oauth/authorize?client_id=YOUR_KAKAO_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&response_type=code';
   };
-
+  
   const handleNaverLogin = () => {
     window.location.href =
       'https://nid.naver.com/oauth2.0/authorize?client_id=YOUR_NAVER_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&response_type=code';
   };
-
+  
   const handleFindId = () => {
     window.open('/Find?tab=findId', 'FindId', 'width=619,height=673');
   };
-
+  
   const handleFindPassword = () => {
     window.open(
       '/Find?tab=findPassword',
@@ -66,11 +65,11 @@ const LoginForm = () => {
       'width=619,height=673'
     );
   };
-
+  
   const closeSnackbar = () => {
     setOpenSnackbar(false);
   };
-
+  
   return (
     <Suspense fallback={<VerificationLoading />}>
       <div className={styles.loginBackground}>
@@ -104,7 +103,7 @@ const LoginForm = () => {
                 <p className={styles.errorText}>{errors.password.message}</p>
               )}
             </div>
-
+            
             <button
               type='submit'
               className={styles.submitButton}
@@ -147,7 +146,7 @@ const LoginForm = () => {
               네이버로 시작하기
             </button>
           </div>
-
+          
           <Snackbar
             open={openSnackbar}
             autoHideDuration={3000}

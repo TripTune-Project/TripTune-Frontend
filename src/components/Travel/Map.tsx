@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { TravelPlace } from '@/types/travelType';
 
 const containerStyle = {
@@ -17,97 +16,95 @@ interface MapProps {
 }
 
 const Map = ({ places }: MapProps) => {
-  const mapRef = useRef<google.maps.Map | null>(null);
+  const mapContainerRef = useRef<HTMLDivElement | null>(null);
+  const [map, setMap] = useState<google.maps.Map | null>(null);
   const [zoom, setZoom] = useState(16);
   const [center, setCenter] = useState(defaultCenter);
-  const [mapLoaded, setMapLoaded] = useState(false);
-
-  const setMapBounds = (map: google.maps.Map) => {
-    if (!map || places.length === 0) return;
-
-    const bounds = new google.maps.LatLngBounds();
-    places.forEach((place) => {
-      bounds.extend(new google.maps.LatLng(place.latitude, place.longitude));
-    });
-
-    map.fitBounds(bounds);
-    google.maps.event.addListenerOnce(map, 'bounds_changed', () => {
-      const currentZoom = map.getZoom();
-      if (currentZoom !== undefined && currentZoom < 16) {
+  
+  const loadGoogleMapsScript = useCallback(() => {
+    const existingScript = document.getElementById('google-maps-script');
+    if (!existingScript) {
+      const script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`;
+      script.id = 'google-maps-script';
+      script.async = true;
+      script.onload = () => {
+        if (mapContainerRef.current) {
+          const googleMap = new google.maps.Map(mapContainerRef.current, {
+            center: defaultCenter,
+            zoom: 16,
+          });
+          setMap(googleMap);
+        }
+      };
+      script.onerror = () => {
+        console.error('Google Maps API 로드에 실패했습니다.');
+      };
+      document.head.appendChild(script);
+    } else {
+      if (window.google && mapContainerRef.current) {
+        const googleMap = new google.maps.Map(mapContainerRef.current, {
+          center: defaultCenter,
+          zoom: 16,
+        });
+        setMap(googleMap);
+      }
+    }
+  }, []);
+  
+  useEffect(() => {
+    if (map) {
+      const bounds = new google.maps.LatLngBounds();
+      places.forEach((place) => {
+        const marker = new google.maps.Marker({
+          position: { lat: place.latitude, lng: place.longitude },
+          map,
+          title: place.placeName,
+        });
+        bounds.extend(marker.getPosition() as google.maps.LatLng);
+      });
+      
+      if (places.length > 0) {
+        map.fitBounds(bounds);
+      } else {
+        map.setCenter(defaultCenter);
         map.setZoom(16);
       }
-    });
-  };
-
-  const handleMapLoad = (map: google.maps.Map) => {
-    mapRef.current = map;
-    setMapLoaded(true);
-    if (places.length > 0) {
-      setMapBounds(map);
-    } else {
-      map.setCenter(defaultCenter);
-      map.setZoom(16);
+      
+      const zoomListener = google.maps.event.addListener(
+        map,
+        'zoom_changed',
+        () => {
+          const newZoom = map.getZoom();
+          if (typeof newZoom === 'number') {
+            setZoom(newZoom);
+          }
+        }
+      );
+      
+      const centerListener = google.maps.event.addListener(
+        map,
+        'center_changed',
+        () => {
+          const newCenter = map.getCenter();
+          if (newCenter) {
+            setCenter({ lat: newCenter.lat(), lng: newCenter.lng() });
+          }
+        }
+      );
+      
+      return () => {
+        google.maps.event.removeListener(zoomListener);
+        google.maps.event.removeListener(centerListener);
+      };
     }
-  };
-
+  }, [map, places]);
+  
   useEffect(() => {
-    if (mapRef.current && mapLoaded) {
-      setMapBounds(mapRef.current);
-    }
-  }, [places, mapLoaded]);
-
-  const handleZoomChanged = () => {
-    if (mapRef.current) {
-      const newZoom = mapRef.current.getZoom();
-
-      if (typeof newZoom === 'number') {
-        if (newZoom < 16) {
-          mapRef.current.setZoom(16);
-        } else if (newZoom !== zoom) {
-          setZoom(newZoom);
-        }
-      } else {
-        console.error(
-          '확대/축소 수준이 정의되지 않았거나 유효한 숫자가 아닙니다.'
-        );
-      }
-    }
-  };
-
-  const handleCenterChanged = () => {
-    if (mapRef.current) {
-      const newCenter = mapRef.current.getCenter();
-      if (newCenter) {
-        const lat = newCenter.lat();
-        const lng = newCenter.lng();
-        if (lat !== center.lat || lng !== center.lng) {
-          setCenter({ lat, lng });
-        }
-      }
-    }
-  };
-
-  return (
-    <LoadScript
-      googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}
-    >
-      <GoogleMap
-        mapContainerStyle={containerStyle}
-        zoom={zoom}
-        onLoad={handleMapLoad}
-        onZoomChanged={handleZoomChanged}
-        onCenterChanged={handleCenterChanged}
-      >
-        {places.map((place) => (
-          <Marker
-            key={place.placeId}
-            position={{ lat: place.latitude, lng: place.longitude }}
-            title={place.placeName}
-          />
-        ))}
-      </GoogleMap>
-    </LoadScript>
-  );
+    loadGoogleMapsScript();
+  }, [loadGoogleMapsScript]);
+  
+  return <div ref={mapContainerRef} style={containerStyle} />;
 };
 
 export default Map;

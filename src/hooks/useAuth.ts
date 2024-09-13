@@ -29,7 +29,6 @@ const useAuth = () => {
         isRefreshing.current = true;
         try {
           await refreshApi();
-          console.log('토큰 갱신 성공');
         } catch {
           showLoginModal();
         } finally {
