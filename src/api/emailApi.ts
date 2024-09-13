@@ -19,7 +19,7 @@ export const requestEmailVerification = async (email: string) => {
 
 export const verifyEmail = async (email: string, authCode: string) => {
   try {
-    const response = await axios.post('/api/emails/verify', {
+    const response = await axios.post('http://13.209.177.247:8080/api/emails/verify', {
       email,
       authCode,
     });

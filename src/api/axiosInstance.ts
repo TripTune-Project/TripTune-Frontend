@@ -8,7 +8,7 @@ import Cookies from 'js-cookie';
 import { refreshApi } from '@/api/refreshApi';
 
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL: 'http://13.209.177.247:8080/',
+  baseURL: '/',
   timeout: 5000,
   headers: {
     'Content-Type': 'application/json',

@@ -17,7 +17,7 @@ export const requestFindId = async (email: string) => {
 
 export const requestFindPassword = async (email: string, userId: string) => {
   try {
-    const response = await axios.post('/api/members/find-password', {
+    const response = await axios.post('http://13.209.177.247:8080/api/members/find-password', {
       email,
       userId,
     });
