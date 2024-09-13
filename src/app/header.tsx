@@ -24,21 +24,19 @@ const Header = () => {
   const [isLogoutClicked, setIsLogoutClicked] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userId, setUserId] = useState('');
-  const [isRefreshing, setIsRefreshing] = useState(false); // 토큰 갱신 중인지 상태 관리
-  const [requestQueue, setRequestQueue] = useState([]); // 요청 대기열
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [requestQueue, setRequestQueue] = useState([]);
   
-  const { checkAuthStatus } = useAuth(setEncryptedCookie);
+  const { checkAuthStatus } = useAuth();
   
-  // 401 에러 시 fetch 요청을 중단하고 토큰 갱신
   const fetchWithRefresh = async (url, options) => {
     try {
       const response = await fetch(url, options);
       if (response.status === 401 && !isRefreshing) {
         setIsRefreshing(true);
         try {
-          await refreshApi(); // 토큰 갱신 시도
+          await refreshApi();
           setIsRefreshing(false);
-          // 대기 중인 요청을 재시도
           requestQueue.forEach(cb => cb());
           setRequestQueue([]);
         } catch (refreshError) {
@@ -46,7 +44,6 @@ const Header = () => {
           setIsRefreshing(false);
         }
       } else if (response.status === 401 && isRefreshing) {
-        // 토큰 갱신 중이라면 대기
         return new Promise((resolve, reject) => {
           setRequestQueue(prevQueue => [
             ...prevQueue,
