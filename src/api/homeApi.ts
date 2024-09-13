@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { get } from './api';
 import {
   EmptyResultResponse,
   ErrorResponse,
@@ -17,49 +17,35 @@ const convertToRecord = (params: SearchParams): Record<string, string> => {
   );
 };
 
-export const fetchHomeData = async (): Promise<
+export const fetchTravelData = async (): Promise<
   SuccessResponse | ErrorResponse
 > => {
   try {
-    const response = await axios.get<SuccessResponse>('/api/home');
-    return response.data;
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      return {
-        success: false,
-        errorCode: 500,
-        message: '서버 내부 오류가 발생하였습니다.',
-      };
-    }
+    return await get<SuccessResponse>('/home');
+  } catch (error) {
+    console.error('예기치 않은 오류:', error);
     return {
       success: false,
-      errorCode: (error as any).errorCode || 500,
-      message: (error as any).message || '알 수 없는 오류가 발생하였습니다.',
+      errorCode: 500,
+      message: '서버 내부 오류가 발생하였습니다.',
     };
   }
 };
 
-export const searchHomePlaces = async (
+export const searchPlaces = async (
   params: SearchParams
-): Promise<unknown> => {
+): Promise<SearchSuccessResponse | EmptyResultResponse | ErrorResponse> => {
   try {
     const queryParams = new URLSearchParams(convertToRecord(params)).toString();
-    const response = await axios.get<SearchSuccessResponse | EmptyResultResponse>(
-      `/api/home/search?${queryParams}`
+    return await get<SearchSuccessResponse | EmptyResultResponse>(
+      `/home/search?${queryParams}`
     );
-    return response.data;
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      return {
-        success: false,
-        errorCode: 500,
-        message: '서버 내부 오류가 발생하였습니다.',
-      };
-    }
+  } catch (error) {
+    console.error('예기치 않은 오류:', error);
     return {
       success: false,
-      errorCode: (error as any).errorCode || 500,
-      message: (error as any).message || '알 수 없는 오류가 발생하였습니다.',
+      errorCode: 500,
+      message: '서버 내부 오류가 발생하였습니다.',
     };
   }
 };

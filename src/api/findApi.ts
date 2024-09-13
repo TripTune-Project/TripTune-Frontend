@@ -1,31 +1,37 @@
-import axios, { AxiosError } from 'axios';
+import { post } from './api';
 
-export const requestFindId = async (email: string) => {
+interface FindIdResponse {
+  id: string;
+}
+
+interface FindPasswordResponse {
+  success: boolean;
+  message: string;
+}
+
+export const requestFindId = async (email: string): Promise<FindIdResponse> => {
   try {
-    const response = await axios.post(
-      '/api/members/find-id',
-      { email }
-    );
-    return response.data;
+    const response = await post<FindIdResponse>('/members/find-id', { email });
+    return response;
   } catch (error) {
-    if (error instanceof AxiosError && error.response?.data?.message) {
-      throw new Error(error.response.data.message);
-    }
-    throw new Error('이메일이 유효하지 않습니다.');
+    throw new Error(
+      error instanceof Error ? error.message : '이메일이 유효하지 않습니다.'
+    );
   }
 };
 
-export const requestFindPassword = async (email: string, userId: string) => {
+export const requestFindPassword = async (
+  email: string,
+  userId: string
+): Promise<FindPasswordResponse> => {
   try {
-    const response = await axios.post('/api/members/find-password', {
+    return await post<FindPasswordResponse>('/emails/verify', {
       email,
       userId,
     });
-    return response.data;
   } catch (error) {
-    if (error instanceof AxiosError && error.response?.data?.message) {
-      throw new Error(error.response.data.message);
-    }
-    throw new Error('이메일이 유효하지 않습니다.');
+    throw new Error(
+      error instanceof Error ? error.message : '이메일이 유효하지 않습니다.'
+    );
   }
 };

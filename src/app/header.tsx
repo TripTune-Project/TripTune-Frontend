@@ -1,4 +1,3 @@
-'use client';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import styles from '../styles/Header.module.css';
@@ -24,21 +23,44 @@ const Header = () => {
   const [isLogoutClicked, setIsLogoutClicked] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userId, setUserId] = useState('');
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [requestQueue, setRequestQueue] = useState<(() => void)[]>([]);
 
-  const { checkAuthStatus } = useAuth(setEncryptedCookie);
+  const { checkAuthStatus } = useAuth();
+
+  const fetchWithRefresh = async (url: string, options: RequestInit) => {
+    try {
+      const response = await fetch(url, options);
+      if (response.status === 401 && !isRefreshing) {
+        setIsRefreshing(true);
+        try {
+          await refreshApi();
+          setIsRefreshing(false);
+          requestQueue.forEach((cb) => cb());
+          setRequestQueue([]);
+        } catch (refreshError) {
+          console.error('토큰 갱신 실패:', refreshError);
+          setIsRefreshing(false);
+        }
+      } else if (response.status === 401 && isRefreshing) {
+        return new Promise((resolve, reject) => {
+          setRequestQueue((prevQueue) => [
+            ...prevQueue,
+            () => fetchWithRefresh(url, options).then(resolve).catch(reject),
+          ]);
+        });
+      }
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  };
 
   useEffect(() => {
     const storedUserId = Cookies.get('userId');
     if (storedUserId) {
       setIsLoggedIn(true);
       setUserId(storedUserId);
-    }
-
-    const refreshToken = Cookies.get('trip-tune_rt');
-    if (refreshToken) {
-      refreshApi().catch((error) => {
-        console.error('토큰 갱신에 실패했습니다:', error);
-      });
     }
   }, []);
 
