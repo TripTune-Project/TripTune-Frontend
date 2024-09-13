@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Head from 'next/head';
 import Pagination from '../../components/Travel/Pagination';
 import Map from '../../components/Travel/Map';
@@ -30,48 +30,24 @@ const TravelPage = () => {
     setIsSearching,
   } = useTravelStore();
 
-  const [alertOpen, setAlertOpen] = useState(false);
-  const [alertMessage, setAlertMessage] = useState('');
-  const [alertSeverity, setAlertSeverity] = useState<AlertColor>('info');
+  const [alertOpen, setAlertOpen] = React.useState(false);
+  const [alertMessage, setAlertMessage] = React.useState('');
+  const [alertSeverity, setAlertSeverity] = React.useState<AlertColor>('info');
 
-  const {
-    userCoordinates,
-    errorMessage: geoErrorMessage,
-    permissionState,
-  } = useGeolocation();
-
-  const [coordinates, setCoordinates] = useState<{
-    latitude: number;
-    longitude: number;
-  } | null>(null);
-
-  const defaultCoordinates = {
-    latitude: 37.5642135,
-    longitude: 127.0016985,
-  };
+  const { userCoordinates, errorMessage: geoErrorMessage } = useGeolocation();
 
   const {
     data: locationData,
     isLoading: isLoadingLocation,
     refetch: refetchLocation,
   } = useTravelListByLocation(
-    coordinates ?? defaultCoordinates,
+    {
+      latitude: userCoordinates?.latitude ?? 0,
+      longitude: userCoordinates?.longitude ?? 0,
+    },
     currentPage,
     !isSearching
   );
-
-  useEffect(() => {
-    if (permissionState === 'granted' && userCoordinates) {
-      setCoordinates(userCoordinates);
-    } else if (permissionState === 'denied' || geoErrorMessage) {
-      setCoordinates(defaultCoordinates);
-      if (geoErrorMessage) {
-        setAlertMessage(geoErrorMessage);
-        setAlertSeverity('warning');
-        setAlertOpen(true);
-      }
-    }
-  }, [permissionState, userCoordinates, geoErrorMessage]);
 
   const {
     data: searchData,
@@ -80,14 +56,28 @@ const TravelPage = () => {
   } = useTravelListSearch(
     {
       keyword: searchTerm,
-      latitude: coordinates?.latitude ?? 0,
-      longitude: coordinates?.longitude ?? 0,
+      latitude: userCoordinates?.latitude ?? 0,
+      longitude: userCoordinates?.longitude ?? 0,
     },
     currentPage,
     isSearching
   );
 
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
+
+  useEffect(() => {
+    if (geoErrorMessage) {
+      setAlertMessage(geoErrorMessage);
+      setAlertSeverity('warning');
+      setAlertOpen(true);
+    }
+  }, [geoErrorMessage]);
+
+  useEffect(() => {
+    if (userCoordinates && !isSearching) {
+      refetchLocation();
+    }
+  }, [userCoordinates, currentPage, isSearching, refetchLocation]);
 
   useEffect(() => {
     if (debouncedSearchTerm.trim()) {
@@ -303,10 +293,7 @@ const TravelPage = () => {
                 total={totalPages * 5}
                 currentPage={currentPage}
                 pageSize={5}
-                onPageChange={(page) => {
-                  setCurrentPage(page);
-                  window.scrollTo(0, 0);
-                }}
+                onPageChange={setCurrentPage}
               />
             )}
           </div>
