@@ -87,7 +87,6 @@ const TravelPage = () => {
     isSearching
   );
   
-  // 디바운스 시간을 적절하게 설정
   const debouncedSearchTerm = useDebounce(searchTerm, 800);
   
   useEffect(() => {
@@ -130,9 +129,12 @@ const TravelPage = () => {
     }
   };
   
-  // 포커스 아웃 시 검색이 트리거되지 않도록 처리
   const handleSearchInputBlur = () => {
-    // 포커스가 사라졌을 때 추가 동작 없음
+    if (searchTerm.trim() === '') {
+      setIsSearching(false);
+      setCurrentPage(1);
+      refetchLocation();
+    }
   };
   
   const handleSearchKeyPress = (

@@ -291,7 +291,7 @@
   flex-wrap: wrap;
   gap: 20px;
   width: 100%;
-  height: 50vh;
+  height:883px;
 }
 
 .leftSection {
@@ -385,7 +385,6 @@
 
 .recommendedDestinations {
   text-align: left;
-  margin-top: 650px;
 }
 
 .chooseRecomend {

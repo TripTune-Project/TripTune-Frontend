@@ -96,11 +96,6 @@ const TravelDetail = () => {
   
   const handleExpandClick = () => {
     setIsExpanded(!isExpanded);
-    if (!isExpanded) {
-      document.querySelector('.travelDetailContent').style.paddingBottom = '100px';
-    } else {
-      document.querySelector('.travelDetailContent').style.paddingBottom = '50px';
-    }
   };
   
   return (

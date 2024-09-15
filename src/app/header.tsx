@@ -23,67 +23,46 @@ const Header = () => {
   const [userId, setUserId] = useState('');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [requestQueue, setRequestQueue] = useState<(() => void)[]>([]);
-
+  
   const { checkAuthStatus } = useAuth();
-
-  const fetchWithRefresh = async (url: string, options: RequestInit) => {
-    try {
-      const response = await fetch(url, options);
-      if (response.status === 401 && !isRefreshing) {
-        setIsRefreshing(true);
-        try {
-          await refreshApi();
-          setIsRefreshing(false);
-          requestQueue.forEach((cb) => cb());
-          setRequestQueue([]);
-        } catch (refreshError) {
-          console.error('토큰 갱신 실패:', refreshError);
-          setIsRefreshing(false);
-        }
-      } else if (response.status === 401 && isRefreshing) {
-        return new Promise((resolve, reject) => {
-          setRequestQueue((prevQueue) => [
-            ...prevQueue,
-            () => fetchWithRefresh(url, options).then(resolve).catch(reject),
-          ]);
-        });
-      }
-      return response;
-    } catch (error) {
-      throw error;
-    }
-  };
-
+  
   useEffect(() => {
-    const storedUserId = Cookies.get('userId');
-    if (storedUserId) {
-      setIsLoggedIn(true);
-      setUserId(storedUserId);
-    }
+    const checkLoginStatus = async () => {
+      const storedUserId = Cookies.get('userId');
+      if (storedUserId) {
+        setIsLoggedIn(true);
+        setUserId(storedUserId as string);
+      } else {
+        setIsLoggedIn(false);
+        setUserId('');
+      }
+    };
+    
+    checkLoginStatus();
   }, []);
-
+  
   useEffect(() => {
     checkAuthStatus();
-
+    
     const handleAuthChange = () => {
       checkAuthStatus();
     };
-
+    
     window.addEventListener('storage', handleAuthChange);
     return () => {
       window.removeEventListener('storage', handleAuthChange);
     };
   }, [checkAuthStatus, isLogoutClicked]);
-
+  
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-
+  
   const handleLogout = async () => {
     setIsLogoutClicked(true);
     closeModal();
     await performLogout();
   };
-
+  
   const performLogout = async () => {
     try {
       await logoutApi();
@@ -95,15 +74,15 @@ const Header = () => {
       setAlertOpen(true);
     }
   };
-
+  
   const handleAlertClose = () => setAlertOpen(false);
-
+  
   const handleLogin = () => {
     router.push(`/Login?next=${encodeURIComponent(pathname)}`);
   };
-
+  
   const isActive = (path: string) => (pathname === path ? styles.active : '');
-
+  
   return (
     <>
       <ul className={styles.headerMenu}>
