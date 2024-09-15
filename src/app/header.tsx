@@ -7,7 +7,6 @@ import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
 import vector from '../../public/assets/icon/Vector.png';
 import LogoImage from '../../public/Logo.png';
-import saveLocalContent from '@/utils/saveLocalContent';
 import { logoutApi } from '@/api/logoutApi';
 import { refreshApi } from '@/api/refreshApi';
 import useAuth from '@/hooks/useAuth';
@@ -16,7 +15,6 @@ import Cookies from 'js-cookie';
 const Header = () => {
   const router = useRouter();
   const pathname = usePathname();
-  const { setEncryptedCookie } = saveLocalContent();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');

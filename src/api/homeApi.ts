@@ -17,7 +17,7 @@ const convertToRecord = (params: SearchParams): Record<string, string> => {
   );
 };
 
-export const fetchTravelData = async (): Promise<
+export const fetchHomeData = async (): Promise<
   SuccessResponse | ErrorResponse
 > => {
   try {
@@ -32,7 +32,7 @@ export const fetchTravelData = async (): Promise<
   }
 };
 
-export const searchPlaces = async (
+export const searchHomePlaces = async (
   params: SearchParams
 ): Promise<SearchSuccessResponse | EmptyResultResponse | ErrorResponse> => {
   try {

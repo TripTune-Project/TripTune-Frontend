@@ -87,7 +87,8 @@ const TravelPage = () => {
     isSearching
   );
   
-  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+  // 디바운스 시간을 적절하게 설정
+  const debouncedSearchTerm = useDebounce(searchTerm, 800);
   
   useEffect(() => {
     if (debouncedSearchTerm.trim()) {
@@ -127,6 +128,11 @@ const TravelPage = () => {
     } else {
       alert('특수문자는 사용할 수 없습니다. 다른 검색어를 입력해 주세요.');
     }
+  };
+  
+  // 포커스 아웃 시 검색이 트리거되지 않도록 처리
+  const handleSearchInputBlur = () => {
+    // 포커스가 사라졌을 때 추가 동작 없음
   };
   
   const handleSearchKeyPress = (
@@ -189,9 +195,7 @@ const TravelPage = () => {
   
   const handlePageChange = (page:number) => {
     setCurrentPage(page);
-    console.log('Page changed to:', page);
     window.scrollTo(0, 0);
-    console.log('Scroll executed');
   };
   
   return (
@@ -237,6 +241,7 @@ const TravelPage = () => {
                 value={searchTerm}
                 onChange={handleSearchInputChange}
                 onKeyPress={handleSearchKeyPress}
+                onBlur={handleSearchInputBlur}
                 className={styles.input}
               />
               <button onClick={handleSearch} className={styles.searchButton}>
