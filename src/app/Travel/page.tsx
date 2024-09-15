@@ -329,6 +329,7 @@ const TravelPage = () => {
           open={alertOpen}
           autoHideDuration={3000}
           onClose={handleAlertClose}
+          anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
         >
           <Alert onClose={handleAlertClose} severity={alertSeverity}>
             {alertMessage}
