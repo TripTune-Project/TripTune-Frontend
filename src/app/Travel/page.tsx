@@ -87,7 +87,7 @@ const TravelPage = () => {
     isSearching
   );
   
-  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+  const debouncedSearchTerm = useDebounce(searchTerm, 800);
   
   useEffect(() => {
     if (debouncedSearchTerm.trim()) {
@@ -126,6 +126,14 @@ const TravelPage = () => {
       setSearchTerm(input);
     } else {
       alert('특수문자는 사용할 수 없습니다. 다른 검색어를 입력해 주세요.');
+    }
+  };
+  
+  const handleSearchInputBlur = () => {
+    if (searchTerm.trim() === '') {
+      setIsSearching(false);
+      setCurrentPage(1);
+      refetchLocation();
     }
   };
   
@@ -189,9 +197,7 @@ const TravelPage = () => {
   
   const handlePageChange = (page:number) => {
     setCurrentPage(page);
-    console.log('Page changed to:', page);
     window.scrollTo(0, 0);
-    console.log('Scroll executed');
   };
   
   return (
@@ -237,6 +243,7 @@ const TravelPage = () => {
                 value={searchTerm}
                 onChange={handleSearchInputChange}
                 onKeyPress={handleSearchKeyPress}
+                onBlur={handleSearchInputBlur}
                 className={styles.input}
               />
               <button onClick={handleSearch} className={styles.searchButton}>
@@ -322,6 +329,7 @@ const TravelPage = () => {
           open={alertOpen}
           autoHideDuration={3000}
           onClose={handleAlertClose}
+          anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
         >
           <Alert onClose={handleAlertClose} severity={alertSeverity}>
             {alertMessage}
