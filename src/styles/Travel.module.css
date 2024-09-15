@@ -278,12 +278,15 @@
   padding: 0;
 }
 
-.travelSearch {
+.travelSearch,.travelSearchDetail {
   font-size: 28px;
   font-weight: bold;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.travelSearchDetail {
   margin-top:30px;
   text-align: center;
-  font-family: 'Noto Sans KR', sans-serif;
 }
 
 .topSection {

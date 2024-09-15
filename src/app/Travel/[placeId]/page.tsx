@@ -100,7 +100,7 @@ const TravelDetail = () => {
   
   return (
     <div className={styles.travelDetailContent}>
-      <h1 className={styles.travelSearch}>여행지 탐색 : 상세보기</h1>
+      <h1 className={styles.travelSearchDetail}>여행지 탐색 : {placeName} 상세보기</h1>
       <div className={styles.topSection}>
         <div className={styles.leftSection}>
           <StyledSwiperContainer>

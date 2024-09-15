@@ -9,7 +9,7 @@ const useGeolocation = () => {
   const [permissionState, setPermissionState] = useState<
     'granted' | 'prompt' | 'denied' | null
   >(null);
-
+  
   const requestUserLocation = useCallback(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -32,7 +32,7 @@ const useGeolocation = () => {
       setErrorMessage('브라우저가 위치 정보를 지원하지 않습니다.');
     }
   }, []);
-
+  
   const checkGeolocationPermission = useCallback(async () => {
     try {
       const result = await navigator.permissions.query({ name: 'geolocation' });
@@ -47,11 +47,11 @@ const useGeolocation = () => {
       setErrorMessage('위치 권한 상태 확인 중 오류가 발생했습니다.');
     }
   }, [requestUserLocation]);
-
+  
   useEffect(() => {
     checkGeolocationPermission();
   }, [checkGeolocationPermission]);
-
+  
   return { userCoordinates, errorMessage, permissionState };
 };
 
