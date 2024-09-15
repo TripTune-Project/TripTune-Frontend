@@ -20,15 +20,20 @@ export const refreshApi = async (): Promise<string> => {
   } catch (error) {
     console.error('액세스 토큰 갱신 에러:', error);
     
-    if (
-      error.response &&
-      error.response.data &&
-      error.response.data.errorCode === 401 &&
-      error.response.data.message === "DB에 저장된 refresh token과 일치하지 않습니다. 다시 로그인해주세요."
-    ) {
-      await Router.push('/login');
+    if (isFetchError(error) && error.status === 401) {
+      const errorData = await error.json();
+      if (
+        errorData.errorCode === 401 &&
+        errorData.message === "DB에 저장된 refresh token과 일치하지 않습니다. 다시 로그인해주세요."
+      ) {
+        await Router.push('/login');
+      }
     }
     
     throw new Error('액세스 토큰 갱신에 실패했습니다.');
   }
 };
+
+function isFetchError(error: unknown): error is Response {
+  return error instanceof Response;
+}

@@ -104,7 +104,7 @@ const TravelDetail = () => {
       <div className={styles.topSection}>
         <div className={styles.leftSection}>
           <StyledSwiperContainer>
-            {imageList.length > 0 ? (
+            {imageList && imageList.length > 0 ? (
               <Swiper
                 modules={[Navigation, Pagination]}
                 slidesPerView={1}
@@ -168,7 +168,7 @@ const TravelDetail = () => {
             <span className={styles.infoIcon}>📝</span>
             <p className={styles.infoText}>
               설명 : <br />
-              {isExpanded ? description : `${description.slice(0, 200)}...`}
+              {isExpanded ? description : `${description && description.slice(0, 100)}...`}
               <button onClick={handleExpandClick} className={styles.expandButton}>
                 {isExpanded ? '접기 ▲' : '더 보기 ▼'}
               </button>
