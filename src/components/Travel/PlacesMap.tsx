@@ -21,7 +21,7 @@ const Map = ({ places }: MapProps) => {
   const [zoom, setZoom] = useState(16);
   const [center, setCenter] = useState(defaultCenter);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
-  
+
   const loadGoogleMapsScript = useCallback(() => {
     const existingScript = document.getElementById('google-maps-script');
     if (!existingScript) {
@@ -42,7 +42,7 @@ const Map = ({ places }: MapProps) => {
       initializeMap();
     }
   }, []);
-  
+
   const initializeMap = useCallback(() => {
     if (mapContainerRef.current && !mapRef.current && window.google) {
       mapRef.current = new google.maps.Map(mapContainerRef.current, {
@@ -51,10 +51,10 @@ const Map = ({ places }: MapProps) => {
       });
     }
   }, []);
-  
+
   useEffect(() => {
     loadGoogleMapsScript();
-    
+
     return () => {
       if (mapRef.current) {
         google.maps.event.clearInstanceListeners(mapRef.current);
@@ -62,13 +62,13 @@ const Map = ({ places }: MapProps) => {
       }
     };
   }, [loadGoogleMapsScript]);
-  
+
   useEffect(() => {
     if (isMapLoaded) {
       initializeMap();
     }
   }, [isMapLoaded, initializeMap]);
-  
+
   useEffect(() => {
     const map = mapRef.current;
     if (map && isMapLoaded) {
@@ -84,7 +84,7 @@ const Map = ({ places }: MapProps) => {
       map.fitBounds(bounds);
     }
   }, [places, isMapLoaded]);
-  
+
   useEffect(() => {
     const map = mapRef.current;
     if (map) {
@@ -94,24 +94,27 @@ const Map = ({ places }: MapProps) => {
           setZoom(newZoom);
         }
       };
-      
+
       const handleCenterChange = () => {
         const newCenter = map.getCenter();
         if (newCenter) {
           setCenter({ lat: newCenter.lat(), lng: newCenter.lng() });
         }
       };
-      
+
       const zoomListener = map.addListener('zoom_changed', handleZoomChange);
-      const centerListener = map.addListener('center_changed', handleCenterChange);
-      
+      const centerListener = map.addListener(
+        'center_changed',
+        handleCenterChange
+      );
+
       return () => {
         google.maps.event.removeListener(zoomListener);
         google.maps.event.removeListener(centerListener);
       };
     }
   }, []);
-  
+
   return <div ref={mapContainerRef} style={containerStyle} />;
 };
 

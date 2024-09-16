@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Pagination from '../../components/Travel/Pagination';
-import Map from '../../components/Travel/Map';
+import PlacesMap from '../../components/Travel/PlacesMap';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import DataLoading from '../../components/Common/DataLoading';
@@ -20,7 +20,7 @@ import { useDebounce } from '@/hooks/useDebounce';
 
 const TravelPage = () => {
   const router = useRouter();
-  
+
   const {
     currentPage,
     searchTerm,
@@ -29,27 +29,27 @@ const TravelPage = () => {
     setSearchTerm,
     setIsSearching,
   } = useTravelStore();
-  
+
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertSeverity, setAlertSeverity] = useState<AlertColor>('info');
-  
+
   const {
     userCoordinates,
     errorMessage: geoErrorMessage,
     permissionState,
   } = useGeolocation();
-  
+
   const [coordinates, setCoordinates] = useState<{
     latitude: number;
     longitude: number;
   } | null>(null);
-  
+
   const defaultCoordinates = {
     latitude: 37.5642135,
     longitude: 127.0016985,
   };
-  
+
   const {
     data: locationData,
     isLoading: isLoadingLocation,
@@ -59,7 +59,7 @@ const TravelPage = () => {
     currentPage,
     !isSearching
   );
-  
+
   useEffect(() => {
     if (permissionState === 'granted' && userCoordinates) {
       setCoordinates(userCoordinates);
@@ -72,7 +72,7 @@ const TravelPage = () => {
       }
     }
   }, [permissionState, userCoordinates, geoErrorMessage]);
-  
+
   const {
     data: searchData,
     isLoading: isLoadingSearch,
@@ -86,9 +86,9 @@ const TravelPage = () => {
     currentPage,
     isSearching
   );
-  
+
   const debouncedSearchTerm = useDebounce(searchTerm, 800);
-  
+
   useEffect(() => {
     if (debouncedSearchTerm.trim()) {
       setIsSearching(true);
@@ -105,7 +105,7 @@ const TravelPage = () => {
     setCurrentPage,
     setIsSearching,
   ]);
-  
+
   const handleSearch = () => {
     if (searchTerm.trim()) {
       setIsSearching(true);
@@ -115,20 +115,20 @@ const TravelPage = () => {
       alert('검색어를 입력해주세요.');
     }
   };
-  
+
   const handleSearchInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const input = event.target.value;
     const regex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]*$/;
-    
+
     if (regex.test(input)) {
       setSearchTerm(input);
     } else {
       alert('특수문자는 사용할 수 없습니다. 다른 검색어를 입력해 주세요.');
     }
   };
-  
+
   const handleSearchInputBlur = () => {
     if (searchTerm.trim() === '') {
       setIsSearching(false);
@@ -136,7 +136,7 @@ const TravelPage = () => {
       refetchLocation();
     }
   };
-  
+
   const handleSearchKeyPress = (
     event: React.KeyboardEvent<HTMLInputElement>
   ) => {
@@ -144,14 +144,14 @@ const TravelPage = () => {
       handleSearch();
     }
   };
-  
+
   const handleResetSearch = () => {
     setSearchTerm('');
     setIsSearching(false);
     setCurrentPage(1);
     refetchLocation();
   };
-  
+
   const handleAlertClose = (
     event?: React.SyntheticEvent | Event,
     reason?: string
@@ -161,11 +161,11 @@ const TravelPage = () => {
     }
     setAlertOpen(false);
   };
-  
+
   const handleDetailClick = (placeId: number) => {
     router.push(`/Travel/${placeId}`);
   };
-  
+
   const calculateTravelTime = (distance: number) => {
     if (isNaN(distance)) {
       return {
@@ -173,33 +173,33 @@ const TravelPage = () => {
         driving: '차로 거리 정보 없음',
       };
     }
-    
+
     const distanceInKm = Math.floor(distance * 10) / 10;
     const walkingSpeed = 5;
     const drivingSpeed = 50;
-    
+
     const walkingTime = Math.round((distanceInKm / walkingSpeed) * 60);
     const drivingTime = Math.round((distanceInKm / drivingSpeed) * 60);
-    
+
     return {
       walking: `도보 ${walkingTime}분 (${distanceInKm} km)`,
       driving: `차로 ${drivingTime}분 (${distanceInKm} km)`,
     };
   };
-  
+
   const places = isSearching
     ? searchData?.data?.content
     : locationData?.data?.content;
-  
+
   const totalPages = isSearching
     ? (searchData?.data?.totalPages ?? 0)
     : (locationData?.data?.totalPages ?? 0);
-  
-  const handlePageChange = (page:number) => {
+
+  const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo(0, 0);
   };
-  
+
   return (
     <>
       <Head>
@@ -323,7 +323,7 @@ const TravelPage = () => {
           </div>
         )}
         <div className={styles.mapContainer}>
-          <Map places={places || []} />
+          <PlacesMap places={places || []} />
         </div>
         <Snackbar
           open={alertOpen}

@@ -25,12 +25,15 @@ const triggerLoginModal = () => {
 
 const authFetch = async (
   url: string,
-  options: FetchOptions = {},
+  options: FetchOptions = {}
 ): Promise<Response> => {
   let isRefreshing = false;
   const failedQueue: FailedQueueItem[] = [];
-  
-  const processQueue = (error: Error | string | null, token: string | null = null) => {
+
+  const processQueue = (
+    error: Error | string | null,
+    token: string | null = null
+  ) => {
     failedQueue.forEach(async ({ resolve, reject }) => {
       if (error) {
         reject(error);
@@ -43,32 +46,34 @@ const authFetch = async (
           const response = await fetch(url, updatedOptions);
           resolve(response);
         } catch (fetchError) {
-          reject(fetchError instanceof Error ? fetchError : 'Unknown error occurred');
+          reject(
+            fetchError instanceof Error ? fetchError : 'Unknown error occurred'
+          );
         }
       }
     });
     failedQueue.length = 0;
   };
-  
+
   const fetchWithToken = async (
     url: string,
-    options: FetchOptions,
+    options: FetchOptions
   ): Promise<Response> => {
     const token = Cookies.get('trip-tune_at');
     if (token && options.headers) {
       setAuthorizationHeader(options.headers, token);
     }
-    
+
     try {
       const response = await fetch(url, options);
-      
+
       if (response.status === 401) {
         if (!Cookies.get('trip-tune_rt')) {
           triggerLoginModal();
           alert('로그인이 필요합니다.');
           throw new Error('리프레시 토큰이 없습니다.');
         }
-        
+
         if (isRefreshing) {
           return new Promise<Response>((resolve, reject) => {
             failedQueue.push({ resolve, reject });
@@ -83,7 +88,7 @@ const authFetch = async (
             throw new Error('토큰 갱신 실패');
           });
         }
-        
+
         isRefreshing = true;
         try {
           const newAccessToken = await refreshApi();
@@ -93,7 +98,12 @@ const authFetch = async (
           }
           return await fetch(url, options);
         } catch (error) {
-          processQueue(error instanceof Error ? error.message : '토큰 갱신 중 문제가 발생했습니다.', null);
+          processQueue(
+            error instanceof Error
+              ? error.message
+              : '토큰 갱신 중 문제가 발생했습니다.',
+            null
+          );
           triggerLoginModal();
           alert('토큰 갱신 중 문제가 발생했습니다.');
           throw error;
@@ -101,13 +111,15 @@ const authFetch = async (
           isRefreshing = false;
         }
       }
-      
+
       return response;
     } catch (error) {
-      throw error instanceof Error ? error : new Error('Unknown error occurred');
+      throw error instanceof Error
+        ? error
+        : new Error('Unknown error occurred');
     }
   };
-  
+
   options = {
     ...options,
     headers: {
@@ -116,7 +128,7 @@ const authFetch = async (
     },
     credentials: 'include',
   };
-  
+
   return fetchWithToken(url, options);
 };
 

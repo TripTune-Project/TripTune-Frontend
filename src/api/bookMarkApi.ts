@@ -6,12 +6,11 @@ interface BookMarkData {
 
 export const BookMarkApi = async (data: BookMarkData) => {
   try {
-    return await post<{ data: { placeId: number } }>(
-      '/bookmarks',
-      data
-    );
+    return await post<{ data: { placeId: number } }>('/bookmarks', data);
   } catch (error) {
-    throw new Error(error instanceof Error ? error.message : '북마크 등록 실패');
+    throw new Error(
+      error instanceof Error ? error.message : '북마크 등록 실패'
+    );
   }
 };
 
@@ -24,6 +23,8 @@ export const BookMarkDeleteApi = async (data: BookMarkData) => {
       },
     });
   } catch (error) {
-    throw new Error(error instanceof Error ? error.message : '북마크 등록 해제 실패');
+    throw new Error(
+      error instanceof Error ? error.message : '북마크 등록 해제 실패'
+    );
   }
 };

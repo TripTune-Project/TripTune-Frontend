@@ -2,7 +2,6 @@
   width: 100%;
   max-width: 1920px;
   flex-shrink: 0;
-  border-bottom: 1px solid #c4c4c4;
   backdrop-filter: blur(2px);
   display: flex;
   flex-direction: column;
@@ -28,6 +27,9 @@
   flex: 1;
   display: flex;
   width: 100%;
+  overflow-y: scroll;
+  /* TODO : footer 수정 때문에 넣은 코드 */
+  overflow-x: hidden;
 }
 
 .content {
@@ -45,6 +47,7 @@
   max-width: 1920px;
   flex-shrink: 0;
   background: #363636;
+  overflow-y: hidden;
 }
 
 .logoImg,
@@ -79,9 +82,11 @@
   .content {
     height: 1200px;
   }
+
   .footer {
     height: 300px;
   }
+
   .logoImg,
   .logoText,
   .email,
@@ -89,10 +94,12 @@
   .copyright {
     margin-left: 120px;
   }
+
   .logoImg {
     margin-top: 30px;
     margin-left: 100px;
   }
+
   .logoText {
     font-size: 30px;
   }
@@ -102,12 +109,15 @@
   .header {
     height: 80px;
   }
+
   .content {
     height: 1000px;
   }
+
   .footer {
     height: 280px;
   }
+
   .logoImg,
   .logoText,
   .email,
@@ -115,10 +125,12 @@
   .copyright {
     margin-left: 80px;
   }
+
   .logoImg {
     margin-top: 25px;
     margin-left: 60px;
   }
+
   .logoText {
     font-size: 28px;
   }
@@ -128,12 +140,15 @@
   .header {
     height: 70px;
   }
+
   .content {
     height: 900px;
   }
+
   .footer {
     height: 250px;
   }
+
   .logoImg,
   .logoText,
   .email,
@@ -141,10 +156,12 @@
   .copyright {
     margin-left: 60px;
   }
+
   .logoImg {
     margin-top: 20px;
     margin-left: 50px;
   }
+
   .logoText {
     font-size: 24px;
   }
@@ -154,12 +171,15 @@
   .header {
     height: 60px;
   }
+
   .content {
     height: 800px;
   }
+
   .footer {
     height: 220px;
   }
+
   .logoImg,
   .logoText,
   .email,
@@ -167,10 +187,12 @@
   .copyright {
     margin-left: 40px;
   }
+
   .logoImg {
     margin-top: 15px;
     margin-left: 30px;
   }
+
   .logoText {
     font-size: 22px;
   }
@@ -181,12 +203,15 @@
     height: 50px;
     flex-direction: column;
   }
+
   .content {
     height: 700px;
   }
+
   .footer {
     height: 200px;
   }
+
   .logoImg,
   .logoText,
   .email,
@@ -194,10 +219,12 @@
   .copyright {
     margin-left: 20px;
   }
+
   .logoImg {
     margin-top: 10px;
     margin-left: 20px;
   }
+
   .logoText {
     font-size: 18px;
   }
@@ -207,12 +234,15 @@
   .header {
     height: 45px;
   }
+
   .content {
     height: 600px;
   }
+
   .footer {
     height: 180px;
   }
+
   .logoImg,
   .logoText,
   .email,
@@ -220,9 +250,11 @@
   .copyright {
     margin-left: 10px;
   }
+
   .logoImg {
     margin-top: 5px;
   }
+
   .logoText {
     font-size: 16px;
   }

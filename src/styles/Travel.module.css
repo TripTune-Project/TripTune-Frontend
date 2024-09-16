@@ -1,4 +1,4 @@
-/* 페이지내이션 */
+/* 페이지네이션 스타일 */
 .paginationContainer {
   display: flex;
   justify-content: center;
@@ -146,7 +146,7 @@
 }
 
 .noImage {
-  margin-top:35px;
+  margin-top: 35px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -201,8 +201,8 @@
   border-radius: 5px;
   cursor: pointer;
   transition:
-          background-color 0.3s,
-          transform 0.3s;
+    background-color 0.3s,
+    transform 0.3s;
 }
 
 .contentBtn:hover {
@@ -274,18 +274,21 @@
 .travelDetailContent {
   display: flex;
   flex-direction: column;
-  margin: 0;
-  padding: 0;
+  margin: 0 auto;
+  padding: 20px;
+  max-width: 1200px;
 }
 
-.travelSearch,.travelSearchDetail {
+.travelSearch,
+.travelSearchDetail {
   font-size: 28px;
   font-weight: bold;
   font-family: 'Noto Sans KR', sans-serif;
+  color: #333;
 }
 
 .travelSearchDetail {
-  margin-top:30px;
+  margin-top: 30px;
   text-align: center;
 }
 
@@ -294,27 +297,26 @@
   flex-wrap: wrap;
   gap: 20px;
   width: 100%;
-  height:883px;
+  margin-top: 20px;
 }
 
 .leftSection {
   width: 50%;
-  height: 100%;
-  padding: 0 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .rightSection {
   flex: 1;
-  min-width: 300px;
-  height: 50vh;
-  justify-content: center;
-  width: 50%;
   padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  box-sizing: border-box;
-  margin-top:300px;
+  gap: 15px;
+  background-color: #fafafa;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .country,
@@ -340,41 +342,24 @@
   position: relative;
 }
 
-.expandButton {
-  background: none;
-  border: none;
-  color: #0070f3;
-  cursor: pointer;
-  padding: 0;
-  font-size: 16px;
-  margin-left: 5px;
-  font-weight: bold;
-  transition: color 0.3s;
-}
-
-.expandButton:hover {
-  color: #0056b3;
-  text-decoration: underline;
-}
-
 .buttonContainer {
   display: flex;
-  justify-content: center;
-  gap:150px;
-  margin-left:20px;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 20px;
 }
 
 .backBtn,
 .ChooseBtn,
 .bookmarkBtn {
-  width: 120px;
-  height: 45px;
+  width: 100px;
+  padding: 10px 15px;
   border-radius: 5px;
   border: none;
-  background-color: #f0f0f0;
-  color: #333;
+  background-color: #0070f3;
+  color: #fff;
   font-family: 'Noto Sans KR', sans-serif;
-  font-size: 16px;
+  font-size: 14px;
   cursor: pointer;
   transition: all 0.3s;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -383,154 +368,161 @@
 .backBtn:hover,
 .ChooseBtn:hover,
 .bookmarkBtn:hover {
-  background-color: #d0d0d0;
+  background-color: #005bb5;
+}
+
+.infoSection {
+  margin: 10px 0;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f5f5f5;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.infoIcon {
+  font-size: 20px;
+  color: #0070f3;
+}
+
+.infoText {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 16px;
+  color: #333;
+  line-height: 1.5;
+}
+
+.expandButton {
+  background: none;
+  border: none;
+  color: #0070f3;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: 5px;
+  transition: color 0.3s;
+}
+
+.expandButton:hover {
+  color: #005bb5;
+  text-decoration: underline;
 }
 
 .recommendedDestinations {
-  text-align: left;
+  margin-top: 40px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .chooseRecomend {
-  margin: 20px 0;
-  color: #000;
-  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 22px;
   font-weight: 600;
   font-family: 'Noto Sans KR', sans-serif;
+  text-align: center;
 }
 
 .sliderImageContainer {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: 500px;
-  margin: 0 auto;
   overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
 }
 
-.sliderImg {
+.sliderImg,
+.detailSliderImg {
   width: 100%;
   height: auto;
   object-fit: cover;
   border-radius: 8px;
 }
 
-.detailSliderImg {
-  margin-left: 85px;
-  width: 600px;
-  height: auto;
-  object-fit: cover;
-}
-
 .sliderTextP {
   color: #000;
   font-family: 'Noto Sans KR', sans-serif;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 500;
   margin-top: 10px;
-  text-align: left;
-  padding-left: 10px;
+  text-align: center;
 }
 
 .sliderTextPDetail {
   color: #848282;
   font-family: 'Noto Sans KR', sans-serif;
-  font-size: 18px;
-  font-weight: 500;
+  font-size: 16px;
   margin-top: 5px;
-  text-align: left;
-  margin-left: 30px;
-  padding-left: 10px;
-  display: flex;
-  align-items: center;
-}
-
-.sliderTextPDetail img {
-  vertical-align: middle;
-  display: inline-block;
-  margin-right: 5px;
-}
-
-.sliderContainer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-  width: 100%;
-  cursor: grab;
-  flex-wrap: wrap;
-}
-
-.sliderContainer:active {
-  cursor: grabbing;
-}
-
-.sliderButton {
-  background: none;
-  border: none;
-  color: #333;
-  font-size: 24px;
-  cursor: pointer;
-  padding: 10px 20px;
-  user-select: none;
-  background-color: rgba(255, 255, 255, 0.5);
-  border-radius: 50%;
-}
-
-.sliderButton:hover {
-  background-color: rgba(255, 255, 255, 0.8);
-}
-
-.imgSliderExplain {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
+  text-align: center;
 }
 
 .noRecommendations {
   text-align: center;
   color: #999;
   font-size: 18px;
-  height:500px;
-  width:100%;
-  margin: 0;
+  padding: 20px;
 }
 
-.errorMessage {
-  color: red;
-  text-align: center;
-  padding: 10px;
-  background-color: #ffe0e0;
-  border: 1px solid #ffcccc;
-  border-radius: 4px;
-}
-
-.infoSection {
-  margin: 15px 0;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.buttonContainer {
   display: flex;
-  align-items: center;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
 }
 
-.infoIcon {
-  margin-right: 10px;
-  font-size: 24px;
-  color: #0070f3;
-}
-
-.infoText {
+.bookmarkBtn {
+  width: 120px;
+  background-color: #ff6b6b;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  color: #fff;
   font-family: 'Noto Sans KR', sans-serif;
-  font-size: 18px;
-  color: #333;
-  line-height: 1.6;
-  font-weight: normal;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* 1200px 이하 해상도 */
+.ChooseBtn {
+  width: 120px;
+  background-color: #4caf50;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  color: #fff;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.backBtn:hover {
+  background-color: #005bb5;
+}
+
+.bookmarkBtn:hover {
+  background-color: #e53935;
+}
+
+.ChooseBtn:hover {
+  background-color: #388e3c;
+}
+
+.backBtn:hover,
+.ChooseBtn:hover,
+.bookmarkBtn:hover {
+  background-color: #005bb5;
+}
+
+/* 미디어 쿼리를 사용한 반응형 디자인 */
 @media (max-width: 1200px) {
   .container {
     flex-direction: column;
@@ -539,25 +531,13 @@
   .listContainer,
   .mapContainer {
     width: 100%;
+    padding: 10px;
   }
 
-  .rightSection,
-  .leftSection {
+  .leftSection,
+  .rightSection {
     width: 100%;
-    height: auto;
-    margin-top: 0;
-  }
-
-  .buttonContainer {
-    gap: 80px;
-    margin-left: 10px;
-  }
-}
-
-/* 992px 이하 해상도 */
-@media (max-width: 992px) {
-  .pageButton {
-    padding: 5px 8px;
+    padding: 10px;
   }
 
   .placeThumbnail {
@@ -565,35 +545,26 @@
     height: 120px;
   }
 
-  .placeName {
-    font-size: 16px;
+  .input {
+    min-width: 80px;
   }
 
-  .container {
-    margin-top: 20px;
+  .buttonContainer {
+    gap: 10px;
+  }
+
+  .backBtn,
+  .ChooseBtn,
+  .bookmarkBtn {
+    width: 80px;
+    padding: 8px 12px;
   }
 }
 
-/* 768px 이하 해상도 */
 @media (max-width: 768px) {
-  .container {
-    flex-direction: column;
-    margin-top: 10px;
-  }
-
-  .searchContainer {
-    flex-direction: column;
-  }
-
-  .input {
-    flex: none;
-    width: 100%;
-    margin-bottom: 10px;
-  }
-
-  .searchButton,
-  .resetButton {
-    width: 100%;
+  .paginationContainer {
+    flex-wrap: wrap;
+    gap: 3px;
   }
 
   .placeItem {
@@ -602,41 +573,48 @@
   }
 
   .placeThumbnail {
-    width: 100%;
-    height: 200px;
+    width: 100px;
+    height: 100px;
     margin-bottom: 10px;
   }
 
-  .rightSection {
-    height: auto;
+  .contentBtn {
+    padding: 6px 10px;
+  }
+
+  .expandButton {
+    font-size: 12px;
   }
 }
 
-/* 576px 이하 해상도 */
-@media (max-width: 576px) {
-  .paginationContainer {
-    flex-wrap: wrap;
-    gap: 3px;
+@media (max-width: 480px) {
+  .placeItem {
+    padding: 10px;
   }
 
-  .placeName {
-    font-size: 14px;
+  .listContainer,
+  .mapContainer {
+    padding: 5px;
   }
 
-  .pageButton {
-    padding: 4px 6px;
+  .input {
+    padding: 8px;
+    margin: 3px 0;
   }
 
-  .contentBtn {
-    padding: 6px 8px;
+  .searchButton,
+  .resetButton {
+    padding: 8px 15px;
+    margin-left: 3px;
   }
 
-  .sliderImageContainer {
-    height: 300px;
+  .headerContainer {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
-  .sliderTextP,
-  .sliderTextPDetail {
-    font-size: 16px;
+  .mylocation {
+    width: 100%;
+    margin-top: 10px;
   }
 }

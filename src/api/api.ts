@@ -16,7 +16,7 @@ interface FetchOptions extends RequestInit {
 
 export const fetchData = async <T>(
   endpoint: string,
-  options: FetchOptions = {},
+  options: FetchOptions = {}
 ): Promise<T> => {
   const url = `${BASE_URL}${endpoint}`;
   const response = await fetch(url, {
@@ -27,7 +27,7 @@ export const fetchData = async <T>(
       ...options.headers,
     },
   });
-  
+
   if (!response.ok) {
     try {
       const errorData = await response.json();
@@ -36,7 +36,7 @@ export const fetchData = async <T>(
       throw new Error('API 요청 실패');
     }
   }
-  
+
   return response.json();
 };
 
@@ -47,7 +47,7 @@ export const get = <T>(endpoint: string, options?: FetchOptions) => {
 export const post = <T>(
   endpoint: string,
   body: object,
-  options?: FetchOptions,
+  options?: FetchOptions
 ) => {
   return fetchData<T>(endpoint, {
     method: 'POST',
@@ -59,7 +59,7 @@ export const post = <T>(
 export const put = <T>(
   endpoint: string,
   body: object,
-  options?: FetchOptions,
+  options?: FetchOptions
 ) => {
   return fetchData<T>(endpoint, {
     method: 'PUT',
@@ -71,7 +71,7 @@ export const put = <T>(
 export const patch = <T>(
   endpoint: string,
   body: object,
-  options?: FetchOptions,
+  options?: FetchOptions
 ) => {
   return fetchData<T>(endpoint, {
     method: 'PATCH',
@@ -83,7 +83,8 @@ export const patch = <T>(
 export const remove = <T>(
   endpoint: string,
   body?: object,
-  options?: FetchOptions) => {
+  options?: FetchOptions
+) => {
   return fetchData<T>(endpoint, {
     method: 'DELETE',
     body: JSON.stringify(body),
