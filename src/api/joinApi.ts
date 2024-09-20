@@ -13,7 +13,9 @@ interface JoinMemberResponse {
   userId: string;
 }
 
-export const joinMember = async (data: JoinMemberData): Promise<JoinMemberResponse> => {
+export const joinMember = async (
+  data: JoinMemberData
+): Promise<JoinMemberResponse> => {
   try {
     return await post<JoinMemberResponse>('/members/join', data);
   } catch (error) {
