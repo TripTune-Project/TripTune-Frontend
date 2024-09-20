@@ -15,7 +15,7 @@ const DetailPlaceMap = ({ latitude, longitude }: MapProps) => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<google.maps.Map | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
-  
+
   const loadGoogleMapsScript = useCallback(() => {
     const existingScript = document.getElementById('google-maps-script');
     if (!existingScript) {
@@ -36,14 +36,14 @@ const DetailPlaceMap = ({ latitude, longitude }: MapProps) => {
       initializeMap();
     }
   }, []);
-  
+
   const initializeMap = useCallback(() => {
     if (mapContainerRef.current && !mapRef.current && window.google) {
       mapRef.current = new google.maps.Map(mapContainerRef.current, {
         center: { lat: latitude, lng: longitude },
         zoom: 16,
       });
-      
+
       new google.maps.Marker({
         position: { lat: latitude, lng: longitude },
         map: mapRef.current,
@@ -51,10 +51,10 @@ const DetailPlaceMap = ({ latitude, longitude }: MapProps) => {
       });
     }
   }, [latitude, longitude]);
-  
+
   useEffect(() => {
     loadGoogleMapsScript();
-    
+
     return () => {
       if (mapRef.current) {
         google.maps.event.clearInstanceListeners(mapRef.current);
@@ -62,13 +62,13 @@ const DetailPlaceMap = ({ latitude, longitude }: MapProps) => {
       }
     };
   }, [loadGoogleMapsScript]);
-  
+
   useEffect(() => {
     if (isMapLoaded) {
       initializeMap();
     }
   }, [isMapLoaded, initializeMap]);
-  
+
   return <div ref={mapContainerRef} style={containerStyle} />;
 };
 

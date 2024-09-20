@@ -5,7 +5,7 @@ import LogoutModal from '@/components/Logout/LogoutModal';
 import { Alert, Snackbar, Button } from '@mui/material';
 import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
-import vector from '../../public/assets/icon/Vector.png';
+import icGo from '../../public/assets/icon/ic_go.png';
 import LogoImage from '../../public/Logo.png';
 import { logoutApi } from '@/api/logoutApi';
 import useAuth from '@/hooks/useAuth';
@@ -121,7 +121,7 @@ const Header = () => {
           !isLoggedIn ? (
             <li className={styles.headerLinkLogin} onClick={handleLogin}>
               로그인
-              <Image src={vector} alt={'>'} width={16} height={16} priority />
+              <Image src={icGo} alt={'>'} width={16} height={16} priority />
             </li>
           ) : (
             <>

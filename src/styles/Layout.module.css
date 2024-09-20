@@ -1,54 +1,54 @@
 .main {
-    width: 100%;
-    max-width: 1920px;
-    flex-shrink: 0;
-    /*border-bottom: 1px solid #c4c4c4;*/
-    backdrop-filter: blur(2px);
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+  width: 100%;
+  max-width: 1920px;
+  flex-shrink: 0;
+  /*border-bottom: 1px solid #c4c4c4;*/
+  backdrop-filter: blur(2px);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .header {
-    display: flex;
-    align-items: center;
-    height: 91px;
-    flex-shrink: 0;
-    border-bottom: 1px solid #c4c4c4;
-    background: #ffffff;
-    backdrop-filter: blur(2px);
-    width: 100%;
+  display: flex;
+  align-items: center;
+  height: 91px;
+  flex-shrink: 0;
+  border-bottom: 1px solid #c4c4c4;
+  background: #ffffff;
+  backdrop-filter: blur(2px);
+  width: 100%;
 }
 
 .header_left {
-    margin-right: auto;
+  margin-right: auto;
 }
 
 .section {
-    flex: 1;
-    display: flex;
-    width: 100%;
-    /* TODO : footer 수정 때문에 넣은 코드 */
-    overflow-y: scroll;
-    overflow-x: hidden;
+  flex: 1;
+  display: flex;
+  width: 100%;
+  /* TODO : footer 수정 때문에 넣은 코드 */
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .content {
-    width: 100%;
-    max-width: 1920px;
-    height: 1336px;
-    flex-grow: 1;
+  width: 100%;
+  max-width: 1920px;
+  height: 1336px;
+  flex-grow: 1;
 }
 
 .footer {
-    margin-top: 64px;
-    padding-top: 5px;
-    width: 100%;
-    height: 324px;
-    max-width: 1920px;
-    flex-shrink: 0;
-    background: #363636;
-    overflow-y: hidden;
+  margin-top: 64px;
+  padding-top: 5px;
+  width: 100%;
+  height: 324px;
+  max-width: 1920px;
+  flex-shrink: 0;
+  background: #363636;
+  overflow-y: hidden;
 }
 
 .logoImg,
@@ -56,207 +56,207 @@
 .email,
 .github,
 .copyright {
-    margin-left: 170px;
-    color: #fff;
-    font-family: 'Noto Sans KR', serif;
-    font-size: 17px;
-    font-style: normal;
-    font-weight: 300;
-    line-height: normal;
+  margin-left: 170px;
+  color: #fff;
+  font-family: 'Noto Sans KR', serif;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
 }
 
 .logoImg {
-    margin-top: 40px;
-    margin-left: 145px;
+  margin-top: 40px;
+  margin-left: 145px;
 }
 
 .logoText {
-    font-size: 35px;
-    font-family: 'Noto Sans KR', serif;
-    font-weight: 500;
-    flex-shrink: 0;
-    color: #fff;
-    margin-top: 0;
+  font-size: 35px;
+  font-family: 'Noto Sans KR', serif;
+  font-weight: 500;
+  flex-shrink: 0;
+  color: #fff;
+  margin-top: 0;
 }
 
 @media screen and (max-width: 1600px) {
-    .content {
-        height: 1200px;
-    }
+  .content {
+    height: 1200px;
+  }
 
-    .footer {
-        height: 300px;
-    }
+  .footer {
+    height: 300px;
+  }
 
-    .logoImg,
-    .logoText,
-    .email,
-    .github,
-    .copyright {
-        margin-left: 120px;
-    }
+  .logoImg,
+  .logoText,
+  .email,
+  .github,
+  .copyright {
+    margin-left: 120px;
+  }
 
-    .logoImg {
-        margin-top: 30px;
-        margin-left: 100px;
-    }
+  .logoImg {
+    margin-top: 30px;
+    margin-left: 100px;
+  }
 
-    .logoText {
-        font-size: 30px;
-    }
+  .logoText {
+    font-size: 30px;
+  }
 }
 
 @media screen and (max-width: 1280px) {
-    .header {
-        height: 80px;
-    }
+  .header {
+    height: 80px;
+  }
 
-    .content {
-        height: 1000px;
-    }
+  .content {
+    height: 1000px;
+  }
 
-    .footer {
-        height: 280px;
-    }
+  .footer {
+    height: 280px;
+  }
 
-    .logoImg,
-    .logoText,
-    .email,
-    .github,
-    .copyright {
-        margin-left: 80px;
-    }
+  .logoImg,
+  .logoText,
+  .email,
+  .github,
+  .copyright {
+    margin-left: 80px;
+  }
 
-    .logoImg {
-        margin-top: 25px;
-        margin-left: 60px;
-    }
+  .logoImg {
+    margin-top: 25px;
+    margin-left: 60px;
+  }
 
-    .logoText {
-        font-size: 28px;
-    }
+  .logoText {
+    font-size: 28px;
+  }
 }
 
 @media screen and (max-width: 1024px) {
-    .header {
-        height: 70px;
-    }
+  .header {
+    height: 70px;
+  }
 
-    .content {
-        height: 900px;
-    }
+  .content {
+    height: 900px;
+  }
 
-    .footer {
-        height: 250px;
-    }
+  .footer {
+    height: 250px;
+  }
 
-    .logoImg,
-    .logoText,
-    .email,
-    .github,
-    .copyright {
-        margin-left: 60px;
-    }
+  .logoImg,
+  .logoText,
+  .email,
+  .github,
+  .copyright {
+    margin-left: 60px;
+  }
 
-    .logoImg {
-        margin-top: 20px;
-        margin-left: 50px;
-    }
+  .logoImg {
+    margin-top: 20px;
+    margin-left: 50px;
+  }
 
-    .logoText {
-        font-size: 24px;
-    }
+  .logoText {
+    font-size: 24px;
+  }
 }
 
 @media screen and (max-width: 768px) {
-    .header {
-        height: 60px;
-    }
+  .header {
+    height: 60px;
+  }
 
-    .content {
-        height: 800px;
-    }
+  .content {
+    height: 800px;
+  }
 
-    .footer {
-        height: 220px;
-    }
+  .footer {
+    height: 220px;
+  }
 
-    .logoImg,
-    .logoText,
-    .email,
-    .github,
-    .copyright {
-        margin-left: 40px;
-    }
+  .logoImg,
+  .logoText,
+  .email,
+  .github,
+  .copyright {
+    margin-left: 40px;
+  }
 
-    .logoImg {
-        margin-top: 15px;
-        margin-left: 30px;
-    }
+  .logoImg {
+    margin-top: 15px;
+    margin-left: 30px;
+  }
 
-    .logoText {
-        font-size: 22px;
-    }
+  .logoText {
+    font-size: 22px;
+  }
 }
 
 @media screen and (max-width: 480px) {
-    .header {
-        height: 50px;
-        flex-direction: column;
-    }
+  .header {
+    height: 50px;
+    flex-direction: column;
+  }
 
-    .content {
-        height: 700px;
-    }
+  .content {
+    height: 700px;
+  }
 
-    .footer {
-        height: 200px;
-    }
+  .footer {
+    height: 200px;
+  }
 
-    .logoImg,
-    .logoText,
-    .email,
-    .github,
-    .copyright {
-        margin-left: 20px;
-    }
+  .logoImg,
+  .logoText,
+  .email,
+  .github,
+  .copyright {
+    margin-left: 20px;
+  }
 
-    .logoImg {
-        margin-top: 10px;
-        margin-left: 20px;
-    }
+  .logoImg {
+    margin-top: 10px;
+    margin-left: 20px;
+  }
 
-    .logoText {
-        font-size: 18px;
-    }
+  .logoText {
+    font-size: 18px;
+  }
 }
 
 @media screen and (max-width: 320px) {
-    .header {
-        height: 45px;
-    }
+  .header {
+    height: 45px;
+  }
 
-    .content {
-        height: 600px;
-    }
+  .content {
+    height: 600px;
+  }
 
-    .footer {
-        height: 180px;
-    }
+  .footer {
+    height: 180px;
+  }
 
-    .logoImg,
-    .logoText,
-    .email,
-    .github,
-    .copyright {
-        margin-left: 10px;
-    }
+  .logoImg,
+  .logoText,
+  .email,
+  .github,
+  .copyright {
+    margin-left: 10px;
+  }
 
-    .logoImg {
-        margin-top: 5px;
-    }
+  .logoImg {
+    margin-top: 5px;
+  }
 
-    .logoText {
-        font-size: 16px;
-    }
+  .logoText {
+    font-size: 16px;
+  }
 }
