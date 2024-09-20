@@ -27,6 +27,7 @@ export interface TravelPlace {
   detailAddress: string;
   thumbnailUrl: string;
   distance: number;
+  isBookmarked?: boolean;
 }
 
 export interface TravelPlaceDetail extends TravelPlace {

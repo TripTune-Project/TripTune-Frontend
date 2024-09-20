@@ -14,7 +14,7 @@ import travelImage from '../../public/assets/travel-main.png';
 import favicon from '../../public/favicon.ico';
 import styles from '../styles/onBoard.module.css';
 import searchIcon from '../../public/assets/images/search-icon.png';
-import place from '../../public/assets/images/place.png';
+import ic_place from '../../public/assets/icon/ic_place.png';
 import picture from '../../public/assets/images/picture.png';
 const StyledSwiperContainer = styled.div`
   overflow: hidden;
@@ -257,7 +257,7 @@ const Home = () => {
                   />
                   <p className={styles.sliderTextP}>{image.title}</p>
                   <p className={styles.sliderTextPDetail}>
-                    <Image src={place} alt={'place'} width={15} height={21} />
+                    <Image src={ic_place} alt={'장소'} width={15} height={21} />
                     &nbsp;
                     {image.description}
                   </p>
