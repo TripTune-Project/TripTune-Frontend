@@ -63,8 +63,8 @@ const TravelPage = () => {
     currentPage,
     !isSearching
   );
-
-  const toggleBookmark = async (placeId: number, isBookmarked: boolean) => {
+  
+  const toggleBookmark = async (placeId: number, isBookmarked: boolean = false) => {
     try {
       if (isBookmarked) {
         await BookMarkDeleteApi({ placeId });
@@ -81,7 +81,7 @@ const TravelPage = () => {
       setAlertOpen(true);
     }
   };
-
+  
   useEffect(() => {
     if (permissionState === 'granted' && userCoordinates) {
       setCoordinates(userCoordinates);
@@ -292,7 +292,7 @@ const TravelPage = () => {
                           className={styles.bookmarkButton}
                           onClick={(e) => {
                             e.stopPropagation();
-                            toggleBookmark(place.placeId, place.isBookmarked);
+                            toggleBookmark(place.placeId, place.isBookmarked ?? false);
                           }}
                         >
                           {place.isBookmarked ? (

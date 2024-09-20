@@ -19,7 +19,10 @@ interface ScheduleModalProps {
 const ScheduleModal = ({ isOpen, onClose, onConfirm }: ScheduleModalProps) => {
   const [startDate, setStartDate] = useState<Date | null>(new Date());
   const [endDate, setEndDate] = useState<Date | null>(new Date());
-
+  
+  // null이면 현재 날짜로 설정
+  const getValidDate = (date: Date | null) => date ?? new Date();
+  
   return (
     <Modal open={isOpen} onClose={onClose}>
       <Box
@@ -48,27 +51,27 @@ const ScheduleModal = ({ isOpen, onClose, onConfirm }: ScheduleModalProps) => {
             size='small'
           />
           <Typography variant='body1'>
-            날짜: {startDate?.toLocaleDateString()} →{' '}
-            {endDate?.toLocaleDateString()}
+            날짜: {getValidDate(startDate).toLocaleDateString()} →{' '}
+            {getValidDate(endDate).toLocaleDateString()}
           </Typography>
           <Stack direction='row' spacing={2} justifyContent='center'>
             <DatePicker
-              selected={startDate}
+              selected={getValidDate(startDate)}
               onChange={(date) => setStartDate(date)}
               selectsStart
-              startDate={startDate}
-              endDate={endDate}
+              startDate={getValidDate(startDate)}
+              endDate={getValidDate(endDate)}
               dateFormat='yyyy.MM.dd'
               monthsShown={2}
               placeholderText='시작 날짜'
             />
             <DatePicker
-              selected={endDate}
+              selected={getValidDate(endDate)}
               onChange={(date) => setEndDate(date)}
               selectsEnd
-              startDate={startDate}
-              endDate={endDate}
-              minDate={startDate}
+              startDate={getValidDate(startDate)}
+              endDate={getValidDate(endDate)}
+              minDate={getValidDate(startDate)}
               dateFormat='yyyy.MM.dd'
               monthsShown={2}
               placeholderText='종료 날짜'
