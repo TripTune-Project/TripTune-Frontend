@@ -33,25 +33,28 @@ interface LayoutProps {
 const Layout = ({ children }: LayoutProps) => {
   const pathname = usePathname();
   const isFindPage = pathname.includes('Find');
-  
+
   // Mixed content 에러 발생
   return (
     <html lang='ko' className={notoSansKR.className}>
-    <Head>
-      <title>TripTune</title>
-      <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
-      <meta
-        name="description"
-        content="TripTune은 여행자들을 위한 일정 플랫폼 서비스 입니다."
-      />
-      <link rel="icon" href="/favicon.ico" />
-      <script
-        async
-        src={`https://www.googletagmanager.com/gtag/js?id=${GA4_MEASUREMENT_ID}`}
-      ></script>
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `
+      <Head>
+        <title>TripTune</title>
+        <meta
+          http-equiv='Content-Security-Policy'
+          content='upgrade-insecure-requests'
+        />
+        <meta
+          name='description'
+          content='TripTune은 여행자들을 위한 일정 플랫폼 서비스 입니다.'
+        />
+        <link rel='icon' href='/favicon.ico' />
+        <script
+          async
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA4_MEASUREMENT_ID}`}
+        ></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
@@ -59,12 +62,12 @@ const Layout = ({ children }: LayoutProps) => {
                 page_path: window.location.pathname,
               });
             `,
-        }}
-      />
-    </Head>
-    <body>
-    <QueryClientProvider client={queryClient}>
-      {isFindPage ? (
+          }}
+        />
+      </Head>
+      <body>
+        <QueryClientProvider client={queryClient}>
+          {isFindPage ? (
             <>{children}</>
           ) : (
             <div className={styles.main}>

@@ -11,7 +11,7 @@ const FindPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const initialTab = searchParams.get('tab') || 'findId';
-  
+
   const [tab, setTab] = useState<'findId' | 'findPassword'>(
     initialTab as 'findId' | 'findPassword'
   );
@@ -26,16 +26,16 @@ const FindPage = () => {
   const [loading, setLoading] = useState(false);
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [isUserIdValid, setIsUserIdValid] = useState(false);
-  
+
   useEffect(() => {
     setTab(initialTab as 'findId' | 'findPassword');
   }, [initialTab]);
-  
+
   useEffect(() => {
     setIsEmailValid(validateEmail(email) === true);
     setIsUserIdValid(validateUserId(userId) === true);
   }, [email, userId]);
-  
+
   const handleTabChange = (tab: 'findId' | 'findPassword') => {
     setTab(tab);
     setEmail('');
@@ -44,18 +44,18 @@ const FindPage = () => {
     setErrorMessage('');
     setAlertOpen(false);
   };
-  
+
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
   };
-  
+
   const handleUserIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUserId(event.target.value);
   };
-  
+
   const handleFindIdSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    
+
     if (!isEmailValid) {
       setErrorMessage('유효한 이메일을 입력해주세요.');
       setAlertSeverity('error');
@@ -63,7 +63,7 @@ const FindPage = () => {
       setTimeout(() => setAlertOpen(false), 5000);
       return;
     }
-    
+
     setLoading(true);
     try {
       const responseMessage = await requestFindId(email);
@@ -83,10 +83,10 @@ const FindPage = () => {
       setLoading(false);
     }
   };
-  
+
   const handleFindPasswordSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    
+
     if (!isEmailValid || !isUserIdValid) {
       setErrorMessage('유효한 이메일과 아이디를 입력해주세요.');
       setAlertSeverity('error');
@@ -94,7 +94,7 @@ const FindPage = () => {
       setTimeout(() => setAlertOpen(false), 5000);
       return;
     }
-    
+
     setLoading(true);
     try {
       const responseMessage = await requestFindPassword(email, userId);
@@ -103,7 +103,9 @@ const FindPage = () => {
         setErrorMessage('');
         setAlertSeverity('success');
       } else {
-        throw new Error(responseMessage.message || '비밀번호 찾기 요청에 실패했습니다.');
+        throw new Error(
+          responseMessage.message || '비밀번호 찾기 요청에 실패했습니다.'
+        );
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -126,7 +128,7 @@ const FindPage = () => {
       }, 5000);
     }
   };
-  
+
   return (
     <div className={styles.pageContainer}>
       <h1 className={styles.FindTitle}>아이디 / 비밀번호 찾기</h1>

@@ -9,11 +9,10 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
 import styles from '../../../styles/Travel.module.css';
-import favicon from '../../../../public/favicon.ico';
-import placeIcon from '../../../../public/assets/images/place.png';
 import { useTravelDetail } from '@/hooks/useTravel';
 import { useRouter, useParams } from 'next/navigation';
 import DataLoading from '@/components/Common/DataLoading';
+import DetailPlaceMap from '@/components/Travel/DetailPlaceMap';
 
 const StyledSwiperContainer = styled.div`
     overflow: hidden;
@@ -89,9 +88,8 @@ const TravelDetail = () => {
     detailAddress,
     description,
     imageList,
-    recommandedTravelList,
-    // latitude,
-    // longitude
+    latitude,
+    longitude,
   } = data?.data || {};
   
   const handleExpandClick = () => {
@@ -137,24 +135,11 @@ const TravelDetail = () => {
               </div>
             )}
           </StyledSwiperContainer>
-          <div className={styles.buttonContainer}>
-            <button className={styles.backBtn} onClick={() => router.back()}>뒤로 가기</button>
-            <button className={styles.ChooseBtn}>내 일정 담기</button>
-            <button className={styles.bookmarkBtn}>북마크</button>
-          </div>
         </div>
         <div className={styles.rightSection}>
           <div className={styles.infoSection}>
-            <span className={styles.infoIcon}>🌍</span>
-            <p className={styles.infoText}>국가 : {country}</p>
-          </div>
-          <div className={styles.infoSection}>
-            <span className={styles.infoIcon}>🏙️</span>
-            <p className={styles.infoText}>도시 : {city}</p>
-          </div>
-          <div className={styles.infoSection}>
             <span className={styles.infoIcon}>📍</span>
-            <p className={styles.infoText}>구 : {district}</p>
+            <p className={styles.infoText}>{country} / {city} / {district}</p>
           </div>
           <div className={styles.infoSection}>
             <span className={styles.infoIcon}>🏢</span>
@@ -175,56 +160,13 @@ const TravelDetail = () => {
             </p>
           </div>
         </div>
+        <div className={styles.buttonContainer}>
+          <button className={styles.backBtn} onClick={() => router.back()}>뒤로 가기</button>
+          <button className={styles.ChooseBtn}>내 일정 담기</button>
+          <button className={styles.bookmarkBtn}>북마크</button>
+        </div>
+        <DetailPlaceMap latitude={latitude ?? 0} longitude={longitude ?? 0} />
       </div>
-      {recommandedTravelList && recommandedTravelList.length > 0 ? (
-        <div className={styles.recommendedDestinations}>
-          <h2 className={styles.chooseRecomend}>
-            <Image src={favicon} alt={'파비콘'} style={{ marginLeft: '-15px' }} priority />
-            여행지 탐색 : 추천 여행지
-          </h2>
-          <StyledSwiperContainer>
-            <Swiper
-              modules={[Navigation, Pagination]}
-              slidesPerView={4}
-              navigation={{
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-              }}
-              loop
-            >
-              {recommandedTravelList.map((rec, index) => (
-                <SwiperSlide key={index}>
-                  <div className={styles.sliderImageContainer}>
-                    <Image
-                      src={rec.ThumbnailUrl}
-                      alt={rec.placeName}
-                      width={500}
-                      height={500}
-                      className={styles.sliderImg}
-                      style={{ objectFit: 'cover' }}
-                    />
-                    <p className={styles.sliderTextP}>{rec.placeName}</p>
-                    <p className={styles.sliderTextPDetail}>
-                      <Image src={placeIcon} alt={'place'} width={15} height={21} />
-                      &nbsp;{rec.country} / {rec.city} / {rec.district}
-                    </p>
-                  </div>
-                </SwiperSlide>
-              ))}
-              <StyledSwiperButtonPrev className="swiper-button-prev" />
-              <StyledSwiperButtonNext className="swiper-button-next" />
-            </Swiper>
-          </StyledSwiperContainer>
-        </div>
-      ) : (
-        <div className={styles.recommendedDestinations}>
-          <h2 className={styles.chooseRecomend}>
-            <Image src={favicon} alt={'파비콘'} style={{ marginLeft: '-15px' }} priority />
-            여행지 탐색 : 추천 여행지
-          </h2>
-          <p className={styles.noRecommendations}>추천 여행지가 없습니다.</p>
-        </div>
-      )}
     </div>
   );
 };

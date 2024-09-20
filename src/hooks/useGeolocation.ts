@@ -2,10 +2,14 @@ import { useState, useEffect, useCallback } from 'react';
 import { Coordinates } from '@/types';
 
 const useGeolocation = () => {
-  const [userCoordinates, setUserCoordinates] = useState<Coordinates | null>(null);
+  const [userCoordinates, setUserCoordinates] = useState<Coordinates | null>(
+    null
+  );
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [permissionState, setPermissionState] = useState<'granted' | 'prompt' | 'denied' | null>(null);
-  
+  const [permissionState, setPermissionState] = useState<
+    'granted' | 'prompt' | 'denied' | null
+  >(null);
+
   const requestUserLocation = useCallback(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -17,7 +21,9 @@ const useGeolocation = () => {
           setErrorMessage(null);
         },
         (error) => {
-          setErrorMessage('위치 권한이 거부되었습니다. 위치 서비스를 이용하려면 권한을 허용해주세요.');
+          setErrorMessage(
+            '위치 권한이 거부되었습니다. 위치 서비스를 이용하려면 권한을 허용해주세요.'
+          );
         },
         {
           enableHighAccuracy: true,
@@ -26,10 +32,12 @@ const useGeolocation = () => {
         }
       );
     } else {
-      setErrorMessage('현재 브라우저에서는 위치 정보를 지원하지 않습니다. 다른 브라우저를 사용해보세요.');
+      setErrorMessage(
+        '현재 브라우저에서는 위치 정보를 지원하지 않습니다. 다른 브라우저를 사용해보세요.'
+      );
     }
   }, []);
-  
+
   const checkGeolocationPermission = useCallback(async () => {
     try {
       const result = await navigator.permissions.query({ name: 'geolocation' });
@@ -37,16 +45,20 @@ const useGeolocation = () => {
       if (result.state === 'granted' || result.state === 'prompt') {
         requestUserLocation();
       } else if (result.state === 'denied') {
-        setErrorMessage('위치 권한이 거부되었습니다. 위치 서비스를 이용하려면 권한을 허용해주세요. 현재 위치 권한이 거부되어 서울 중부의 위치를 사용 중입니다.');
+        setErrorMessage(
+          '위치 권한이 거부되었습니다. 위치 서비스를 이용하려면 권한을 허용해주세요. 현재 위치 권한이 거부되어 서울 중부의 위치를 사용 중입니다.'
+        );
       }
-      
+
       result.onchange = () => {
         setPermissionState(result.state);
         if (result.state === 'granted') {
           requestUserLocation();
         } else if (result.state === 'denied') {
           setUserCoordinates(null);
-          setErrorMessage('위치 권한이 거부되었습니다. 위치 서비스를 이용하려면 권한을 허용해주세요. 현재 위치 권한이 거부되어 서울 중부의 위치를 사용 중입니다.');
+          setErrorMessage(
+            '위치 권한이 거부되었습니다. 위치 서비스를 이용하려면 권한을 허용해주세요. 현재 위치 권한이 거부되어 서울 중부의 위치를 사용 중입니다.'
+          );
         }
       };
     } catch (error) {
@@ -54,11 +66,11 @@ const useGeolocation = () => {
       setErrorMessage('위치 권한 상태 확인 중 오류가 발생했습니다.');
     }
   }, [requestUserLocation]);
-  
+
   useEffect(() => {
     checkGeolocationPermission();
   }, [checkGeolocationPermission]);
-  
+
   return { userCoordinates, errorMessage, permissionState };
 };
 

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Pagination from '../../components/Travel/Pagination';
-import Map from '../../components/Travel/Map';
+import PlacesMap from '../../components/Travel/PlacesMap';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import DataLoading from '../../components/Common/DataLoading';
@@ -57,7 +57,7 @@ const TravelPage = () => {
   } = useTravelListByLocation(
     coordinates ?? defaultCoordinates,
     currentPage,
-    !isSearching
+    !isSearching,
   );
   
   useEffect(() => {
@@ -84,7 +84,7 @@ const TravelPage = () => {
       longitude: coordinates?.longitude ?? 0,
     },
     currentPage,
-    isSearching
+    isSearching,
   );
   
   const debouncedSearchTerm = useDebounce(searchTerm, 800);
@@ -117,7 +117,7 @@ const TravelPage = () => {
   };
   
   const handleSearchInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const input = event.target.value;
     const regex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]*$/;
@@ -138,7 +138,7 @@ const TravelPage = () => {
   };
   
   const handleSearchKeyPress = (
-    event: React.KeyboardEvent<HTMLInputElement>
+    event: React.KeyboardEvent<HTMLInputElement>,
   ) => {
     if (event.key === 'Enter') {
       handleSearch();
@@ -154,7 +154,7 @@ const TravelPage = () => {
   
   const handleAlertClose = (
     event?: React.SyntheticEvent | Event,
-    reason?: string
+    reason?: string,
   ) => {
     if (reason === 'clickaway') {
       return;
@@ -195,7 +195,7 @@ const TravelPage = () => {
     ? (searchData?.data?.totalPages ?? 0)
     : (locationData?.data?.totalPages ?? 0);
   
-  const handlePageChange = (page:number) => {
+  const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo(0, 0);
   };
@@ -205,20 +205,20 @@ const TravelPage = () => {
       <Head>
         <title>여행지 탐색 | 검색 리스트 조회</title>
         <meta
-          name='description'
-          content='여행지를 검색하고 위치를 기반으로 추천받아보세요. 원하는 키워드로 검색하거나 내 위치에서 가까운 여행지를 찾아볼 수 있습니다.'
+          name="description"
+          content="여행지를 검색하고 위치를 기반으로 추천받아보세요. 원하는 키워드로 검색하거나 내 위치에서 가까운 여행지를 찾아볼 수 있습니다."
         />
         <meta
-          name='keywords'
-          content='여행, 여행지 검색, 위치 기반 추천, 내 위치, 여행지 추천, 여행 정보'
+          name="keywords"
+          content="여행, 여행지 검색, 위치 기반 추천, 내 위치, 여행지 추천, 여행 정보"
         />
-        <meta property='og:title' content='여행지 탐색 | 검색 리스트 조회' />
+        <meta property="og:title" content="여행지 탐색 | 검색 리스트 조회" />
         <meta
-          property='og:description'
-          content='여행지를 검색하고 위치를 기반으로 추천받아보세요. 원하는 키워드로 검색하거나 내 위치에서 가까운 여행지를 찾아볼 수 있습니다.'
+          property="og:description"
+          content="여행지를 검색하고 위치를 기반으로 추천받아보세요. 원하는 키워드로 검색하거나 내 위치에서 가까운 여행지를 찾아볼 수 있습니다."
         />
-        <meta property='og:image' content='/assets/Logo.png' />
-        <meta name='viewport' content='width=device-width, initial-scale=1' />
+        <meta property="og:image" content="/assets/Logo.png" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <div className={styles.container}>
         {isLoadingLocation || isLoadingSearch ? (
@@ -229,17 +229,11 @@ const TravelPage = () => {
               <h1 className={styles.travelSearch}>
                 여행지 탐색 : 검색 리스트 조회
               </h1>
-              <button
-                className={styles.mylocation}
-                onClick={() => refetchLocation()}
-              >
-                내 위치
-              </button>
             </div>
             <div className={styles.searchContainer}>
               <input
-                type='text'
-                placeholder='검색할 키워드를 입력 해주세요.'
+                type="text"
+                placeholder="검색할 키워드를 입력 해주세요."
                 value={searchTerm}
                 onChange={handleSearchInputChange}
                 onKeyPress={handleSearchKeyPress}
@@ -249,18 +243,12 @@ const TravelPage = () => {
               <button onClick={handleSearch} className={styles.searchButton}>
                 검색
               </button>
-              <button
-                onClick={handleResetSearch}
-                className={styles.resetButton}
-              >
-                초기화
-              </button>
             </div>
             <ul className={styles.placeList}>
               {places && places.length > 0 ? (
                 places.map((place) => {
                   const { walking, driving } = calculateTravelTime(
-                    place.distance
+                    place.distance,
                   );
                   return (
                     <li
@@ -323,7 +311,7 @@ const TravelPage = () => {
           </div>
         )}
         <div className={styles.mapContainer}>
-          <Map places={places || []} />
+          <PlacesMap places={places || []} />
         </div>
         <Snackbar
           open={alertOpen}

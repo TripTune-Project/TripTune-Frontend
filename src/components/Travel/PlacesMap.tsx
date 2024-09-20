@@ -15,7 +15,7 @@ interface MapProps {
   places: TravelPlace[];
 }
 
-const Map = ({ places }: MapProps) => {
+const PlacesMap = ({ places }: MapProps) => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<google.maps.Map | null>(null);
   const [zoom, setZoom] = useState(16);
@@ -103,7 +103,10 @@ const Map = ({ places }: MapProps) => {
       };
       
       const zoomListener = map.addListener('zoom_changed', handleZoomChange);
-      const centerListener = map.addListener('center_changed', handleCenterChange);
+      const centerListener = map.addListener(
+        'center_changed',
+        handleCenterChange
+      );
       
       return () => {
         google.maps.event.removeListener(zoomListener);
@@ -115,4 +118,4 @@ const Map = ({ places }: MapProps) => {
   return <div ref={mapContainerRef} style={containerStyle} />;
 };
 
-export default Map;
+export default PlacesMap;
