@@ -23,7 +23,7 @@ const triggerLoginModal = () => {
   }
 };
 
-const authFetch = async (
+export const authFetch = async (
   url: string,
   options: FetchOptions = {}
 ): Promise<Response> => {
@@ -132,4 +132,115 @@ const authFetch = async (
   return fetchWithToken(url, options);
 };
 
-export default authFetch;
+// GET 요청 함수
+export const authGet = async <T>(url: string, options: FetchOptions = {}): Promise<T> => {
+  try {
+    const response = await authFetch(url, { method: 'GET', ...options });
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'API 요청 실패');
+    }
+    
+    return response.json();
+  } catch (error) {
+    throw error instanceof Error ? error : new Error('Unknown error occurred');
+  }
+};
+
+// POST 요청 함수
+export const authPost = async <T>(url: string, body: object, options: FetchOptions = {}): Promise<T> => {
+  try {
+    const response = await authFetch(url, {
+      method: 'POST',
+      body: JSON.stringify(body),
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+      ...options,
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'API 요청 실패');
+    }
+    
+    return response.json();
+  } catch (error) {
+    throw error instanceof Error ? error : new Error('Unknown error occurred');
+  }
+};
+
+// PUT 요청 함수
+export const authPut = async <T>(url: string, body: object, options: FetchOptions = {}): Promise<T> => {
+  try {
+    const response = await authFetch(url, {
+      method: 'PUT',
+      body: JSON.stringify(body),
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+      ...options,
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'API 요청 실패');
+    }
+    
+    return response.json();
+  } catch (error) {
+    throw error instanceof Error ? error : new Error('Unknown error occurred');
+  }
+};
+
+// PATCH 요청 함수
+export const authPatch = async <T>(url: string, body: object, options: FetchOptions = {}): Promise<T> => {
+  try {
+    const response = await authFetch(url, {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+      ...options,
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'API 요청 실패');
+    }
+    
+    return response.json();
+  } catch (error) {
+    throw error instanceof Error ? error : new Error('Unknown error occurred');
+  }
+};
+
+// DELETE 요청 함수
+export const authDelete = async <T>(url: string, body?: object, options: FetchOptions = {}): Promise<T> => {
+  try {
+    const response = await authFetch(url, {
+      method: 'DELETE',
+      body: body ? JSON.stringify(body) : undefined,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+      ...options,
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'API 요청 실패');
+    }
+    
+    return response.json();
+  } catch (error) {
+    throw error instanceof Error ? error : new Error('Unknown error occurred');
+  }
+};
+
