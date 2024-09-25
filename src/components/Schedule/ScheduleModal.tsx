@@ -19,9 +19,9 @@ interface ScheduleModalProps {
 const ScheduleModal = ({ isOpen, onClose, onConfirm }: ScheduleModalProps) => {
   const [startDate, setStartDate] = useState<Date | null>(new Date());
   const [endDate, setEndDate] = useState<Date | null>(new Date());
-  
+
   const getValidDate = (date: Date | null) => date ?? new Date();
-  
+
   return (
     <Modal open={isOpen} onClose={onClose}>
       <Box
@@ -58,7 +58,9 @@ const ScheduleModal = ({ isOpen, onClose, onConfirm }: ScheduleModalProps) => {
             justifyContent='center'
             sx={{ display: 'flex', justifyContent: 'center', gap: '10px' }}
           >
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+            <div
+              style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}
+            >
               <DatePicker
                 selected={getValidDate(startDate)}
                 onChange={(date) => setStartDate(date)}

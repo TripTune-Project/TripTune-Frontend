@@ -62,7 +62,7 @@ export const getMyPage = async () => {
       };
       message: string;
     }>('/mypage');
-    
+
     if (response.success) {
       console.log('마이페이지 정보 조회 성공:', response.data);
       return response.data;
@@ -70,7 +70,10 @@ export const getMyPage = async () => {
       console.error('마이페이지 정보 조회 실패:', response.message);
     }
   } catch (error) {
-    handleApiError(error as Error, '마이페이지 정보 조회 중 오류가 발생했습니다.');
+    handleApiError(
+      error as Error,
+      '마이페이지 정보 조회 중 오류가 발생했습니다.'
+    );
   }
 };
 
@@ -82,7 +85,7 @@ export const getMySchedules = async (currentPage: number = 1) => {
       data: ScheduleResponse;
       message: string;
     }>(`/mypage/schedules?page=${currentPage}`);
-    
+
     if (response.success) {
       console.log('내 일정 목록 조회 성공:', response.data);
       return response.data;
@@ -100,7 +103,7 @@ export const deleteSchedule = async (scheduleId: number) => {
     const response = await authDelete<{ success: boolean; message: string }>(
       `/mypage/schedules/${scheduleId}`
     );
-    
+
     if (response.success) {
       console.log('일정 삭제 성공:', response.message);
     } else {
@@ -112,13 +115,16 @@ export const deleteSchedule = async (scheduleId: number) => {
 };
 
 // 내 일정에 장소 추가 (POST)
-export const addPlaceToSchedule = async (scheduleId: number, placeId: number) => {
+export const addPlaceToSchedule = async (
+  scheduleId: number,
+  placeId: number
+) => {
   try {
     const response = await authPost<{ success: boolean; message: string }>(
       `/mypage/schedules/${scheduleId}`,
       { placeId }
     );
-    
+
     if (response.success) {
       console.log('일정에 장소 추가 성공:', response.message);
     } else {
@@ -137,7 +143,7 @@ export const getBookmarks = async (page: number = 1) => {
       data: BookmarkResponse;
       message: string;
     }>(`/mypage/bookmarks?page=${page}`);
-    
+
     if (response.success) {
       console.log('북마크 목록 조회 성공:', response.data);
       return response.data;
@@ -157,7 +163,7 @@ export const getProfile = async () => {
       data: Profile;
       message: string;
     }>('/mypage/profile');
-    
+
     if (response.success) {
       console.log('회원정보 조회 성공:', response.data);
       return response.data;
@@ -170,13 +176,16 @@ export const getProfile = async () => {
 };
 
 // 회원정보 수정 (PATCH)
-export const updateProfile = async (nickname: string, profileImage: File | null) => {
+export const updateProfile = async (
+  nickname: string,
+  profileImage: File | null
+) => {
   const formData = new FormData();
   formData.append('nickname', nickname);
   if (profileImage) {
     formData.append('profileImage', profileImage);
   }
-  
+
   try {
     const response = await authPatch<{
       success: boolean;
@@ -186,7 +195,7 @@ export const updateProfile = async (nickname: string, profileImage: File | null)
         'Content-Type': 'multipart/form-data',
       },
     });
-    
+
     if (response.success) {
       console.log('회원정보 수정 성공:', response.message);
     } else {
@@ -206,7 +215,7 @@ export const deactivateAccount = async (password: string) => {
     }>('/mypage/profile/deactivate', {
       password,
     });
-    
+
     if (response.success) {
       console.log('회원 탈퇴 성공:', response.message);
     } else {
@@ -232,13 +241,13 @@ export const changePassword = async (
       newPassword,
       rePassword,
     });
-    
+
     if (response.success) {
       console.log('비밀번호 변경 성공:', response.message);
     } else {
       console.error('비밀번호 변경 실패:', response.message);
-      if (response.message.includes("일치하지 않습니다")) {
-        alert("새 비밀번호가 일치하지 않습니다.");
+      if (response.message.includes('일치하지 않습니다')) {
+        alert('새 비밀번호가 일치하지 않습니다.');
       }
     }
   } catch (error) {
