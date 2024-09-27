@@ -319,7 +319,9 @@ const TravelPage = () => {
                             />
                           )}
                         </button>
-                        <div className={styles.placeName}>{place.placeName}</div>
+                        <div className={styles.placeName}>
+                          {place.placeName}
+                        </div>
                         <p className={styles.placeAddress}>
                           {`${place.country} / ${place.city} / ${place.district}`}
                         </p>
@@ -329,7 +331,8 @@ const TravelPage = () => {
                             alt={'장소'}
                             width={15}
                             height={21}
-                          />&nbsp;
+                          />
+                          &nbsp;
                           {place.address} {place.detailAddress}
                         </p>
                         <div className={styles.distanceInfo}>
