@@ -66,6 +66,7 @@ const StyledSwiperButtonNext = styled.div`
     background-image: url('/assets/images/rightBtnImage.png');
   }
 `;
+
 const Home = () => {
   const router = useRouter();
 

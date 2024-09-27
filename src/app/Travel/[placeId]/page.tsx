@@ -22,7 +22,52 @@ import locationIcon from '../../../../public/assets/icons/ic_location.png';
 import timeIcon from '../../../../public/assets/icons/ic_time.png';
 import homePageIcon from '../../../../public/assets/icons/ic_homepage.png';
 import phoneIcon from '../../../../public/assets/icons/ic_phone.png';
+import styled from 'styled-components';
 
+// Swiper 관련 styled-components 정의
+const StyledSwiperContainer = styled.div`
+    position: relative;
+    width: 749px;
+    height: 512px;
+`;
+
+const StyledSwiperButtonPrev = styled.button`
+    background-color: #000000;
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+    user-select: none;
+    &::after {
+        content: '';
+        display: block;
+        width: 50px;
+        height: 50px;
+        background-image: url('/assets/images/detailLeftBtnImage.png');
+    }
+`;
+
+const StyledSwiperButtonNext = styled.button`
+    background-color: #000000;
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+    user-select: none;
+    &::after {
+        content: '';
+        display: block;
+        width: 50px;
+        height: 50px;
+        background-image: url('/assets/images/detailRightBtnImage.png');
+    }
+`;
 
 const TravelDetail = () => {
   const { placeId } = useParams();
@@ -73,13 +118,13 @@ const TravelDetail = () => {
   };
   
   const UseTimeUI = ({ useTime }: { useTime: string }) => {
-    return useTime ?? <div><Image src={timeIcon} alt={"시간UI"}/> 이용시간: {useTime}</div>;
+    return useTime ?? <div><Image src={timeIcon} alt={'시간UI'} /> 이용시간: {useTime}</div>;
   };
   
   const CheckInOutUI = ({ checkInTime, checkOutTime }: { checkInTime: string; checkOutTime: string }) => {
     return (
       <div>
-        <Image src={timeIcon} alt={"시간UI"}/>
+        <Image src={timeIcon} alt={'시간UI'} />
         {checkInTime ?? <div>입실시간: {checkInTime}</div>}
         {checkOutTime ?? <div>퇴실시간: {checkOutTime}</div>}
       </div>
@@ -157,7 +202,7 @@ const TravelDetail = () => {
       <div className={styles.topSection}>
         <div className={styles.leftSection}>
           {imageList && imageList.length > 0 ? (
-            <div className={styles.swiperContainer}>
+            <StyledSwiperContainer>
               <Swiper
                 modules={[Navigation, Pagination]}
                 slidesPerView={1}
@@ -183,9 +228,9 @@ const TravelDetail = () => {
                   </SwiperSlide>
                 ))}
               </Swiper>
-              <button ref={prevRef} className={styles.swiperButtonPrev}>‹</button>
-              <button ref={nextRef} className={styles.swiperButtonNext}>›</button>
-            </div>
+              <StyledSwiperButtonPrev ref={prevRef} />
+              <StyledSwiperButtonNext ref={nextRef} />
+            </StyledSwiperContainer>
           ) : (
             <div className={styles.noImage}>이미지가 없습니다.</div>
           )}
@@ -193,56 +238,32 @@ const TravelDetail = () => {
         <div className={styles.rightSection}>
           <p className={styles.countryCityDistrict}>{country} > {city} > {district}</p>
           <div className={styles.placeName}>{placeName}</div>
-          <div className={styles.addressLabel}><Image src={locationIcon} alt={"주소"}/> {address} {detailAddress}</div>
+          <div className={styles.addressLabel}>&nbsp;<Image src={locationIcon} alt={'주소'} />&nbsp;{address} {detailAddress}</div>
           {renderTimeContent(checkInTime, checkOutTime, useTime)}
-          <div className={styles.homepageLabel}><Image src={homePageIcon} alt={"홈페이지"}/> 홈페이지: <p dangerouslySetInnerHTML={{ __html: homepage }} /></div>
-          <div className={styles.phoneLabel}><Image src={phoneIcon} alt={"문의 및 안내"}/> 문의 및 안내: {phoneNumber}</div>
+          <div className={styles.homepageLabel}>&nbsp;<Image src={homePageIcon} alt={'홈페이지'} />&nbsp;홈페이지: <p dangerouslySetInnerHTML={{ __html: homepage }} /></div>
+          <div className={styles.phoneLabel}>&nbsp;<Image src={phoneIcon} alt={'문의 및 안내'} />&nbsp;문의 및 안내: {phoneNumber}</div>
           <div className={styles.buttonContainer}>
-            {isBookmarked ?
-              <>
-                <button className={styles.bookmarkBtn} onClick={toggleBookmark}>
-                  <Image
-                    src={detailBookMark}
-                    alt={'북마크 등록'}
-                    priority
-                  />{" "}
-                  북마크
-                </button>
-              </>
-              :
-              <>
-                <button className={styles.bookmarkBtn} onClick={toggleBookmark}>
-                  <Image
-                    src={detailBookMarkNo}
-                    alt={'북마크 해제'}
-                    priority
-                  />{" "}
-                  북마크
-                </button>
-              </>
-            }
+            {isBookmarked ? (
+              <button className={styles.bookmarkBtn} onClick={toggleBookmark}>
+                <Image src={detailBookMark} alt={'북마크 등록'} priority />{' '}
+                북마크
+              </button>
+            ) : (
+              <button className={styles.bookmarkBtn} onClick={toggleBookmark}>
+                <Image src={detailBookMarkNo} alt={'북마크 해제'} priority />{' '}
+                북마크
+              </button>
+            )}
             <button className={styles.chooseBtn} onClick={openModal}>
-              <Image
-                src={scheduleIcon}
-                alt={'일정등록'}
-                priority
-              />{" "}
+              <Image src={scheduleIcon} alt={'일정등록'} priority />{' '}
               내 일정 담기
             </button>
           </div>
-          <ScheduleModal
-            isOpen={isModalOpen}
-            onClose={closeModal}
-            onConfirm={handleSchedule}
-          />
+          <ScheduleModal isOpen={isModalOpen} onClose={closeModal} onConfirm={handleSchedule} />
         </div>
       </div>
       <h2 className={styles.detailTitle}>
-        <Image
-          src={triptuneIcon}
-          alt={'상세설명'}
-          priority
-        />
+        <Image src={triptuneIcon} alt={'상세설명'} priority />
         상세 설명
       </h2>
       <div className={styles.infoSection}>
@@ -257,10 +278,7 @@ const TravelDetail = () => {
           {description ? formatDescriptionWithParagraphs(description) : '상세 설명을 불러오는 중입니다...'}
         </p>
         {showExpandButton && (
-          <button
-            onClick={handleExpandClick}
-            className={styles.expandButton}
-          >
+          <button onClick={handleExpandClick} className={styles.expandButton}>
             {isExpanded ? '접기 ▲' : '내용 더 보기 ▼'}
           </button>
         )}
