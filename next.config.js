@@ -22,9 +22,7 @@ const nextConfig = {
       },
     ],
   },
-  // todo : 이걸 써야할지 말지를 모르겠음
   async rewrites() {
-    // 리라이트 규칙 설정
     return [
       {
         source: '/api/:path*',

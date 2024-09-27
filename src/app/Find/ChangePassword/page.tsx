@@ -5,7 +5,7 @@ import Head from 'next/head';
 import { useSearchParams, useRouter } from 'next/navigation';
 import styles from '../../../styles/Find.module.css';
 import Image from 'next/image';
-import favicon from '../../../../public/favicon.ico';
+import triptuneIcon from '../../../../public/assets/icons/ic_triptune.png';
 import VerificationLoading from '../../../components/Common/VerificationLoading';
 import { validatePassword } from '@/utils/validation';
 
@@ -98,12 +98,18 @@ const ChangePassword = () => {
           content='https://triptune.netlify.app/Find/ChangePassword'
         />
         <meta name='viewport' content='width=device-width, initial-scale=1' />
-        <link rel='icon' href='/favicon.ico' />
+        <link rel='icon' href='/public/assets/favicon.ico' />
       </Head>
       <div className={styles.pageContainer}>
         <h1 className={styles.FindTitle}>비밀번호 재설정</h1>
         <div className={styles.completeText}>
-          <Image src={favicon} alt={'파비콘'} width={31} height={20} priority />
+          <Image
+            src={triptuneIcon}
+            alt={'파비콘'}
+            width={31}
+            height={20}
+            priority
+          />
           새롭게 설정할 비밀번호를 입력해 주세요.
         </div>
         <hr className={styles.hrStyle} />

@@ -8,8 +8,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import Image from 'next/image';
-import kakaoImg from '../../../public/assets/images/kakao.png';
-import naverImg from '../../../public/assets/images/naver.png';
+import kakao from '../../../public/assets/icon/ic_kakao_vector.png';
+import naver from '../../../public/assets/icon/ic_naver_vector.png';
 import VerificationLoading from '../Common/VerificationLoading';
 import { loginUser } from '@/api/loginApi';
 
@@ -133,8 +133,8 @@ const LoginForm = () => {
             </div>
             <button onClick={handleKakaoLogin} className={styles.kakaoButton}>
               <Image
-                src={kakaoImg}
-                alt={'kakao'}
+                src={kakao}
+                alt={'kakao 로그인'}
                 width={21}
                 height={21}
                 priority
@@ -142,7 +142,7 @@ const LoginForm = () => {
               카카오로 시작하기
             </button>
             <button onClick={handleNaverLogin} className={styles.naverButton}>
-              <Image src={naverImg} alt={'naver'} width={21} height={21} />
+              <Image src={naver} alt={'naver 로그인'} width={21} height={21} />
               네이버로 시작하기
             </button>
           </div>

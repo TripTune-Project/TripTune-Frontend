@@ -6,7 +6,6 @@ const fetchOptions: RequestInit = {
   },
   redirect: 'follow', // 'follow', 'error', 'manual'
   cache: 'no-cache', // 'default', 'no-store', 'reload', 'no-cache', 'force-cache', 'only-if-cached'
-  // TODO : CORS 뜨는 원인 일 수도 있다고 함 -> Fetch 기준
   // credentials: 'same-origin', // 'omit', 'same-origin', 'include'
 };
 

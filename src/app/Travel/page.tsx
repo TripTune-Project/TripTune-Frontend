@@ -18,9 +18,9 @@ import styles from '../../styles/Travel.module.css';
 import { useTravelStore } from '@/store/travelStore';
 import { useDebounce } from '@/hooks/useDebounce';
 import { BookMarkApi, BookMarkDeleteApi } from '@/api/bookMarkApi';
-import bookMarkIcon from '../../../public/assets/icon/ic_bookmark_white.png';
-import bookMarkIconWhite from '../../../public/assets/icon/ic_bookmark.png';
-import ic_place from '../../../public/assets/icon/ic_place.png';
+import bookMarkIcon from '../../../public/assets/icons/ic_bookmark.png';
+import bookMarkIconNo from '../../../public/assets/icons/ic_bookmark_no.png';
+import locationIcon from '../../../public/assets/icons/ic_location.png';
 
 const TravelPage = () => {
   const router = useRouter();
@@ -303,7 +303,7 @@ const TravelPage = () => {
                         >
                           {place.isBookmarked ? (
                             <Image
-                              src={bookMarkIconWhite}
+                              src={bookMarkIconNo}
                               alt={'북마크 해제'}
                               width={16}
                               height={16}
@@ -325,26 +325,15 @@ const TravelPage = () => {
                         </p>
                         <p className={styles.placeDetailAddress}>
                           <Image
-                            src={ic_place}
+                            src={locationIcon}
                             alt={'장소'}
                             width={15}
                             height={21}
                           />{' '}
                           {place.address} {place.detailAddress}
                         </p>
-                        <div className={styles.timeAndDistance}>
-                          <button
-                            className={styles.contentBtn}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDetailClick(place.placeId);
-                            }}
-                          >
-                            {place.placeName} 상세보기
-                          </button>
-                          <div className={styles.distanceInfo}>
-                            <span>{walking}</span> | <span>{driving}</span>
-                          </div>
+                        <div className={styles.distanceInfo}>
+                          <span>{walking}</span> | <span>{driving}</span>
                         </div>
                       </div>
                     </li>

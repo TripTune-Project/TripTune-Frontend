@@ -5,8 +5,8 @@ import LogoutModal from '@/components/Logout/LogoutModal';
 import { Alert, Snackbar, Button } from '@mui/material';
 import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
-import icGo from '../../public/assets/icon/ic_go.png';
-import LogoImage from '../../public/Logo.png';
+import LoginIcon from '../../public/assets/icons/ic_login.png';
+import MainLogoImage from '../../public/assets/images/MainLogoImage.png';
 import { logoutApi } from '@/api/logoutApi';
 import useAuth from '@/hooks/useAuth';
 import Cookies from 'js-cookie';
@@ -88,7 +88,7 @@ const Header = () => {
         <li>
           <Link href='/'>
             <Image
-              src={LogoImage}
+              src={MainLogoImage}
               alt='로고'
               className={styles.logo}
               width={183}
@@ -121,7 +121,13 @@ const Header = () => {
           !isLoggedIn ? (
             <li className={styles.headerLinkLogin} onClick={handleLogin}>
               로그인
-              <Image src={icGo} alt={'>'} width={16} height={16} priority />
+              <Image
+                src={LoginIcon}
+                alt={'>'}
+                width={16}
+                height={16}
+                priority
+              />
             </li>
           ) : (
             <>

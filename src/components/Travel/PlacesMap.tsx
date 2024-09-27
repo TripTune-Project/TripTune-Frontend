@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { TravelPlace } from '@/types/travelType';
 
 const containerStyle = {
-  width: '100%',
-  height: '100%',
+  width: '1050px',
+  height: '905px',
 };
 
 const defaultCenter = {

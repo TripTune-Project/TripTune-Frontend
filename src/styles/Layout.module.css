@@ -27,7 +27,6 @@
   flex: 1;
   display: flex;
   width: 100%;
-  /* TODO : footer 수정 때문에 넣은 코드 */
   overflow-y: scroll;
   overflow-x: hidden;
 }
