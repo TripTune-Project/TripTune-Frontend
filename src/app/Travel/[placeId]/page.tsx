@@ -24,66 +24,68 @@ import homePageIcon from '../../../../public/assets/icons/ic_homepage.png';
 import phoneIcon from '../../../../public/assets/icons/ic_phone.png';
 import styled from 'styled-components';
 
-// Swiper 관련 styled-components 정의
+// TODO : SWIPER 이미지 여러개 뜨는 이슈
 const StyledSwiperContainer = styled.div`
-    position: relative;
-    width: 749px;
-    height: 512px;
+  position: relative;
+  width: 749px;
+  height: 512px;
 `;
 
 const StyledSwiperButtonPrev = styled.button`
-    background-color: #000000;
-    position: absolute;
-    top: 50%;
-    left: 10px;
-    transform: translateY(-50%);
-    border: none;
-    cursor: pointer;
-    z-index: 10;
-    user-select: none;
-    &::after {
-        content: '';
-        display: block;
-        width: 50px;
-        height: 50px;
-        background-image: url('/assets/images/detailLeftBtnImage.png');
-    }
+  background-color: #000000;
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+  user-select: none;
+
+  &::after {
+    content: '';
+    display: block;
+    width: 50px;
+    height: 50px;
+    background-image: url('/assets/images/detailLeftBtnImage.png');
+  }
 `;
 
 const StyledSwiperButtonNext = styled.button`
-    background-color: #000000;
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-    border: none;
-    cursor: pointer;
-    z-index: 10;
-    user-select: none;
-    &::after {
-        content: '';
-        display: block;
-        width: 50px;
-        height: 50px;
-        background-image: url('/assets/images/detailRightBtnImage.png');
-    }
+  background-color: #000000;
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+  user-select: none;
+
+  &::after {
+    content: '';
+    display: block;
+    width: 50px;
+    height: 50px;
+    background-image: url('/assets/images/detailRightBtnImage.png');
+  }
 `;
 
 const TravelDetail = () => {
   const { placeId } = useParams();
   const placeIdNumber = parseInt(placeId as string, 10);
   const { data, isLoading, error } = useTravelDetail(placeIdNumber);
-  
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
   const [showExpandButton, setShowExpandButton] = useState(false);
-  
+
   const nextRef = useRef(null);
   const prevRef = useRef(null);
   const descriptionRef = useRef(null);
-  
+
   useEffect(() => {
     const fetchBookmarkStatus = async () => {
       try {
@@ -92,17 +94,17 @@ const TravelDetail = () => {
         console.error('북마크 상태 확인 중 오류 발생:', error);
       }
     };
-    
+
     fetchBookmarkStatus();
   }, [placeIdNumber]);
-  
+
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-  
+
   const handleSchedule = () => {
     closeModal();
   };
-  
+
   const toggleBookmark = async () => {
     try {
       if (isBookmarked) {
@@ -116,12 +118,25 @@ const TravelDetail = () => {
       console.error('북마크 처리 중 오류 발생:', error);
     }
   };
-  
+
+  // TODO : CSS 모듈 추가 해야함 UseTimeUI CheckInOutUI
   const UseTimeUI = ({ useTime }: { useTime: string }) => {
-    return useTime ?? <div><Image src={timeIcon} alt={'시간UI'} /> 이용시간: {useTime}</div>;
+    return (
+      useTime ?? (
+        <div>
+          <Image src={timeIcon} alt={'시간UI'} /> 이용시간: {useTime}
+        </div>
+      )
+    );
   };
-  
-  const CheckInOutUI = ({ checkInTime, checkOutTime }: { checkInTime: string; checkOutTime: string }) => {
+
+  const CheckInOutUI = ({
+    checkInTime,
+    checkOutTime,
+  }: {
+    checkInTime: string;
+    checkOutTime: string;
+  }) => {
     return (
       <div>
         <Image src={timeIcon} alt={'시간UI'} />
@@ -130,18 +145,24 @@ const TravelDetail = () => {
       </div>
     );
   };
-  
-  const renderTimeContent = (checkInTime: string, checkOutTime: string, useTime: string) => {
+
+  const renderTimeContent = (
+    checkInTime: string,
+    checkOutTime: string,
+    useTime: string
+  ) => {
     if (checkInTime || checkOutTime) {
-      return <CheckInOutUI checkInTime={checkInTime} checkOutTime={checkOutTime} />;
+      return (
+        <CheckInOutUI checkInTime={checkInTime} checkOutTime={checkOutTime} />
+      );
     } else if (useTime) {
       return <UseTimeUI useTime={useTime} />;
     } else {
       return null;
     }
   };
-  
-  const formatDescriptionWithParagraphs = (text) => {
+
+  const formatDescriptionWithParagraphs = (text: string) => {
     const paragraphs = text.split(/\n+/);
     return paragraphs.map((paragraph, index) => (
       <React.Fragment key={index}>
@@ -151,17 +172,18 @@ const TravelDetail = () => {
       </React.Fragment>
     ));
   };
-  
+
   useEffect(() => {
     setTimeout(() => {
       if (descriptionRef.current) {
         const style = getComputedStyle(descriptionRef.current);
         const lineHeight = parseFloat(style.lineHeight) || 20;
+        // TODO : 여기서 부터 진행 , 이건 빌드 이슈
         const scrollHeight = descriptionRef.current.scrollHeight;
-        
+
         if (!isNaN(lineHeight)) {
           const lineCount = scrollHeight / lineHeight;
-          
+
           if (lineCount > 3) {
             setShowExpandButton(true);
           } else {
@@ -171,14 +193,14 @@ const TravelDetail = () => {
       }
     }, 0);
   }, [isExpanded, data]);
-  
+
   const handleExpandClick = () => {
     setIsExpanded(!isExpanded);
   };
-  
+
   if (isLoading) return <DataLoading />;
   if (error) return <p>Error: {error.message}</p>;
-  
+
   const {
     placeName,
     country,
@@ -196,11 +218,11 @@ const TravelDetail = () => {
     checkOutTime,
     useTime,
   } = data?.data || {};
-  
+
   return (
     <div className={styles.travelDetailContent}>
       <div className={styles.topSection}>
-        <div className={styles.leftSection}>
+        <div>
           {imageList && imageList.length > 0 ? (
             <StyledSwiperContainer>
               <Swiper
@@ -236,12 +258,29 @@ const TravelDetail = () => {
           )}
         </div>
         <div className={styles.rightSection}>
-          <p className={styles.countryCityDistrict}>{country} > {city} > {district}</p>
-          <div className={styles.placeName}>{placeName}</div>
-          <div className={styles.addressLabel}>&nbsp;<Image src={locationIcon} alt={'주소'} />&nbsp;{address} {detailAddress}</div>
+          <p className={styles.countryCityDistrict}>
+            {country} &gt; {city} &gt; {district}
+          </p>
+          <div className={styles.detailplaceName}>{placeName}</div>
+          <div className={styles.addressLabel}>
+            &nbsp;
+            <Image src={locationIcon} alt={'주소'} />
+            &nbsp; 주소 : {address} {detailAddress}
+          </div>
           {renderTimeContent(checkInTime, checkOutTime, useTime)}
-          <div className={styles.homepageLabel}>&nbsp;<Image src={homePageIcon} alt={'홈페이지'} />&nbsp;홈페이지: <p dangerouslySetInnerHTML={{ __html: homepage }} /></div>
-          <div className={styles.phoneLabel}>&nbsp;<Image src={phoneIcon} alt={'문의 및 안내'} />&nbsp;문의 및 안내: {phoneNumber}</div>
+          {homepage && (
+            <div className={styles.homepageLabel}>
+              &nbsp;
+              <Image src={homePageIcon} alt={'홈페이지'} />
+              &nbsp; 홈페이지 :{' '}
+              <p dangerouslySetInnerHTML={{ __html: homepage }} />
+            </div>
+          )}
+          <div className={styles.phoneLabel}>
+            &nbsp;
+            <Image src={phoneIcon} alt={'문의 및 안내'} />
+            &nbsp;문의 및 안내 : {phoneNumber}
+          </div>
           <div className={styles.buttonContainer}>
             {isBookmarked ? (
               <button className={styles.bookmarkBtn} onClick={toggleBookmark}>
@@ -255,11 +294,15 @@ const TravelDetail = () => {
               </button>
             )}
             <button className={styles.chooseBtn} onClick={openModal}>
-              <Image src={scheduleIcon} alt={'일정등록'} priority />{' '}
-              내 일정 담기
+              <Image src={scheduleIcon} alt={'일정등록'} priority /> 내 일정
+              담기
             </button>
           </div>
-          <ScheduleModal isOpen={isModalOpen} onClose={closeModal} onConfirm={handleSchedule} />
+          <ScheduleModal
+            isOpen={isModalOpen}
+            onClose={closeModal}
+            onConfirm={handleSchedule}
+          />
         </div>
       </div>
       <h2 className={styles.detailTitle}>
@@ -275,7 +318,9 @@ const TravelDetail = () => {
             WebkitLineClamp: isExpanded ? 'unset' : 3,
           }}
         >
-          {description ? formatDescriptionWithParagraphs(description) : '상세 설명을 불러오는 중입니다...'}
+          {description
+            ? formatDescriptionWithParagraphs(description)
+            : '상세 설명을 불러오는 중입니다...'}
         </p>
         {showExpandButton && (
           <button onClick={handleExpandClick} className={styles.expandButton}>

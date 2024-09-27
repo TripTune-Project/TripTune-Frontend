@@ -121,13 +121,7 @@ const Header = () => {
           !isLoggedIn ? (
             <li className={styles.headerLinkLogin} onClick={handleLogin}>
               로그인
-              <Image
-                src={LoginIcon}
-                alt={'>'}
-                width={16}
-                height={16}
-                priority
-              />
+              <Image src={LoginIcon} alt={'>'} width={8} height={8} priority />
             </li>
           ) : (
             <>
