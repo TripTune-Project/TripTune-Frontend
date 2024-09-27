@@ -8,8 +8,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import Image from 'next/image';
-import kakao from '../../../public/assets/icon/ic_kakao_vector.png';
-import naver from '../../../public/assets/icon/ic_naver_vector.png';
+import kakao from '../../../public/assets/icons/ic_kakao_vector.png';
+import naver from '../../../public/assets/icons/ic_naver_vector.png';
 import VerificationLoading from '../Common/VerificationLoading';
 import { loginUser } from '@/api/loginApi';
 
