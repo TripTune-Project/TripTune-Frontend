@@ -1,66 +1,123 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
-import styled from 'styled-components';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
 import styles from '../../../styles/Travel.module.css';
 import { useTravelDetail } from '@/hooks/useTravel';
-import { useRouter, useParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import DataLoading from '@/components/Common/DataLoading';
 import DetailPlaceMap from '@/components/Travel/DetailPlaceMap';
 import ScheduleModal from '@/components/Schedule/ScheduleModal';
 import { BookMarkApi, BookMarkDeleteApi } from '@/api/bookMarkApi';
+import detailBookMarkNo from '../../../../public/assets/icons/ic_detail_no_bookmark.png';
+import detailBookMark from '../../../../public/assets/icons/ic_detail_bookmark.png';
+import scheduleIcon from '../../../../public/assets/icons/ic_schedule.png';
+import triptuneIcon from '../../../../public/assets/icons/ic_triptune.png';
+import locationIcon from '../../../../public/assets/icons/ic_location.png';
+import timeIcon from '../../../../public/assets/icons/ic_time.png';
+import homePageIcon from '../../../../public/assets/icons/ic_homepage.png';
+import phoneIcon from '../../../../public/assets/icons/ic_phone.png';
+import styled from 'styled-components';
 
 const StyledSwiperContainer = styled.div`
-  overflow: hidden;
-  position: relative;
-  width: 100%;
-  max-width: 1850px;
-  margin: 0 auto;
+    position: relative;
+    width: 749px;
+    height: 512px;
+`;
+
+const StyledSwiperButtonPrev = styled.button`
+    background-color: #000000;
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+    user-select: none;
+
+    &::after {
+        content: '';
+        display: block;
+        width: 20px;
+        height: 30px;
+        background-repeat: no-repeat;
+        background-image: url('/assets/images/detailLeftBtnImage.png');
+    }
+`;
+
+const StyledSwiperButtonNext = styled.button`
+    background-color: #000000;
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+    user-select: none;
+
+    &::after {
+        content: '';
+        display: block;
+        width: 20px;
+        height: 30px;
+        background-repeat: no-repeat;
+        background-image: url('/assets/images/detailRightBtnImage.png');
+    }
 `;
 
 const TravelDetail = () => {
-  const router = useRouter();
   const { placeId } = useParams();
   const placeIdNumber = parseInt(placeId as string, 10);
   const { data, isLoading, error } = useTravelDetail(placeIdNumber);
-
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
-
+  const [imageLoading, setImageLoading] = useState(true);
+  const [showExpandButton, setShowExpandButton] = useState(false);
+  
+  const nextRef = useRef(null);
+  const prevRef = useRef(null);
+  const descriptionRef = useRef<HTMLParagraphElement | null>(null);
+  
   useEffect(() => {
-    const fetchBookmarkStatus = async () => {
-      try {
-        // TODO : 초기 렌더링 시 현재 장소가 북마크에 등록되어 있는지 확인하는 API 호출
-        // TODO : 서버로부터 받은 북마크 상태에 따라 true or false 설정
-        // const response = await getBookmarkStatus(placeIdNumber);
-        // setIsBookmarked(response?.data?.isBookmarked);
-        // setIsBookmarked(true or false);
-      } catch (error) {
-        console.error('북마크 상태 확인 중 오류 발생:', error);
-      }
-    };
-
-    fetchBookmarkStatus();
-  }, [placeIdNumber]);
-
+    if (descriptionRef.current) {
+      requestAnimationFrame(() => {
+        const descriptionElement = descriptionRef.current;
+        
+        if (descriptionElement) {
+          const style = getComputedStyle(descriptionElement);
+          const lineHeight = parseFloat(style.lineHeight) || 20;
+          const scrollHeight = descriptionElement.scrollHeight;
+          
+          if (!isNaN(lineHeight)) {
+            const lineCount = scrollHeight / lineHeight;
+            
+            if (lineCount > 3) {
+              setShowExpandButton(true);
+            } else {
+              setShowExpandButton(false);
+            }
+          }
+        }
+      });
+    }
+  }, [isExpanded, data]);
+  
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-
+  
   const handleSchedule = () => {
     closeModal();
   };
-
-  const handleExpandClick = () => {
-    setIsExpanded(!isExpanded);
-  };
-
+  
   const toggleBookmark = async () => {
     try {
       if (isBookmarked) {
@@ -74,10 +131,99 @@ const TravelDetail = () => {
       console.error('북마크 처리 중 오류 발생:', error);
     }
   };
-
+  
+  const UseTimeUI = ({ useTime }: { useTime: string }) => {
+    return (
+      <div className={styles.useTimeLabel}>
+        <Image className={styles.useTimeIcon} src={timeIcon} alt={'시간UI'} />
+        이용시간 : {useTime}
+      </div>
+    );
+  };
+  
+  const CheckInOutUI = ({
+                          checkInTime,
+                          checkOutTime,
+                        }: {
+    checkInTime: string;
+    checkOutTime: string;
+  }) => {
+    return (
+      <div className={styles.checkInOutLabel}>
+        <Image
+          className={styles.checkInOutIcon}
+          src={timeIcon}
+          alt={'시간UI'}
+        />
+        <div>
+          {checkInTime && <div>입실시간: {checkInTime}</div>}
+          {checkOutTime && <div>퇴실시간: {checkOutTime}</div>}
+        </div>
+      </div>
+    );
+  };
+  
+  const renderTimeContent = (
+    checkInTime?: string,
+    checkOutTime?: string,
+    useTime?: string,
+  ) => {
+    if (checkInTime || checkOutTime) {
+      return (
+        <CheckInOutUI
+          checkInTime={typeof checkInTime === 'string' ? checkInTime : ''}
+          checkOutTime={typeof checkOutTime === 'string' ? checkOutTime : ''}
+        />
+      );
+    } else if (useTime) {
+      return <UseTimeUI useTime={useTime} />;
+    } else {
+      return null;
+    }
+  };
+  
+  const formatDescriptionWithParagraphs = (text: string) => {
+    const paragraphs = text.split(/\n+/);
+    return paragraphs.map((paragraph, index) => (
+      <React.Fragment key={index}>
+        {paragraph}
+        {index < paragraphs.length - 1 && <br />}
+        {index < paragraphs.length - 1 && <br />}
+      </React.Fragment>
+    ));
+  };
+  
+  useEffect(() => {
+    if (descriptionRef.current) {
+      requestAnimationFrame(() => {
+        const descriptionElement = descriptionRef.current;
+        
+        if (descriptionElement) {
+          const style = getComputedStyle(descriptionElement);
+          const lineHeight = parseFloat(style.lineHeight) || 20;
+          const scrollHeight = descriptionElement.scrollHeight;
+          
+          if (!isNaN(lineHeight)) {
+            const lineCount = scrollHeight / lineHeight;
+            
+            if (lineCount > 3) {
+              setShowExpandButton(true);
+            } else {
+              setShowExpandButton(false);
+            }
+          }
+        }
+      });
+    }
+  }, [isExpanded, data]);
+  
+  const handleExpandClick = () => {
+    setIsExpanded(!isExpanded);
+  };
+  
   if (isLoading) return <DataLoading />;
   if (error) return <p>Error: {error.message}</p>;
-
+  
   const {
     placeName,
     country,
@@ -89,97 +235,123 @@ const TravelDetail = () => {
     imageList,
     latitude,
     longitude,
+    phoneNumber,
+    homepage,
+    checkInTime,
+    checkOutTime,
+    useTime,
   } = data?.data || {};
-
+  
   return (
     <div className={styles.travelDetailContent}>
-      <h1 className={styles.travelSearchDetail}>
-        여행지 탐색 : {placeName} 상세보기
-      </h1>
       <div className={styles.topSection}>
-        <div className={styles.leftSection}>
-          <StyledSwiperContainer>
-            {imageList && imageList.length > 0 ? (
+        <div>
+          {imageList && imageList.length > 0 ? (
+            <StyledSwiperContainer>
               <Swiper
                 modules={[Navigation, Pagination]}
                 slidesPerView={1}
                 navigation={{
-                  nextEl: '.swiper-button-next',
-                  prevEl: '.swiper-button-prev',
+                  nextEl: nextRef.current,
+                  prevEl: prevRef.current,
                 }}
                 loop
               >
                 {imageList.map((image, index) => (
                   <SwiperSlide key={index}>
                     <div className={styles.sliderImageContainer}>
+                      {imageLoading && <div>로딩 중...</div>}
                       <Image
                         src={image.imageUrl}
                         alt={image.imageName}
-                        width={500}
-                        height={500}
-                        className={styles.detailSliderImg}
+                        width={749}
+                        height={512}
                         style={{ objectFit: 'cover' }}
+                        onLoad={() => setImageLoading(false)}
                       />
                     </div>
                   </SwiperSlide>
                 ))}
               </Swiper>
-            ) : (
-              <div className={styles.noImage}>이미지가 없습니다.</div>
-            )}
-          </StyledSwiperContainer>
+              <StyledSwiperButtonPrev ref={prevRef} />
+              <StyledSwiperButtonNext ref={nextRef} />
+            </StyledSwiperContainer>
+          ) : (
+            <div className={styles.noImage}>이미지가 없습니다.</div>
+          )}
         </div>
         <div className={styles.rightSection}>
-          <div className={styles.infoSection}>
-            <span className={styles.infoIcon}>📍</span>
-            <p className={styles.infoText}>
-              {country} / {city} / {district}
-            </p>
+          <p className={styles.countryCityDistrict}>
+            {country} &gt; {city} &gt; {district}
+          </p>
+          <div className={styles.detailplaceName}>{placeName}</div>
+          <div className={styles.addressLabel}>
+            
+            <Image src={locationIcon} alt={'주소'} />
+             주소 : {address} {detailAddress}
           </div>
-          <div className={styles.infoSection}>
-            <span className={styles.infoIcon}>🏢</span>
-            <p className={styles.infoText}>장소명 : {placeName}</p>
+          {renderTimeContent(checkInTime, checkOutTime, useTime)}
+          {homepage && (
+            <div className={styles.homepageLabel}>
+              
+              <Image src={homePageIcon} alt={'홈페이지'} />
+              <span className={styles.homepageText}> 홈페이지 : {' '}</span>
+              <p dangerouslySetInnerHTML={{ __html: homepage }} />
+            </div>
+          )}
+          <div className={styles.phoneLabel}>
+            
+            <Image src={phoneIcon} alt={'문의 및 안내'} />
+            문의 및 안내 : {phoneNumber}
           </div>
-          <div className={styles.infoSection}>
-            <span className={styles.infoIcon}>🗺️</span>
-            <p className={styles.infoText}>
-              주소 : {address} {detailAddress}
-            </p>
-          </div>
-          <div className={styles.infoSection}>
-            <span className={styles.infoIcon}>📝</span>
-            <p className={styles.infoText}>
-              설명 : <br />
-              {isExpanded
-                ? description
-                : `${description && description.slice(0, 100)}...`}
-              <button
-                onClick={handleExpandClick}
-                className={styles.expandButton}
-              >
-                {isExpanded ? '접기 ▲' : '더 보기 ▼'}
+          <div className={styles.buttonContainer}>
+            {isBookmarked ? (
+              <button className={styles.bookmarkBtn} onClick={toggleBookmark}>
+                <Image src={detailBookMark} alt={'북마크 등록'} priority />{' '}
+                북마크
               </button>
-            </p>
+            ) : (
+              <button className={styles.bookmarkBtn} onClick={toggleBookmark}>
+                <Image src={detailBookMarkNo} alt={'북마크 해제'} priority />{' '}
+                북마크
+              </button>
+            )}
+            <button className={styles.chooseBtn} onClick={openModal}>
+              <Image src={scheduleIcon} alt={'일정등록'} priority /> 내 일정
+              담기
+            </button>
           </div>
-        </div>
-        <div className={styles.buttonContainer}>
-          <button className={styles.backBtn} onClick={() => router.back()}>
-            뒤로 가기
-          </button>
-          <button className={styles.ChooseBtn} onClick={openModal}>
-            내 일정 담기
-          </button>
           <ScheduleModal
             isOpen={isModalOpen}
             onClose={closeModal}
             onConfirm={handleSchedule}
           />
-          <button className={styles.bookmarkBtn} onClick={toggleBookmark}>
-            {isBookmarked ? '북마크 해제' : '북마크'}
-          </button>
         </div>
-        <DetailPlaceMap latitude={latitude ?? 0} longitude={longitude ?? 0} />
       </div>
+      <h2 className={styles.detailTitle}>
+        <Image src={triptuneIcon} alt={'상세설명'} priority />
+        상세 설명
+      </h2>
+      <div className={styles.infoSection}>
+        <p
+          ref={descriptionRef}
+          className={styles.infoText}
+          style={{
+            display: isExpanded ? 'block' : '-webkit-box',
+            WebkitLineClamp: isExpanded ? 'unset' : 3,
+          }}
+        >
+          {description
+            ? formatDescriptionWithParagraphs(description)
+            : '상세 설명을 불러오는 중입니다...'}
+        </p>
+        {showExpandButton && (
+          <button onClick={handleExpandClick} className={styles.expandButton}>
+            {isExpanded ? '접기 ▲' : '내용 더 보기 ▼'}
+          </button>
+        )}
+      </div>
+      <DetailPlaceMap latitude={latitude ?? 0} longitude={longitude ?? 0} />
     </div>
   );
 };

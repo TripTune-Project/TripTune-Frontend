@@ -32,13 +32,17 @@ export interface TravelPlace {
 
 export interface TravelPlaceDetail extends TravelPlace {
   description: string;
+  phoneNumber?: string;
+  useTime?: string;
+  checkInTime?: string;
+  checkOutTime?: string;
+  homepage?: string;
   imageList: { imageName: string; imageUrl: string }[];
+  // TODO : 추천 여행지 추후 개발 시
   recommandedTravelList?: {
-    country: string;
-    city: string;
-    district: string;
-    placeName: string;
-    ThumbnailUrl: string;
+    address: string; // 주소
+    placeName: string; // 장소 이름
+    ThumbnailUrl: string; // 이미지
   }[];
 }
 

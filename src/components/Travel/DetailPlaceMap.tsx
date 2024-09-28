@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 
 const containerStyle = {
-  width: '1000px',
-  height: '500px',
-  margin: '0px auto',
+  width: '1497px',
+  height: '393px',
+  margin: '100px auto',
 };
 
 interface MapProps {

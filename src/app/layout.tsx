@@ -7,7 +7,7 @@ import Header from './header';
 import styles from '../styles/Layout.module.css';
 import Image from 'next/image';
 import ReactGA from 'react-ga4';
-import logoImg from '../../public/white_Logo.png';
+import FooterLogoImage from '../../public/assets/images/FooterLogoImage.png';
 import '../styles/global.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Noto_Sans_KR } from 'next/font/google';
@@ -34,7 +34,6 @@ const Layout = ({ children }: LayoutProps) => {
   const pathname = usePathname();
   const isFindPage = pathname.includes('Find');
 
-  // Mixed content 에러 발생
   return (
     <html lang='ko' className={notoSansKR.className}>
       <Head>
@@ -80,8 +79,8 @@ const Layout = ({ children }: LayoutProps) => {
               <footer className={styles.footer}>
                 <Image
                   className={styles.logoImg}
-                  src={logoImg}
-                  alt='logoImg'
+                  src={FooterLogoImage}
+                  alt='FooterLogoImage'
                   priority
                 />
                 <p className={styles.email}>

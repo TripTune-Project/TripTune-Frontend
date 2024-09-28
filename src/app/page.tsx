@@ -10,12 +10,13 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
 import styled from 'styled-components';
-import travelImage from '../../public/assets/travel-main.png';
-import favicon from '../../public/favicon.ico';
+import HomeImage from '../../public/assets/images/HomeImage.png';
+import favicon from '../../public/assets/favicon.ico';
 import styles from '../styles/onBoard.module.css';
-import searchIcon from '../../public/assets/images/search-icon.png';
-import ic_place from '../../public/assets/icon/ic_place.png';
-import picture from '../../public/assets/images/picture.png';
+import searchIcon from '../../public/assets/icons/ic_search.png';
+import locationIcon from '../../public/assets/icons/ic_location.png';
+import pictureImage from '../../public/assets/images/pictureImage.png';
+
 const StyledSwiperContainer = styled.div`
   overflow: hidden;
   position: relative;
@@ -41,7 +42,7 @@ const StyledSwiperButtonPrev = styled.div`
     width: 60px;
     height: 60px;
     background-size: cover;
-    background-image: url('/assets/images/left_btn.png');
+    background-image: url('/assets/images/leftBtnImage.png');
   }
 `;
 const StyledSwiperButtonNext = styled.div`
@@ -62,9 +63,10 @@ const StyledSwiperButtonNext = styled.div`
     width: 60px;
     height: 60px;
     background-size: cover;
-    background-image: url('/assets/images/right_btn.png');
+    background-image: url('/assets/images/rightBtnImage.png');
   }
 `;
+
 const Home = () => {
   const router = useRouter();
 
@@ -82,31 +84,31 @@ const Home = () => {
 
   const images = [
     {
-      src: picture,
+      src: pictureImage,
       alt: '경복궁',
       title: '경복궁',
       description: '서울 종로구 경복궁',
     },
     {
-      src: picture,
+      src: pictureImage,
       alt: '남산타워',
       title: '남산타워',
       description: '서울 용산구 남산타워',
     },
     {
-      src: picture,
+      src: pictureImage,
       alt: '한라산',
       title: '한라산',
       description: '제주 서귀포시 한라산',
     },
     {
-      src: picture,
+      src: pictureImage,
       alt: '해운대 해수욕장',
       title: '해운대 해수욕장',
       description: '부산 해운대구 해운대 해수욕장',
     },
     {
-      src: picture,
+      src: pictureImage,
       alt: '동대문 디자인 플라자',
       title: '동대문 디자인 플라자',
       description: '서울 중구 동대문 디자인 플라자',
@@ -142,9 +144,8 @@ const Home = () => {
         <div className={styles.onBoardingView}>
           <Image
             className={styles.onBoardingImg}
-            src={travelImage}
+            src={HomeImage}
             alt='온보딩 이미지'
-            objectFit='cover'
             priority
           />
           <div className={styles.onBoardingContent}>
@@ -257,7 +258,12 @@ const Home = () => {
                   />
                   <p className={styles.sliderTextP}>{image.title}</p>
                   <p className={styles.sliderTextPDetail}>
-                    <Image src={ic_place} alt={'장소'} width={15} height={21} />
+                    <Image
+                      src={locationIcon}
+                      alt={'장소'}
+                      width={15}
+                      height={21}
+                    />
                     &nbsp;
                     {image.description}
                   </p>

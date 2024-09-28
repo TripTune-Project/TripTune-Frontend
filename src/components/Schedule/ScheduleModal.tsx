@@ -19,10 +19,9 @@ interface ScheduleModalProps {
 const ScheduleModal = ({ isOpen, onClose, onConfirm }: ScheduleModalProps) => {
   const [startDate, setStartDate] = useState<Date | null>(new Date());
   const [endDate, setEndDate] = useState<Date | null>(new Date());
-  
-  // null이면 현재 날짜로 설정
+
   const getValidDate = (date: Date | null) => date ?? new Date();
-  
+
   return (
     <Modal open={isOpen} onClose={onClose}>
       <Box
@@ -35,7 +34,6 @@ const ScheduleModal = ({ isOpen, onClose, onConfirm }: ScheduleModalProps) => {
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          width: 350,
           textAlign: 'center',
           outline: 'none',
         }}
@@ -54,28 +52,31 @@ const ScheduleModal = ({ isOpen, onClose, onConfirm }: ScheduleModalProps) => {
             날짜: {getValidDate(startDate).toLocaleDateString()} →{' '}
             {getValidDate(endDate).toLocaleDateString()}
           </Typography>
-          <Stack direction='row' spacing={2} justifyContent='center'>
-            <DatePicker
-              selected={getValidDate(startDate)}
-              onChange={(date) => setStartDate(date)}
-              selectsStart
-              startDate={getValidDate(startDate)}
-              endDate={getValidDate(endDate)}
-              dateFormat='yyyy.MM.dd'
-              monthsShown={2}
-              placeholderText='시작 날짜'
-            />
-            <DatePicker
-              selected={getValidDate(endDate)}
-              onChange={(date) => setEndDate(date)}
-              selectsEnd
-              startDate={getValidDate(startDate)}
-              endDate={getValidDate(endDate)}
-              minDate={getValidDate(startDate)}
-              dateFormat='yyyy.MM.dd'
-              monthsShown={2}
-              placeholderText='종료 날짜'
-            />
+          <Stack
+            direction='row'
+            spacing={2}
+            justifyContent='center'
+            sx={{ display: 'flex', justifyContent: 'center', gap: '10px' }}
+          >
+            <div
+              style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}
+            >
+              <DatePicker
+                selected={getValidDate(startDate)}
+                onChange={(date) => setStartDate(date)}
+                selectsStart
+                startDate={getValidDate(startDate)}
+                endDate={getValidDate(endDate)}
+                dateFormat='yyyy.MM.dd'
+                monthsShown={2}
+                inline
+                calendarContainer={({ className, children }) => (
+                  <div className={className} style={{ width: '481px' }}>
+                    {children}
+                  </div>
+                )}
+              />
+            </div>
           </Stack>
         </Stack>
         <Stack direction='row' spacing={2} justifyContent='center' mt={3}>

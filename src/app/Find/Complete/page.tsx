@@ -4,7 +4,7 @@ import React, { Suspense, useEffect, useState } from 'react';
 import Head from 'next/head';
 import styles from '../../../styles/Find.module.css';
 import Image from 'next/image';
-import favicon from '../../../../public/favicon.ico';
+import triptuneIcon from '../../../../public/assets/icons/ic_triptune.png';
 import { useSearchParams, useRouter } from 'next/navigation';
 const FindIdComplete = () => {
   const searchParams = useSearchParams();
@@ -70,8 +70,8 @@ const FindIdComplete = () => {
           </button>
         </div>
         <p className={styles.completeText}>
-          <Image src={favicon} alt={'파비콘'} width={31} height={20} /> 요청하신
-          아이디 찾기 결과 입니다.
+          <Image src={triptuneIcon} alt={'파비콘'} width={31} height={20} />{' '}
+          요청하신 아이디 찾기 결과 입니다.
         </p>
         <div className={styles.FindIdBox}>
           {userId === 'undefined' || !userId ? (
