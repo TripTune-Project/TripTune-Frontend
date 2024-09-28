@@ -85,19 +85,31 @@ const TravelDetail = () => {
   
   const nextRef = useRef(null);
   const prevRef = useRef(null);
-  const descriptionRef = useRef(null);
+  const descriptionRef = useRef<HTMLParagraphElement | null>(null);
   
   useEffect(() => {
-    const fetchBookmarkStatus = async () => {
-      try {
-        setIsBookmarked(false);
-      } catch (error) {
-        console.error('북마크 상태 확인 중 오류 발생:', error);
-      }
-    };
-    
-    fetchBookmarkStatus();
-  }, [placeIdNumber]);
+    if (descriptionRef.current) {
+      requestAnimationFrame(() => {
+        const descriptionElement = descriptionRef.current;
+        
+        if (descriptionElement) {
+          const style = getComputedStyle(descriptionElement);
+          const lineHeight = parseFloat(style.lineHeight) || 20;
+          const scrollHeight = descriptionElement.scrollHeight;
+          
+          if (!isNaN(lineHeight)) {
+            const lineCount = scrollHeight / lineHeight;
+            
+            if (lineCount > 3) {
+              setShowExpandButton(true);
+            } else {
+              setShowExpandButton(false);
+            }
+          }
+        }
+      });
+    }
+  }, [isExpanded, data]);
   
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -122,9 +134,10 @@ const TravelDetail = () => {
   
   const UseTimeUI = ({ useTime }: { useTime: string }) => {
     return (
-        <div className={styles.useTimeLabel}>
-          <Image className={styles.useTimeIcon} src={timeIcon} alt={'시간UI'} /> 이용시간 : {useTime}
-        </div>
+      <div className={styles.useTimeLabel}>
+        <Image className={styles.useTimeIcon} src={timeIcon} alt={'시간UI'} />
+        이용시간 : {useTime}
+      </div>
     );
   };
   
@@ -137,7 +150,11 @@ const TravelDetail = () => {
   }) => {
     return (
       <div className={styles.checkInOutLabel}>
-        <Image className={styles.checkInOutIcon} src={timeIcon} alt={'시간UI'} />
+        <Image
+          className={styles.checkInOutIcon}
+          src={timeIcon}
+          alt={'시간UI'}
+        />
         <div>
           {checkInTime && <div>입실시간: {checkInTime}</div>}
           {checkOutTime && <div>퇴실시간: {checkOutTime}</div>}
@@ -147,13 +164,16 @@ const TravelDetail = () => {
   };
   
   const renderTimeContent = (
-    checkInTime: string,
-    checkOutTime: string,
-    useTime: string,
+    checkInTime?: string,
+    checkOutTime?: string,
+    useTime?: string,
   ) => {
     if (checkInTime || checkOutTime) {
       return (
-        <CheckInOutUI checkInTime={checkInTime} checkOutTime={checkOutTime} />
+        <CheckInOutUI
+          checkInTime={typeof checkInTime === 'string' ? checkInTime : ''}
+          checkOutTime={typeof checkOutTime === 'string' ? checkOutTime : ''}
+        />
       );
     } else if (useTime) {
       return <UseTimeUI useTime={useTime} />;
@@ -176,23 +196,27 @@ const TravelDetail = () => {
   useEffect(() => {
     if (descriptionRef.current) {
       requestAnimationFrame(() => {
-        const style = getComputedStyle(descriptionRef.current);
-        const lineHeight = parseFloat(style.lineHeight) || 20;
-        const scrollHeight = descriptionRef.current.scrollHeight;
+        const descriptionElement = descriptionRef.current;
         
-        if (!isNaN(lineHeight)) {
-          const lineCount = scrollHeight / lineHeight;
+        if (descriptionElement) {
+          const style = getComputedStyle(descriptionElement);
+          const lineHeight = parseFloat(style.lineHeight) || 20;
+          const scrollHeight = descriptionElement.scrollHeight;
           
-          if (lineCount > 3) {
-            setShowExpandButton(true);
-          } else {
-            setShowExpandButton(false);
+          if (!isNaN(lineHeight)) {
+            const lineCount = scrollHeight / lineHeight;
+            
+            if (lineCount > 3) {
+              setShowExpandButton(true);
+            } else {
+              setShowExpandButton(false);
+            }
           }
         }
       });
     }
   }, [isExpanded, data]);
-
+  
   const handleExpandClick = () => {
     setIsExpanded(!isExpanded);
   };
@@ -262,23 +286,23 @@ const TravelDetail = () => {
           </p>
           <div className={styles.detailplaceName}>{placeName}</div>
           <div className={styles.addressLabel}>
-            &nbsp;
+            
             <Image src={locationIcon} alt={'주소'} />
-            &nbsp; 주소 : {address} {detailAddress}
+             주소 : {address} {detailAddress}
           </div>
           {renderTimeContent(checkInTime, checkOutTime, useTime)}
           {homepage && (
             <div className={styles.homepageLabel}>
-              &nbsp;
+              
               <Image src={homePageIcon} alt={'홈페이지'} />
-              &nbsp; 홈페이지 :{' '}
+              <span className={styles.homepageText}> 홈페이지 : {' '}</span>
               <p dangerouslySetInnerHTML={{ __html: homepage }} />
             </div>
           )}
           <div className={styles.phoneLabel}>
-            &nbsp;
+            
             <Image src={phoneIcon} alt={'문의 및 안내'} />
-            &nbsp;문의 및 안내 : {phoneNumber}
+            문의 및 안내 : {phoneNumber}
           </div>
           <div className={styles.buttonContainer}>
             {isBookmarked ? (

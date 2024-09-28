@@ -152,7 +152,6 @@
     border-radius: 8px;
     background-color: #e0e0e0;
     border: 1px dashed #ccc;
-    margin-bottom: 35px;
     color: #888;
     font-size: 18px;
 }
@@ -328,7 +327,9 @@
 
 .addressLabel,
 .homepageLabel,
-.phoneLabel {
+.phoneLabel,
+.useTimeLabel,
+.checkInOutLabel {
     display: flex;
     align-items: center;
     margin-left: 30px;
@@ -336,10 +337,25 @@
     font-size: 16px;
     color: #555;
     line-height: 2.6em;
+    gap: 10px;
 }
 
-.phoneLabel {
-    margin-left: 25px;
+.homepageLabel p,
+.addressLabel p,
+.phoneLabel p,
+.useTimeLabel p,
+.checkInOutLabel p {
+    margin: 0;
+}
+
+.useTimeIcon,
+.checkInOutIcon,
+.homepageLabel img,
+.phoneLabel img,
+.addressLabel img {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
 }
 
 .buttonContainer {
@@ -609,11 +625,15 @@
     color: #0070f3;
 }
 
-.homepageLabel {
+.homepageLabel, .homepageText {
     color: #0070f3;
     font-family: 'Noto Sans KR', sans-serif;
     font-size: 16px;
     font-weight: bold;
+}
+
+.homepageText {
+    color: #575757;
 }
 
 .useTimeLabel,
@@ -630,10 +650,4 @@
 .useTimeIcon,
 .checkInOutIcon {
     margin-right: 10px;
-}
-
-.useTimeLabel img,
-.checkInOutLabel img {
-    width: 20px;
-    height: 20px;
 }
