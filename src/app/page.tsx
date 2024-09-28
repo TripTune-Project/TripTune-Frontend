@@ -146,7 +146,6 @@ const Home = () => {
             className={styles.onBoardingImg}
             src={HomeImage}
             alt='온보딩 이미지'
-            objectFit='cover'
             priority
           />
           <div className={styles.onBoardingContent}>

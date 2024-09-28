@@ -24,68 +24,69 @@ import homePageIcon from '../../../../public/assets/icons/ic_homepage.png';
 import phoneIcon from '../../../../public/assets/icons/ic_phone.png';
 import styled from 'styled-components';
 
-// TODO : SWIPER 이미지 여러개 뜨는 이슈
 const StyledSwiperContainer = styled.div`
-  position: relative;
-  width: 749px;
-  height: 512px;
+    position: relative;
+    width: 749px;
+    height: 512px;
 `;
 
 const StyledSwiperButtonPrev = styled.button`
-  background-color: #000000;
-  position: absolute;
-  top: 50%;
-  left: 10px;
-  transform: translateY(-50%);
-  border: none;
-  cursor: pointer;
-  z-index: 10;
-  user-select: none;
+    background-color: #000000;
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+    user-select: none;
 
-  &::after {
-    content: '';
-    display: block;
-    width: 50px;
-    height: 50px;
-    background-image: url('/assets/images/detailLeftBtnImage.png');
-  }
+    &::after {
+        content: '';
+        display: block;
+        width: 20px;
+        height: 30px;
+        background-repeat: no-repeat;
+        background-image: url('/assets/images/detailLeftBtnImage.png');
+    }
 `;
 
 const StyledSwiperButtonNext = styled.button`
-  background-color: #000000;
-  position: absolute;
-  top: 50%;
-  right: 10px;
-  transform: translateY(-50%);
-  border: none;
-  cursor: pointer;
-  z-index: 10;
-  user-select: none;
+    background-color: #000000;
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+    user-select: none;
 
-  &::after {
-    content: '';
-    display: block;
-    width: 50px;
-    height: 50px;
-    background-image: url('/assets/images/detailRightBtnImage.png');
-  }
+    &::after {
+        content: '';
+        display: block;
+        width: 20px;
+        height: 30px;
+        background-repeat: no-repeat;
+        background-image: url('/assets/images/detailRightBtnImage.png');
+    }
 `;
 
 const TravelDetail = () => {
   const { placeId } = useParams();
   const placeIdNumber = parseInt(placeId as string, 10);
   const { data, isLoading, error } = useTravelDetail(placeIdNumber);
-
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
   const [showExpandButton, setShowExpandButton] = useState(false);
-
+  
   const nextRef = useRef(null);
   const prevRef = useRef(null);
   const descriptionRef = useRef(null);
-
+  
   useEffect(() => {
     const fetchBookmarkStatus = async () => {
       try {
@@ -94,17 +95,17 @@ const TravelDetail = () => {
         console.error('북마크 상태 확인 중 오류 발생:', error);
       }
     };
-
+    
     fetchBookmarkStatus();
   }, [placeIdNumber]);
-
+  
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-
+  
   const handleSchedule = () => {
     closeModal();
   };
-
+  
   const toggleBookmark = async () => {
     try {
       if (isBookmarked) {
@@ -118,38 +119,37 @@ const TravelDetail = () => {
       console.error('북마크 처리 중 오류 발생:', error);
     }
   };
-
-  // TODO : CSS 모듈 추가 해야함 UseTimeUI CheckInOutUI
+  
   const UseTimeUI = ({ useTime }: { useTime: string }) => {
     return (
-      useTime ?? (
-        <div>
-          <Image src={timeIcon} alt={'시간UI'} /> 이용시간: {useTime}
+        <div className={styles.useTimeLabel}>
+          <Image className={styles.useTimeIcon} src={timeIcon} alt={'시간UI'} /> 이용시간 : {useTime}
         </div>
-      )
     );
   };
-
+  
   const CheckInOutUI = ({
-    checkInTime,
-    checkOutTime,
-  }: {
+                          checkInTime,
+                          checkOutTime,
+                        }: {
     checkInTime: string;
     checkOutTime: string;
   }) => {
     return (
-      <div>
-        <Image src={timeIcon} alt={'시간UI'} />
-        {checkInTime ?? <div>입실시간: {checkInTime}</div>}
-        {checkOutTime ?? <div>퇴실시간: {checkOutTime}</div>}
+      <div className={styles.checkInOutLabel}>
+        <Image className={styles.checkInOutIcon} src={timeIcon} alt={'시간UI'} />
+        <div>
+          {checkInTime && <div>입실시간: {checkInTime}</div>}
+          {checkOutTime && <div>퇴실시간: {checkOutTime}</div>}
+        </div>
       </div>
     );
   };
-
+  
   const renderTimeContent = (
     checkInTime: string,
     checkOutTime: string,
-    useTime: string
+    useTime: string,
   ) => {
     if (checkInTime || checkOutTime) {
       return (
@@ -161,7 +161,7 @@ const TravelDetail = () => {
       return null;
     }
   };
-
+  
   const formatDescriptionWithParagraphs = (text: string) => {
     const paragraphs = text.split(/\n+/);
     return paragraphs.map((paragraph, index) => (
@@ -172,35 +172,34 @@ const TravelDetail = () => {
       </React.Fragment>
     ));
   };
-
+  
   useEffect(() => {
-    setTimeout(() => {
-      if (descriptionRef.current) {
+    if (descriptionRef.current) {
+      requestAnimationFrame(() => {
         const style = getComputedStyle(descriptionRef.current);
         const lineHeight = parseFloat(style.lineHeight) || 20;
-        // TODO : 여기서 부터 진행 , 이건 빌드 이슈
         const scrollHeight = descriptionRef.current.scrollHeight;
-
+        
         if (!isNaN(lineHeight)) {
           const lineCount = scrollHeight / lineHeight;
-
+          
           if (lineCount > 3) {
             setShowExpandButton(true);
           } else {
             setShowExpandButton(false);
           }
         }
-      }
-    }, 0);
+      });
+    }
   }, [isExpanded, data]);
 
   const handleExpandClick = () => {
     setIsExpanded(!isExpanded);
   };
-
+  
   if (isLoading) return <DataLoading />;
   if (error) return <p>Error: {error.message}</p>;
-
+  
   const {
     placeName,
     country,
@@ -218,7 +217,7 @@ const TravelDetail = () => {
     checkOutTime,
     useTime,
   } = data?.data || {};
-
+  
   return (
     <div className={styles.travelDetailContent}>
       <div className={styles.topSection}>

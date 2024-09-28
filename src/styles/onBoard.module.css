@@ -29,6 +29,7 @@
   width: 1980px;
   height: 610px;
   display: inline-block;
+  object-fit:cover;
   margin: 0;
 }
 
