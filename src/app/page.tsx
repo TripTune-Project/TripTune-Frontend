@@ -181,14 +181,14 @@ const Home = () => {
                   <div className={styles.iconContainer}>
                     <div className={styles.goLink}>
                       <Image
-                        src='/assets/images/go.png'
+                        src='/assets/images/linkBtnImage.png'
                         alt='바로가기'
                         width={50}
                         height={50}
                       />
                     </div>
                     <Image
-                      src='/assets/images/time.png'
+                      src='/assets/images/homeScheduleImage.png'
                       className={styles.time}
                       alt='일정 만들기'
                       width={98}
@@ -202,14 +202,14 @@ const Home = () => {
                   <div className={styles.iconContainer}>
                     <div className={styles.goLink}>
                       <Image
-                        src='/assets/images/go.png'
+                        src='/assets/images/linkBtnImage.png'
                         alt='바로가기'
                         width={50}
                         height={50}
                       />
                     </div>
                     <Image
-                      src='/assets/images/travel.png'
+                      src='/assets/images/homeMapImage.png'
                       className={styles.travel}
                       alt='여행지 탐색'
                       width={98}
