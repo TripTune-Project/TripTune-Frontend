@@ -1,0 +1,96 @@
+/* 일정 만들기를 위한 모달창 */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* 어두운 배경 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modalContainer {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    width: 500px;
+    position: relative;
+}
+
+.closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.detailTitle {
+    font-size: 24px;
+    margin-bottom: 20px;
+    display: flex;
+}
+
+.inputGroup {
+    padding:21px;
+    display: flex;
+}
+
+.inputField {
+    flex: 1;
+    width: 722px;
+    height: fit-content;
+    border: none;
+    border-bottom: 1px solid black;
+    font-size: 16px;
+    margin-left:10px;
+}
+
+.dateDisplay {
+    margin-top: 8px;
+    font-size: 16px;
+    color: #333;
+}
+
+.datePickerContainer {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+}
+
+.customCalendarContainer {
+    width: 761px;
+    height: 419px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.sunday {
+    color: blue !important;
+}
+
+.saturday {
+    color: red !important;
+}
+
+.confirmButton {
+    float: right;
+    background-color: #76ADAC;
+    color: #ffffff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+.confirmButton:hover {
+    background-color: #76ADAC;
+}
