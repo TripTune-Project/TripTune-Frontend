@@ -12,7 +12,6 @@ import { useTravelDetail } from '@/hooks/useTravel';
 import { useParams } from 'next/navigation';
 import DataLoading from '@/components/Common/DataLoading';
 import DetailPlaceMap from '@/components/Travel/DetailPlaceMap';
-import ScheduleModal from '@/components/Schedule/ScheduleModal';
 import { BookMarkApi, BookMarkDeleteApi } from '@/api/bookMarkApi';
 import detailBookMarkNo from '../../../../public/assets/icons/ic_detail_no_bookmark.png';
 import detailBookMark from '../../../../public/assets/icons/ic_detail_bookmark.png';
@@ -77,7 +76,6 @@ const TravelDetail = () => {
   const placeIdNumber = parseInt(placeId as string, 10);
   const { data, isLoading, error } = useTravelDetail(placeIdNumber);
   
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
@@ -111,11 +109,8 @@ const TravelDetail = () => {
     }
   }, [isExpanded, data]);
   
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
-  
-  const handleSchedule = () => {
-    closeModal();
+  const scheduleAdd = () => {
+    console.log('일정 추가 진행');
   };
   
   const toggleBookmark = async () => {
@@ -288,7 +283,7 @@ const TravelDetail = () => {
           <div className={styles.addressLabel}>
             
             <Image src={locationIcon} alt={'주소'} />
-             주소 : {address} {detailAddress}
+            주소 : {address} {detailAddress}
           </div>
           {renderTimeContent(checkInTime, checkOutTime, useTime)}
           {homepage && (
@@ -316,16 +311,11 @@ const TravelDetail = () => {
                 북마크
               </button>
             )}
-            <button className={styles.chooseBtn} onClick={openModal}>
+            <button className={styles.chooseBtn} onClick={scheduleAdd}>
               <Image src={scheduleIcon} alt={'일정등록'} priority /> 내 일정
               담기
             </button>
           </div>
-          <ScheduleModal
-            isOpen={isModalOpen}
-            onClose={closeModal}
-            onConfirm={handleSchedule}
-          />
         </div>
       </div>
       <h2 className={styles.detailTitle}>
