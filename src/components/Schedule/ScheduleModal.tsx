@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
-import {
-  Modal,
-  Box,
-  Button,
-  Typography,
-  Stack,
-  TextField,
-} from '@mui/material';
-import DatePicker from 'react-datepicker';
+import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import styles from '@/styles/Schedule.module.css';
+import Image from 'next/image';
+import triptuneIcon from '../../../public/assets/icons/ic_triptune.png';
+import { ko } from 'date-fns/locale';
+
+registerLocale('ko', ko);
 
 interface ScheduleModalProps {
   isOpen: boolean;
@@ -19,94 +17,69 @@ interface ScheduleModalProps {
 const ScheduleModal = ({ isOpen, onClose, onConfirm }: ScheduleModalProps) => {
   const [startDate, setStartDate] = useState<Date | null>(new Date());
   const [endDate, setEndDate] = useState<Date | null>(new Date());
-
-  const getValidDate = (date: Date | null) => date ?? new Date();
-
+  
+  const getFormattedDate = (date: Date | null) => {
+    return date
+      ? date.toLocaleDateString('ko-KR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      })
+      : '';
+  };
+  
+  if (!isOpen) return null;
+  
   return (
-    <Modal open={isOpen} onClose={onClose}>
-      <Box
-        sx={{
-          p: 4,
-          backgroundColor: 'background.paper',
-          borderRadius: 3,
-          boxShadow: 24,
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          textAlign: 'center',
-          outline: 'none',
-        }}
-      >
-        <Typography variant='h6' component='h2' mb={3}>
-          일정 만들기 시작
-        </Typography>
-        <Stack spacing={2}>
-          <TextField
-            fullWidth
-            label='여행 이름'
-            variant='outlined'
-            size='small'
+    <div className={styles.modalOverlay}>
+      <div className={styles.modalContainer}>
+        <button className={styles.closeButton} onClick={onClose}>
+          &times;
+        </button>
+        <h2 className={styles.detailTitle}>
+          <Image src={triptuneIcon} alt="일정만들기" priority />
+          일정 만들기
+        </h2>
+        <div className={styles.inputGroup}>
+          <label>여행 이름</label>
+          <input
+            type="text"
+            className={styles.inputField}
+            placeholder="여행 이름을 입력해주세요."
           />
-          <Typography variant='body1'>
-            날짜: {getValidDate(startDate).toLocaleDateString()} →{' '}
-            {getValidDate(endDate).toLocaleDateString()}
-          </Typography>
-          <Stack
-            direction='row'
-            spacing={2}
-            justifyContent='center'
-            sx={{ display: 'flex', justifyContent: 'center', gap: '10px' }}
-          >
-            <div
-              style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}
-            >
-              <DatePicker
-                selected={getValidDate(startDate)}
-                onChange={(date) => setStartDate(date)}
-                selectsStart
-                startDate={getValidDate(startDate)}
-                endDate={getValidDate(endDate)}
-                dateFormat='yyyy.MM.dd'
-                monthsShown={2}
-                inline
-                calendarContainer={({ className, children }) => (
-                  <div className={className} style={{ width: '481px' }}>
-                    {children}
-                  </div>
-                )}
-              />
-            </div>
-          </Stack>
-        </Stack>
-        <Stack direction='row' spacing={2} justifyContent='center' mt={3}>
-          <Button
-            onClick={onClose}
-            variant='outlined'
-            size='large'
-            sx={{
-              textTransform: 'none',
-              borderRadius: '8px',
-              boxShadow: 'none',
+        </div>
+        <div className={styles.inputGroup}>
+          <label>여행 날짜</label>
+          <input
+            type="text"
+            className={styles.inputField}
+            value={`${getFormattedDate(startDate)} ~ ${getFormattedDate(endDate)}`}
+            readOnly
+          />
+        </div>
+        <div className={styles.datePickerContainer}>
+          <DatePicker
+            locale="ko"
+            selected={endDate}
+            onChange={(date) => setEndDate(date)}
+            selectsEnd
+            startDate={startDate ?? new Date()}
+            endDate={endDate ?? new Date()}
+            minDate={startDate ?? new Date()}
+            inline
+            monthsShown={2}
+            dateFormat="yyyy.MM.dd"
+            dayClassName={(date) => {
+              const day = date.getDay();
+              return day === 0 ? styles.sunday : day === 6 ? styles.saturday : '';
             }}
-          >
-            취소
-          </Button>
-          <Button
-            onClick={() => onConfirm(startDate, endDate)}
-            variant='contained'
-            size='large'
-            sx={{
-              textTransform: 'none',
-              borderRadius: '8px',
-              boxShadow: 'none',
-            }}
-          >
-            확인
-          </Button>
-        </Stack>
-      </Box>
-    </Modal>
+          />
+        </div>
+        <button className={styles.confirmButton} onClick={() => onConfirm(startDate, endDate)}>
+          생성
+        </button>
+      </div>
+    </div>
   );
 };
 
