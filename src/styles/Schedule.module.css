@@ -1,4 +1,4 @@
-/* 일정 만들기 1/3 분할 */
+/* 일정 만들기 전체 1/3 분할 */
 .layoutContainer {
     display: flex;
     width:100%;
@@ -38,7 +38,7 @@
     background-color:#ffffff;
 }
 
-/* 일정 만들기를 위한 모달창 */
+/* 0번 : 일정 만들기를 위한 모달창 */
 .modalOverlay {
     position: fixed;
     top: 0;
@@ -330,7 +330,7 @@
     line-height: normal;
 }
 
-/* 일정만들기 3번 : 채팅 */
+/* 일정 만들기 3번 : 채팅 */
 .chatContainer {
     display: flex;
     flex-direction: column;
@@ -492,4 +492,27 @@
     border-radius: 10px;
     width: 400px;
     text-align: center;
+}
+
+.radioContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.radioContainer label {
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.radioContainer input {
+    margin-right: 10px;
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
 }
