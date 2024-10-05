@@ -30,8 +30,10 @@ const PlacesScheduleMap = ({ places }: MapProps) => {
       script.id = 'google-maps-script';
       script.async = true;
       script.onload = () => {
-        setIsMapLoaded(true);
-        initializeMap();
+        if (window.google) {
+          setIsMapLoaded(true);
+          initializeMap();
+        }
       };
       script.onerror = () => {
         console.error('Google Maps API 로드에 실패했습니다.');
@@ -44,7 +46,7 @@ const PlacesScheduleMap = ({ places }: MapProps) => {
   }, []);
   
   const initializeMap = useCallback(() => {
-    if (mapContainerRef.current && !mapRef.current && window.google) {
+    if (mapContainerRef.current && window.google && !mapRef.current) {
       mapRef.current = new google.maps.Map(mapContainerRef.current, {
         center: defaultCenter,
         zoom: 16,
@@ -64,14 +66,8 @@ const PlacesScheduleMap = ({ places }: MapProps) => {
   }, [loadGoogleMapsScript]);
   
   useEffect(() => {
-    if (isMapLoaded) {
-      initializeMap();
-    }
-  }, [isMapLoaded, initializeMap]);
-  
-  useEffect(() => {
-    const map = mapRef.current;
-    if (map && isMapLoaded) {
+    if (isMapLoaded && mapRef.current) {
+      const map = mapRef.current;
       const bounds = new google.maps.LatLngBounds();
       places.forEach((place) => {
         const marker = new google.maps.Marker({
@@ -81,13 +77,14 @@ const PlacesScheduleMap = ({ places }: MapProps) => {
         });
         bounds.extend(marker.getPosition() as google.maps.LatLng);
       });
-      map.fitBounds(bounds);
+      map.fitBounds(bounds)
     }
   }, [places, isMapLoaded]);
   
   useEffect(() => {
-    const map = mapRef.current;
-    if (map) {
+    if (mapRef.current) {
+      const map = mapRef.current;
+      
       const handleZoomChange = () => {
         const newZoom = map.getZoom();
         if (typeof newZoom === 'number') {
@@ -103,10 +100,7 @@ const PlacesScheduleMap = ({ places }: MapProps) => {
       };
       
       const zoomListener = map.addListener('zoom_changed', handleZoomChange);
-      const centerListener = map.addListener(
-        'center_changed',
-        handleCenterChange
-      );
+      const centerListener = map.addListener('center_changed', handleCenterChange);
       
       return () => {
         google.maps.event.removeListener(zoomListener);
