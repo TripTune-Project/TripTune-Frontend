@@ -18,7 +18,7 @@ export const fetchTravelListByLocation = async (
   try {
     const pageNum = Number(page);
     const data = await post<TravelApiResponse>(
-      `/travels/list?page=${pageNum}`,
+      `/travels?page=${pageNum}`,
       params
     );
     if (!data.data || data.data.content.length === 0) {

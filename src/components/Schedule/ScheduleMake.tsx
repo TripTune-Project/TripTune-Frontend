@@ -95,7 +95,6 @@ const ScheduleMake = () => {
                 alt="돋보기 아이콘"
                 width={20}
                 height={20}
-                style={{ marginLeft: '30px' }}
               />
             </button>
           </div>

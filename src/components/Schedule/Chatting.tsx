@@ -1,21 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from '../../styles/Schedule.module.css';
 
 interface User {
   id: number;
   name: string;
+  email: string;
 }
 
 const Chatting = () => {
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
-  // TODO : 모의 데이터 USER -> 이메일이나 다른것으로 변경
-  const [allUsers] = useState<User[]>([
-    { id: 1, name: '홍길동' },
-    { id: 2, name: '김철수' },
-    { id: 3, name: '박영희' },
-  ]);
+  const [link, setLink] = useState('https://chat.example.com');
+  const [allUsers, setAllUsers] = useState<User[]>([]);
+  const [messages, setMessages] = useState<string[]>([]);
+  const [socket, setSocket] = useState<WebSocket | null>(null);
+  
+  useEffect(() => {
+    // 기본 채팅방 WebSocket 설정
+    const newSocket = new WebSocket('wss://chat.example.com/websocket');
+    setSocket(newSocket);
+    
+    newSocket.onmessage = (event) => {
+      setMessages((prevMessages) => [...prevMessages, event.data]);
+    };
+    
+    return () => {
+      newSocket.close();
+    };
+  }, []);
   
   const handleInviteClick = () => {
     setIsInviteModalOpen(true);
@@ -30,8 +43,8 @@ const Chatting = () => {
   };
   
   const handleSendMessage = () => {
-    if (message.trim()) {
-      console.log('메시지 전송:', message);
+    if (message.trim() && socket) {
+      socket.send(message);
       setMessage('');
     }
   };
@@ -47,10 +60,26 @@ const Chatting = () => {
   const handleInviteConfirm = () => {
     if (selectedUsers.length > 0) {
       console.log('초대된 대화 상대:', selectedUsers);
+      selectedUsers.forEach((user) => {
+        console.log(`초대 링크를 ${user.email}로 전송: ${link}`);
+        sendEmail(user.email, link);
+      });
       setIsInviteModalOpen(false);
     } else {
       console.log('선택된 대화 상대가 없습니다.');
     }
+  };
+  
+  const sendEmail = (email: string, link: string) => {
+    // 이메일 전송을 위한 모의 함수
+    console.log(`이메일 전송: ${email} - 초대 링크: ${link}`);
+    // 실제 이메일 전송 로직은 백엔드 API를 통해 구현해야 합니다.
+  };
+  
+  const handleLinkCopy = () => {
+    navigator.clipboard.writeText(link).then(() => {
+      console.log('링크가 클립보드에 복사되었습니다.');
+    });
   };
   
   return (
@@ -67,7 +96,11 @@ const Chatting = () => {
         </button>
       </div>
       <div className={styles.messageContainer}>
-        {/* TODO: 여기에 실제 메시지가 표시될 것입니다. */}
+        {messages.map((msg, index) => (
+          <div key={index} className={styles.message}>
+            {msg}
+          </div>
+        ))}
       </div>
       <div className={styles.inputContainer}>
         <input
@@ -86,6 +119,21 @@ const Chatting = () => {
         <div className={styles.chattingModalOverlay}>
           <div className={styles.chattingModalContainer}>
             <h3>대화상대 초대하기</h3>
+            <div className={styles.linkContainer}>
+              <label>
+                초대 링크:
+                <input
+                  type="radio"
+                  value={link}
+                  checked={true}
+                  readOnly
+                />
+                {link}
+              </label>
+              <button onClick={handleLinkCopy} className={styles.copyButton}>
+                링크 복사하기
+              </button>
+            </div>
             <ul className={styles.userList}>
               {allUsers.map((user) => (
                 <li key={user.id}>
@@ -95,7 +143,7 @@ const Chatting = () => {
                       checked={selectedUsers.some((u) => u.id === user.id)}
                       onChange={() => handleUserSelect(user)}
                     />
-                    {user.name}
+                    {user.name} ({user.email})
                   </label>
                 </li>
               ))}
