@@ -38,7 +38,7 @@ const handleApiError = (error: unknown, defaultMessage: string): void => {
 };
 
 // 일정 생성 (POST)
-const createSchedule = async (scheduleData: Schedule): Promise<void> => {
+export const createSchedule = async (scheduleData: Schedule): Promise<void> => {
   const url = '/api/schedules';
   
   try {
@@ -70,7 +70,7 @@ const getSchedule = async (scheduleId: number, page = 1): Promise<void> => {
 };
 
 // 여행지 조회 (GET)
-const getTravels = async (scheduleId: number, page = 1): Promise<void> => {
+export const getTravels = async (scheduleId: number, page = 1): Promise<void> => {
   const url = `/api/schedules/${scheduleId}/travels?page=${page}`;
   
   try {

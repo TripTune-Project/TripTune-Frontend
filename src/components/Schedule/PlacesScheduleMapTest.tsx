@@ -21,7 +21,7 @@ const PlacesScheduleMap = ({ places }: MapProps) => {
   const [zoom, setZoom] = useState(16);
   const [center, setCenter] = useState(defaultCenter);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
-  const [marker, setMarker] = useState<google.maps.Marker | null>(null);
+  const [markers, setMarkers] = useState<google.maps.Marker[]>([]);
   
   const loadGoogleMapsScript = useCallback(() => {
     const existingScript = document.getElementById('google-maps-script');
@@ -49,22 +49,18 @@ const PlacesScheduleMap = ({ places }: MapProps) => {
         zoom: 16,
       });
       
-      // 지도 클릭 시 링크 매거 추가
+      // 지도 클릭 시 마커 추가
       mapRef.current.addListener('click', (e: google.maps.MapMouseEvent) => {
         if (e.latLng && mapRef.current) {
-          // 이전 매거 제거
-          if (marker) {
-            marker.setMap(null);
-          }
           const newMarker = new google.maps.Marker({
             position: e.latLng,
             map: mapRef.current,
           });
-          setMarker(newMarker);
+          setMarkers((prevMarkers) => [...prevMarkers, newMarker]);
         }
       });
     }
-  }, [marker]);
+  }, []);
   
   useEffect(() => {
     loadGoogleMapsScript();
@@ -74,10 +70,8 @@ const PlacesScheduleMap = ({ places }: MapProps) => {
         google.maps.event.clearInstanceListeners(mapRef.current);
         mapRef.current = null;
       }
-      if (marker) {
-        marker.setMap(null);
-      }
-      setMarker(null);
+      markers.forEach(marker => marker.setMap(null));
+      setMarkers([]);
     };
   }, [loadGoogleMapsScript]);
   
@@ -96,12 +90,12 @@ const PlacesScheduleMap = ({ places }: MapProps) => {
       } else {
         const bounds = new google.maps.LatLngBounds();
         places.forEach((place) => {
-          const newMarker = new google.maps.Marker({
+          const marker = new google.maps.Marker({
             position: { lat: place.latitude, lng: place.longitude },
             map,
             title: place.placeName,
           });
-          bounds.extend(newMarker.getPosition() as google.maps.LatLng);
+          bounds.extend(marker.getPosition() as google.maps.LatLng);
         });
         map.fitBounds(bounds);
       }

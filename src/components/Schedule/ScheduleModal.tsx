@@ -5,18 +5,42 @@ import styles from '@/styles/Schedule.module.css';
 import Image from 'next/image';
 import triptuneIcon from '../../../public/assets/icons/ic_triptune.png';
 import { ko } from 'date-fns/locale';
+import { createSchedule } from '@/api/scheduleApi';
 
 registerLocale('ko', ko);
 
 interface ScheduleModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (startDate: Date | null, endDate: Date | null) => void;
+  onConfirm: (startDate: Date | null, endDate: Date | null, travelName: string) => void;
 }
 
 const ScheduleModal = ({ isOpen, onClose, onConfirm }: ScheduleModalProps) => {
   const [startDate, setStartDate] = useState<Date | null>(new Date());
   const [endDate, setEndDate] = useState<Date | null>(new Date());
+  const [travelName, setTravelName] = useState<string>('');
+  
+  const handleCreateSchedule = async () => {
+    if (!startDate || !endDate || !travelName) {
+      console.error('모든 필드를 입력해야 합니다.');
+      return;
+    }
+    
+    const scheduleData = {
+      startDate,
+      endDate,
+      travelName,
+    };
+    
+    try {
+      await createSchedule(scheduleData);
+      console.log('일정 생성 성공');
+      onConfirm(startDate, endDate, travelName);
+      onClose();
+    } catch (error) {
+      console.error('일정 생성 실패:', error);
+    }
+  };
   
   const getFormattedDate = (date: Date | null) => {
     return date
@@ -46,6 +70,8 @@ const ScheduleModal = ({ isOpen, onClose, onConfirm }: ScheduleModalProps) => {
             type="text"
             className={styles.inputField}
             placeholder="여행 이름을 입력해주세요."
+            value={travelName}
+            onChange={(e) => setTravelName(e.target.value)}
           />
         </div>
         <div className={styles.inputGroup}>
@@ -75,7 +101,7 @@ const ScheduleModal = ({ isOpen, onClose, onConfirm }: ScheduleModalProps) => {
             }}
           />
         </div>
-        <button className={styles.confirmButton} onClick={() => onConfirm(startDate, endDate)}>
+        <button className={styles.confirmButton} onClick={handleCreateSchedule}>
           생성
         </button>
       </div>

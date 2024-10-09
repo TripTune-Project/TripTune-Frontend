@@ -15,6 +15,7 @@ const Chatting = () => {
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const [messages, setMessages] = useState<string[]>([]);
   const [socket, setSocket] = useState<WebSocket | null>(null);
+  const [permission, setPermission] = useState('모두허용');
   
   useEffect(() => {
     // 기본 채팅방 WebSocket 설정
@@ -82,6 +83,11 @@ const Chatting = () => {
     });
   };
   
+  const handlePermissionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPermission(event.target.value);
+    setLink(`https://chat.example.com?permission=${event.target.value}`);
+  };
+  
   return (
     <div className={styles.chatContainer}>
       <div className={styles.header}>
@@ -118,17 +124,56 @@ const Chatting = () => {
       {isInviteModalOpen && (
         <div className={styles.chattingModalOverlay}>
           <div className={styles.chattingModalContainer}>
+            <button onClick={handleCloseModal} className={styles.closeButton}>
+              X
+            </button>
             <h3>대화상대 초대하기</h3>
+            <div className={styles.permissionContainer}>
+              <label>
+                <input
+                  type="radio"
+                  name="permission"
+                  value="all"
+                  checked={permission === 'all'}
+                  onChange={handlePermissionChange}
+                />
+                모두 허용
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="permission"
+                  value="edit"
+                  checked={permission === 'edit'}
+                  onChange={handlePermissionChange}
+                />
+                편집 가능
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="permission"
+                  value="chat"
+                  checked={permission === 'chat'}
+                  onChange={handlePermissionChange}
+                />
+                채팅 가능
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="permission"
+                  value="read"
+                  checked={permission === 'read'}
+                  onChange={handlePermissionChange}
+                />
+                읽기 전용
+              </label>
+            </div>
             <div className={styles.linkContainer}>
               <label>
                 초대 링크:
-                <input
-                  type="radio"
-                  value={link}
-                  checked={true}
-                  readOnly
-                />
-                {link}
+                <input type="text" value={link} readOnly />
               </label>
               <button onClick={handleLinkCopy} className={styles.copyButton}>
                 링크 복사하기
@@ -150,9 +195,6 @@ const Chatting = () => {
             </ul>
             <button onClick={handleInviteConfirm} className={styles.confirmButton}>
               초대 확인
-            </button>
-            <button onClick={handleCloseModal} className={styles.closeButton}>
-              닫기
             </button>
           </div>
         </div>
