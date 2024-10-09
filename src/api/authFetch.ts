@@ -1,5 +1,6 @@
 import Cookies from 'js-cookie';
 import { refreshApi } from './refreshApi';
+import { redirect } from 'next/navigation';
 
 type HeadersType = Record<string, string>;
 
@@ -12,15 +13,14 @@ interface FailedQueueItem {
   reject: (error: Error | string) => void;
 }
 
+// Authorization 헤더 설정 함수
 const setAuthorizationHeader = (headers: HeadersType, token: string) => {
   headers['Authorization'] = `Bearer ${token}`;
 };
 
-const triggerLoginModal = () => {
-  if (typeof window !== 'undefined') {
-    const event = new CustomEvent('showLoginModal');
-    window.dispatchEvent(event);
-  }
+// 로그인 페이지로 리다이렉트 함수
+const redirectToLoginPage = () => {
+  redirect('/Login');  // next/navigation의 redirect 사용
 };
 
 export const authFetch = async (
@@ -59,33 +59,73 @@ export const authFetch = async (
     url: string,
     options: FetchOptions
   ): Promise<Response> => {
-    const token = Cookies.get('trip-tune_at');
-    if (token && options.headers) {
-      setAuthorizationHeader(options.headers, token);
+    const accessToken = Cookies.get('trip-tune_at');
+    const refreshToken = Cookies.get('trip-tune_rt');
+    const userId = Cookies.get('user_id');  // 아이디 쿠키도 같이 확인
+
+    // 리프레시 토큰이나 아이디 쿠키가 없으면 로그인 유도
+    if (!refreshToken || !userId) {
+      redirectToLoginPage();  // 로그인 페이지로 리다이렉트
+      throw new Error('리프레시 토큰 또는 사용자 정보가 없습니다.');
+    }
+
+    // 액세스 토큰이 없으면 리프레시 토큰으로 갱신 시도
+    if (!accessToken) {
+      if (isRefreshing) {
+        return new Promise<Response>((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        }).then(async (newAccessToken) => {
+          if (typeof newAccessToken === 'string') {
+            const updatedOptions = { ...options };
+            if (updatedOptions.headers) {
+              setAuthorizationHeader(updatedOptions.headers, newAccessToken);
+            }
+            return fetch(url, updatedOptions);
+          }
+          throw new Error('토큰 갱신 실패');
+        });
+      }
+
+      isRefreshing = true;
+      try {
+        const newAccessToken = await refreshApi(); // 리프레시 토큰으로 갱신
+        processQueue(null, newAccessToken);
+        if (options.headers) {
+          setAuthorizationHeader(options.headers, newAccessToken);
+        }
+        return await fetch(url, options);
+      } catch (error) {
+        processQueue(
+          error instanceof Error
+            ? error.message
+            : '토큰 갱신 중 문제가 발생했습니다.',
+          null
+        );
+        redirectToLoginPage();  // 토큰 갱신 실패 시 로그인 페이지로 리다이렉트
+        throw error;
+      } finally {
+        isRefreshing = false;
+      }
+    }
+
+    // 액세스 토큰이 있으면 그대로 요청
+    if (accessToken && options.headers) {
+      setAuthorizationHeader(options.headers, accessToken);
     }
 
     try {
       const response = await fetch(url, options);
 
+      // 만약 응답이 401이라면 토큰 만료 처리
       if (response.status === 401) {
-        if (!Cookies.get('trip-tune_rt')) {
-          triggerLoginModal();
-          alert('로그인이 필요합니다.');
-          throw new Error('리프레시 토큰이 없습니다.');
+        if (!refreshToken || !userId) {
+          redirectToLoginPage();  // 리프레시 토큰 없을 때 로그인 페이지로 리다이렉트
+          throw new Error('리프레시 토큰 또는 사용자 정보가 없습니다.');
         }
 
         if (isRefreshing) {
           return new Promise<Response>((resolve, reject) => {
             failedQueue.push({ resolve, reject });
-          }).then(async (newAccessToken) => {
-            if (typeof newAccessToken === 'string') {
-              const updatedOptions = { ...options };
-              if (updatedOptions.headers) {
-                setAuthorizationHeader(updatedOptions.headers, newAccessToken);
-              }
-              return fetch(url, updatedOptions);
-            }
-            throw new Error('토큰 갱신 실패');
           });
         }
 
@@ -104,8 +144,7 @@ export const authFetch = async (
               : '토큰 갱신 중 문제가 발생했습니다.',
             null
           );
-          triggerLoginModal();
-          alert('토큰 갱신 중 문제가 발생했습니다.');
+          redirectToLoginPage();  // 토큰 갱신 실패 시 로그인 페이지로 리다이렉트
           throw error;
         } finally {
           isRefreshing = false;
@@ -130,135 +169,4 @@ export const authFetch = async (
   };
 
   return fetchWithToken(url, options);
-};
-
-// GET 요청 함수
-export const authGet = async <T>(
-  url: string,
-  options: FetchOptions = {}
-): Promise<T> => {
-  try {
-    const response = await authFetch(url, { method: 'GET', ...options });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'API 요청 실패');
-    }
-
-    return response.json();
-  } catch (error) {
-    throw error instanceof Error ? error : new Error('Unknown error occurred');
-  }
-};
-
-// POST 요청 함수
-export const authPost = async <T>(
-  url: string,
-  body: object,
-  options: FetchOptions = {}
-): Promise<T> => {
-  try {
-    const response = await authFetch(url, {
-      method: 'POST',
-      body: JSON.stringify(body),
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
-      ...options,
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'API 요청 실패');
-    }
-
-    return response.json();
-  } catch (error) {
-    throw error instanceof Error ? error : new Error('Unknown error occurred');
-  }
-};
-
-// PUT 요청 함수
-export const authPut = async <T>(
-  url: string,
-  body: object,
-  options: FetchOptions = {}
-): Promise<T> => {
-  try {
-    const response = await authFetch(url, {
-      method: 'PUT',
-      body: JSON.stringify(body),
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
-      ...options,
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'API 요청 실패');
-    }
-
-    return response.json();
-  } catch (error) {
-    throw error instanceof Error ? error : new Error('Unknown error occurred');
-  }
-};
-
-// PATCH 요청 함수
-export const authPatch = async <T>(
-  url: string,
-  body: object,
-  options: FetchOptions = {}
-): Promise<T> => {
-  try {
-    const response = await authFetch(url, {
-      method: 'PATCH',
-      body: JSON.stringify(body),
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
-      ...options,
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'API 요청 실패');
-    }
-
-    return response.json();
-  } catch (error) {
-    throw error instanceof Error ? error : new Error('Unknown error occurred');
-  }
-};
-
-// DELETE 요청 함수
-export const authDelete = async <T>(
-  url: string,
-  body?: object,
-  options: FetchOptions = {}
-): Promise<T> => {
-  try {
-    const response = await authFetch(url, {
-      method: 'DELETE',
-      body: body ? JSON.stringify(body) : undefined,
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
-      ...options,
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'API 요청 실패');
-    }
-
-    return response.json();
-  } catch (error) {
-    throw error instanceof Error ? error : new Error('Unknown error occurred');
-  }
 };
