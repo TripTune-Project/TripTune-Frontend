@@ -54,7 +54,7 @@ export const createSchedule = async (scheduleData: Schedule): Promise<void> => {
 };
 
 // 일정 조회 (GET)
-const getSchedule = async (scheduleId: number, page = 1): Promise<void> => {
+export const getSchedule = async (scheduleId: number, page = 1): Promise<void> => {
   const url = `/api/schedules/${scheduleId}?page=${page}`;
   
   try {
