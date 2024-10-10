@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import styles from '@/styles/Schedule.module.css';
 import { getSchedule, getTravels } from '@/api/scheduleApi';
 
-interface ScheduleMakeProps {
-  scheduleId?: number | null;
-}
-
-const ScheduleMake = ({ scheduleId }: ScheduleMakeProps) => {
+const ScheduleMake = () => {
   const searchParams = useSearchParams();
+  const { scheduleId } = useParams();
   const initialTab = searchParams.get('tab') || 'scheduleTravel';
   
   const [tab, setTab] = useState<'scheduleTravel' | 'travelRoot'>(initialTab as 'scheduleTravel' | 'travelRoot');
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   
   useEffect(() => {
@@ -20,7 +17,7 @@ const ScheduleMake = ({ scheduleId }: ScheduleMakeProps) => {
       if (scheduleId) {
         try {
           setIsLoading(true);
-          const scheduleData = await getSchedule(scheduleId);
+          const scheduleData = await getSchedule(Number(scheduleId), 1);
           setData(scheduleData);
         } catch (error) {
           console.error('Failed to fetch schedule data:', error);
@@ -38,10 +35,12 @@ const ScheduleMake = ({ scheduleId }: ScheduleMakeProps) => {
   };
   
   const handleTravelSearch = async () => {
-    try {
-      await getTravels(scheduleId);
-    } catch (error) {
-      console.error('Failed to fetch travels:', error);
+    if (scheduleId) {
+      try {
+        await getTravels(Number(scheduleId), 1);
+      } catch (error) {
+        console.error('Failed to fetch travels:', error);
+      }
     }
   };
   
