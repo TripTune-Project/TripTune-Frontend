@@ -29,7 +29,7 @@ export const authFetch = async (
 ): Promise<Response> => {
   let isRefreshing = false;
   const failedQueue: FailedQueueItem[] = [];
-
+  
   const processQueue = (
     error: Error | string | null,
     token: string | null = null
@@ -54,7 +54,7 @@ export const authFetch = async (
     });
     failedQueue.length = 0;
   };
-
+  
   const fetchWithToken = async (
     url: string,
     options: FetchOptions
@@ -62,13 +62,13 @@ export const authFetch = async (
     const accessToken = Cookies.get('trip-tune_at');
     const refreshToken = Cookies.get('trip-tune_rt');
     const userId = Cookies.get('user_id');  // 아이디 쿠키도 같이 확인
-
+    
     // 리프레시 토큰이나 아이디 쿠키가 없으면 로그인 유도
     if (!refreshToken || !userId) {
       redirectToLoginPage();  // 로그인 페이지로 리다이렉트
       throw new Error('리프레시 토큰 또는 사용자 정보가 없습니다.');
     }
-
+    
     // 액세스 토큰이 없으면 리프레시 토큰으로 갱신 시도
     if (!accessToken) {
       if (isRefreshing) {
@@ -85,7 +85,7 @@ export const authFetch = async (
           throw new Error('토큰 갱신 실패');
         });
       }
-
+      
       isRefreshing = true;
       try {
         const newAccessToken = await refreshApi(); // 리프레시 토큰으로 갱신
@@ -107,28 +107,28 @@ export const authFetch = async (
         isRefreshing = false;
       }
     }
-
+    
     // 액세스 토큰이 있으면 그대로 요청
     if (accessToken && options.headers) {
       setAuthorizationHeader(options.headers, accessToken);
     }
-
+    
     try {
       const response = await fetch(url, options);
-
+      
       // 만약 응답이 401이라면 토큰 만료 처리
       if (response.status === 401) {
         if (!refreshToken || !userId) {
           redirectToLoginPage();  // 리프레시 토큰 없을 때 로그인 페이지로 리다이렉트
           throw new Error('리프레시 토큰 또는 사용자 정보가 없습니다.');
         }
-
+        
         if (isRefreshing) {
           return new Promise<Response>((resolve, reject) => {
             failedQueue.push({ resolve, reject });
           });
         }
-
+        
         isRefreshing = true;
         try {
           const newAccessToken = await refreshApi();
@@ -150,7 +150,7 @@ export const authFetch = async (
           isRefreshing = false;
         }
       }
-
+      
       return response;
     } catch (error) {
       throw error instanceof Error
@@ -158,8 +158,8 @@ export const authFetch = async (
         : new Error('Unknown error occurred');
     }
   };
-
-  options = {
+  
+  const updatedOptions: FetchOptions = {
     ...options,
     headers: {
       'Content-Type': 'application/json',
@@ -167,6 +167,88 @@ export const authFetch = async (
     },
     credentials: 'include',
   };
+  
+  return fetchWithToken(url, updatedOptions);
+};
 
-  return fetchWithToken(url, options);
+export const authGet = async <T>(
+  url: string,
+  options: FetchOptions = {}
+): Promise<T> => {
+  try {
+    const response = await authFetch(url, { method: 'GET', ...options });
+    
+    if (!response.ok) {
+      const errorData: { message?: string } = await response.json();
+      throw new Error(errorData.message || 'API 요청 실패');
+    }
+    
+    return response.json();
+  } catch (error) {
+    throw error instanceof Error ? error : new Error('Unknown error occurred');
+  }
+};
+
+export const authPost = async <T>(
+  url: string,
+  body: Record<string, unknown>,
+  options: FetchOptions = {}
+): Promise<T> => {
+  try {
+    const response = await authFetch(url, {
+      method: 'POST',
+      body: JSON.stringify(body),
+      ...options,
+    });
+    
+    if (!response.ok) {
+      const errorData: { message?: string } = await response.json();
+      throw new Error(errorData.message || 'API 요청 실패');
+    }
+    
+    return response.json();
+  } catch (error) {
+    throw error instanceof Error ? error : new Error('Unknown error occurred');
+  }
+};
+
+export const authPatch = async <T>(
+  url: string,
+  body: Record<string, unknown>,
+  options: FetchOptions = {}
+): Promise<T> => {
+  try {
+    const response = await authFetch(url, {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+      ...options,
+    });
+    
+    if (!response.ok) {
+      const errorData: { message?: string } = await response.json();
+      throw new Error(errorData.message || 'API 요청 실패');
+    }
+    
+    return response.json();
+  } catch (error) {
+    throw error instanceof Error ? error : new Error('Unknown error occurred');
+  }
+};
+
+export const authDelete = async <T>(
+  url: string,
+  options: FetchOptions = {}
+): Promise<T> => {
+  try {
+    const response = await authFetch(url, { method: 'DELETE', ...options });
+    
+    if (!response.ok) {
+      const errorData: { message?: string } = await response.json();
+      throw new Error(errorData.message || 'API 요청 실패');
+    }
+    
+    return response.json();
+  } catch (error) {
+    throw error instanceof Error ? error : new Error('Unknown error occurred');
+  }
 };
