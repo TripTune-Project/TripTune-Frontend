@@ -122,8 +122,8 @@
     font-size: 16px;
 }
 
-.confirmButton:hover {
-    background-color: #76ADAC;
+.confirmButton:disabled {
+    background-color: #848282;
 }
 
 /* 일정만들기 1번 : 일정 기본 틀 */
@@ -166,11 +166,6 @@
 .tabButton.activeTab {
     border: 3px solid #76adac;
     border-bottom: none;
-    color: #000;
-}
-
-.tabButton:hover {
-    border: 3px solid #76adac;
     color: #000;
 }
 
@@ -217,10 +212,6 @@
     font-style: normal;
     font-weight: 700;
     line-height: normal;
-}
-
-.submitButton:hover {
-    background-color: #4d7f7d;
 }
 
 .hrStyle {
@@ -289,10 +280,6 @@
     background-color: #ccc;
     cursor: not-allowed;
     color: #ffffff;
-}
-
-.submitButton.disabledButton:hover {
-    background-color: #ccc;
 }
 
 .userIdText {
@@ -378,10 +365,6 @@
     transition: background-color 0.3s ease;
 }
 
-.inviteButton:hover {
-    background-color: #0056b3;
-}
-
 .messageContainer {
     flex-grow: 1;
     padding: 16px;
@@ -439,10 +422,6 @@
     transition: background-color 0.3s ease;
 }
 
-.sendButton:hover {
-    background-color: #0056b3;
-}
-
 .userList {
     list-style: none;
     padding: 0;
@@ -460,10 +439,6 @@
     align-items: center;
     gap: 12px;
     transition: background-color 0.3s ease;
-}
-
-.userList li:hover {
-    background-color: #e0e7ea;
 }
 
 .linkContainer {
@@ -494,10 +469,6 @@
     transition: background-color 0.3s ease;
 }
 
-.copyButton:hover {
-    background-color: #0056b3;
-}
-
 .confirmButton {
     background-color: #007bff;
     color: white;
@@ -507,10 +478,6 @@
     cursor: pointer;
     margin-right: 12px;
     transition: background-color 0.3s ease;
-}
-
-.confirmButton:hover {
-    background-color: #0056b3;
 }
 
 .closeButton {
