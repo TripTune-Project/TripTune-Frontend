@@ -1,34 +1,6 @@
 import { get, post, patch } from './api';
-
-interface Schedule {
-  scheduleId?: number;
-  scheduleName: string;
-  startDate: string;
-  endDate: string;
-}
-
-interface Attendee {
-  name: string;
-  email: string;
-}
-
-interface TravelRoute {
-  routeId: number;
-  destination: string;
-  startTime: string;
-  endTime: string;
-}
-
-interface ScheduleDetails extends Schedule {
-  attendees: Attendee[];
-  travelRoute: TravelRoute[];
-}
-
-interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  message: string;
-}
+import { ApiResponse } from '@/types/travelType';
+import { Schedule, ScheduleDetails, TravelRoute } from '@/types/scheduleType';
 
 // 일정 생성 (POST)
 export const createSchedule = async (scheduleData: Schedule): Promise<ApiResponse<Schedule>> => {
@@ -48,13 +20,13 @@ export const createSchedule = async (scheduleData: Schedule): Promise<ApiRespons
 };
 
 // 일정 조회 (GET)
-export const getSchedule = async (scheduleId: number, page = 1): Promise<ApiResponse<Schedule>> => {
+export const getSchedule = async (scheduleId: number, page: number = 1): Promise<ApiResponse<Schedule>> => {
   const url = `/schedules/${scheduleId}?page=${page}`;
   
   try {
     const response = await get<ApiResponse<Schedule>>(url, { requiresAuth: true });
     if (response.success) {
-      console.log('일정 조회 성공:', response.data);
+      console.log('일정 조회 성공:', response);
     } else {
       console.error('일정 조회 실패:', response.message);
     }
@@ -87,7 +59,7 @@ export const searchSchedule = async (keyword: string): Promise<ApiResponse<{ sea
     const response = await post<ApiResponse<{ searchList: Schedule[] }>>(
       '/schedule/search',
       { keyword },
-      { requiresAuth: true }
+      { requiresAuth: true },
     );
     
     if (response.success && response.data) {
