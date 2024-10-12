@@ -1,4 +1,4 @@
-/* 일정 만들기 1/3 분할 */
+/* 일정 만들기 전체 1/3 분할 */
 .layoutContainer {
     display: flex;
     width:100%;
@@ -38,7 +38,7 @@
     background-color:#ffffff;
 }
 
-/* 일정 만들기를 위한 모달창 */
+/* 0번 : 일정 만들기를 위한 모달창 */
 .modalOverlay {
     position: fixed;
     top: 0;
@@ -46,6 +46,7 @@
     width: 100vw;
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.5);
+    /* background-color: rgba(0, 0, 0, 0.0);*/
     display: flex;
     justify-content: center;
     align-items: center;
@@ -61,10 +62,24 @@
     position: relative;
 }
 
+.closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
 .detailTitle {
-    margin-left:20px;
     font-size: 24px;
     margin-bottom: 20px;
+    display: flex;
+}
+
+.inputGroup {
+    padding:21px;
     display: flex;
 }
 
@@ -117,8 +132,8 @@
     font-size: 16px;
 }
 
-.confirmButton:disabled {
-    background-color: #848282;
+.confirmButton:hover {
+    background-color: #76ADAC;
 }
 
 /* 일정만들기 1번 : 일정 기본 틀 */
@@ -132,7 +147,6 @@
 }
 
 .tabContainer {
-    margin-left:20px;
     display: flex;
     margin-bottom: 20px;
 }
@@ -165,9 +179,12 @@
     color: #000;
 }
 
+.tabButton:hover {
+    border: 3px solid #76adac;
+    color: #000;
+}
+
 .inputGroup {
-    padding:21px;
-    display: flex;
     margin-bottom: 20px;
     width: 480px;
 }
@@ -210,6 +227,10 @@
     font-style: normal;
     font-weight: 700;
     line-height: normal;
+}
+
+.submitButton:hover {
+    background-color: #4d7f7d;
 }
 
 .hrStyle {
@@ -280,6 +301,10 @@
     color: #ffffff;
 }
 
+.submitButton.disabledButton:hover {
+    background-color: #ccc;
+}
+
 .userIdText {
     display: flex;
     flex-direction: column;
@@ -305,359 +330,155 @@
     line-height: normal;
 }
 
-.noResults {
-    color: #555;
-    font-size: 16px;
-    text-align: center;
-    margin: 20px 0;
-    padding: 10px;
-    background-color: #f9f9f9;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.placeItem {
-    display: flex;
-    margin-bottom: 20px;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #fff;
-    transition: box-shadow 0.3s ease;
-}
-
-.placeItem:hover {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.placeThumbnail {
-    margin-right: 20px;
-    width: 150px;
-    height: 150px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #f0f0f0;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.thumbnailImage {
-    border-radius: 8px;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.noImage {
-    position: relative;
-    width: 749px;
-    height: 512px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-    background-color: #e0e0e0;
-    border: 1px dashed #ccc;
-    color: #888;
-    font-size: 18px;
-}
-
-.placeInfo {
-    position: relative;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.bookmarkButton {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-
-.placeName {
-    font-size: 18px;
-    font-weight: bold;
-    font-family: 'Noto Sans KR', sans-serif;
-    color: #333;
-    margin-left: 0;
-}
-
-.placeAddress,
-.placeDetailAddress {
-    line-height: 2em;
-    margin: 2px 0;
-    color: #555;
-    font-size: 14px;
-}
-
-.placeDetailAddress {
-    display: flex;
-    align-items: center;
-}
-
-.distanceInfo {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    color: #555;
-    font-size: 14px;
-}
-
-.addButton {
-    background-color: #76adac;
-    color: #fff;
-    font-size: 16px;
-    font-family: 'Noto Sans KR', sans-serif;
-    padding: 12px 20px;
-    border: none;
-    cursor: pointer;
-}
-
-.travelSearchContainer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 20px;
-    gap:10px;
-}
-
-.travelSearchContainer input {
-    width: 350px;
-    padding: 10px 15px;
-    font-size: 16px;
-    border-radius: 25px;
-    border: 1px solid #ccc;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-}
-
-.travelSearchContainer input:focus {
-    border-color: #76adac;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    outline: none;
-}
-
-.travelSearchContainer button {
-    padding: 10px 20px;
-    background-color: #76adac;
-    color: #fff;
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.travelList {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* 반응형으로 칸을 채움 */
-    gap: 20px;
-}
-
-/* 일정만들기 3번 : 채팅 */
+/* 일정 만들기 3번 : 채팅 */
 .chatContainer {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     width: 100%;
     height: 100%;
-    background-color: #f0f2f5;
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: #f7f7f7;
+    border: 1px solid #ccc;
+    border-radius: 10px;
 }
 
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px;
-    background-color: #ffffff;
-    border-bottom: 1px solid #e0e0e0;
-    border-radius: 12px 12px 0 0;
+    padding: 10px;
 }
 
 .chatTitle {
     margin: 0;
     font-size: 24px;
-    font-weight: 700;
-    color: #333333;
+    font-weight: bold;
 }
 
 .plusButton {
-    color: #333333;
-    padding: 8px;
+    background-color: #76adac;
+    color: #ffffff;
+    padding: 10px;
     border: none;
-    border-radius: 50%;
-    font-size: 24px;
+    border-radius: 5px;
+    font-size: 20px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+}
+
+.plusButton:hover {
+    background-color: #4d7f7d;
 }
 
 .centerContainer {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 24px 0;
+    padding: 20px 0;
 }
 
 .inviteButton {
-    background-color: #007bff;
+    background-color: #76adac;
     color: #ffffff;
-    padding: 12px 24px;
+    padding: 10px 20px;
     border: none;
-    border-radius: 8px;
+    border-radius: 5px;
     font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+}
+
+.inviteButton:hover {
+    background-color: #4d7f7d;
 }
 
 .messageContainer {
     flex-grow: 1;
-    padding: 16px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
     overflow-y: auto;
-    background-color: #ffffff;
-    border-bottom: 1px solid #e0e0e0;
 }
 
 .message {
-    background-color: #e9f7fe;
-    border-radius: 16px;
-    padding: 12px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     font-size: 14px;
-    max-width: 70%;
-    align-self: flex-start;
+    max-width: 60%;
 }
 
 .inputContainer {
     display: flex;
-    padding: 16px;
-    border-top: 1px solid #e0e0e0;
-    background-color: #ffffff;
-    border-radius: 0 0 12px 12px;
-    gap: 12px;
-    flex-wrap: wrap;
+    padding: 10px;
+    border-top: 1px solid #ccc;
 }
 
 .messageInput {
     flex-grow: 1;
-    padding: 12px;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
     font-size: 14px;
-    transition: border-color 0.3s ease;
-    min-width: 200px;
-    background-color: #ffffff;
-}
-
-.messageInput:focus {
-    border-color: #007bff;
-    outline: none;
+    margin-right: 10px;
 }
 
 .sendButton {
-    background-color: #007bff;
-    color: #ffffff;
-    padding: 12px 20px;
+    background-color: #76adac;
+    color: white;
+    padding: 10px 20px;
     border: none;
-    border-radius: 8px;
+    border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+}
+
+.sendButton:hover {
+    background-color: #4d7f7d;
 }
 
 .userList {
     list-style: none;
     padding: 0;
     margin-bottom: 20px;
-    max-height: 200px;
-    overflow-y: auto;
 }
 
 .userList li {
-    margin: 12px 0;
-    padding: 8px;
-    background-color: #f0f2f5;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    transition: background-color 0.3s ease;
-}
-
-.linkContainer {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 24px;
-    flex-wrap: wrap;
-}
-
-.linkContainer input[type="text"] {
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 10px;
-    font-size: 14px;
-    width: 300px;
-    margin:5px ;
-}
-
-.copyButton {
-    background-color: #007bff;
-    color: white;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    margin: 10px 0;
 }
 
 .confirmButton {
-    background-color: #007bff;
+    background-color: #76adac;
     color: white;
-    padding: 12px 24px;
+    padding: 10px 20px;
     border: none;
-    border-radius: 8px;
+    border-radius: 5px;
     cursor: pointer;
-    margin-right: 12px;
-    transition: background-color 0.3s ease;
+    margin-right: 10px;
+}
+
+.confirmButton:hover {
+    background-color: #4d7f7d;
 }
 
 .closeButton {
-    position: absolute;
-    background: none;
+    padding: 10px 20px;
+    background-color: #ccc;
+    color: white;
     border: none;
-    font-size: 20px;
+    border-radius: 5px;
     cursor: pointer;
-    top: 16px;
-    right: 16px;
-    padding: 8px;
-    color: #333333;
-    border-radius: 50%;
-    transition: background-color 0.3s ease;
+}
+
+.closeButton:hover {
+    background-color: #999;
 }
 
 .chattingModalOverlay {
     position: fixed;
-    bottom: 400px;
+    top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
@@ -666,41 +487,32 @@
 }
 
 .chattingModalContainer {
-    position: relative;
     background-color: white;
-    padding: 32px;
-    border-radius: 16px;
-    width: 600px;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
     text-align: center;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
-.chattingModalContainer h3 {
-    margin-bottom: 24px;
-    font-size: 22px;
-    font-weight: 700;
-}
-
-.permissionContainer label {
+.radioContainer {
     display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px 0;
 }
 
-.permissionContainer {
-    display: flex;
-    gap: 16px;
-    justify-content: center;
-    margin-bottom: 24px;
-    flex-wrap: wrap;
-}
-
-.linkContainer label {
+.radioContainer label {
+    font-size: 16px;
     display: flex;
     align-items: center;
 }
 
-.linkContainer input[type="radio"] {
+.radioContainer input {
     margin-right: 10px;
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
 }

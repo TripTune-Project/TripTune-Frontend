@@ -1,149 +1,72 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { useParams, useSearchParams, useRouter } from 'next/navigation';
-import styles from '@/styles/Schedule.module.css';
-import { getSchedule, getTravels } from '@/api/scheduleApi';
+import React, { useEffect, useState, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
+import styles from '../../styles/Schedule.module.css';
 import Image from 'next/image';
-import bookMarkIcon from '../../../public/assets/icons/ic_bookmark.png';
-import bookMarkIconNo from '../../../public/assets/icons/ic_bookmark_no.png';
-import locationIcon from '../../../public/assets/icons/ic_location.png';
-import Pagination from '../Travel/Pagination';
-import PlacesScheduleMap from './PlacesScheduleMap';
-import { BookMarkApi, BookMarkDeleteApi } from '@/api/bookMarkApi';
-import { ScheduleDetail, Place } from '@/types/scheduleType';
+import triptuneIcon from '../../../public/assets/icons/ic_triptune.png';
 
 const ScheduleMake = () => {
-  const router = useRouter();
   const searchParams = useSearchParams();
-  const { scheduleId } = useParams();
-  const initialTab = (searchParams.get('tab') || 'scheduleTravel') as 'scheduleTravel' | 'travelRoot';
+  const initialTab = searchParams.get('tab') || 'scheduleTravel';
   
-  const [tab, setTab] = useState<'scheduleTravel' | 'travelRoot'>(initialTab);
-  const [data, setData] = useState<ScheduleDetail | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [travels, setTravels] = useState<Place[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
-  const [isSearching, setIsSearching] = useState(false);
-  const [markers, setMarkers] = useState<{ lat: number; lng: number; name: string }[]>([]);
-  const [alertMessage, setAlertMessage] = useState<string>('');
-  const [alertSeverity, setAlertSeverity] = useState<'success' | 'error' | ''>('');
+  const [tab, setTab] = useState<'scheduleTravel' | 'travelRoot'>(
+    initialTab as 'scheduleTravel' | 'travelRoot'
+  );
+  const [message, setMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const [alertOpen, setAlertOpen] = useState(false);
-  
-  const fetchScheduleData = useCallback(async (page: number) => {
-    if (!scheduleId) return;
-    try {
-      setIsLoading(true);
-      const scheduleData = await getSchedule(Number(scheduleId), page);
-      if (scheduleData && scheduleData.data) {
-        const scheduleDetail = scheduleData.data as ScheduleDetail;
-        setData(scheduleDetail);
-        setTravels(scheduleDetail.placeList?.content ?? []);
-        setTotalPages(scheduleDetail.placeList?.totalPages ?? 0);
-      } else {
-        setData(null);
-      }
-    } catch (error) {
-      console.error('Failed to fetch schedule data:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [scheduleId]);
-  
-  const fetchTravels = useCallback(async (page: number) => {
-    if (!scheduleId) return;
-    try {
-      setIsLoading(true);
-      const travelData = await getTravels(Number(scheduleId), page);
-      if (travelData && travelData.data) {
-        const travelDetail = travelData.data as ScheduleDetail;
-        setTravels(travelDetail.placeList?.content ?? []);
-        setTotalPages(travelDetail.placeList?.totalPages ?? 0);
-      } else {
-        setTravels([]);
-      }
-    } catch (error) {
-      console.error('Failed to fetch travels:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [scheduleId]);
-  
-  const handleAddMarker = (place: Place) => {
-    setMarkers((prevMarkers) => [
-      ...prevMarkers,
-      { lat: place.latitude ?? 0, lng: place.longitude ?? 0, name: place.placeName },
-    ]);
-  };
+  const [alertSeverity] = useState<'success' | 'error'>(
+    'success'
+  );
   
   useEffect(() => {
-    fetchScheduleData(currentPage);
-  }, [fetchScheduleData, currentPage]);
+    setTab(initialTab as 'scheduleTravel' | 'travelRoot');
+  }, [initialTab]);
   
-  const handleTabChange = (newTab: 'scheduleTravel' | 'travelRoot') => {
-    setTab(newTab);
+  const handleTabChange = (tab: 'scheduleTravel' | 'travelRoot') => {
+    setTab(tab);
+    setMessage('');
+    setErrorMessage('');
+    setAlertOpen(false);
   };
   
-  const handleTravelSearch = async () => {
-    setCurrentPage(1);
-    setIsSearching(true);
-    await fetchTravels(1);
+  const [startDate, setStartDate] = useState<Date | null>(new Date());
+  const [endDate, setEndDate] = useState<Date | null>(new Date());
+  
+  const getFormattedDate = (date: Date | null) => {
+    return date
+      ? date.toLocaleDateString('ko-KR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      })
+      : '';
   };
-  
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    isSearching ? fetchTravels(page) : fetchScheduleData(page);
-  };
-  
-  const handleDetailClick = (placeId: number) => {
-    router.push(`/Travel/${placeId}`);
-  };
-  
-  const toggleBookmark = useCallback(async (placeId: number, isBookmarked = false) => {
-    try {
-      if (isBookmarked) {
-        await BookMarkDeleteApi({ placeId });
-        setAlertMessage('북마크가 해제되었습니다.');
-      } else {
-        await BookMarkApi({ placeId });
-        setAlertMessage('북마크가 등록되었습니다.');
-      }
-      setAlertSeverity('success');
-    } catch (error) {
-      setAlertMessage('북마크 처리 중 오류가 발생했습니다.');
-      setAlertSeverity('error');
-    } finally {
-      setAlertOpen(true);
-    }
-  }, []);
-  
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
   
   return (
     <div className={styles.pageContainer}>
       <div>
-        <h1 className={styles.detailTitle}>일정 만들기</h1>
-        <div className={styles.inputGroup}>
-          <label>여행 이름</label>
-          <input
-            type="text"
-            className={styles.inputField}
-            placeholder="여행 이름을 입력해주세요."
-            value={data?.scheduleName || ''}
-            readOnly
-          />
+          <h2 className={styles.detailTitle}>
+            <Image src={triptuneIcon} alt="일정만들기" priority />
+            일정 만들기
+          </h2>
+          <div className={styles.inputGroup}>
+            <label>여행 이름</label>
+            <input
+              type="text"
+              className={styles.inputField}
+              placeholder="여행 이름을 입력해주세요."
+            />
+          </div>
+          <div className={styles.inputGroup}>
+            <label>여행 날짜</label>
+            <input
+              type="text"
+              className={styles.inputField}
+              value={`${getFormattedDate(startDate)} ~ ${getFormattedDate(endDate)}`}
+              readOnly
+            />
+          </div>
         </div>
-        <div className={styles.inputGroup}>
-          <label>여행 날짜</label>
-          <input
-            type="text"
-            className={styles.inputField}
-            value={`${data?.startDate ?? ''} ~ ${data?.endDate ?? ''}`}
-            readOnly
-          />
-        </div>
-      </div>
       <div className={styles.tabContainer}>
         <button
           className={`${styles.tabButton} ${tab === 'scheduleTravel' ? styles.activeTab : ''}`}
@@ -158,109 +81,1100 @@ const ScheduleMake = () => {
           여행 루트
         </button>
       </div>
-      {tab === 'scheduleTravel' && (
-        <>
-          <div className={styles.travelSearchContainer}>
-            <input type="text" placeholder="원하는 여행지를 검색하세요" />
-            <button onClick={handleTravelSearch}>돋보기</button>
-          </div>
-          <div className={styles.travelList}>
-            {travels && travels.length > 0 ? (
-              travels.map((place) => (
-                <li
-                  key={place.placeId}
-                  className={styles.placeItem}
-                  onClick={() => handleDetailClick(place.placeId)}
+      {tab === 'scheduleTravel' ? (
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+              <input
+                type="text"
+                placeholder="원하는 여행지를 검색하세요"
+                style={{
+                  width: '450px',
+                  padding: '10px',
+                  fontSize: '16px',
+                  border: '1px solid #ccc',
+                  borderRadius: '4px',
+                  marginRight: '10px'
+                }}
+              />
+              <button
+                style={{
+                  padding: '10px',
+                  backgroundColor: '#fff',
+                  border: '1px solid #ccc',
+                  borderRadius: '4px',
+                  cursor: 'pointer'
+                }}
+              >
+                돋보기
+              </button>
+            </div>
+            {/* TODO : 반복 시점 10개씩 무한 스크롤 실행 */}
+            <>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  border: '1px solid #ccc',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  marginBottom: '10px',
+                  boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                }}
+              >
+                <div
+                  style={{
+                    width: '100px',
+                    height: '100px',
+                    backgroundColor: '#eee',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
                 >
-                  <div className={styles.placeThumbnail}>
-                    {place.thumbnailUrl ? (
-                      <Image
-                        src={place.thumbnailUrl}
-                        alt={place.placeName}
-                        width={150}
-                        height={150}
-                        className={styles.thumbnailImage}
-                        priority
-                      />
-                    ) : (
-                      <div className={styles.noImage}>이미지 없음</div>
-                    )}
+                  <span>사진</span>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '5px' }}>
+                    훈련원공원
                   </div>
-                  <div className={styles.placeInfo}>
-                    <button
-                      className={styles.bookmarkButton}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleBookmark(place.placeId, place.isBookmarked ?? false);
-                      }}
-                    >
-                      {place.isBookmarked ? (
-                        <Image
-                          src={bookMarkIcon}
-                          alt="북마크"
-                          width={16}
-                          height={16}
-                          priority
-                        />
-                      ) : (
-                        <Image
-                          src={bookMarkIconNo}
-                          alt="북마크 해제"
-                          width={16}
-                          height={16}
-                          priority
-                        />
-                      )}
-                    </button>
-                    <div className={styles.placeName}>{place.placeName}</div>
-                    <p className={styles.placeAddress}>
-                      {`${place.country} / ${place.city} / ${place.district}`}
-                    </p>
-                    <p className={styles.placeDetailAddress}>
-                      <Image
-                        src={locationIcon}
-                        alt="장소"
-                        width={15}
-                        height={21}
-                      />
-                      &nbsp;
-                      {place.address} {place.detailAddress}
-                    </p>
-                    <div className={styles.distanceInfo}>
-                      <button
-                        className={styles.addButton}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleAddMarker(place);
-                        }}
-                      >
-                        추가
-                      </button>
-                    </div>
+                  <div style={{ color: '#666', marginBottom: '5px' }}>
+                    대한민국 / 서울 / 중구
                   </div>
-                </li>
-              ))
-            ) : (
-              <p className={styles.noResults}>검색 결과가 없습니다.</p>
-            )}
+                  <div style={{ display: 'flex', alignItems: 'center', color: '#666' }}>
+                <span style={{ marginLeft: '5px' }}>
+            서울특별시 중구 을지로 227 (을지로5가)
+          </span>
+                  </div>
+                </div>
+                <button
+                  style={{
+                    padding: '10px 20px',
+                    fontSize: '16px',
+                    backgroundColor: '#4CAF50',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  추가
+                </button>
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  border: '1px solid #ccc',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  marginBottom: '10px',
+                  boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                }}
+              >
+                <div
+                  style={{
+                    width: '100px',
+                    height: '100px',
+                    backgroundColor: '#eee',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <span>사진</span>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '5px' }}>
+                    훈련원공원
+                  </div>
+                  <div style={{ color: '#666', marginBottom: '5px' }}>
+                    대한민국 / 서울 / 중구
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', color: '#666' }}>
+                <span style={{ marginLeft: '5px' }}>
+            서울특별시 중구 을지로 227 (을지로5가)
+          </span>
+                  </div>
+                </div>
+                <button
+                  style={{
+                    padding: '10px 20px',
+                    fontSize: '16px',
+                    backgroundColor: '#4CAF50',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  추가
+                </button>
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  border: '1px solid #ccc',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  marginBottom: '10px',
+                  boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                }}
+              >
+                <div
+                  style={{
+                    width: '100px',
+                    height: '100px',
+                    backgroundColor: '#eee',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <span>사진</span>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '5px' }}>
+                    훈련원공원
+                  </div>
+                  <div style={{ color: '#666', marginBottom: '5px' }}>
+                    대한민국 / 서울 / 중구
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', color: '#666' }}>
+                <span style={{ marginLeft: '5px' }}>
+            서울특별시 중구 을지로 227 (을지로5가)
+          </span>
+                  </div>
+                </div>
+                <button
+                  style={{
+                    padding: '10px 20px',
+                    fontSize: '16px',
+                    backgroundColor: '#4CAF50',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  추가
+                </button>
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  border: '1px solid #ccc',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  marginBottom: '10px',
+                  boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                }}
+              >
+                <div
+                  style={{
+                    width: '100px',
+                    height: '100px',
+                    backgroundColor: '#eee',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <span>사진</span>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '5px' }}>
+                    훈련원공원
+                  </div>
+                  <div style={{ color: '#666', marginBottom: '5px' }}>
+                    대한민국 / 서울 / 중구
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', color: '#666' }}>
+                <span style={{ marginLeft: '5px' }}>
+            서울특별시 중구 을지로 227 (을지로5가)
+          </span>
+                  </div>
+                </div>
+                <button
+                  style={{
+                    padding: '10px 20px',
+                    fontSize: '16px',
+                    backgroundColor: '#4CAF50',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  추가
+                </button>
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  border: '1px solid #ccc',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  marginBottom: '10px',
+                  boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                }}
+              >
+                <div
+                  style={{
+                    width: '100px',
+                    height: '100px',
+                    backgroundColor: '#eee',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <span>사진</span>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '5px' }}>
+                    훈련원공원
+                  </div>
+                  <div style={{ color: '#666', marginBottom: '5px' }}>
+                    대한민국 / 서울 / 중구
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', color: '#666' }}>
+                <span style={{ marginLeft: '5px' }}>
+            서울특별시 중구 을지로 227 (을지로5가)
+          </span>
+                  </div>
+                </div>
+                <button
+                  style={{
+                    padding: '10px 20px',
+                    fontSize: '16px',
+                    backgroundColor: '#4CAF50',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  추가
+                </button>
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  border: '1px solid #ccc',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  marginBottom: '10px',
+                  boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                }}
+              >
+                <div
+                  style={{
+                    width: '100px',
+                    height: '100px',
+                    backgroundColor: '#eee',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <span>사진</span>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '5px' }}>
+                    훈련원공원
+                  </div>
+                  <div style={{ color: '#666', marginBottom: '5px' }}>
+                    대한민국 / 서울 / 중구
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', color: '#666' }}>
+                <span style={{ marginLeft: '5px' }}>
+            서울특별시 중구 을지로 227 (을지로5가)
+          </span>
+                  </div>
+                </div>
+                <button
+                  style={{
+                    padding: '10px 20px',
+                    fontSize: '16px',
+                    backgroundColor: '#4CAF50',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  추가
+                </button>
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  border: '1px solid #ccc',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  marginBottom: '10px',
+                  boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                }}
+              >
+                <div
+                  style={{
+                    width: '100px',
+                    height: '100px',
+                    backgroundColor: '#eee',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <span>사진</span>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '5px' }}>
+                    훈련원공원
+                  </div>
+                  <div style={{ color: '#666', marginBottom: '5px' }}>
+                    대한민국 / 서울 / 중구
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', color: '#666' }}>
+                <span style={{ marginLeft: '5px' }}>
+            서울특별시 중구 을지로 227 (을지로5가)
+          </span>
+                  </div>
+                </div>
+                <button
+                  style={{
+                    padding: '10px 20px',
+                    fontSize: '16px',
+                    backgroundColor: '#4CAF50',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  추가
+                </button>
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  border: '1px solid #ccc',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  marginBottom: '10px',
+                  boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                }}
+              >
+                <div
+                  style={{
+                    width: '100px',
+                    height: '100px',
+                    backgroundColor: '#eee',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <span>사진</span>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '5px' }}>
+                    훈련원공원
+                  </div>
+                  <div style={{ color: '#666', marginBottom: '5px' }}>
+                    대한민국 / 서울 / 중구
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', color: '#666' }}>
+                <span style={{ marginLeft: '5px' }}>
+            서울특별시 중구 을지로 227 (을지로5가)
+          </span>
+                  </div>
+                </div>
+                <button
+                  style={{
+                    padding: '10px 20px',
+                    fontSize: '16px',
+                    backgroundColor: '#4CAF50',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  추가
+                </button>
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  border: '1px solid #ccc',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  marginBottom: '10px',
+                  boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                }}
+              >
+                <div
+                  style={{
+                    width: '100px',
+                    height: '100px',
+                    backgroundColor: '#eee',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <span>사진</span>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '5px' }}>
+                    훈련원공원
+                  </div>
+                  <div style={{ color: '#666', marginBottom: '5px' }}>
+                    대한민국 / 서울 / 중구
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', color: '#666' }}>
+                <span style={{ marginLeft: '5px' }}>
+            서울특별시 중구 을지로 227 (을지로5가)
+          </span>
+                  </div>
+                </div>
+                <button
+                  style={{
+                    padding: '10px 20px',
+                    fontSize: '16px',
+                    backgroundColor: '#4CAF50',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  추가
+                </button>
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  border: '1px solid #ccc',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  marginBottom: '10px',
+                  boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                }}
+              >
+                <div
+                  style={{
+                    width: '100px',
+                    height: '100px',
+                    backgroundColor: '#eee',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <span>사진</span>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '5px' }}>
+                    훈련원공원
+                  </div>
+                  <div style={{ color: '#666', marginBottom: '5px' }}>
+                    대한민국 / 서울 / 중구
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', color: '#666' }}>
+                <span style={{ marginLeft: '5px' }}>
+            서울특별시 중구 을지로 227 (을지로5가)
+          </span>
+                  </div>
+                </div>
+                <button
+                  style={{
+                    padding: '10px 20px',
+                    fontSize: '16px',
+                    backgroundColor: '#4CAF50',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  추가
+                </button>
+              </div>
+            </>
           </div>
-          <Pagination
-            total={totalPages * 5}
-            currentPage={currentPage}
-            pageSize={5}
-            onPageChange={handlePageChange}
-          />
-          <PlacesScheduleMap
-            places={travels.map((place) => ({
-              latitude: place.latitude ?? 0,
-              longitude: place.longitude ?? 0,
-            }))}
-            markers={markers}
-          />
-        </>
+      ) : (
+        <div className={styles.inputGroup}>
+          <div>
+            <>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  border: '1px solid #ccc',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  marginBottom: '10px',
+                  boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                }}
+              >
+                <div
+                  style={{
+                    width: '100px',
+                    height: '100px',
+                    backgroundColor: '#eee',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <span>사진</span>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '5px' }}>
+                    훈련원공원
+                  </div>
+                  <div style={{ color: '#666', marginBottom: '5px' }}>
+                    대한민국 / 서울 / 중구
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', color: '#666' }}>
+                <span style={{ marginLeft: '5px' }}>
+            서울특별시 중구 을지로 227 (을지로5가)
+          </span>
+                  </div>
+                </div>
+                <button
+                  style={{
+                    padding: '10px 20px',
+                    fontSize: '16px',
+                    backgroundColor: '#4CAF50',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  추가
+                </button>
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  border: '1px solid #ccc',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  marginBottom: '10px',
+                  boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                }}
+              >
+                <div
+                  style={{
+                    width: '100px',
+                    height: '100px',
+                    backgroundColor: '#eee',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <span>사진</span>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '5px' }}>
+                    훈련원공원
+                  </div>
+                  <div style={{ color: '#666', marginBottom: '5px' }}>
+                    대한민국 / 서울 / 중구
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', color: '#666' }}>
+                <span style={{ marginLeft: '5px' }}>
+            서울특별시 중구 을지로 227 (을지로5가)
+          </span>
+                  </div>
+                </div>
+                <button
+                  style={{
+                    padding: '10px 20px',
+                    fontSize: '16px',
+                    backgroundColor: '#4CAF50',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  추가
+                </button>
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  border: '1px solid #ccc',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  marginBottom: '10px',
+                  boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                }}
+              >
+                <div
+                  style={{
+                    width: '100px',
+                    height: '100px',
+                    backgroundColor: '#eee',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <span>사진</span>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '5px' }}>
+                    훈련원공원
+                  </div>
+                  <div style={{ color: '#666', marginBottom: '5px' }}>
+                    대한민국 / 서울 / 중구
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', color: '#666' }}>
+                <span style={{ marginLeft: '5px' }}>
+            서울특별시 중구 을지로 227 (을지로5가)
+          </span>
+                  </div>
+                </div>
+                <button
+                  style={{
+                    padding: '10px 20px',
+                    fontSize: '16px',
+                    backgroundColor: '#4CAF50',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  추가
+                </button>
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  border: '1px solid #ccc',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  marginBottom: '10px',
+                  boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                }}
+              >
+                <div
+                  style={{
+                    width: '100px',
+                    height: '100px',
+                    backgroundColor: '#eee',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <span>사진</span>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '5px' }}>
+                    훈련원공원
+                  </div>
+                  <div style={{ color: '#666', marginBottom: '5px' }}>
+                    대한민국 / 서울 / 중구
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', color: '#666' }}>
+                <span style={{ marginLeft: '5px' }}>
+            서울특별시 중구 을지로 227 (을지로5가)
+          </span>
+                  </div>
+                </div>
+                <button
+                  style={{
+                    padding: '10px 20px',
+                    fontSize: '16px',
+                    backgroundColor: '#4CAF50',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  추가
+                </button>
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  border: '1px solid #ccc',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  marginBottom: '10px',
+                  boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                }}
+              >
+                <div
+                  style={{
+                    width: '100px',
+                    height: '100px',
+                    backgroundColor: '#eee',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <span>사진</span>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '5px' }}>
+                    훈련원공원
+                  </div>
+                  <div style={{ color: '#666', marginBottom: '5px' }}>
+                    대한민국 / 서울 / 중구
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', color: '#666' }}>
+                <span style={{ marginLeft: '5px' }}>
+            서울특별시 중구 을지로 227 (을지로5가)
+          </span>
+                  </div>
+                </div>
+                <button
+                  style={{
+                    padding: '10px 20px',
+                    fontSize: '16px',
+                    backgroundColor: '#4CAF50',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  추가
+                </button>
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  border: '1px solid #ccc',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  marginBottom: '10px',
+                  boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                }}
+              >
+                <div
+                  style={{
+                    width: '100px',
+                    height: '100px',
+                    backgroundColor: '#eee',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <span>사진</span>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '5px' }}>
+                    훈련원공원
+                  </div>
+                  <div style={{ color: '#666', marginBottom: '5px' }}>
+                    대한민국 / 서울 / 중구
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', color: '#666' }}>
+                <span style={{ marginLeft: '5px' }}>
+            서울특별시 중구 을지로 227 (을지로5가)
+          </span>
+                  </div>
+                </div>
+                <button
+                  style={{
+                    padding: '10px 20px',
+                    fontSize: '16px',
+                    backgroundColor: '#4CAF50',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  추가
+                </button>
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  border: '1px solid #ccc',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  marginBottom: '10px',
+                  boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                }}
+              >
+                <div
+                  style={{
+                    width: '100px',
+                    height: '100px',
+                    backgroundColor: '#eee',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <span>사진</span>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '5px' }}>
+                    훈련원공원
+                  </div>
+                  <div style={{ color: '#666', marginBottom: '5px' }}>
+                    대한민국 / 서울 / 중구
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', color: '#666' }}>
+                <span style={{ marginLeft: '5px' }}>
+            서울특별시 중구 을지로 227 (을지로5가)
+          </span>
+                  </div>
+                </div>
+                <button
+                  style={{
+                    padding: '10px 20px',
+                    fontSize: '16px',
+                    backgroundColor: '#4CAF50',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  추가
+                </button>
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  border: '1px solid #ccc',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  marginBottom: '10px',
+                  boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                }}
+              >
+                <div
+                  style={{
+                    width: '100px',
+                    height: '100px',
+                    backgroundColor: '#eee',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <span>사진</span>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '5px' }}>
+                    훈련원공원
+                  </div>
+                  <div style={{ color: '#666', marginBottom: '5px' }}>
+                    대한민국 / 서울 / 중구
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', color: '#666' }}>
+                <span style={{ marginLeft: '5px' }}>
+            서울특별시 중구 을지로 227 (을지로5가)
+          </span>
+                  </div>
+                </div>
+                <button
+                  style={{
+                    padding: '10px 20px',
+                    fontSize: '16px',
+                    backgroundColor: '#4CAF50',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  추가
+                </button>
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  border: '1px solid #ccc',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  marginBottom: '10px',
+                  boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                }}
+              >
+                <div
+                  style={{
+                    width: '100px',
+                    height: '100px',
+                    backgroundColor: '#eee',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <span>사진</span>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '5px' }}>
+                    훈련원공원
+                  </div>
+                  <div style={{ color: '#666', marginBottom: '5px' }}>
+                    대한민국 / 서울 / 중구
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', color: '#666' }}>
+                <span style={{ marginLeft: '5px' }}>
+            서울특별시 중구 을지로 227 (을지로5가)
+          </span>
+                  </div>
+                </div>
+                <button
+                  style={{
+                    padding: '10px 20px',
+                    fontSize: '16px',
+                    backgroundColor: '#4CAF50',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  추가
+                </button>
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  border: '1px solid #ccc',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  marginBottom: '10px',
+                  boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                }}
+              >
+                <div
+                  style={{
+                    width: '100px',
+                    height: '100px',
+                    backgroundColor: '#eee',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <span>사진</span>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '5px' }}>
+                    훈련원공원
+                  </div>
+                  <div style={{ color: '#666', marginBottom: '5px' }}>
+                    대한민국 / 서울 / 중구
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', color: '#666' }}>
+                <span style={{ marginLeft: '5px' }}>
+            서울특별시 중구 을지로 227 (을지로5가)
+          </span>
+                  </div>
+                </div>
+                <button
+                  style={{
+                    padding: '10px 20px',
+                    fontSize: '16px',
+                    backgroundColor: '#4CAF50',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  추가
+                </button>
+              </div>
+            </>
+          </div>
+        </div>
+      )}
+      {alertOpen && (
+        <div
+          className={`${styles.alert} ${alertSeverity === 'success' ? styles.alertSuccess : styles.alertError}`}
+        >
+          {alertSeverity === 'success' ? message : errorMessage}
+        </div>
       )}
     </div>
   );
 };
 
-export default ScheduleMake;
+const WrappedScheduleMakePage = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <ScheduleMake />
+  </Suspense>
+);
+
+export default WrappedScheduleMakePage;
