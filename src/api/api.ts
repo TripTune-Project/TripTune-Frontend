@@ -26,7 +26,7 @@ const getAuthHeaders = (): HeadersInit => {
 };
 
 // 토큰 갱신 및 재시도 로직
-const handleTokenRefresh = async (originalRequest: RequestInit): Promise<Response> => {
+const handleTokenRefresh = async (originalRequest: RequestInit & { url: string }): Promise<Response> => {
   const refreshToken = Cookies.get('trip-tune_rt');
   
   if (!refreshToken) {
@@ -34,12 +34,12 @@ const handleTokenRefresh = async (originalRequest: RequestInit): Promise<Respons
     throw new Error('로그인 필요');
   }
   
-  const newAccessToken = await refreshApi(refreshToken);
+  const newAccessToken = await refreshApi();
   
   if (newAccessToken) {
     Cookies.set('trip-tune_at', newAccessToken);
     // 갱신된 토큰으로 다시 요청
-    return fetch(originalRequest.url!, {
+    return fetch(originalRequest.url, {
       ...originalRequest,
       headers: {
         ...originalRequest.headers,
@@ -63,10 +63,11 @@ export const fetchData = async <T>(endpoint: string, options: FetchOptions = {})
     ...options.headers,
   };
   
-  const requestConfig: FetchOptions = {
+  const requestConfig: FetchOptions & { url: string } = {
     ...fetchOptions,
     ...options,
     headers,
+    url,
   };
   
   let response = await fetch(url, requestConfig);

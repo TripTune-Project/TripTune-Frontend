@@ -14,7 +14,7 @@ export default function ScheduleDetail() {
         <ScheduleMake />
       </div>
       <div className={styles.centerSection}>
-        <PlacesScheduleMap places={[]} />
+        <PlacesScheduleMap places={[]} markers={[]} />
       </div>
       <div className={styles.rightSection}>
         <Chatting />

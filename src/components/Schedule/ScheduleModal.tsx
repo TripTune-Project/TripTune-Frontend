@@ -33,7 +33,7 @@ const ScheduleModal = () => {
     );
   }, [travelName, startDate, endDate]);
   
-  const formatDateToString = (date) => {
+  const formatDateToString = (date: Date): string => {
     return date.toISOString().split('T')[0];
   };
   
@@ -56,7 +56,7 @@ const ScheduleModal = () => {
     try {
       const response = await createSchedule(scheduleData);
       
-      if (response) {
+      if (response && response.data && response.data.scheduleId) {
         const scheduleId = response.data.scheduleId;
         handleCloseModal();
         router.push(`/Schedule/${scheduleId}`);
@@ -68,7 +68,7 @@ const ScheduleModal = () => {
     }
   };
   
-  const getFormattedDate = (date) => {
+  const getFormattedDate = (date: Date | null) => {
     return date
       ? date.toLocaleDateString('ko-KR', {
         year: 'numeric',
@@ -111,9 +111,11 @@ const ScheduleModal = () => {
             locale="ko"
             selected={startDate}
             onChange={(dates) => {
-              const [start, end] = dates;
-              setStartDate(start);
-              setEndDate(end);
+              if (dates) {
+                const [start, end] = dates;
+                if (start) setStartDate(start);
+                if (end) setEndDate(end);
+              }
             }}
             startDate={startDate}
             endDate={endDate}

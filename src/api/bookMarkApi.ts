@@ -10,8 +10,8 @@ export const BookMarkApi = async (data: BookMarkData) => {
     return await post<{ data: { placeId: number } }>('/bookmarks', data, {
       headers: {
         'Content-Type': 'application/json',
-        requiresAuth: true,
       },
+      requiresAuth: true, // 인증 관련 옵션을 headers 외부로 이동
     });
   } catch (error) {
     throw new Error(
@@ -26,8 +26,8 @@ export const BookMarkDeleteApi = async (data: BookMarkData) => {
     return await remove<{ data: { placeId: number } }>('/bookmarks', data, {
       headers: {
         'Content-Type': 'application/json',
-        requiresAuth: true,
       },
+      requiresAuth: true, // 인증 관련 옵션을 headers 외부로 이동
     });
   } catch (error) {
     throw new Error(

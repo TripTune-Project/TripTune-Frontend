@@ -1,9 +1,8 @@
-// 여행 루트 정보
-export interface TravelRoute {
-  routeId: number;
-  destination: string;
-  startTime: string;
-  endTime: string;
+export interface ApiResponse<T> {
+  success: boolean;
+  data?: T;
+  message?: string;
+  errorCode?: number;
 }
 
 // 일정 정보
@@ -14,34 +13,56 @@ export interface Schedule {
   endDate: string;
 }
 
-// 참석자 정보
 export interface Attendee {
   attendeeId: number;
   userId: string;
   role: string;
   permission: string;
-  createdAt: string;
 }
 
 // 장소 정보
 export interface Place {
+  latitude?: number;
+  longitude?: number;
   placeId: number;
   country: string;
   city: string;
   district: string;
+  address: string;
+  detailAddress: string;
+  placeName: string;
+  thumbnailUrl: string;
+  isBookmarked?: boolean;
 }
 
-// 장소 리스트 (페이지네이션 지원)
-export interface PlaceList {
+// 페이지 내이션 + 장소 리스트
+export interface PaginatedPlaces {
   totalPages: number;
   currentPage: number;
-  pageSize: number;
   totalElements: number;
+  pageSize: number;
   content: Place[];
 }
 
-// 일정 상세 정보 (참석자 및 여행 루트 포함)
-export interface ScheduleDetails extends Schedule {
-  attendees: Attendee[];
-  travelRoute: TravelRoute[];
+// 전반적인 상세 정보
+export interface ScheduleDetail {
+  // TODO : 이상한 점 발견
+  travelRoute?: string;
+  attendees?: string;
+  //
+  scheduleId?: string;
+  scheduleName: string;
+  startDate: string;
+  endDate: string;
+  createdAt: string;
+  updatedAt: string;
+  attendeeList: Attendee[];
+  placeList: PaginatedPlaces;
+}
+
+export interface TravelRoute {
+  routeId: number;
+  destination: string;
+  startTime: string;
+  endTime: string;
 }

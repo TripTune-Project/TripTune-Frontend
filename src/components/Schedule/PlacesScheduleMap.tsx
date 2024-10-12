@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { TravelPlace } from '@/types/travelType';
 
 const containerStyle = {
   width: '100%',
@@ -7,13 +6,13 @@ const containerStyle = {
 };
 
 const defaultCenter = {
-  lat: 37.5636, // 서울 중구의 위도
-  lng: 126.9976, // 서울 중구의 경도
+  lat: 37.5636,
+  lng: 126.9976,
 };
 
 interface MapProps {
-  places: TravelPlace[];
-  markers: { lat: number; lng: number; name: string }[]; // 마커 정보 추가
+  places: { latitude: number; longitude: number; }[];
+  markers: { lat: number; lng: number; name: string; }[];
 }
 
 const PlacesScheduleMap = ({ places, markers }: MapProps) => {
@@ -78,7 +77,7 @@ const PlacesScheduleMap = ({ places, markers }: MapProps) => {
       });
     }
   }, [markers, isMapLoaded]);
-
+  
   return <div ref={mapContainerRef} style={containerStyle} />;
 };
 
