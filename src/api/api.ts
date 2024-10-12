@@ -1,32 +1,82 @@
+import Cookies from 'js-cookie';
+import { refreshApi } from './refreshApi';
+import { redirect } from 'next/navigation';
+
 const BASE_URL = `${process.env.NEXT_PUBLIC_BACKEND_PROXY}`;
 
 const fetchOptions: RequestInit = {
   headers: {
     'Content-Type': 'application/json',
   },
-  redirect: 'follow', // 'follow', 'error', 'manual'
-  cache: 'no-cache', // 'default', 'no-store', 'reload', 'no-cache', 'force-cache', 'only-if-cached'
-  // credentials: 'same-origin', // 'omit', 'same-origin', 'include'
+  redirect: 'follow',
+  cache: 'no-cache',
 };
 
 interface FetchOptions extends RequestInit {
   headers?: HeadersInit;
+  requiresAuth?: boolean;
 }
 
-export const fetchData = async <T>(
-  endpoint: string,
-  options: FetchOptions = {}
-): Promise<T> => {
+// 토큰을 헤더에 삽입하는 함수
+const getAuthHeaders = (): HeadersInit => {
+  const accessToken = Cookies.get('trip-tune_at');
+  return {
+    Authorization: `Bearer ${accessToken}`,
+  };
+};
+
+// 토큰 갱신 및 재시도 로직
+const handleTokenRefresh = async (originalRequest: RequestInit & { url: string }): Promise<Response> => {
+  const refreshToken = Cookies.get('trip-tune_rt');
+  
+  if (!refreshToken) {
+    redirect('/login');
+    throw new Error('로그인 필요');
+  }
+  
+  const newAccessToken = await refreshApi();
+  
+  if (newAccessToken) {
+    Cookies.set('trip-tune_at', newAccessToken);
+    // 갱신된 토큰으로 다시 요청
+    return fetch(originalRequest.url, {
+      ...originalRequest,
+      headers: {
+        ...originalRequest.headers,
+        Authorization: `Bearer ${newAccessToken}`,
+      },
+    });
+  }
+  
+  redirect('/login');
+  throw new Error('토큰 갱신 실패');
+};
+
+// 통합 fetch 함수
+export const fetchData = async <T>(endpoint: string, options: FetchOptions = {}): Promise<T> => {
   const url = `${BASE_URL}${endpoint}`;
-  const response = await fetch(url, {
+  
+  // 인증이 필요한 경우 헤더에 토큰 추가
+  const headers: HeadersInit = {
+    ...fetchOptions.headers,
+    ...(options.requiresAuth ? getAuthHeaders() : {}),
+    ...options.headers,
+  };
+  
+  const requestConfig: FetchOptions & { url: string } = {
     ...fetchOptions,
     ...options,
-    headers: {
-      ...fetchOptions.headers,
-      ...options.headers,
-    },
-  });
-
+    headers,
+    url,
+  };
+  
+  let response = await fetch(url, requestConfig);
+  
+  // 401 에러 발생 시 토큰 갱신 시도
+  if (response.status === 401 && options.requiresAuth) {
+    response = await handleTokenRefresh(requestConfig);
+  }
+  
   if (!response.ok) {
     try {
       const errorData = await response.json();
@@ -35,19 +85,16 @@ export const fetchData = async <T>(
       throw new Error('API 요청 실패');
     }
   }
-
+  
   return response.json();
 };
 
+// HTTP 메소드별 요청 함수
 export const get = <T>(endpoint: string, options?: FetchOptions) => {
   return fetchData<T>(endpoint, { method: 'GET', ...options });
 };
 
-export const post = <T>(
-  endpoint: string,
-  body: object,
-  options?: FetchOptions
-) => {
+export const post = <T>(endpoint: string, body: object, options?: FetchOptions) => {
   return fetchData<T>(endpoint, {
     method: 'POST',
     body: JSON.stringify(body),
@@ -55,11 +102,7 @@ export const post = <T>(
   });
 };
 
-export const put = <T>(
-  endpoint: string,
-  body: object,
-  options?: FetchOptions
-) => {
+export const put = <T>(endpoint: string, body: object, options?: FetchOptions) => {
   return fetchData<T>(endpoint, {
     method: 'PUT',
     body: JSON.stringify(body),
@@ -67,11 +110,7 @@ export const put = <T>(
   });
 };
 
-export const patch = <T>(
-  endpoint: string,
-  body: object,
-  options?: FetchOptions
-) => {
+export const patch = <T>(endpoint: string, body: object, options?: FetchOptions) => {
   return fetchData<T>(endpoint, {
     method: 'PATCH',
     body: JSON.stringify(body),
@@ -79,14 +118,10 @@ export const patch = <T>(
   });
 };
 
-export const remove = <T>(
-  endpoint: string,
-  body?: object,
-  options?: FetchOptions
-) => {
+export const remove = <T>(endpoint: string, body?: object, options?: FetchOptions) => {
   return fetchData<T>(endpoint, {
     method: 'DELETE',
-    body: JSON.stringify(body),
+    body: body ? JSON.stringify(body) : undefined,
     ...options,
   });
 };

@@ -261,7 +261,7 @@ const TravelDetail = () => {
                         alt={image.imageName}
                         width={749}
                         height={512}
-                        style={{ objectFit: 'cover' }}
+                        style={{ objectFit: 'contain' }}
                         onLoad={() => setImageLoading(false)}
                       />
                     </div>

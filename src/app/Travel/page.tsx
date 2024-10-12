@@ -130,8 +130,7 @@ const TravelPage = () => {
       handleSearch();
     }
   };
-  
-  const handleResetSearch = useCallback(() => {
+  useCallback(() => {
     setSearchTerm('');
     setIsSearching(false);
     setCurrentPage(1);
