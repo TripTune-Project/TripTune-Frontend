@@ -83,6 +83,7 @@
 }
 
 .input {
+    background-color:#ffffff;
     padding: 10px;
     margin: 5px 5px 5px 0;
     border: 1px solid #ccc;
@@ -439,11 +440,20 @@
     margin-left: 15px;
 }
 
+.sliderImageContainer {
+    width: 100%;
+    height:auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background-color: #f0f0f0;
+}
+
 .sliderImageContainer img {
-    width: 749px;
-    height: 512px;
-    object-fit: cover;
-    border-radius: 8px;
+    width:749px;
+    object-fit: contain!important;
+    aspect-ratio: 3 / 2!important;
 }
 
 .sliderButton {
