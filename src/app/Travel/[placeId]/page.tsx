@@ -22,6 +22,7 @@ import timeIcon from '../../../../public/assets/icons/ic_time.png';
 import homePageIcon from '../../../../public/assets/icons/ic_homepage.png';
 import phoneIcon from '../../../../public/assets/icons/ic_phone.png';
 import styled from 'styled-components';
+import pictureImage from '../../../../public/assets/images/pictureImage.png';
 
 const StyledSwiperContainer = styled.div`
     position: relative;
@@ -70,6 +71,39 @@ const StyledSwiperButtonNext = styled.button`
         background-image: url('/assets/images/detailRightBtnImage.png');
     }
 `;
+
+// const images = [
+//   {
+//     src: pictureImage,
+//     alt: '경복궁',
+//     title: '경복궁',
+//     description: '서울 종로구 경복궁',
+//   },
+//   {
+//     src: pictureImage,
+//     alt: '남산타워',
+//     title: '남산타워',
+//     description: '서울 용산구 남산타워',
+//   },
+//   {
+//     src: pictureImage,
+//     alt: '한라산',
+//     title: '한라산',
+//     description: '제주 서귀포시 한라산',
+//   },
+//   {
+//     src: pictureImage,
+//     alt: '해운대 해수욕장',
+//     title: '해운대 해수욕장',
+//     description: '부산 해운대구 해운대 해수욕장',
+//   },
+//   {
+//     src: pictureImage,
+//     alt: '동대문 디자인 플라자',
+//     title: '동대문 디자인 플라자',
+//     description: '서울 중구 동대문 디자인 플라자',
+//   },
+// ];
 
 const TravelDetail = () => {
   const { placeId } = useParams();
@@ -259,6 +293,7 @@ const TravelDetail = () => {
                       <Image
                         src={image.imageUrl}
                         alt={image.imageName}
+                        layout="responsive"
                         width={749}
                         height={512}
                         style={{ objectFit: 'contain' }}
@@ -342,6 +377,45 @@ const TravelDetail = () => {
         )}
       </div>
       <DetailPlaceMap latitude={latitude ?? 0} longitude={longitude ?? 0} />
+      {/* TODO : 추천 여행지의 슬라이더와 기본 여행지 탐색의 슬리이더는 다르다.*/}
+      {/*<StyledSwiperContainer>*/}
+      {/*  <Swiper*/}
+      {/*    modules={[Navigation, Pagination]}*/}
+      {/*    slidesPerView={4}*/}
+      {/*    navigation={{*/}
+      {/*      nextEl: '.swiper-button-next',*/}
+      {/*      prevEl: '.swiper-button-prev',*/}
+      {/*    }}*/}
+      {/*    loop*/}
+      {/*  >*/}
+      {/*    {images.map((image, index) => (*/}
+      {/*      <SwiperSlide key={index}>*/}
+      {/*        <div className={styles.imgSliderContainer}>*/}
+      {/*          <Image*/}
+      {/*            className={styles.sliderImg}*/}
+      {/*            src={image.src}*/}
+      {/*            alt={image.alt}*/}
+      {/*            width={400}*/}
+      {/*            height={280}*/}
+      {/*          />*/}
+      {/*          <p className={styles.sliderTextP}>{image.title}</p>*/}
+      {/*          <p className={styles.sliderTextPDetail}>*/}
+      {/*            <Image*/}
+      {/*              src={locationIcon}*/}
+      {/*              alt={'장소'}*/}
+      {/*              width={15}*/}
+      {/*              height={21}*/}
+      {/*            />*/}
+      {/*            &nbsp;*/}
+      {/*            {image.description}*/}
+      {/*          </p>*/}
+      {/*        </div>*/}
+      {/*      </SwiperSlide>*/}
+      {/*    ))}*/}
+      {/*    <StyledSwiperButtonPrev className='swiper-button-prev' />*/}
+      {/*    <StyledSwiperButtonNext className='swiper-button-next' />*/}
+      {/*  </Swiper>*/}
+      {/*</StyledSwiperContainer>*/}
     </div>
   );
 };
