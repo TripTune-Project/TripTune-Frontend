@@ -259,6 +259,7 @@ const TravelDetail = () => {
                       <Image
                         src={image.imageUrl}
                         alt={image.imageName}
+                        layout="responsive"
                         width={749}
                         height={512}
                         style={{ objectFit: 'contain' }}
