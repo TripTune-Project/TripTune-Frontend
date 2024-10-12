@@ -11,7 +11,7 @@ export const BookMarkApi = async (data: BookMarkData) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      requiresAuth: true, // 인증 관련 옵션을 headers 외부로 이동
+      requiresAuth: true,
     });
   } catch (error) {
     throw new Error(
@@ -27,7 +27,7 @@ export const BookMarkDeleteApi = async (data: BookMarkData) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      requiresAuth: true, // 인증 관련 옵션을 headers 외부로 이동
+      requiresAuth: true,
     });
   } catch (error) {
     throw new Error(

@@ -12,24 +12,24 @@ import { useRouter } from 'next/navigation';
 
 registerLocale('ko', ko);
 
-const ScheduleModal = () => {
-  const [isModalOpen, setIsModalOpen] = useState(true);
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-  const [travelName, setTravelName] = useState('');
-  const [isFormValid, setIsFormValid] = useState(false);
+const ScheduleModal: React.FC = () => {
+  const today = new Date();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(true);
+  const [startDate, setStartDate] = useState<Date | null>(today);
+  const [endDate, setEndDate] = useState<Date | null>(today);
+  const [travelName, setTravelName] = useState<string>('');
+  const [isFormValid, setIsFormValid] = useState<boolean>(false);
   const router = useRouter();
   
   useEffect(() => {
-    const today = new Date();
     today.setHours(0, 0, 0, 0);
     
     setIsFormValid(
       travelName.trim() !== '' &&
-      startDate &&
-      endDate &&
+      startDate !== null &&
+      endDate !== null &&
       startDate >= today &&
-      startDate < endDate,
+      startDate <= endDate
     );
   }, [travelName, startDate, endDate]);
   
@@ -37,11 +37,11 @@ const ScheduleModal = () => {
     return date.toISOString().split('T')[0];
   };
   
-  const handleCloseModal = () => {
+  const handleCloseModal = (): void => {
     setIsModalOpen(false);
   };
   
-  const handleCreateSchedule = async () => {
+  const handleCreateSchedule = async (): Promise<void> => {
     if (!isFormValid) {
       console.error('모든 필드를 올바르게 입력해야 합니다.');
       return;
@@ -49,14 +49,14 @@ const ScheduleModal = () => {
     
     const scheduleData = {
       scheduleName: travelName,
-      startDate: formatDateToString(startDate),
-      endDate: formatDateToString(endDate),
+      startDate: formatDateToString(startDate!),
+      endDate: formatDateToString(endDate!),
     };
     
     try {
       const response = await createSchedule(scheduleData);
       
-      if (response && response.data && response.data.scheduleId) {
+      if (response && response.data) {
         const scheduleId = response.data.scheduleId;
         handleCloseModal();
         router.push(`/Schedule/${scheduleId}`);
@@ -68,7 +68,7 @@ const ScheduleModal = () => {
     }
   };
   
-  const getFormattedDate = (date: Date | null) => {
+  const getFormattedDate = (date: Date | null): string => {
     return date
       ? date.toLocaleDateString('ko-KR', {
         year: 'numeric',
@@ -77,6 +77,8 @@ const ScheduleModal = () => {
       })
       : '';
   };
+  
+  if (!isModalOpen) return null;
   
   return (
     <div className={styles.modalOverlay}>
@@ -109,22 +111,24 @@ const ScheduleModal = () => {
         <div className={styles.datePickerContainer}>
           <DatePicker
             locale="ko"
-            selected={startDate}
-            onChange={(dates) => {
-              if (dates) {
-                const [start, end] = dates;
-                if (start) setStartDate(start);
-                if (end) setEndDate(end);
+            selected={startDate || undefined}
+            onChange={(dates: [Date | null, Date | null]) => {
+              let [start, end] = dates;
+              if (end && start && start > end) {
+                // 시작일이 종료일보다 나중인 경우, 서로 변경
+                [start, end] = [end, start];
               }
+              setStartDate(start);
+              setEndDate(end);
             }}
-            startDate={startDate}
-            endDate={endDate}
-            minDate={new Date()}
+            startDate={startDate || undefined}
+            endDate={endDate || undefined}
+            minDate={today}
             selectsRange
             inline
             monthsShown={2}
             dateFormat="yyyy.MM.dd"
-            dayClassName={(date) => {
+            dayClassName={(date: Date) => {
               const day = date.getDay();
               return day === 0
                 ? styles.sunday

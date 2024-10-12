@@ -17,7 +17,6 @@ interface FetchOptions extends RequestInit {
   requiresAuth?: boolean;
 }
 
-// 토큰을 헤더에 삽입하는 함수
 const getAuthHeaders = (): HeadersInit => {
   const accessToken = Cookies.get('trip-tune_at');
   return {
@@ -25,7 +24,6 @@ const getAuthHeaders = (): HeadersInit => {
   };
 };
 
-// 토큰 갱신 및 재시도 로직
 const handleTokenRefresh = async (originalRequest: RequestInit & { url: string }): Promise<Response> => {
   const refreshToken = Cookies.get('trip-tune_rt');
   
@@ -38,7 +36,6 @@ const handleTokenRefresh = async (originalRequest: RequestInit & { url: string }
   
   if (newAccessToken) {
     Cookies.set('trip-tune_at', newAccessToken);
-    // 갱신된 토큰으로 다시 요청
     return fetch(originalRequest.url, {
       ...originalRequest,
       headers: {
@@ -52,11 +49,9 @@ const handleTokenRefresh = async (originalRequest: RequestInit & { url: string }
   throw new Error('토큰 갱신 실패');
 };
 
-// 통합 fetch 함수
 export const fetchData = async <T>(endpoint: string, options: FetchOptions = {}): Promise<T> => {
   const url = `${BASE_URL}${endpoint}`;
   
-  // 인증이 필요한 경우 헤더에 토큰 추가
   const headers: HeadersInit = {
     ...fetchOptions.headers,
     ...(options.requiresAuth ? getAuthHeaders() : {}),
@@ -72,7 +67,6 @@ export const fetchData = async <T>(endpoint: string, options: FetchOptions = {})
   
   let response = await fetch(url, requestConfig);
   
-  // 401 에러 발생 시 토큰 갱신 시도
   if (response.status === 401 && options.requiresAuth) {
     response = await handleTokenRefresh(requestConfig);
   }
@@ -89,7 +83,6 @@ export const fetchData = async <T>(endpoint: string, options: FetchOptions = {})
   return response.json();
 };
 
-// HTTP 메소드별 요청 함수
 export const get = <T>(endpoint: string, options?: FetchOptions) => {
   return fetchData<T>(endpoint, { method: 'GET', ...options });
 };
