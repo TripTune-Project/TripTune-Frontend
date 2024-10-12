@@ -1,4 +1,4 @@
-import { authDelete, authPost } from '@/api/authFetch';
+import { remove, post } from './api';
 
 interface BookMarkData {
   placeId: number;
@@ -7,7 +7,12 @@ interface BookMarkData {
 // 북마크 등록
 export const BookMarkApi = async (data: BookMarkData) => {
   try {
-    return await authPost<{ data: { placeId: number } }>('/bookmarks', data);
+    return await post<{ data: { placeId: number } }>('/bookmarks', data, {
+      headers: {
+        'Content-Type': 'application/json',
+        requiresAuth: true,
+      },
+    });
   } catch (error) {
     throw new Error(
       error instanceof Error ? error.message : '북마크 등록 실패'
@@ -18,10 +23,10 @@ export const BookMarkApi = async (data: BookMarkData) => {
 // 북마크 등록 해제
 export const BookMarkDeleteApi = async (data: BookMarkData) => {
   try {
-    return await authDelete<{ data: { placeId: number } }>('/bookmarks', {
-      body: JSON.stringify(data),
+    return await remove<{ data: { placeId: number } }>('/bookmarks', data, {
       headers: {
         'Content-Type': 'application/json',
+        requiresAuth: true,
       },
     });
   } catch (error) {

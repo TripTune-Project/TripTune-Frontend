@@ -14,7 +14,7 @@ const fetchOptions: RequestInit = {
 
 interface FetchOptions extends RequestInit {
   headers?: HeadersInit;
-  requiresAuth?: boolean; // 인증이 필요한지 여부
+  requiresAuth?: boolean;
 }
 
 // 토큰을 헤더에 삽입하는 함수

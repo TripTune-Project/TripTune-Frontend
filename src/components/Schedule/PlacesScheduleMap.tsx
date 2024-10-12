@@ -13,15 +13,13 @@ const defaultCenter = {
 
 interface MapProps {
   places: TravelPlace[];
+  markers: { lat: number; lng: number; name: string }[]; // 마커 정보 추가
 }
 
-const PlacesScheduleMap = ({ places }: MapProps) => {
+const PlacesScheduleMap = ({ places, markers }: MapProps) => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<google.maps.Map | null>(null);
-  const [zoom, setZoom] = useState(16);
-  const [center, setCenter] = useState(defaultCenter);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
-  const [marker, setMarker] = useState<google.maps.Marker | null>(null);
   
   const loadGoogleMapsScript = useCallback(() => {
     const existingScript = document.getElementById('google-maps-script');
@@ -48,23 +46,8 @@ const PlacesScheduleMap = ({ places }: MapProps) => {
         center: defaultCenter,
         zoom: 16,
       });
-      
-      // 지도 클릭 시 링크 매거 추가
-      mapRef.current.addListener('click', (e: google.maps.MapMouseEvent) => {
-        if (e.latLng && mapRef.current) {
-          // 이전 매거 제거
-          if (marker) {
-            marker.setMap(null);
-          }
-          const newMarker = new google.maps.Marker({
-            position: e.latLng,
-            map: mapRef.current,
-          });
-          setMarker(newMarker);
-        }
-      });
     }
-  }, [marker]);
+  }, []);
   
   useEffect(() => {
     loadGoogleMapsScript();
@@ -74,10 +57,6 @@ const PlacesScheduleMap = ({ places }: MapProps) => {
         google.maps.event.clearInstanceListeners(mapRef.current);
         mapRef.current = null;
       }
-      if (marker) {
-        marker.setMap(null);
-      }
-      setMarker(null);
     };
   }, [loadGoogleMapsScript]);
   
@@ -89,55 +68,17 @@ const PlacesScheduleMap = ({ places }: MapProps) => {
   
   useEffect(() => {
     const map = mapRef.current;
-    if (map && isMapLoaded) {
-      if (places.length === 0) {
-        map.setCenter(defaultCenter);
-        map.setZoom(16);
-      } else {
-        const bounds = new google.maps.LatLngBounds();
-        places.forEach((place) => {
-          const newMarker = new google.maps.Marker({
-            position: { lat: place.latitude, lng: place.longitude },
-            map,
-            title: place.placeName,
-          });
-          bounds.extend(newMarker.getPosition() as google.maps.LatLng);
+    if (map && isMapLoaded && Array.isArray(markers) && markers.length > 0) {
+      markers.forEach((marker) => {
+        new google.maps.Marker({
+          position: { lat: marker.lat, lng: marker.lng },
+          map,
+          title: marker.name,
         });
-        map.fitBounds(bounds);
-      }
+      });
     }
-  }, [places, isMapLoaded]);
-  
-  useEffect(() => {
-    const map = mapRef.current;
-    if (map) {
-      const handleZoomChange = () => {
-        const newZoom = map.getZoom();
-        if (typeof newZoom === 'number') {
-          setZoom(newZoom);
-        }
-      };
-      
-      const handleCenterChange = () => {
-        const newCenter = map.getCenter();
-        if (newCenter) {
-          setCenter({ lat: newCenter.lat(), lng: newCenter.lng() });
-        }
-      };
-      
-      const zoomListener = map.addListener('zoom_changed', handleZoomChange);
-      const centerListener = map.addListener(
-        'center_changed',
-        handleCenterChange
-      );
-      
-      return () => {
-        google.maps.event.removeListener(zoomListener);
-        google.maps.event.removeListener(centerListener);
-      };
-    }
-  }, []);
-  
+  }, [markers, isMapLoaded]);
+
   return <div ref={mapContainerRef} style={containerStyle} />;
 };
 
