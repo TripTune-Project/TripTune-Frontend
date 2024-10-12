@@ -296,7 +296,6 @@ const TravelDetail = () => {
                         layout="responsive"
                         width={749}
                         height={512}
-                        style={{ objectFit: 'contain' }}
                         onLoad={() => setImageLoading(false)}
                       />
                     </div>
