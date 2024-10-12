@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { TravelPlace } from '@/types/travelType';
 
 const containerStyle = {
   width: '100%',
@@ -12,14 +11,13 @@ const defaultCenter = {
 };
 
 interface MapProps {
-  places: TravelPlace[];
+  places: { latitude: number; longitude: number; }[];
+  markers: { lat: number; lng: number; name: string; }[];
 }
 
-const PlacesScheduleMap = ({ places }: MapProps) => {
+const PlacesScheduleMap = ({ places, markers }: MapProps) => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<google.maps.Map | null>(null);
-  const [zoom, setZoom] = useState(16);
-  const [center, setCenter] = useState(defaultCenter);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
   
   const loadGoogleMapsScript = useCallback(() => {
@@ -30,10 +28,7 @@ const PlacesScheduleMap = ({ places }: MapProps) => {
       script.id = 'google-maps-script';
       script.async = true;
       script.onload = () => {
-        if (window.google) {
-          setIsMapLoaded(true);
-          initializeMap();
-        }
+        setIsMapLoaded(true);
       };
       script.onerror = () => {
         console.error('Google Maps API 로드에 실패했습니다.');
@@ -41,12 +36,11 @@ const PlacesScheduleMap = ({ places }: MapProps) => {
       document.head.appendChild(script);
     } else if (window.google && mapContainerRef.current && !mapRef.current) {
       setIsMapLoaded(true);
-      initializeMap();
     }
   }, []);
   
   const initializeMap = useCallback(() => {
-    if (mapContainerRef.current && window.google && !mapRef.current) {
+    if (mapContainerRef.current && !mapRef.current && window.google) {
       mapRef.current = new google.maps.Map(mapContainerRef.current, {
         center: defaultCenter,
         zoom: 16,
@@ -66,48 +60,23 @@ const PlacesScheduleMap = ({ places }: MapProps) => {
   }, [loadGoogleMapsScript]);
   
   useEffect(() => {
-    if (isMapLoaded && mapRef.current) {
-      const map = mapRef.current;
-      const bounds = new google.maps.LatLngBounds();
-      places.forEach((place) => {
-        const marker = new google.maps.Marker({
-          position: { lat: place.latitude, lng: place.longitude },
-          map,
-          title: place.placeName,
-        });
-        bounds.extend(marker.getPosition() as google.maps.LatLng);
-      });
-      map.fitBounds(bounds)
+    if (isMapLoaded) {
+      initializeMap();
     }
-  }, [places, isMapLoaded]);
+  }, [isMapLoaded, initializeMap]);
   
   useEffect(() => {
-    if (mapRef.current) {
-      const map = mapRef.current;
-      
-      const handleZoomChange = () => {
-        const newZoom = map.getZoom();
-        if (typeof newZoom === 'number') {
-          setZoom(newZoom);
-        }
-      };
-      
-      const handleCenterChange = () => {
-        const newCenter = map.getCenter();
-        if (newCenter) {
-          setCenter({ lat: newCenter.lat(), lng: newCenter.lng() });
-        }
-      };
-      
-      const zoomListener = map.addListener('zoom_changed', handleZoomChange);
-      const centerListener = map.addListener('center_changed', handleCenterChange);
-      
-      return () => {
-        google.maps.event.removeListener(zoomListener);
-        google.maps.event.removeListener(centerListener);
-      };
+    const map = mapRef.current;
+    if (map && isMapLoaded && Array.isArray(markers) && markers.length > 0) {
+      markers.forEach((marker) => {
+        new google.maps.Marker({
+          position: { lat: marker.lat, lng: marker.lng },
+          map,
+          title: marker.name,
+        });
+      });
     }
-  }, []);
+  }, [markers, isMapLoaded]);
   
   return <div ref={mapContainerRef} style={containerStyle} />;
 };
