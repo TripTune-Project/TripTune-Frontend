@@ -52,6 +52,40 @@ export const getTravels = async (scheduleId: number, page = 1): Promise<ApiRespo
   }
 };
 
+// 여행지 검색 (GET)
+export const SearchTravels = async (scheduleId: number, page = 1, keyword:string): Promise<ApiResponse<unknown>> => {
+  const url = `/schedules/${scheduleId}/travels/search?page=${page}&keyword=${keyword}`;
+  
+  try {
+    const response = await get<ApiResponse<unknown>>(url, { requiresAuth: true });
+    if (response.success) {
+      console.log('여행지 검색 성공:', response.data);
+    } else {
+      console.error('여행지 검색 실패:', response.message);
+    }
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// 여행 루트 조회 (GET)
+export const getRouteTravel = async (scheduleId: number, page = 1): Promise<ApiResponse<unknown>> => {
+  const url = `/schedules/${scheduleId}/routes?page=${page}`;
+  
+  try {
+    const response = await get<ApiResponse<unknown>>(url, { requiresAuth: true });
+    if (response.success) {
+      console.log('여행지 루트 성공:', response.data);
+    } else {
+      console.error('여행지 루트 실패:', response.message);
+    }
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // 일정 검색 (POST)
 export const searchSchedule = async (keyword: string): Promise<ApiResponse<{ searchList: Schedule[] }>> => {
   try {
