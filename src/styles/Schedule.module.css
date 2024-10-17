@@ -24,18 +24,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.leftSection {
-    background-color: #ffffff;
-}
-
-.centerSection {
-    background-color: #ffffff;
-}
-
-.rightSection {
-    background-color:#ffffff;
+    background: #ffffff;
+    height: auto;
 }
 
 /* 일정 만들기를 위한 모달창 */
@@ -121,10 +111,117 @@
     background-color: #848282;
 }
 
-/* 일정만들기 1번 : 일정 기본 틀 */
+/*일정 만들기 : 일정 만들기 최근 목록 틀*/
+.createContainer::before {
+    content: '';
+    position: absolute;
+    width: 80%;
+    max-width: 1455px;
+    height: 601px;
+    border-radius: 0 0 0 200px;
+    background: linear-gradient(264deg, #edf9f7 3.98%, #f1f5ff 98.44%);
+    top: 0;
+    left: 61.8%;
+    transform: translateX(-50%);
+    z-index: -1;
+}
+
+.scheduleTitle {
+    font-size: 32px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.createAddButton {
+    background-color: #0070f3;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: background-color 0.3s ease;
+    margin-bottom: 30px;
+    float:right;
+}
+
+.createAddButton:hover {
+    background-color: #005bb5;
+}
+
+.scheduleList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.scheduleItem {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: box-shadow 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.scheduleItem:hover {
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+.scheduleImage {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.scheduleContent {
+    padding: 15px;
+}
+
+.scheduleName {
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.scheduleDates {
+    color: #555;
+    font-size: 16px;
+}
+
+.emptyMessage {
+    text-align: center;
+    font-size: 18px;
+    color: #888;
+    margin-top: 30px;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* 일정만들기 : 일정 기본 틀 */
+.scheduleUpdateBtn {
+    background-color: #0070f3;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: background-color 0.3s ease;
+    margin-bottom: 30px;
+    float:left;
+}
+
 .pageContainer {
     width: 100%;
-    height: 100%;
+    height: 1350px;
     flex-shrink: 0;
     display: flex;
     flex-direction: column;

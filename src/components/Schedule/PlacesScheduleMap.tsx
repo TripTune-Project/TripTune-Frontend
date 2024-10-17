@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 
 const containerStyle = {
   width: '100%',
-  height: '100%',
+  height: '1330px',
 };
 
 const defaultCenter = {
@@ -11,28 +11,26 @@ const defaultCenter = {
 };
 
 interface MapProps {
-  places: { latitude: number; longitude: number; }[];
-  markers: { lat: number; lng: number; name: string; }[];
+  markers: { lat: number; lng: number; }[];
 }
 
-const PlacesScheduleMap = ({ places, markers }: MapProps) => {
+const PlacesScheduleMap = ({ markers }: MapProps) => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<google.maps.Map | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
+  const markersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
+  
+  const mapId = process.env.NEXT_PUBLIC_GOOGLE_MAPS_STYLE_ID;
   
   const loadGoogleMapsScript = useCallback(() => {
     const existingScript = document.getElementById('google-maps-script');
     if (!existingScript) {
       const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=marker`;
       script.id = 'google-maps-script';
       script.async = true;
-      script.onload = () => {
-        setIsMapLoaded(true);
-      };
-      script.onerror = () => {
-        console.error('Google Maps API 로드에 실패했습니다.');
-      };
+      script.onload = () => setIsMapLoaded(true);
+      script.onerror = () => console.error('Google Maps API 로드에 실패했습니다.');
       document.head.appendChild(script);
     } else if (window.google && mapContainerRef.current && !mapRef.current) {
       setIsMapLoaded(true);
@@ -44,9 +42,10 @@ const PlacesScheduleMap = ({ places, markers }: MapProps) => {
       mapRef.current = new google.maps.Map(mapContainerRef.current, {
         center: defaultCenter,
         zoom: 16,
+        mapId: mapId,  // 지도 스타일 ID 적용
       });
     }
-  }, []);
+  }, [mapId]);
   
   useEffect(() => {
     loadGoogleMapsScript();
@@ -56,6 +55,8 @@ const PlacesScheduleMap = ({ places, markers }: MapProps) => {
         google.maps.event.clearInstanceListeners(mapRef.current);
         mapRef.current = null;
       }
+      markersRef.current.forEach(marker => marker.map = null);
+      markersRef.current = [];
     };
   }, [loadGoogleMapsScript]);
   
@@ -66,15 +67,21 @@ const PlacesScheduleMap = ({ places, markers }: MapProps) => {
   }, [isMapLoaded, initializeMap]);
   
   useEffect(() => {
-    const map = mapRef.current;
-    if (map && isMapLoaded && Array.isArray(markers) && markers.length > 0) {
-      markers.forEach((marker) => {
-        new google.maps.Marker({
-          position: { lat: marker.lat, lng: marker.lng },
-          map,
-          title: marker.name,
-        });
+    if (mapRef.current && isMapLoaded && markers.length > 0) {
+      markers.forEach((marker, index) => {
+        // 이미 존재하는 마커는 중복 추가하지 않음
+        if (!markersRef.current[index]) {
+          const advancedMarker = new google.maps.marker.AdvancedMarkerElement({
+            map: mapRef.current,
+            position: { lat: marker.lat, lng: marker.lng },
+          });
+          markersRef.current.push(advancedMarker);
+        }
       });
+      
+      // 마지막 마커의 위치로 지도 중심 이동
+      const lastMarker = markers[markers.length - 1];
+      mapRef.current.setCenter({ lat: lastMarker.lat, lng: lastMarker.lng });
     }
   }, [markers, isMapLoaded]);
   
