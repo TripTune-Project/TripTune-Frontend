@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams, useSearchParams, useRouter } from 'next/navigation';
 import styles from '@/styles/Schedule.module.css';
-import { fetchScheduleDetail, fetchTravelList, searchTravelDestinations } from '@/api/scheduleApi';
+import { fetchScheduleDetail, fetchTravelList, searchTravelDestinations, fetchTravelRoute } from '@/api/scheduleApi';
 import Image from 'next/image';
 import locationIcon from '../../../public/assets/icons/ic_location.png';
 import Pagination from '../Travel/Pagination';
@@ -41,6 +41,28 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
     }
   }, [scheduleId]);
   
+  const fetchRouteData = useCallback(async (page: number) => {
+    if (!scheduleId) return;
+    try {
+      const response = await fetchTravelRoute(Number(scheduleId), page);
+      if (response && response.data) {
+        const routeDetail = response.data;
+        
+        if (routeDetail?.placeList?.content !== undefined) {
+          setTravels(routeDetail.placeList.content ?? []);
+          setTotalPages(routeDetail.placeList.totalPages ?? 0);
+        } else {
+          console.warn('routeDetail에 content 속성이 없습니다.');
+          setTravels([]);
+        }
+      } else {
+        setTravels([]);
+      }
+    } catch (error) {
+      console.error('Failed to fetch route data:', error);
+    }
+  }, [scheduleId]);
+  
   const handleAddMarker = (place: Place) => {
     const marker = {
       lat: place.latitude ?? 0,
@@ -51,11 +73,16 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
   };
   
   useEffect(() => {
-    fetchData(fetchScheduleDetail, currentPage);
-  }, [fetchData, currentPage]);
+    if (tab === 'scheduleTravel') {
+      fetchData(fetchScheduleDetail, currentPage);
+    } else if (tab === 'travelRoot') {
+      fetchRouteData(currentPage);
+    }
+  }, [fetchData, fetchRouteData, tab, currentPage]);
   
   const handleTabChange = (newTab: 'scheduleTravel' | 'travelRoot') => {
     setTab(newTab);
+    setCurrentPage(1);
   };
   
   const handleTravelSearch = async () => {
@@ -73,7 +100,11 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
     if (isSearching) {
       fetchData(searchTravelDestinations, page);
     } else {
-      fetchData(fetchTravelList, page);
+      if (tab === 'scheduleTravel') {
+        fetchData(fetchTravelList, page);
+      } else if (tab === 'travelRoot') {
+        fetchRouteData(page);
+      }
     }
   };
   

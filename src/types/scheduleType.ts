@@ -22,8 +22,9 @@ export interface Attendee {
 
 // 장소 정보
 export interface Place {
-  latitude?: number;
-  longitude?: number;
+  routeOrder?:number;
+  latitude: number;
+  longitude: number;
   placeId: number;
   country: string;
   city: string;
@@ -32,25 +33,11 @@ export interface Place {
   detailAddress: string;
   placeName: string;
   thumbnailUrl: string;
-  isBookmarked?: boolean;
-}
-
-// 페이지 내이션 + 장소 리스트
-export interface PaginatedPlaces {
-  totalPages: number;
-  currentPage: number;
-  totalElements: number;
-  pageSize: number;
-  content: Place[];
 }
 
 // 전반적인 상세 정보
 export interface ScheduleDetail {
-  // TODO : 이상한 점 발견
-  travelRoute?: string;
-  attendees?: string;
-  //
-  scheduleId?: string;
+  scheduleId?: number;
   scheduleName: string;
   startDate: string;
   endDate: string;
@@ -60,9 +47,11 @@ export interface ScheduleDetail {
   placeList: PaginatedPlaces;
 }
 
-export interface TravelRoute {
-  routeId: number;
-  destination: string;
-  startTime: string;
-  endTime: string;
+// 페이지 내이션 + 장소 리스트
+export interface PaginatedPlaces {
+  totalPages: number;
+  currentPage: number;
+  totalElements: number;
+  pageSize: number;
+  content: Place[];
 }

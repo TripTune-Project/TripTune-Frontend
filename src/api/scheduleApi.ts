@@ -2,7 +2,7 @@ import { get, post, patch } from './api';
 import { ApiResponse, Schedule, ScheduleDetail } from '@/types/scheduleType';
 
 // 1.1 일정 "최근" 목록 조회 (GET)
-export const fetchScheduleList = async (): Promise<ApiResponse<ScheduleDetail>> => {
+export const fetchScheduleList = async (): Promise<ApiResponse<Schedule>> => {
   const url = `/schedules`;
   
   try {
@@ -53,16 +53,16 @@ export const createNewSchedule = async (scheduleData: Schedule): Promise<ApiResp
 };
 
 // 1.4 일정 만들기 수정/ 저장 (PATCH)
-export const updateExistingSchedule = async (schedule: ScheduleDetail): Promise<ApiResponse<null>> => {
+export const updateExistingSchedule = async (schedule: ScheduleDetail): Promise<ApiResponse<ScheduleDetail>> => {
   const url = `/schedules/${schedule.scheduleId}`;
   
   try {
-    const response = await patch<ApiResponse<null>>(url, {
+    const response = await patch<ApiResponse<ScheduleDetail>>(url, {
       scheduleName: schedule.scheduleName,
       startDate: schedule.startDate,
       endDate: schedule.endDate,
-      attendees: schedule.attendees,
-      travelRoute: schedule.travelRoute,
+      // attendees: schedule.attendees,
+      // travelRoute: schedule.travelRoute,
     }, { requiresAuth: true });
     
     if (response.success) {
@@ -128,11 +128,11 @@ export const addTravelRoute = async (scheduleId: number): Promise<ApiResponse<un
 };
 
 // 3.2 여행 루트 조회 (GET)
-export const fetchTravelRoute = async (scheduleId: number, page = 1): Promise<ApiResponse<unknown>> => {
+export const fetchTravelRoute = async (scheduleId: number, page = 1): Promise<ApiResponse<ScheduleDetail>> => {
   const url = `/schedules/${scheduleId}/routes?page=${page}`;
   
   try {
-    const response = await get<ApiResponse<unknown>>(url, { requiresAuth: true });
+    const response = await get<ApiResponse<ScheduleDetail>>(url, { requiresAuth: true });
     if (response.success) {
       console.log('여행지 루트 조회 성공:', response.data);
     } else {
