@@ -1,14 +1,19 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams, useSearchParams, useRouter } from 'next/navigation';
 import styles from '@/styles/Schedule.module.css';
-import { fetchScheduleDetail, fetchTravelList, searchTravelDestinations, fetchTravelRoute } from '@/api/scheduleApi';
+import {
+  fetchScheduleDetail,
+  fetchTravelList,
+  searchTravelDestinations,
+  fetchTravelRoute,
+} from '@/api/scheduleApi';
 import Image from 'next/image';
 import locationIcon from '../../../public/assets/icons/ic_location.png';
 import Pagination from '../Travel/Pagination';
 import { ScheduleDetail, Place } from '@/types/scheduleType';
 
 interface ScheduleMakeProps {
-  onAddMarker: (marker: { lat: number; lng: number; }) => void;
+  onAddMarker: (marker: { lat: number; lng: number }) => void;
 }
 
 const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
@@ -18,67 +23,67 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
   const initialTab = (searchParams.get('tab') || 'scheduleTravel') as 'scheduleTravel' | 'travelRoot';
   
   const [tab, setTab] = useState<'scheduleTravel' | 'travelRoot'>(initialTab);
-  const [data, setData] = useState<ScheduleDetail | null>(null);
   const [travels, setTravels] = useState<Place[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [isSearching, setIsSearching] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
+  const [data, setData] = useState<ScheduleDetail | null>(null); // 추가된 상태
   
-  const fetchData = useCallback(async (fetchFn: Function, page: number) => {
-    if (!scheduleId) return;
-    try {
-      const response = await fetchFn(Number(scheduleId), page);
-      if (response && response.data) {
-        const scheduleDetail = response.data as ScheduleDetail;
-        setTravels(scheduleDetail.placeList?.content ?? []);
-        setTotalPages(scheduleDetail.placeList?.totalPages ?? 0);
-      } else {
-        setTravels([]);
-      }
-    } catch (error) {
-      console.error('Failed to fetch data:', error);
-    }
-  }, [scheduleId]);
-  
-  const fetchRouteData = useCallback(async (page: number) => {
-    if (!scheduleId) return;
-    try {
-      const response = await fetchTravelRoute(Number(scheduleId), page);
-      if (response && response.data) {
-        const routeDetail = response.data;
-        
-        if (routeDetail?.placeList?.content !== undefined) {
-          setTravels(routeDetail.placeList.content ?? []);
-          setTotalPages(routeDetail.placeList.totalPages ?? 0);
+  const fetchData = useCallback(
+    async (fetchFn: Function, page: number) => {
+      if (!scheduleId) return;
+      try {
+        const response = await fetchFn(Number(scheduleId), page);
+        if (response && response.data) {
+          const scheduleDetail = response.data as ScheduleDetail;
+          setTravels(scheduleDetail.placeList?.content ?? []);
+          setTotalPages(scheduleDetail.placeList?.totalPages ?? 0);
+          setData(scheduleDetail); // 상태 업데이트
         } else {
-          console.warn('routeDetail에 content 속성이 없습니다.');
+          setTravels([]);
+          setData(null); // 데이터가 없을 경우 null로 설정
+        }
+      } catch (error) {
+        console.error('Failed to fetch data:', error);
+        setData(null); // 에러 발생 시 null로 설정
+      }
+    },
+    [scheduleId]
+  );
+  
+  const fetchRouteData = useCallback(
+    async (page: number) => {
+      if (!scheduleId) return;
+      try {
+        const response = await fetchTravelRoute(Number(scheduleId), page);
+        if (response && response.data) {
+          const routeDetail = response.data;
+          if (routeDetail?.placeList?.content !== undefined) {
+            setTravels(routeDetail.placeList.content ?? []);
+            setTotalPages(routeDetail.placeList.totalPages ?? 0);
+          } else {
+            console.warn('routeDetail에 content 속성이 없습니다.');
+            setTravels([]);
+          }
+        } else {
           setTravels([]);
         }
-      } else {
-        setTravels([]);
+      } catch (error) {
+        console.error('Failed to fetch route data:', error);
       }
-    } catch (error) {
-      console.error('Failed to fetch route data:', error);
-    }
-  }, [scheduleId]);
-  
-  const handleAddMarker = (place: Place) => {
-    const marker = {
-      lat: place.latitude ?? 0,
-      lng: place.longitude ?? 0,
-    };
-    console.log('추가된 마커:', marker);
-    onAddMarker(marker);
-  };
+    },
+    [scheduleId]
+  );
   
   useEffect(() => {
+    if (!scheduleId) return; // scheduleId가 없을 경우 중단
     if (tab === 'scheduleTravel') {
       fetchData(fetchScheduleDetail, currentPage);
     } else if (tab === 'travelRoot') {
       fetchRouteData(currentPage);
     }
-  }, [fetchData, fetchRouteData, tab, currentPage]);
+  }, [fetchData, fetchRouteData, tab, currentPage, scheduleId]);
   
   const handleTabChange = (newTab: 'scheduleTravel' | 'travelRoot') => {
     setTab(newTab);
@@ -112,6 +117,15 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
     router.push(`/Travel/${placeId}`);
   };
   
+  const handleAddMarker = (place: Place) => {
+    const marker = {
+      lat: place.latitude ?? 0,
+      lng: place.longitude ?? 0,
+    };
+    console.log('추가된 마커:', marker);
+    onAddMarker(marker);
+  };
+  
   return (
     <div className={styles.pageContainer}>
       <div>
@@ -123,7 +137,6 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
             className={styles.inputField}
             placeholder="여행 이름을 입력해주세요."
             value={data?.scheduleName || ''}
-            readOnly
           />
         </div>
         <div className={styles.inputGroup}>
@@ -189,14 +202,8 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
                       {`${place.country} / ${place.city} / ${place.district}`}
                     </p>
                     <p className={styles.placeDetailAddress}>
-                      <Image
-                        src={locationIcon}
-                        alt="장소"
-                        width={15}
-                        height={21}
-                      />
-                      &nbsp;
-                      {place.address} {place.detailAddress}
+                      <Image src={locationIcon} alt="장소" width={15} height={21} />
+                      &nbsp;{place.address} {place.detailAddress}
                     </p>
                     <div className={styles.distanceInfo}>
                       <button
