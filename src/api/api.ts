@@ -1,6 +1,7 @@
 import Cookies from 'js-cookie';
 import { refreshApi } from './refreshApi';
 import { redirect } from 'next/navigation';
+import saveLocalContent from '@/utils/saveLocalContent';
 
 const BASE_URL = `${process.env.NEXT_PUBLIC_BACKEND_PROXY}`;
 
@@ -19,12 +20,16 @@ interface FetchOptions extends RequestInit {
 
 const getAuthHeaders = (): HeadersInit => {
   const accessToken = Cookies.get('trip-tune_at');
+  if (!accessToken) {
+    throw new Error('액세스 토큰이 없습니다. 다시 로그인 해주세요.');
+  }
   return {
     Authorization: `Bearer ${accessToken}`,
   };
 };
 
 const handleTokenRefresh = async (originalRequest: RequestInit & { url: string }): Promise<Response> => {
+  const { setEncryptedCookie } = saveLocalContent();
   const refreshToken = Cookies.get('trip-tune_rt');
   
   if (!refreshToken) {
@@ -32,17 +37,20 @@ const handleTokenRefresh = async (originalRequest: RequestInit & { url: string }
     throw new Error('로그인 필요');
   }
   
-  const newAccessToken = await refreshApi();
-  
-  if (newAccessToken) {
-    Cookies.set('trip-tune_at', newAccessToken);
-    return fetch(originalRequest.url, {
-      ...originalRequest,
-      headers: {
-        ...originalRequest.headers,
-        Authorization: `Bearer ${newAccessToken}`,
-      },
-    });
+  try {
+    const newAccessToken = await refreshApi();
+    if (newAccessToken) {
+      setEncryptedCookie('trip-tune_at', newAccessToken, 5 / (24 * 60));
+      return fetch(originalRequest.url, {
+        ...originalRequest,
+        headers: {
+          ...originalRequest.headers,
+          Authorization: `Bearer ${newAccessToken}`,
+        },
+      });
+    }
+  } catch (error) {
+    console.error('토큰 갱신 실패:', error);
   }
   
   redirect('/login');
@@ -75,8 +83,12 @@ export const fetchData = async <T>(endpoint: string, options: FetchOptions = {})
     try {
       const errorData = await response.json();
       throw new Error(errorData.message || 'API 요청 실패');
-    } catch {
-      throw new Error('API 요청 실패');
+    } catch (e) {
+      if (e instanceof Error) {
+        throw new Error('API 요청 실패: ' + e.message);
+      } else {
+        throw new Error('API 요청 실패: 알 수 없는 에러 발생');
+      }
     }
   }
   
