@@ -1,17 +1,17 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams, useSearchParams, useRouter } from 'next/navigation';
 import styles from '@/styles/Schedule.module.css';
-import { getSchedule, getTravels } from '@/api/scheduleApi';
+import { fetchScheduleDetail, fetchTravelList, searchTravelDestinations } from '@/api/scheduleApi';
 import Image from 'next/image';
-import bookMarkIcon from '../../../public/assets/icons/ic_bookmark.png';
-import bookMarkIconNo from '../../../public/assets/icons/ic_bookmark_no.png';
 import locationIcon from '../../../public/assets/icons/ic_location.png';
 import Pagination from '../Travel/Pagination';
-import PlacesScheduleMap from './PlacesScheduleMap';
-import { BookMarkApi, BookMarkDeleteApi } from '@/api/bookMarkApi';
 import { ScheduleDetail, Place } from '@/types/scheduleType';
 
-const ScheduleMake = () => {
+interface ScheduleMakeProps {
+  onAddMarker: (marker: { lat: number; lng: number; }) => void;
+}
+
+const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { scheduleId } = useParams();
@@ -19,65 +19,40 @@ const ScheduleMake = () => {
   
   const [tab, setTab] = useState<'scheduleTravel' | 'travelRoot'>(initialTab);
   const [data, setData] = useState<ScheduleDetail | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [travels, setTravels] = useState<Place[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [isSearching, setIsSearching] = useState(false);
-  const [markers, setMarkers] = useState<{ lat: number; lng: number; name: string }[]>([]);
-  const [alertMessage, setAlertMessage] = useState<string>('');
-  const [alertSeverity, setAlertSeverity] = useState<'success' | 'error' | ''>('');
-  const [alertOpen, setAlertOpen] = useState(false);
+  const [searchKeyword, setSearchKeyword] = useState('');
   
-  const fetchScheduleData = useCallback(async (page: number) => {
+  const fetchData = useCallback(async (fetchFn: Function, page: number) => {
     if (!scheduleId) return;
     try {
-      setIsLoading(true);
-      const scheduleData = await getSchedule(Number(scheduleId), page);
-      if (scheduleData && scheduleData.data) {
-        const scheduleDetail = scheduleData.data as ScheduleDetail;
-        setData(scheduleDetail);
+      const response = await fetchFn(Number(scheduleId), page);
+      if (response && response.data) {
+        const scheduleDetail = response.data as ScheduleDetail;
         setTravels(scheduleDetail.placeList?.content ?? []);
         setTotalPages(scheduleDetail.placeList?.totalPages ?? 0);
-      } else {
-        setData(null);
-      }
-    } catch (error) {
-      console.error('Failed to fetch schedule data:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [scheduleId]);
-  
-  const fetchTravels = useCallback(async (page: number) => {
-    if (!scheduleId) return;
-    try {
-      setIsLoading(true);
-      const travelData = await getTravels(Number(scheduleId), page);
-      if (travelData && travelData.data) {
-        const travelDetail = travelData.data as ScheduleDetail;
-        setTravels(travelDetail.placeList?.content ?? []);
-        setTotalPages(travelDetail.placeList?.totalPages ?? 0);
       } else {
         setTravels([]);
       }
     } catch (error) {
-      console.error('Failed to fetch travels:', error);
-    } finally {
-      setIsLoading(false);
+      console.error('Failed to fetch data:', error);
     }
   }, [scheduleId]);
   
   const handleAddMarker = (place: Place) => {
-    setMarkers((prevMarkers) => [
-      ...prevMarkers,
-      { lat: place.latitude ?? 0, lng: place.longitude ?? 0, name: place.placeName },
-    ]);
+    const marker = {
+      lat: place.latitude ?? 0,
+      lng: place.longitude ?? 0,
+    };
+    console.log('추가된 마커:', marker);
+    onAddMarker(marker);
   };
   
   useEffect(() => {
-    fetchScheduleData(currentPage);
-  }, [fetchScheduleData, currentPage]);
+    fetchData(fetchScheduleDetail, currentPage);
+  }, [fetchData, currentPage]);
   
   const handleTabChange = (newTab: 'scheduleTravel' | 'travelRoot') => {
     setTab(newTab);
@@ -86,39 +61,25 @@ const ScheduleMake = () => {
   const handleTravelSearch = async () => {
     setCurrentPage(1);
     setIsSearching(true);
-    await fetchTravels(1);
+    try {
+      await fetchData(searchTravelDestinations, 1);
+    } catch (error) {
+      console.error('여행지 검색 실패:', error);
+    }
   };
   
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    isSearching ? fetchTravels(page) : fetchScheduleData(page);
+    if (isSearching) {
+      fetchData(searchTravelDestinations, page);
+    } else {
+      fetchData(fetchTravelList, page);
+    }
   };
   
   const handleDetailClick = (placeId: number) => {
     router.push(`/Travel/${placeId}`);
   };
-  
-  const toggleBookmark = useCallback(async (placeId: number, isBookmarked = false) => {
-    try {
-      if (isBookmarked) {
-        await BookMarkDeleteApi({ placeId });
-        setAlertMessage('북마크가 해제되었습니다.');
-      } else {
-        await BookMarkApi({ placeId });
-        setAlertMessage('북마크가 등록되었습니다.');
-      }
-      setAlertSeverity('success');
-    } catch (error) {
-      setAlertMessage('북마크 처리 중 오류가 발생했습니다.');
-      setAlertSeverity('error');
-    } finally {
-      setAlertOpen(true);
-    }
-  }, []);
-  
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
   
   return (
     <div className={styles.pageContainer}>
@@ -161,7 +122,12 @@ const ScheduleMake = () => {
       {tab === 'scheduleTravel' && (
         <>
           <div className={styles.travelSearchContainer}>
-            <input type="text" placeholder="원하는 여행지를 검색하세요" />
+            <input
+              type="text"
+              placeholder="원하는 여행지를 검색하세요"
+              value={searchKeyword}
+              onChange={(e) => setSearchKeyword(e.target.value)}
+            />
             <button onClick={handleTravelSearch}>돋보기</button>
           </div>
           <div className={styles.travelList}>
@@ -187,31 +153,6 @@ const ScheduleMake = () => {
                     )}
                   </div>
                   <div className={styles.placeInfo}>
-                    <button
-                      className={styles.bookmarkButton}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleBookmark(place.placeId, place.isBookmarked ?? false);
-                      }}
-                    >
-                      {place.isBookmarked ? (
-                        <Image
-                          src={bookMarkIcon}
-                          alt="북마크"
-                          width={16}
-                          height={16}
-                          priority
-                        />
-                      ) : (
-                        <Image
-                          src={bookMarkIconNo}
-                          alt="북마크 해제"
-                          width={16}
-                          height={16}
-                          priority
-                        />
-                      )}
-                    </button>
                     <div className={styles.placeName}>{place.placeName}</div>
                     <p className={styles.placeAddress}>
                       {`${place.country} / ${place.city} / ${place.district}`}
@@ -249,13 +190,6 @@ const ScheduleMake = () => {
             currentPage={currentPage}
             pageSize={5}
             onPageChange={handlePageChange}
-          />
-          <PlacesScheduleMap
-            places={travels.map((place) => ({
-              latitude: place.latitude ?? 0,
-              longitude: place.longitude ?? 0,
-            }))}
-            markers={markers}
           />
         </>
       )}

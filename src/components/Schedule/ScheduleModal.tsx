@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useState, useEffect } from 'react';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -7,14 +5,17 @@ import styles from '@/styles/Schedule.module.css';
 import Image from 'next/image';
 import triptuneIcon from '../../../public/assets/icons/ic_triptune.png';
 import { ko } from 'date-fns/locale';
-import { createSchedule } from '@/api/scheduleApi';
+import { createNewSchedule } from '@/api/scheduleApi';
 import { useRouter } from 'next/navigation';
 
 registerLocale('ko', ko);
 
-const ScheduleModal: React.FC = () => {
+interface ScheduleModalProps {
+  onClose: () => void;
+}
+
+const ScheduleModal: React.FC<ScheduleModalProps> = ({ onClose }) => {
   const today = new Date();
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(true);
   const [startDate, setStartDate] = useState<Date | null>(today);
   const [endDate, setEndDate] = useState<Date | null>(today);
   const [travelName, setTravelName] = useState<string>('');
@@ -37,10 +38,6 @@ const ScheduleModal: React.FC = () => {
     return date.toISOString().split('T')[0];
   };
   
-  const handleCloseModal = (): void => {
-    setIsModalOpen(false);
-  };
-  
   const handleCreateSchedule = async (): Promise<void> => {
     if (!isFormValid) {
       console.error('모든 필드를 올바르게 입력해야 합니다.');
@@ -54,11 +51,11 @@ const ScheduleModal: React.FC = () => {
     };
     
     try {
-      const response = await createSchedule(scheduleData);
+      const response = await createNewSchedule(scheduleData);
       
       if (response && response.data) {
         const scheduleId = response.data.scheduleId;
-        handleCloseModal();
+        onClose();  // 모달 닫기
         router.push(`/Schedule/${scheduleId}`);
       } else {
         console.error('일정 생성 실패');
@@ -78,12 +75,10 @@ const ScheduleModal: React.FC = () => {
       : '';
   };
   
-  if (!isModalOpen) return null;
-  
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContainer}>
-        <button className={styles.closeButton} onClick={handleCloseModal}>
+        <button className={styles.closeButton} onClick={onClose}>
           &times;
         </button>
         <h2 className={styles.detailTitle}>
@@ -130,11 +125,7 @@ const ScheduleModal: React.FC = () => {
             dateFormat="yyyy.MM.dd"
             dayClassName={(date: Date) => {
               const day = date.getDay();
-              return day === 0
-                ? styles.sunday
-                : day === 6
-                  ? styles.saturday
-                  : '';
+              return day === 0 ? styles.sunday : day === 6 ? styles.saturday : '';
             }}
           />
         </div>
