@@ -25,7 +25,8 @@
     align-items: center;
     justify-content: center;
     background: #ffffff;
-    height: auto;
+    height: fit-content;
+    max-height:1330px;
 }
 
 /* 일정 만들기를 위한 모달창 */
@@ -145,7 +146,7 @@
     font-size: 18px;
     font-family: 'Noto Sans KR', sans-serif;
     transition: background-color 0.3s ease;
-    margin-bottom: 30px;
+    margin: 30px;
     float:right;
 }
 
@@ -216,7 +217,7 @@
     font-family: 'Noto Sans KR', sans-serif;
     transition: background-color 0.3s ease;
     margin-bottom: 30px;
-    float:left;
+    float:right;
 }
 
 .pageContainer {
@@ -280,8 +281,7 @@
 
 .errorText {
     color: red;
-    font-family: Noto Sans KR,
-    sans-serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 14px;
     margin-top: 5px;
 }
@@ -526,10 +526,9 @@
 }
 
 .travelSearchContainer input {
-    width: 350px;
+    width: 420px;
     padding: 10px 15px;
     font-size: 16px;
-    border-radius: 25px;
     border: 1px solid #ccc;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
@@ -546,7 +545,6 @@
     background-color: #76adac;
     color: #fff;
     border: none;
-    border-radius: 25px;
     cursor: pointer;
     font-size: 16px;
     transition: all 0.3s ease;
@@ -558,8 +556,7 @@
     padding: 0;
     margin: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* 반응형으로 칸을 채움 */
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 }
 
 /* 일정만들기 3번 : 채팅 */
@@ -568,7 +565,7 @@
     flex-direction: column;
     justify-content: space-between;
     width: 100%;
-    height: 100%;
+    height: 1355px;
     background-color: #f0f2f5;
     border: 1px solid #e0e0e0;
     border-radius: 12px;

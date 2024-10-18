@@ -23,6 +23,7 @@ import homePageIcon from '../../../../public/assets/icons/ic_homepage.png';
 import phoneIcon from '../../../../public/assets/icons/ic_phone.png';
 import styled from 'styled-components';
 import pictureImage from '../../../../public/assets/images/pictureImage.png';
+import VerificationLoading from '@/components/Common/VerificationLoading';
 
 const StyledSwiperContainer = styled.div`
     position: relative;
@@ -289,7 +290,7 @@ const TravelDetail = () => {
                 {imageList.map((image, index) => (
                   <SwiperSlide key={index}>
                     <div className={styles.sliderImageContainer}>
-                      {imageLoading && <div>로딩 중...</div>}
+                      {imageLoading && <VerificationLoading />}
                       <Image
                         src={image.imageUrl}
                         alt={image.imageName}
