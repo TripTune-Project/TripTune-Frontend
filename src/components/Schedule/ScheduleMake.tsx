@@ -28,7 +28,7 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
   const [totalPages, setTotalPages] = useState(0);
   const [isSearching, setIsSearching] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
-  const [data, setData] = useState<ScheduleDetail | null>(null); // 추가된 상태
+  const [data, setData] = useState<ScheduleDetail | null>(null);
   
   const fetchData = useCallback(
     async (fetchFn: Function, page: number) => {
@@ -39,14 +39,14 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
           const scheduleDetail = response.data as ScheduleDetail;
           setTravels(scheduleDetail.placeList?.content ?? []);
           setTotalPages(scheduleDetail.placeList?.totalPages ?? 0);
-          setData(scheduleDetail); // 상태 업데이트
+          setData(scheduleDetail);
         } else {
           setTravels([]);
-          setData(null); // 데이터가 없을 경우 null로 설정
+          setData(null);
         }
       } catch (error) {
         console.error('Failed to fetch data:', error);
-        setData(null); // 에러 발생 시 null로 설정
+        setData(null);
       }
     },
     [scheduleId]
@@ -77,7 +77,7 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
   );
   
   useEffect(() => {
-    if (!scheduleId) return; // scheduleId가 없을 경우 중단
+    if (!scheduleId) return;
     if (tab === 'scheduleTravel') {
       fetchData(fetchScheduleDetail, currentPage);
     } else if (tab === 'travelRoot') {
@@ -137,6 +137,7 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
             className={styles.inputField}
             placeholder="여행 이름을 입력해주세요."
             value={data?.scheduleName || ''}
+            onChange={(e) => setData((prev) => (prev ? { ...prev, scheduleName: e.target.value } : null))}
           />
         </div>
         <div className={styles.inputGroup}>
@@ -144,8 +145,12 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
           <input
             type="text"
             className={styles.inputField}
+            placeholder="여행 날짜를 입력해주세요."
             value={`${data?.startDate ?? ''} ~ ${data?.endDate ?? ''}`}
-            readOnly
+            onChange={(e) => {
+              const [start, end] = e.target.value.split(' ~ ');
+              setData((prev) => (prev ? { ...prev, startDate: start, endDate: end } : null));
+            }}
           />
         </div>
       </div>
