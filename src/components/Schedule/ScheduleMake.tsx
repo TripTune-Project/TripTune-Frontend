@@ -1,12 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams, useSearchParams, useRouter } from 'next/navigation';
 import styles from '@/styles/Schedule.module.css';
-import {
-  fetchScheduleDetail,
-  fetchTravelList,
-  searchTravelDestinations,
-  fetchTravelRoute,
-} from '@/api/scheduleApi';
+import { fetchScheduleDetail, fetchTravelList, searchTravelDestinations, fetchTravelRoute } from '@/api/scheduleApi';
 import Image from 'next/image';
 import locationIcon from '../../../public/assets/icons/ic_location.png';
 import Pagination from '../Travel/Pagination';
@@ -31,10 +26,10 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
   const [data, setData] = useState<ScheduleDetail | null>(null);
   
   const fetchData = useCallback(
-    async (fetchFn: Function, page: number) => {
+    async (fetchFn: Function, page: number, keyword?: string) => {
       if (!scheduleId) return;
       try {
-        const response = await fetchFn(Number(scheduleId), page);
+        const response = keyword ? await fetchFn(Number(scheduleId), page, keyword) : await fetchFn(Number(scheduleId), page);
         if (response && response.data) {
           const scheduleDetail = response.data as ScheduleDetail;
           setTravels(scheduleDetail.placeList?.content ?? []);
@@ -45,32 +40,8 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
           setData(null);
         }
       } catch (error) {
-        console.error('Failed to fetch data:', error);
+        console.error('데이터를 불러오는데 실패했습니다:', error);
         setData(null);
-      }
-    },
-    [scheduleId]
-  );
-  
-  const fetchRouteData = useCallback(
-    async (page: number) => {
-      if (!scheduleId) return;
-      try {
-        const response = await fetchTravelRoute(Number(scheduleId), page);
-        if (response && response.data) {
-          const routeDetail = response.data;
-          if (routeDetail?.placeList?.content !== undefined) {
-            setTravels(routeDetail.placeList.content ?? []);
-            setTotalPages(routeDetail.placeList.totalPages ?? 0);
-          } else {
-            console.warn('routeDetail에 content 속성이 없습니다.');
-            setTravels([]);
-          }
-        } else {
-          setTravels([]);
-        }
-      } catch (error) {
-        console.error('Failed to fetch route data:', error);
       }
     },
     [scheduleId]
@@ -81,9 +52,9 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
     if (tab === 'scheduleTravel') {
       fetchData(fetchScheduleDetail, currentPage);
     } else if (tab === 'travelRoot') {
-      fetchRouteData(currentPage);
+      fetchData(fetchTravelRoute, currentPage);
     }
-  }, [fetchData, fetchRouteData, tab, currentPage, scheduleId]);
+  }, [fetchData, tab, currentPage, scheduleId]);
   
   const handleTabChange = (newTab: 'scheduleTravel' | 'travelRoot') => {
     setTab(newTab);
@@ -94,7 +65,7 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
     setCurrentPage(1);
     setIsSearching(true);
     try {
-      await fetchData(searchTravelDestinations, 1);
+      await fetchData(searchTravelDestinations, 1, searchKeyword);
     } catch (error) {
       console.error('여행지 검색 실패:', error);
     }
@@ -103,13 +74,9 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     if (isSearching) {
-      fetchData(searchTravelDestinations, page);
+      fetchData(searchTravelDestinations, page, searchKeyword);
     } else {
-      if (tab === 'scheduleTravel') {
-        fetchData(fetchTravelList, page);
-      } else if (tab === 'travelRoot') {
-        fetchRouteData(page);
-      }
+      fetchData(tab === 'scheduleTravel' ? fetchTravelList : fetchTravelRoute, page);
     }
   };
   
@@ -135,7 +102,7 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
           <input
             type="text"
             className={styles.inputField}
-            placeholder="여행 이름을 입력해주세요."
+            placeholder="여행 이름을 입력해주세요"
             value={data?.scheduleName || ''}
             onChange={(e) => setData((prev) => (prev ? { ...prev, scheduleName: e.target.value } : null))}
           />
@@ -145,7 +112,7 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
           <input
             type="text"
             className={styles.inputField}
-            placeholder="여행 날짜를 입력해주세요."
+            placeholder="여행 날짜를 입력해주세요"
             value={`${data?.startDate ?? ''} ~ ${data?.endDate ?? ''}`}
             onChange={(e) => {
               const [start, end] = e.target.value.split(' ~ ');
@@ -177,7 +144,7 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
               value={searchKeyword}
               onChange={(e) => setSearchKeyword(e.target.value)}
             />
-            <button onClick={handleTravelSearch}>돋보기</button>
+            <button onClick={handleTravelSearch}>검색</button>
           </div>
           <div className={styles.travelList}>
             {travels && travels.length > 0 ? (
