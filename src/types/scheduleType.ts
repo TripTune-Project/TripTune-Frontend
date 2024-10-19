@@ -1,3 +1,4 @@
+// API 응답 제네릭 타입
 export interface ApiResponse<T> {
   success: boolean;
   data?: T;
@@ -13,7 +14,7 @@ export interface Schedule {
   endDate: string;
 }
 
-// 참여자
+// 참여자 정보
 export interface Attendee {
   attendeeId: number;
   userId: string;
@@ -21,9 +22,25 @@ export interface Attendee {
   permission: string;
 }
 
+// 일정 만들기 기본 조회
+export interface ScheduleDetailType {
+  scheduleId?: number;
+  attendeeList: Attendee;
+  createdAt: string;
+  endDate: string;
+  placeList: Place;
+  totalPages: number;
+  currentPage: number;
+  totalElements: number;
+  pageSize: number;
+  scheduleName: string;
+  startDate: string;
+  updatedAt?: string;
+}
+
 // 장소 정보
 export interface Place {
-  routeOrder?:number;
+  routeOrder?: number;
   latitude: number;
   longitude: number;
   placeId: number;
@@ -31,28 +48,17 @@ export interface Place {
   city: string;
   district: string;
   address: string;
-  detailAddress: string;
+  detailAddress?: string;
   placeName: string;
   thumbnailUrl: string;
 }
 
-// 전반적인 스케줄의 상세 정보
-export interface ScheduleDetail {
-  scheduleId?: number;
-  scheduleName: string;
-  startDate: string;
-  endDate: string;
-  createdAt: string;
-  updatedAt: string;
-  attendeeList: Attendee[];
-  placeList: PaginatedPlaces;
-}
-
-// 페이지 내이션 + 장소 리스트
-export interface PaginatedPlaces {
-  totalPages: number;
-  currentPage: number;
-  totalElements: number;
-  pageSize: number;
+// 여행지 조회, 여행지 검색, 여행루트
+export interface ScheduleTravelResultType {
+  placeId?:number;
   content: Place[];
+  currentPage: number;
+  pageSize: number;
+  totalElements: number;
+  totalPages: number;
 }

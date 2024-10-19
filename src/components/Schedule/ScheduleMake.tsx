@@ -1,11 +1,18 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useSearchParams, useRouter } from 'next/navigation';
 import styles from '@/styles/Schedule.module.css';
-import { fetchScheduleDetail, fetchTravelList, searchTravelDestinations, fetchTravelRoute } from '@/api/scheduleApi';
+import {
+  useScheduleDetailList,
+  useScheduleTravelList,
+  useTravelListByLocation,
+  useScheduleTravelRoute,
+} from '@/hooks/useSchedule';
 import Image from 'next/image';
 import locationIcon from '../../../public/assets/icons/ic_location.png';
 import Pagination from '../Travel/Pagination';
-import { ScheduleDetail, Place } from '@/types/scheduleType';
+import { Place, ScheduleDetailType, ScheduleTravelResultType } from '@/types/scheduleType';
+import DataLoading from '@/components/Common/DataLoading';
+
 
 interface ScheduleMakeProps {
   onAddMarker: (marker: { lat: number; lng: number }) => void;
@@ -13,85 +20,74 @@ interface ScheduleMakeProps {
 
 const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { scheduleId } = useParams();
+  const searchParams = useSearchParams();
+  
   const initialTab = (searchParams.get('tab') || 'scheduleTravel') as 'scheduleTravel' | 'travelRoot';
   
   const [tab, setTab] = useState<'scheduleTravel' | 'travelRoot'>(initialTab);
-  const [travels, setTravels] = useState<Place[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
-  const [isSearching, setIsSearching] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
-  const [data, setData] = useState<ScheduleDetail | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
+  const [scheduleDetail, setScheduleDetail] = useState<ScheduleDetailType | null>(null);
   
-  const fetchData = useCallback(
-    async (fetchFn: Function, page: number, keyword?: string) => {
-      if (!scheduleId) return;
-      try {
-        const response = keyword ? await fetchFn(Number(scheduleId), page, keyword) : await fetchFn(Number(scheduleId), page);
-        if (response && response.data) {
-          const scheduleDetail = response.data as ScheduleDetail;
-          setTravels(scheduleDetail.placeList?.content ?? []);
-          setTotalPages(scheduleDetail.placeList?.totalPages ?? 0);
-          setData(scheduleDetail);
-        } else {
-          setTravels([]);
-          setData(null);
-        }
-      } catch (error) {
-        console.error('데이터를 불러오는데 실패했습니다:', error);
-        setData(null);
-      }
-    },
-    [scheduleId]
-  );
+  const scheduleDetailQuery = useScheduleDetailList(Number(scheduleId), currentPage, tab === 'scheduleTravel' && !isSearching);
+  const travelListQuery = useScheduleTravelList(Number(scheduleId), currentPage, tab === 'scheduleTravel' && !isSearching);
+  const searchTravelQuery = useTravelListByLocation(Number(scheduleId), searchKeyword, currentPage, isSearching);
+  const travelRouteQuery = useScheduleTravelRoute(Number(scheduleId), currentPage, tab === 'travelRoot');
   
-  useEffect(() => {
-    if (!scheduleId) return;
-    if (tab === 'scheduleTravel') {
-      fetchData(fetchScheduleDetail, currentPage);
-    } else if (tab === 'travelRoot') {
-      fetchData(fetchTravelRoute, currentPage);
-    }
-  }, [fetchData, tab, currentPage, scheduleId]);
+  const getTravels = () => {
+    if (isSearching) return searchTravelQuery?.data?.data?.content || [];
+    if (tab === 'travelRoot') return travelRouteQuery?.data?.data?.content || [];
+    return travelListQuery?.data?.data?.content || [];
+  };
+  
+  const getTotalPages = () => {
+    if (isSearching) return searchTravelQuery?.data?.data?.totalPages || 0;
+    if (tab === 'travelRoot') return travelRouteQuery?.data?.data?.totalPages || 0;
+    return travelListQuery?.data?.data?.totalPages || 0;
+  };
+  
+  const travels = getTravels();
+  const totalPages = getTotalPages();
   
   const handleTabChange = (newTab: 'scheduleTravel' | 'travelRoot') => {
     setTab(newTab);
     setCurrentPage(1);
+    setIsSearching(false);
   };
   
-  const handleTravelSearch = async () => {
+  const handleTravelSearch = () => {
     setCurrentPage(1);
     setIsSearching(true);
-    try {
-      await fetchData(searchTravelDestinations, 1, searchKeyword);
-    } catch (error) {
-      console.error('여행지 검색 실패:', error);
-    }
   };
   
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    if (isSearching) {
-      fetchData(searchTravelDestinations, page, searchKeyword);
-    } else {
-      fetchData(tab === 'scheduleTravel' ? fetchTravelList : fetchTravelRoute, page);
-    }
-  };
+  const handlePageChange = (page: number) => setCurrentPage(page);
   
-  const handleDetailClick = (placeId: number) => {
-    router.push(`/Travel/${placeId}`);
-  };
+  const handleDetailClick = (placeId: number) => router.push(`/Travel/${placeId}`);
   
-  const handleAddMarker = (place: Place) => {
-    const marker = {
-      lat: place.latitude ?? 0,
-      lng: place.longitude ?? 0,
-    };
-    console.log('추가된 마커:', marker);
+  const handleAddMarker = (place :Place) => {
+    const marker = { lat: place.latitude, lng: place.longitude };
     onAddMarker(marker);
   };
+  
+  const handleScheduleDetailChange = (field: keyof ScheduleDetailType, value: string) => {
+    if (scheduleDetail) setScheduleDetail({ ...scheduleDetail, [field]: value });
+  };
+  
+  useEffect(() => {
+    if (scheduleDetailQuery?.data?.data) {
+      setScheduleDetail(scheduleDetailQuery.data.data);
+    }
+  }, [scheduleDetailQuery]);
+  
+  if (scheduleDetailQuery.isLoading || travelListQuery.isLoading || searchTravelQuery.isLoading || travelRouteQuery.isLoading) {
+    return <DataLoading />;
+  }
+  
+  if (scheduleDetailQuery.error || travelListQuery.error || searchTravelQuery.error || travelRouteQuery.error) {
+    return <p>데이터를 불러오는데 오류가 발생했습니다.</p>;
+  }
   
   return (
     <div className={styles.pageContainer}>
@@ -102,9 +98,9 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
           <input
             type="text"
             className={styles.inputField}
-            placeholder="여행 이름을 입력해주세요"
-            value={data?.scheduleName || ''}
-            onChange={(e) => setData((prev) => (prev ? { ...prev, scheduleName: e.target.value } : null))}
+            placeholder="여행 이름을 입력해주세요."
+            value={scheduleDetail?.scheduleName || ''}
+            onChange={(e) => handleScheduleDetailChange('scheduleName', e.target.value)}
           />
         </div>
         <div className={styles.inputGroup}>
@@ -112,11 +108,12 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
           <input
             type="text"
             className={styles.inputField}
-            placeholder="여행 날짜를 입력해주세요"
-            value={`${data?.startDate ?? ''} ~ ${data?.endDate ?? ''}`}
+            placeholder="시작일 ~ 종료일"
+            value={`${scheduleDetail?.startDate ?? ''} ~ ${scheduleDetail?.endDate ?? ''}`}
             onChange={(e) => {
-              const [start, end] = e.target.value.split(' ~ ');
-              setData((prev) => (prev ? { ...prev, startDate: start, endDate: end } : null));
+              const [startDate, endDate] = e.target.value.split(' ~ ');
+              handleScheduleDetailChange('startDate', startDate);
+              handleScheduleDetailChange('endDate', endDate);
             }}
           />
         </div>
@@ -135,7 +132,7 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
           여행 루트
         </button>
       </div>
-      {tab === 'scheduleTravel' && (
+      {tab === 'scheduleTravel' ? (
         <>
           <div className={styles.travelSearchContainer}>
             <input
@@ -144,11 +141,71 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
               value={searchKeyword}
               onChange={(e) => setSearchKeyword(e.target.value)}
             />
-            <button onClick={handleTravelSearch}>검색</button>
+            <button onClick={handleTravelSearch}>돋보기</button>
           </div>
           <div className={styles.travelList}>
-            {travels && travels.length > 0 ? (
-              travels.map((place) => (
+            {travels ? (
+              <ul>
+                {travels && travels.map((place:Place) => (
+                  <li
+                    key={place.placeId}
+                    className={styles.placeItem}
+                    onClick={() => handleDetailClick(place.placeId)}
+                  >
+                    <div className={styles.placeThumbnail}>
+                      {place.thumbnailUrl ? (
+                        <Image
+                          src={place.thumbnailUrl}
+                          alt={place.placeName}
+                          width={150}
+                          height={150}
+                          className={styles.thumbnailImage}
+                          priority
+                        />
+                      ) : (
+                        <div className={styles.noImage}>이미지 없음</div>
+                      )}
+                    </div>
+                    <div className={styles.placeInfo}>
+                      <div className={styles.placeName}>{place.placeName}</div>
+                      <p className={styles.placeAddress}>
+                        {`${place.country} / ${place.city} / ${place.district}`}
+                      </p>
+                      <p className={styles.placeDetailAddress}>
+                        <Image src={locationIcon} alt="장소" width={15} height={21} />
+                        &nbsp;{place.address} {place.detailAddress}
+                      </p>
+                      <div className={styles.distanceInfo}>
+                        <button
+                          className={styles.addButton}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAddMarker(place);
+                          }}
+                        >
+                          추가
+                        </button>
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className={styles.noResults}>검색 결과가 없습니다.</p>
+            )}
+          </div>
+          <Pagination
+            total={totalPages * 5}
+            currentPage={currentPage}
+            pageSize={5}
+            onPageChange={handlePageChange}
+          />
+        </>
+      ) : (
+        <>
+          {travels ? (
+            <ul>
+              {travels && travels.map((place:Place) => (
                 <li
                   key={place.placeId}
                   className={styles.placeItem}
@@ -177,30 +234,13 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
                       <Image src={locationIcon} alt="장소" width={15} height={21} />
                       &nbsp;{place.address} {place.detailAddress}
                     </p>
-                    <div className={styles.distanceInfo}>
-                      <button
-                        className={styles.addButton}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleAddMarker(place);
-                        }}
-                      >
-                        추가
-                      </button>
-                    </div>
                   </div>
                 </li>
-              ))
-            ) : (
-              <p className={styles.noResults}>검색 결과가 없습니다.</p>
-            )}
-          </div>
-          <Pagination
-            total={totalPages * 5}
-            currentPage={currentPage}
-            pageSize={5}
-            onPageChange={handlePageChange}
-          />
+              ))}
+            </ul>
+          ) : (
+            <p className={styles.noResults}>여행지에서 추가를 해보세요.</p>
+          )}
         </>
       )}
     </div>
