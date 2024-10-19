@@ -23,6 +23,7 @@ import homePageIcon from '../../../../public/assets/icons/ic_homepage.png';
 import phoneIcon from '../../../../public/assets/icons/ic_phone.png';
 import styled from 'styled-components';
 import pictureImage from '../../../../public/assets/images/pictureImage.png';
+import VerificationLoading from '@/components/Common/VerificationLoading';
 
 const StyledSwiperContainer = styled.div`
     position: relative;
