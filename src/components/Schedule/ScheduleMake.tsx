@@ -35,14 +35,14 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
       if (!scheduleId) return;
       try {
         const response = await fetchFn(Number(scheduleId), page);
-        if (response) {
-          const scheduleDetail = response as ScheduleDetail;
+        if (response && response.data) {
+          const scheduleDetail = response.data as ScheduleDetail;
           setTravels(scheduleDetail.placeList?.content ?? []);
           setTotalPages(scheduleDetail.placeList?.totalPages ?? 0);
-          setData(scheduleDetail);
+          setData(scheduleDetail); // 상태 업데이트
         } else {
           setTravels([]);
-          setData(null);
+          setData(null); // 데이터가 없을 경우 null로 설정
         }
       } catch (error) {
         console.error('Failed to fetch data:', error);
@@ -57,8 +57,8 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
       if (!scheduleId) return;
       try {
         const response = await fetchTravelRoute(Number(scheduleId), page);
-        if (response) {
-          const routeDetail = response;
+        if (response && response.data) {
+          const routeDetail = response.data;
           if (routeDetail?.placeList?.content !== undefined) {
             setTravels(routeDetail.placeList.content ?? []);
             setTotalPages(routeDetail.placeList.totalPages ?? 0);
@@ -172,7 +172,7 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
               value={searchKeyword}
               onChange={(e) => setSearchKeyword(e.target.value)}
             />
-            <button onClick={handleTravelSearch}>검색</button>
+            <button onClick={handleTravelSearch}>돋보기</button>
           </div>
           <div className={styles.travelList}>
             {travels && travels.length > 0 ? (

@@ -12,7 +12,7 @@ export const fetchScheduleList = async (): Promise<ApiResponse<Schedule>> => {
     } else {
       console.error('일정 목록 조회 실패:', response.message);
     }
-    return response.data;
+    return response;
   } catch (error) {
     throw error;
   }
@@ -29,7 +29,7 @@ export const fetchScheduleDetail = async (scheduleId: number, page: number = 1):
     } else {
       console.error('일정 조회 실패:', response.message);
     }
-    return response.data;
+    return response;
   } catch (error) {
     throw error;
   }
@@ -46,7 +46,7 @@ export const createNewSchedule = async (scheduleData: Schedule): Promise<ApiResp
     } else {
       console.error('일정 생성 실패:', response.message);
     }
-    return response.data;
+    return response;
   } catch (error) {
     throw error;
   }
@@ -70,7 +70,7 @@ export const updateExistingSchedule = async (schedule: ScheduleDetail): Promise<
     } else {
       console.error('일정 수정 실패:', response.message);
     }
-    return response.data;
+    return response;
   } catch (error) {
     throw error;
   }
@@ -87,7 +87,7 @@ export const fetchTravelList = async (scheduleId: number, page = 1): Promise<Api
     } else {
       console.error('여행지 조회 실패:', response.message);
     }
-    return response.data;
+    return response;
   } catch (error) {
     throw error;
   }
@@ -104,7 +104,7 @@ export const searchTravelDestinations = async (scheduleId: number, page = 1, key
     } else {
       console.error('여행지 검색 실패:', response.message);
     }
-    return response.data;
+    return response;
   } catch (error) {
     throw error;
   }
@@ -121,7 +121,7 @@ export const addTravelRoute = async (scheduleId: number): Promise<ApiResponse<un
     } else {
       console.error('여행지 루트 추가 실패:', response.message);
     }
-    return response.data.data;
+    return response;
   } catch (error) {
     throw error;
   }
@@ -138,7 +138,7 @@ export const fetchTravelRoute = async (scheduleId: number, page = 1): Promise<Ap
     } else {
       console.error('여행지 루트 조회 실패:', response.message);
     }
-    return response.data;
+    return response;
   } catch (error) {
     throw error;
   }
