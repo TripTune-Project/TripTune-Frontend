@@ -14,7 +14,6 @@ export const refreshApi = async (): Promise<string> => {
         refreshToken,
       }
     );
-    
     return response.data.accessToken;
     
   } catch (error) {
