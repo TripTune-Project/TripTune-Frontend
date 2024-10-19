@@ -35,14 +35,14 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
       if (!scheduleId) return;
       try {
         const response = await fetchFn(Number(scheduleId), page);
-        if (response && response.data) {
-          const scheduleDetail = response.data as ScheduleDetail;
+        if (response) {
+          const scheduleDetail = response as ScheduleDetail;
           setTravels(scheduleDetail.placeList?.content ?? []);
           setTotalPages(scheduleDetail.placeList?.totalPages ?? 0);
-          setData(scheduleDetail); // 상태 업데이트
+          setData(scheduleDetail);
         } else {
           setTravels([]);
-          setData(null); // 데이터가 없을 경우 null로 설정
+          setData(null);
         }
       } catch (error) {
         console.error('Failed to fetch data:', error);
@@ -57,8 +57,8 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
       if (!scheduleId) return;
       try {
         const response = await fetchTravelRoute(Number(scheduleId), page);
-        if (response && response.data) {
-          const routeDetail = response.data;
+        if (response) {
+          const routeDetail = response;
           if (routeDetail?.placeList?.content !== undefined) {
             setTravels(routeDetail.placeList.content ?? []);
             setTotalPages(routeDetail.placeList.totalPages ?? 0);
