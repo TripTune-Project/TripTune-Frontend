@@ -172,7 +172,7 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
               value={searchKeyword}
               onChange={(e) => setSearchKeyword(e.target.value)}
             />
-            <button onClick={handleTravelSearch}>돋보기</button>
+            <button onClick={handleTravelSearch}>검색</button>
           </div>
           <div className={styles.travelList}>
             {travels && travels.length > 0 ? (
