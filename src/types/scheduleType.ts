@@ -28,7 +28,7 @@ export interface ScheduleDetailType {
   attendeeList: Attendee;
   createdAt: string;
   endDate: string;
-  placeList: Content;
+  placeList: Place;
   totalPages: number;
   currentPage: number;
   totalElements: number;
@@ -39,7 +39,7 @@ export interface ScheduleDetailType {
 }
 
 // 장소 정보
-export interface Content {
+export interface Place {
   routeOrder?: number;
   latitude: number;
   longitude: number;
@@ -56,7 +56,7 @@ export interface Content {
 // 여행지 조회, 여행지 검색, 여행루트
 export interface ScheduleTravelResultType {
   placeId?:number;
-  content: Content;
+  content: Place[];
   currentPage: number;
   pageSize: number;
   totalElements: number;

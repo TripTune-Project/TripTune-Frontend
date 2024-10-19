@@ -10,8 +10,9 @@ import {
 import Image from 'next/image';
 import locationIcon from '../../../public/assets/icons/ic_location.png';
 import Pagination from '../Travel/Pagination';
-import { ScheduleDetailType, ScheduleTravelResultType } from '@/types/scheduleType';
+import { Place, ScheduleDetailType, ScheduleTravelResultType } from '@/types/scheduleType';
 import DataLoading from '@/components/Common/DataLoading';
+
 
 interface ScheduleMakeProps {
   onAddMarker: (marker: { lat: number; lng: number }) => void;
@@ -65,7 +66,7 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
   
   const handleDetailClick = (placeId: number) => router.push(`/Travel/${placeId}`);
   
-  const handleAddMarker = (place: ScheduleTravelResultType) => {
+  const handleAddMarker = (place :Place) => {
     const marker = { lat: place.latitude, lng: place.longitude };
     onAddMarker(marker);
   };
@@ -143,9 +144,9 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
             <button onClick={handleTravelSearch}>돋보기</button>
           </div>
           <div className={styles.travelList}>
-            {travels.length > 0 ? (
+            {travels ? (
               <ul>
-                {travels.map((place) => (
+                {travels && travels.map((place:Place) => (
                   <li
                     key={place.placeId}
                     className={styles.placeItem}
@@ -202,9 +203,9 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
         </>
       ) : (
         <>
-          {travels.length > 0 ? (
+          {travels ? (
             <ul>
-              {travels.map((place) => (
+              {travels && travels.map((place:Place) => (
                 <li
                   key={place.placeId}
                   className={styles.placeItem}
