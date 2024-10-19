@@ -5,7 +5,7 @@ export interface ApiResponse<T> {
   errorCode?: number;
 }
 
-// 일정 정보
+// 일정 정보 생성
 export interface Schedule {
   scheduleId?: number;
   scheduleName: string;
@@ -13,6 +13,7 @@ export interface Schedule {
   endDate: string;
 }
 
+// 참여자
 export interface Attendee {
   attendeeId: number;
   userId: string;
@@ -35,7 +36,7 @@ export interface Place {
   thumbnailUrl: string;
 }
 
-// 전반적인 상세 정보
+// 전반적인 스케줄의 상세 정보
 export interface ScheduleDetail {
   scheduleId?: number;
   scheduleName: string;
