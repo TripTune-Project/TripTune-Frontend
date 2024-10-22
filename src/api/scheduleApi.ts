@@ -7,8 +7,8 @@ import {
 } from '@/types/scheduleType';
 
 // 1.1 일정 "최근" 목록 조회 (GET)
-export const fetchScheduleList = async (): Promise<ApiResponse<unknown>> => {
-  const url = `/schedules`;
+export const fetchScheduleList = async (page: number = 1): Promise<ApiResponse<unknown>> => {
+  const url = `/schedules?page=${page}`;
   
   try {
     const data = await get<ApiResponse<unknown>>(url, { requiresAuth: true });
