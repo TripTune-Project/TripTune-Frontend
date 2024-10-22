@@ -1,17 +1,17 @@
 import { get, post, patch } from './api';
 import {
-  ApiResponse,
+  ApiResponse, scehduleAllList,
   Schedule,
   ScheduleDetailType,
   ScheduleTravelResultType,
 } from '@/types/scheduleType';
 
 // 1.1 일정 "최근" 목록 조회 (GET)
-export const fetchScheduleList = async (page: number = 1): Promise<ApiResponse<unknown>> => {
+export const fetchScheduleList = async (page: number = 1): Promise<ApiResponse<scehduleAllList>> => {
   const url = `/schedules?page=${page}`;
   
   try {
-    const data = await get<ApiResponse<unknown>>(url, { requiresAuth: true });
+    const data = await get<ApiResponse<scehduleAllList>>(url, { requiresAuth: true });
     if (data.success) {
       console.log('일정 목록 조회 성공:', data);
     } else {
