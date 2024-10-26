@@ -42,7 +42,7 @@ const DetailPlaceMap = ({ latitude, longitude }: MapProps) => {
       mapRef.current = new google.maps.Map(mapContainerRef.current, {
         center: { lat: latitude, lng: longitude },
         zoom: 16,
-        mapId: process.env.NEXT_PUBLIC_GOOGLE_MAPS_STYLE_ID
+        mapId: process.env.NEXT_PUBLIC_GOOGLE_MAPS_STYLE_ID,
       });
 
       new google.maps.Marker({

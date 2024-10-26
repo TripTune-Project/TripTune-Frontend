@@ -26,51 +26,51 @@ import pictureImage from '../../../../public/assets/images/pictureImage.png';
 import VerificationLoading from '@/components/Common/VerificationLoading';
 
 const StyledSwiperContainer = styled.div`
-    position: relative;
-    width: 749px;
-    height: 512px;
+  position: relative;
+  width: 749px;
+  height: 512px;
 `;
 
 const StyledSwiperButtonPrev = styled.button`
-    background-color: #000000;
-    position: absolute;
-    top: 50%;
-    left: 10px;
-    transform: translateY(-50%);
-    border: none;
-    cursor: pointer;
-    z-index: 10;
-    user-select: none;
+  background-color: #000000;
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+  user-select: none;
 
-    &::after {
-        content: '';
-        display: block;
-        width: 20px;
-        height: 30px;
-        background-repeat: no-repeat;
-        background-image: url('/assets/images/detailLeftBtnImage.png');
-    }
+  &::after {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 30px;
+    background-repeat: no-repeat;
+    background-image: url('/assets/images/detailLeftBtnImage.png');
+  }
 `;
 
 const StyledSwiperButtonNext = styled.button`
-    background-color: #000000;
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-    border: none;
-    cursor: pointer;
-    z-index: 10;
-    user-select: none;
+  background-color: #000000;
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+  user-select: none;
 
-    &::after {
-        content: '';
-        display: block;
-        width: 20px;
-        height: 30px;
-        background-repeat: no-repeat;
-        background-image: url('/assets/images/detailRightBtnImage.png');
-    }
+  &::after {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 30px;
+    background-repeat: no-repeat;
+    background-image: url('/assets/images/detailRightBtnImage.png');
+  }
 `;
 
 // const images = [
@@ -110,29 +110,29 @@ const TravelDetail = () => {
   const { placeId } = useParams();
   const placeIdNumber = parseInt(placeId as string, 10);
   const { data, isLoading, error } = useTravelDetail(placeIdNumber);
-  
+
   const [isExpanded, setIsExpanded] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
   const [showExpandButton, setShowExpandButton] = useState(false);
-  
+
   const nextRef = useRef(null);
   const prevRef = useRef(null);
   const descriptionRef = useRef<HTMLParagraphElement | null>(null);
-  
+
   useEffect(() => {
     if (descriptionRef.current) {
       requestAnimationFrame(() => {
         const descriptionElement = descriptionRef.current;
-        
+
         if (descriptionElement) {
           const style = getComputedStyle(descriptionElement);
           const lineHeight = parseFloat(style.lineHeight) || 20;
           const scrollHeight = descriptionElement.scrollHeight;
-          
+
           if (!isNaN(lineHeight)) {
             const lineCount = scrollHeight / lineHeight;
-            
+
             if (lineCount > 3) {
               setShowExpandButton(true);
             } else {
@@ -143,11 +143,11 @@ const TravelDetail = () => {
       });
     }
   }, [isExpanded, data]);
-  
+
   const scheduleAdd = () => {
     console.log('일정 추가 진행');
   };
-  
+
   const toggleBookmark = async () => {
     try {
       if (isBookmarked) {
@@ -161,7 +161,7 @@ const TravelDetail = () => {
       console.error('북마크 처리 중 오류 발생:', error);
     }
   };
-  
+
   const UseTimeUI = ({ useTime }: { useTime: string }) => {
     return (
       <div className={styles.useTimeLabel}>
@@ -170,11 +170,11 @@ const TravelDetail = () => {
       </div>
     );
   };
-  
+
   const CheckInOutUI = ({
-                          checkInTime,
-                          checkOutTime,
-                        }: {
+    checkInTime,
+    checkOutTime,
+  }: {
     checkInTime: string;
     checkOutTime: string;
   }) => {
@@ -192,11 +192,11 @@ const TravelDetail = () => {
       </div>
     );
   };
-  
+
   const renderTimeContent = (
     checkInTime?: string,
     checkOutTime?: string,
-    useTime?: string,
+    useTime?: string
   ) => {
     if (checkInTime || checkOutTime) {
       return (
@@ -211,7 +211,7 @@ const TravelDetail = () => {
       return null;
     }
   };
-  
+
   const formatDescriptionWithParagraphs = (text: string) => {
     const paragraphs = text.split(/\n+/);
     return paragraphs.map((paragraph, index) => (
@@ -222,20 +222,20 @@ const TravelDetail = () => {
       </React.Fragment>
     ));
   };
-  
+
   useEffect(() => {
     if (descriptionRef.current) {
       requestAnimationFrame(() => {
         const descriptionElement = descriptionRef.current;
-        
+
         if (descriptionElement) {
           const style = getComputedStyle(descriptionElement);
           const lineHeight = parseFloat(style.lineHeight) || 20;
           const scrollHeight = descriptionElement.scrollHeight;
-          
+
           if (!isNaN(lineHeight)) {
             const lineCount = scrollHeight / lineHeight;
-            
+
             if (lineCount > 3) {
               setShowExpandButton(true);
             } else {
@@ -246,14 +246,14 @@ const TravelDetail = () => {
       });
     }
   }, [isExpanded, data]);
-  
+
   const handleExpandClick = () => {
     setIsExpanded(!isExpanded);
   };
-  
+
   if (isLoading) return <DataLoading />;
   if (error) return <p>Error: {error.message}</p>;
-  
+
   const {
     placeName,
     country,
@@ -271,7 +271,7 @@ const TravelDetail = () => {
     checkOutTime,
     useTime,
   } = data?.data || {};
-  
+
   return (
     <div className={styles.travelDetailContent}>
       <div className={styles.topSection}>
@@ -294,7 +294,7 @@ const TravelDetail = () => {
                       <Image
                         src={image.imageUrl}
                         alt={image.imageName}
-                        layout="responsive"
+                        layout='responsive'
                         width={749}
                         height={512}
                         onLoad={() => setImageLoading(false)}
@@ -316,21 +316,18 @@ const TravelDetail = () => {
           </p>
           <div className={styles.detailplaceName}>{placeName}</div>
           <div className={styles.addressLabel}>
-            
             <Image src={locationIcon} alt={'주소'} />
             주소 : {address} {detailAddress}
           </div>
           {renderTimeContent(checkInTime, checkOutTime, useTime)}
           {homepage && (
             <div className={styles.homepageLabel}>
-              
               <Image src={homePageIcon} alt={'홈페이지'} />
-              <span className={styles.homepageText}> 홈페이지 : {' '}</span>
+              <span className={styles.homepageText}> 홈페이지 : </span>
               <p dangerouslySetInnerHTML={{ __html: homepage }} />
             </div>
           )}
           <div className={styles.phoneLabel}>
-            
             <Image src={phoneIcon} alt={'문의 및 안내'} />
             문의 및 안내 : {phoneNumber}
           </div>

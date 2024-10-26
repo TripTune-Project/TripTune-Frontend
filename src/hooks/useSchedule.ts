@@ -1,21 +1,37 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import {
   addTravelRoute,
   createNewSchedule,
-  fetchScheduleDetail, fetchScheduleList,
+  fetchScheduleDetail,
+  fetchScheduleList,
   fetchTravelList,
   fetchTravelRoute,
-  searchTravelDestinations, updateExistingSchedule,
+  searchTravelDestinations,
+  updateExistingSchedule,
 } from '@/api/scheduleApi';
+import { ScheduleAllListType, ApiResponse } from '@/types/scheduleType';
 
 // 1.1 일정 "최근" 목록 조회 (GET)
-export const useScheduleList = (
-  enabled = true,
-) => {
-  return useQuery({
-    queryKey: ['scheduleList'],
-    queryFn: () => fetchScheduleList,
+export const useScheduleList = (enabled = true) => {
+  return useInfiniteQuery({
+    queryKey: ['scheduleAllList'],
+    queryFn: ({ pageParam }) => fetchScheduleList(pageParam || 1),
     enabled,
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      const currentPage = lastPage?.data?.currentPage ?? 0; // 기본값 0
+      const totalPages = lastPage?.data?.totalPages ?? 0; // 기본값 0
+
+      if (currentPage < totalPages) {
+        return currentPage + 1;
+      }
+      return undefined;
+    },
   });
 };
 
@@ -23,7 +39,7 @@ export const useScheduleList = (
 export const useScheduleDetailList = (
   scheduleId: number,
   page = 1,
-  enabled = true,
+  enabled = true
 ) => {
   return useQuery({
     queryKey: ['scheduleDetailList', scheduleId, page],
@@ -58,7 +74,7 @@ export const useUpdateExistingSchedule = () => {
 export const useScheduleTravelList = (
   scheduleId: number,
   page = 1,
-  enabled = true,
+  enabled = true
 ) => {
   return useQuery({
     queryKey: ['scheduleTravelList', scheduleId, page],
@@ -70,9 +86,9 @@ export const useScheduleTravelList = (
 // 2.2 여행지 검색 (GET)
 export const useTravelListByLocation = (
   scheduleId: number,
-  keyword:string,
+  keyword: string,
   page = 1,
-  enabled = true,
+  enabled = true
 ) => {
   return useQuery({
     queryKey: ['travelListByLocation', scheduleId, keyword, page],
@@ -96,7 +112,7 @@ export const useAddTravelRoute = () => {
 export const useScheduleTravelRoute = (
   scheduleId: number,
   page = 1,
-  enabled = true,
+  enabled = true
 ) => {
   return useQuery({
     queryKey: ['scheduleTravelRouteList', scheduleId, page],

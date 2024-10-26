@@ -48,7 +48,7 @@ const PlacesMap = ({ places }: MapProps) => {
       mapRef.current = new google.maps.Map(mapContainerRef.current, {
         center: defaultCenter,
         zoom: 16,
-        mapId: process.env.NEXT_PUBLIC_GOOGLE_MAPS_STYLE_ID
+        mapId: process.env.NEXT_PUBLIC_GOOGLE_MAPS_STYLE_ID,
       });
     }
   }, []);
