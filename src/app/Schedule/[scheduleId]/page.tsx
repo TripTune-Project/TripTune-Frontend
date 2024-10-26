@@ -8,11 +8,11 @@ import Chatting from '@/components/Schedule/Chatting';
 
 export default function ScheduleDetail() {
   const [markers, setMarkers] = useState<{ lat: number; lng: number }[]>([]);
-  
+
   const handleAddMarker = (marker: { lat: number; lng: number }) => {
     setMarkers((prevMarkers) => [...prevMarkers, marker]);
   };
-  
+
   return (
     <>
       <button className={styles.scheduleUpdateBtn}>일정 만들기 저장</button>

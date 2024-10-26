@@ -62,7 +62,7 @@ export const getMyPage = async () => {
       };
       message: string;
     }>('/mypage', { requiresAuth: true });
-    
+
     if (response.success) {
       console.log('마이페이지 정보 조회 성공:', response.data);
       return response.data;
@@ -85,7 +85,7 @@ export const getMySchedules = async (currentPage: number = 1) => {
       data: ScheduleResponse;
       message: string;
     }>(`/mypage/schedules?page=${currentPage}`, { requiresAuth: true });
-    
+
     if (response.success) {
       console.log('내 일정 목록 조회 성공:', response.data);
       return response.data;
@@ -104,7 +104,7 @@ export const deleteSchedule = async (scheduleId: number) => {
       `/mypage/schedules/${scheduleId}`,
       { requiresAuth: true }
     );
-    
+
     if (response.success) {
       console.log('일정 삭제 성공:', response.message);
     } else {
@@ -126,7 +126,7 @@ export const addPlaceToSchedule = async (
       { placeId },
       { requiresAuth: true }
     );
-    
+
     if (response.success) {
       console.log('일정에 장소 추가 성공:', response.message);
     } else {
@@ -145,7 +145,7 @@ export const getBookmarks = async (page: number = 1) => {
       data: BookmarkResponse;
       message: string;
     }>(`/mypage/bookmarks?page=${page}`, { requiresAuth: true });
-    
+
     if (response.success) {
       console.log('북마크 목록 조회 성공:', response.data);
       return response.data;
@@ -165,7 +165,7 @@ export const getProfile = async () => {
       data: Profile;
       message: string;
     }>('/mypage/profile', { requiresAuth: true });
-    
+
     if (response.success) {
       console.log('회원정보 조회 성공:', response.data);
       return response.data;
@@ -187,7 +187,7 @@ export const updateProfile = async (
   if (profileImage) {
     formData.append('profileImage', profileImage);
   }
-  
+
   try {
     const response = await patch<{
       success: boolean;
@@ -198,7 +198,7 @@ export const updateProfile = async (
         'Content-Type': 'multipart/form-data',
       },
     });
-    
+
     if (response.success) {
       console.log('회원정보 수정 성공:', response.message);
     } else {
@@ -216,7 +216,7 @@ export const deactivateAccount = async (password: string) => {
       success: boolean;
       message: string;
     }>('/mypage/profile/deactivate', { password }, { requiresAuth: true });
-    
+
     if (response.success) {
       console.log('회원 탈퇴 성공:', response.message);
     } else {
@@ -237,12 +237,16 @@ export const changePassword = async (
     const response = await patch<{
       success: boolean;
       message: string;
-    }>('/mypage/change-password', {
-      nowPassword,
-      newPassword,
-      rePassword,
-    }, { requiresAuth: true });
-    
+    }>(
+      '/mypage/change-password',
+      {
+        nowPassword,
+        newPassword,
+        rePassword,
+      },
+      { requiresAuth: true }
+    );
+
     if (response.success) {
       console.log('비밀번호 변경 성공:', response.message);
     } else {

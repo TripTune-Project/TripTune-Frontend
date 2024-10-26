@@ -7,7 +7,7 @@ export interface ApiResponse<T> {
 }
 
 // 일정 정보 생성
-export interface Schedule {
+export interface ScheduleType {
   scheduleId?: number;
   scheduleName: string;
   startDate: string;
@@ -23,12 +23,12 @@ export interface Attendee {
 }
 
 // 최근 일정 리스트
-export interface scehduleAllList {
-  totalPages: number,
-  currentPage: number,
-  totalElements: number,
-  pageSize: number,
-  content: Place[]
+export interface ScheduleAllListType {
+  totalPages: number;
+  currentPage: number;
+  totalElements: number;
+  pageSize: number;
+  content: Place[];
 }
 
 // 일정 만들기 기본 조회
@@ -60,16 +60,16 @@ export interface Place {
   detailAddress?: string;
   placeName: string;
   thumbnailUrl: string;
-  scheduleId?: number,
-  scheduleName?: string,
-  startDate?: string,
-  endDate?: string,
-  sinceUpdate?: string,
+  scheduleId?: number;
+  scheduleName?: string;
+  startDate?: string;
+  endDate?: string;
+  sinceUpdate?: string;
 }
 
 // 여행지 조회, 여행지 검색, 여행루트
 export interface ScheduleTravelResultType {
-  placeId?:number;
+  placeId?: number;
   content: Place[];
   currentPage: number;
   pageSize: number;

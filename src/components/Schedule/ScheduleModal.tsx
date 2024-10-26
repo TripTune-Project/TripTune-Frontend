@@ -21,41 +21,41 @@ const ScheduleModal: React.FC<ScheduleModalProps> = ({ onClose }) => {
   const [travelName, setTravelName] = useState<string>('');
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
   const router = useRouter();
-  
+
   useEffect(() => {
     today.setHours(0, 0, 0, 0);
-    
+
     setIsFormValid(
       travelName.trim() !== '' &&
-      startDate !== null &&
-      endDate !== null &&
-      startDate >= today &&
-      startDate <= endDate
+        startDate !== null &&
+        endDate !== null &&
+        startDate >= today &&
+        startDate <= endDate
     );
   }, [travelName, startDate, endDate]);
-  
+
   const formatDateToString = (date: Date): string => {
     return date.toISOString().split('T')[0];
   };
-  
+
   const handleCreateSchedule = async (): Promise<void> => {
     if (!isFormValid) {
       console.error('모든 필드를 올바르게 입력해야 합니다.');
       return;
     }
-    
+
     const scheduleData = {
       scheduleName: travelName,
       startDate: formatDateToString(startDate!),
       endDate: formatDateToString(endDate!),
     };
-    
+
     try {
       const response = await createNewSchedule(scheduleData);
-      
+
       if (response && response.data) {
         const scheduleId = response.data.scheduleId;
-        onClose();  // 모달 닫기
+        onClose();
         router.push(`/Schedule/${scheduleId}`);
       } else {
         console.error('일정 생성 실패');
@@ -64,17 +64,17 @@ const ScheduleModal: React.FC<ScheduleModalProps> = ({ onClose }) => {
       console.error('일정 생성 중 오류 발생:', error);
     }
   };
-  
+
   const getFormattedDate = (date: Date | null): string => {
     return date
       ? date.toLocaleDateString('ko-KR', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      })
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        })
       : '';
   };
-  
+
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContainer}>
@@ -82,14 +82,14 @@ const ScheduleModal: React.FC<ScheduleModalProps> = ({ onClose }) => {
           &times;
         </button>
         <h2 className={styles.detailTitle}>
-          <Image src={triptuneIcon} alt="일정만들기" priority /> 일정 만들기
+          <Image src={triptuneIcon} alt='일정만들기' priority /> 일정 만들기
         </h2>
         <div className={styles.inputGroup}>
           <label>여행 이름</label>
           <input
-            type="text"
+            type='text'
             className={styles.inputField}
-            placeholder="여행 이름을 입력해주세요."
+            placeholder='여행 이름을 입력해주세요.'
             value={travelName}
             onChange={(e) => setTravelName(e.target.value)}
           />
@@ -97,7 +97,7 @@ const ScheduleModal: React.FC<ScheduleModalProps> = ({ onClose }) => {
         <div className={styles.inputGroup}>
           <label>여행 날짜</label>
           <input
-            type="text"
+            type='text'
             className={styles.inputField}
             value={`${getFormattedDate(startDate)} ~ ${getFormattedDate(endDate)}`}
             readOnly
@@ -105,7 +105,7 @@ const ScheduleModal: React.FC<ScheduleModalProps> = ({ onClose }) => {
         </div>
         <div className={styles.datePickerContainer}>
           <DatePicker
-            locale="ko"
+            locale='ko'
             selected={startDate || undefined}
             onChange={(dates: [Date | null, Date | null]) => {
               let [start, end] = dates;
@@ -122,10 +122,14 @@ const ScheduleModal: React.FC<ScheduleModalProps> = ({ onClose }) => {
             selectsRange
             inline
             monthsShown={2}
-            dateFormat="yyyy.MM.dd"
+            dateFormat='yyyy.MM.dd'
             dayClassName={(date: Date) => {
               const day = date.getDay();
-              return day === 0 ? styles.sunday : day === 6 ? styles.saturday : '';
+              return day === 0
+                ? styles.sunday
+                : day === 6
+                  ? styles.saturday
+                  : '';
             }}
           />
         </div>
