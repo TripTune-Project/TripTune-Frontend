@@ -12,9 +12,10 @@ import {
   fetchTravelList,
   fetchTravelRoute,
   searchTravelDestinations,
-  updateExistingSchedule,
+  updateExistingSchedule, updateScheduleAttendees,
 } from '@/api/scheduleApi';
 import { ScheduleAllListType, ApiResponse } from '@/types/scheduleType';
+import { deleteSchedule } from '@/api/myPageApi';
 
 // 1.1 일정 "최근" 목록 조회 (GET)
 export const useScheduleList = (enabled = true) => {
@@ -24,8 +25,8 @@ export const useScheduleList = (enabled = true) => {
     enabled,
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
-      const currentPage = lastPage?.data?.currentPage ?? 0; // 기본값 0
-      const totalPages = lastPage?.data?.totalPages ?? 0; // 기본값 0
+      const currentPage = lastPage?.data?.currentPage ?? 0;
+      const totalPages = lastPage?.data?.totalPages ?? 0;
 
       if (currentPage < totalPages) {
         return currentPage + 1;
@@ -64,6 +65,29 @@ export const useUpdateExistingSchedule = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: updateExistingSchedule,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['scheduleDetailList'] });
+    },
+  });
+};
+
+// 1.5 일정 삭제 (DELETE)
+export const useDeleteSchedule = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deleteSchedule,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['scheduleAllList'] });
+    },
+  });
+};
+
+// 1.6 일정 참석자 추가/수정 (PATCH)
+export const useUpdateScheduleAttendees = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ scheduleId, attendeeList }: { scheduleId: number, attendeeList: { userId: string; role: string; permission: string; }[] }) =>
+      updateScheduleAttendees(scheduleId, attendeeList),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['scheduleDetailList'] });
     },
