@@ -1,4 +1,4 @@
-import { get, post, patch } from './api';
+import { get, post, patch, remove } from './api';
 import {
   ApiResponse,
   ScheduleAllListType,
@@ -113,6 +113,63 @@ export const updateExistingSchedule = async (
       console.log('일정 수정 성공:', data.message);
     } else {
       console.error('일정 수정 실패:', data.message);
+    }
+    return data;
+  } catch (error) {
+    console.error('예기치 않은 오류:', error);
+    return {
+      success: false,
+      errorCode: 500,
+      message: '서버 내부 오류가 발생하였습니다.',
+    };
+  }
+};
+
+// 1.5 일정 삭제 (DELETE)
+export const deleteSchedule = async (
+  scheduleId: number
+): Promise<ApiResponse<null>> => {
+  const url = `/schedules/${scheduleId}`;
+
+  try {
+    const data = await remove<ApiResponse<null>>(url, {
+      requiresAuth: true,
+    });
+
+    if (data.success) {
+      console.log('일정 삭제 성공:', data.message);
+    } else {
+      console.error('일정 삭제 실패:', data.message);
+    }
+    return data;
+  } catch (error) {
+    console.error('예기치 않은 오류:', error);
+    return {
+      success: false,
+      errorCode: 500,
+      message: '서버 내부 오류가 발생하였습니다.',
+    };
+  }
+};
+
+// 1.6 일정 참석자 추가/수정 (PATCH)
+export const updateScheduleAttendees = async (
+  scheduleId: number,
+  attendeeList: { userId: string; role: string; permission: string }[]
+): Promise<ApiResponse<ScheduleDetailType>> => {
+  const url = `/schedules/${scheduleId}/attendees`;
+
+  try {
+    const data = await patch<ApiResponse<ScheduleDetailType>>(
+      url,
+      { attendeeList },
+      { requiresAuth: true }
+    );
+
+    if (data.success) {
+      console.log('참석자 추가/수정 성공:', data.message);
+    } else {
+      console.error('참석자 추가/수정 실패:', data.message);
     }
     return data;
   } catch (error) {
