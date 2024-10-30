@@ -271,22 +271,22 @@ export const addTravelRoute = async (
   placeId: number
 ): Promise<ApiResponse<ScheduleTravelResultType>> => {
   const url = `/schedules/${scheduleId}/routes`;
-
+  
   const body = {
     placeId,
   };
-
+  
   try {
-    const data = await post<ApiResponse<null>>(url, body, {
+    const data = await post<ApiResponse<ScheduleTravelResultType>>(url, body, {
       requiresAuth: true,
     });
-
+    
     if (data.success) {
       console.log('여행 루트 추가 성공:', data.message);
     } else {
       console.error('여행 루트 추가 실패:', data.message);
     }
-
+    
     return data;
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -294,12 +294,12 @@ export const addTravelRoute = async (
     } else {
       console.error('알 수 없는 오류 발생');
     }
-
+    
     return {
       success: false,
       errorCode: 500,
       message: '서버 내부 오류가 발생하였습니다.',
-    } as ApiResponse<null>;
+    } as ApiResponse<ScheduleTravelResultType>;
   }
 };
 
