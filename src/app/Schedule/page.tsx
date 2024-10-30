@@ -18,9 +18,8 @@ export default function Schedule() {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeDeleteMenu, setActiveDeleteMenu] = useState<number | null>(null);
-  const [selectedScheduleId, setSelectedScheduleId] = useState<number | null>(
-    null,
-  );
+  const [selectedScheduleId, setSelectedScheduleId] = useState<number | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   
@@ -64,18 +63,23 @@ export default function Schedule() {
   
   const { mutate: deleteScheduleMutate } = useDeleteSchedule();
   
-  const handleDeleteSchedule = (event: React.MouseEvent) => {
-    event.stopPropagation();
+  const handleDeleteConfirmation = () => {
     if (selectedScheduleId) {
       deleteScheduleMutate(selectedScheduleId, {
         onSuccess: () => {
           setActiveDeleteMenu(null);
+          setIsDeleteModalOpen(false);
         },
         onError: () => {
           alert('일정 삭제 중 오류가 발생했습니다.');
         },
       });
     }
+  };
+  
+  const handleDeleteSchedule = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setIsDeleteModalOpen(true);
   };
   
   const handleObserver = useCallback(
@@ -236,6 +240,18 @@ export default function Schedule() {
       </div>
       
       {isModalOpen && <ScheduleModal onClose={handleCloseModal} />}
+      
+      {isDeleteModalOpen && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.deleteModal}>
+            <p>정말로 일정을 삭제하시겠습니까?</p>
+            <button className={styles.confirmButton} onClick={handleDeleteConfirmation}>삭제</button>
+            <button style={{ backgroundColor: 'red' }} className={styles.confirmButton}
+                    onClick={() => setIsDeleteModalOpen(false)}>취소
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
