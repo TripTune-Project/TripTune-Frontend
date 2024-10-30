@@ -167,7 +167,7 @@
 }
 
 .createAddButton {
-  background-color: #0070f3;
+  background-color: #76adac;
   color: white;
   padding: 12px 24px;
   border: none;
@@ -181,7 +181,7 @@
 }
 
 .createAddButton:hover {
-  background-color: #005bb5;
+  background-color: #76adac;
 }
 
 .loadingArea {

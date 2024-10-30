@@ -15,6 +15,7 @@ import {
   updateExistingSchedule,
   updateScheduleAttendees,
   deleteSchedule,
+  fetchScheduleListSearch,
 } from '@/api/scheduleApi';
 
 // 1.1 일정 "최근" 목록 조회 (GET)
@@ -36,7 +37,31 @@ export const useScheduleList = (enabled = true) => {
   });
 };
 
-// 1.2 일정 상세 조회 (GET)
+// 1.2 일정 목록 중 검색 (GET)
+export const useScheduleListSearch = (
+  keyword: string,
+  enabled = true,
+  page = 1
+) => {
+  return useInfiniteQuery({
+    queryKey: ['scheduleListSearch', keyword],
+    queryFn: ({ pageParam }) =>
+      fetchScheduleListSearch(pageParam || page, keyword),
+    enabled: !!keyword && enabled,
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      const currentPage = lastPage?.data?.currentPage ?? 0;
+      const totalPages = lastPage?.data?.totalPages ?? 0;
+
+      if (currentPage < totalPages) {
+        return currentPage + 1;
+      }
+      return undefined;
+    },
+  });
+};
+
+// 1.3 일정 상세 조회 (GET)
 export const useScheduleDetailList = (
   scheduleId: number,
   page = 1,
@@ -49,7 +74,7 @@ export const useScheduleDetailList = (
   });
 };
 
-// 1.3 일정 만들기 생성 (POST)
+// 1.4 일정 만들기 생성 (POST)
 export const useCreateNewSchedule = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -60,7 +85,7 @@ export const useCreateNewSchedule = () => {
   });
 };
 
-// 1.4 일정 만들기 수정/ 저장 (PATCH)
+// 1.5 일정 만들기 수정/ 저장 (PATCH)
 export const useUpdateExistingSchedule = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -71,7 +96,7 @@ export const useUpdateExistingSchedule = () => {
   });
 };
 
-// 1.5 일정 삭제 (DELETE)
+// 1.6 일정 삭제 (DELETE)
 export const useDeleteSchedule = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -82,7 +107,7 @@ export const useDeleteSchedule = () => {
   });
 };
 
-// 1.6 일정 참석자 추가/수정 (PATCH)
+// 1.7 일정 참석자 추가/수정 (PATCH)
 export const useUpdateScheduleAttendees = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -126,13 +151,23 @@ export const useTravelListByLocation = (
   });
 };
 
-// 3.1 여행 루트 추가 (POST) 안할 수도 있음
+// 3.1 여행 루트 추가 (POST)
 export const useAddTravelRoute = () => {
   const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: addTravelRoute,
+    mutationFn: ({
+      scheduleId,
+      placeId,
+    }: {
+      scheduleId: number;
+      placeId: number;
+    }) => addTravelRoute(scheduleId, placeId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['scheduleTravelRouteList'] });
+    },
+    onError: (error) => {
+      console.error('여행 루트 추가 실패:', error);
     },
   });
 };

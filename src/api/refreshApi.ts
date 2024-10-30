@@ -28,7 +28,6 @@ export const refreshApi = async (): Promise<string | null> => {
     console.error('액세스 토큰 갱신 에러:', error);
 
     if (error instanceof Response) {
-      // error가 Response 객체인 경우 처리
       if (
         window.location.pathname !== '/Login' &&
         [400, 401, 403, 404].includes(error.status)
