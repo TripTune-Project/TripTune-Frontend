@@ -67,6 +67,9 @@ const fetchData = async <T>(
         if (!isRedirectingToLogin && window.location.pathname !== '/Login') {
           isRedirectingToLogin = true;
           alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+          Cookies.remove('trip-tune_at');
+          Cookies.remove('trip-tune_rt');
+          Cookies.remove('userId');
           window.location.href = '/Login';
         }
         return Promise.reject(
@@ -77,6 +80,9 @@ const fetchData = async <T>(
       if (!isRedirectingToLogin && window.location.pathname !== '/Login') {
         isRedirectingToLogin = true;
         alert('토큰 갱신 시도 후에도 실패했습니다. 다시 로그인해주세요.');
+        Cookies.remove('trip-tune_at');
+        Cookies.remove('trip-tune_rt');
+        Cookies.remove('userId');
         window.location.href = '/Login';
       }
       return Promise.reject(

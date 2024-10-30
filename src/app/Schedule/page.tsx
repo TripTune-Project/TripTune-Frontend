@@ -1,28 +1,22 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useScheduleList } from '@/hooks/useSchedule';
+import { useScheduleList, useDeleteSchedule } from '@/hooks/useSchedule';
 import styles from '@/styles/Schedule.module.css';
 import ScheduleModal from '@/components/Schedule/ScheduleModal';
 import DataLoading from '@/components/Common/DataLoading';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Place, ApiResponse, ScheduleAllListType } from '@/types/scheduleType';
-
-const transformToSchedule = (places: Place[]) => {
-  return places.map((place) => ({
-    id: place.placeId,
-    name: place.placeName,
-    startDate: place.startDate || '',
-    endDate: place.endDate || '',
-    sinceUpdate: place.sinceUpdate || '',
-    thumbnailUrl: place.thumbnailUrl,
-  }));
-};
+import triptuneIcon from '../../../public/assets/icons/ic_triptune.png';
 
 export default function Schedule() {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeDeleteMenu, setActiveDeleteMenu] = useState<number | null>(null);
+  const [selectedScheduleId, setSelectedScheduleId] = useState<number | null>(
+    null
+  );
   const {
     data,
     isLoading,
@@ -40,6 +34,32 @@ export default function Schedule() {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+  };
+
+  const handleToggleDeleteMenu = (
+    scheduleId: number,
+    event: React.MouseEvent
+  ) => {
+    event.stopPropagation();
+    setActiveDeleteMenu((prevId) =>
+      prevId === scheduleId ? null : scheduleId
+    );
+  };
+
+  const { mutate: deleteScheduleMutate } = useDeleteSchedule();
+
+  const handleDeleteSchedule = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    if (selectedScheduleId) {
+      deleteScheduleMutate(selectedScheduleId, {
+        onSuccess: () => {
+          setActiveDeleteMenu(null);
+        },
+        onError: () => {
+          alert('일정 삭제 중 오류가 발생했습니다.');
+        },
+      });
+    }
   };
 
   const formatDate = (dateString: string) => {
@@ -93,57 +113,84 @@ export default function Schedule() {
     return <div>일정 목록을 불러오는 중 오류가 발생했습니다.</div>;
   }
 
-  const handleDetailClick = (scheduleId: number) => {
-    router.push(`/Schedule/${scheduleId}`);
+  const handleDetailClick = (e: React.MouseEvent, scheduleId: number) => {
+    if (!activeDeleteMenu) {
+      router.push(`/Schedule/${scheduleId}`);
+    }
   };
 
   return (
     <div className={styles.createContainer}>
-      <h1 className={styles.scheduleTitle}>일정 리스트 최근 리스트</h1>
+      <h2 className={styles.detailTitle}>
+        <Image src={triptuneIcon} alt={'상세설명'} priority />
+        최근 일정
+      </h2>
+      <button className={styles.allSchedule}>전체 일정</button>
+      <button className={styles.allShareSchedule}>공유한 일정</button>
       <button className={styles.createAddButton} onClick={handleOpenModal}>
-        새 일정 리스트 추가
+        {'+'} 일정 생성
       </button>
       <div className={styles.scheduleList}>
-        {/* data.pages를 명시적으로 ScheduleAllListType으로 처리 */}
-        {data?.pages?.map((page, index) => {
+        {data?.pages?.map((page) => {
           const typedPage = page as ApiResponse<ScheduleAllListType>;
           return typedPage.data?.content.map((place: Place) => {
-            const schedule = transformToSchedule([place])[0];
             return (
               <div
-                key={schedule.id}
+                key={place.scheduleId}
                 className={styles.scheduleItem}
-                onClick={() => handleDetailClick(schedule.id)}
+                onClick={(e) => {
+                  if (place.scheduleId !== undefined) {
+                    handleDetailClick(e, place.scheduleId);
+                  }
+                }}
               >
-                {schedule.thumbnailUrl ? (
+                {place.thumbnailUrl ? (
                   <Image
-                    src={schedule.thumbnailUrl}
+                    src={place.thumbnailUrl}
                     alt='여행 루트 이미지'
                     className={styles.scheduleImage}
-                    width={300}
-                    height={300}
+                    width={256}
+                    height={158}
                   />
                 ) : (
-                  <div
-                    className={styles.noImage}
-                    style={{ width: '300px', height: '300px' }}
-                  >
-                    이미지 없음
-                  </div>
+                  <div className={styles.noImage}>이미지 없음</div>
                 )}
                 <div className={styles.scheduleContent}>
                   <div className={styles.scheduleName}>
-                    여행 이름: {schedule.name}
+                    {place.scheduleName}
                   </div>
                   <div className={styles.scheduleDates}>
-                    여행 일정: {schedule.startDate} ~ {schedule.endDate}
-                  </div>
-                  <div className={styles.scheduleDates}>
-                    업데이트:{' '}
-                    {schedule.sinceUpdate
-                      ? calculateDaysAgo(schedule.sinceUpdate)
+                    {place.sinceUpdate
+                      ? calculateDaysAgo(place.sinceUpdate)
                       : '업데이트 정보 없음'}
                   </div>
+                </div>
+                <div className={styles.hoverMenu}>
+                  <div
+                    className={styles.threeDots}
+                    onClick={(e) => {
+                      if (place.scheduleId !== undefined) {
+                        handleToggleDeleteMenu(place.scheduleId, e);
+                      }
+                    }}
+                  >
+                    ...
+                  </div>
+                  {activeDeleteMenu === place.scheduleId && (
+                    <div className={styles.deleteMenu}>
+                      <button
+                        className={styles.deleteButton}
+                        onClick={(e) => {
+                          if (place.scheduleId !== undefined) {
+                            setSelectedScheduleId(place.scheduleId);
+                            handleDeleteSchedule(e);
+                          }
+                        }}
+                      >
+                        일정 삭제
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             );
