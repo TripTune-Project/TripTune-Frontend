@@ -290,7 +290,7 @@ const TravelDetail = () => {
                 {imageList.map((image, index) => (
                   <SwiperSlide key={index}>
                     <div className={styles.sliderImageContainer}>
-                      {imageLoading && <VerificationLoading />}
+                      {imageLoading && <DataLoading />}
                       <Image
                         src={image.imageUrl}
                         alt={image.imageName}

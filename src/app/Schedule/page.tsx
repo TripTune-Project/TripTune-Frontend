@@ -19,11 +19,11 @@ export default function Schedule() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeDeleteMenu, setActiveDeleteMenu] = useState<number | null>(null);
   const [selectedScheduleId, setSelectedScheduleId] = useState<number | null>(
-    null
+    null,
   );
   const [searchKeyword, setSearchKeyword] = useState('');
   const [isSearching, setIsSearching] = useState(false);
-
+  
   const {
     data: scheduleData,
     isLoading: isScheduleLoading,
@@ -32,7 +32,7 @@ export default function Schedule() {
     hasNextPage,
     isFetchingNextPage,
   } = useScheduleList(!isSearching);
-
+  
   const {
     data: searchData,
     isLoading: isSearchLoading,
@@ -41,29 +41,29 @@ export default function Schedule() {
     hasNextPage: hasNextSearchPage,
     isFetchingNextPage: isFetchingNextSearchPage,
   } = useScheduleListSearch(searchKeyword, isSearching);
-
+  
   const observerRef = useRef<HTMLDivElement | null>(null);
-
+  
   const handleOpenModal = () => {
     setIsModalOpen(true);
   };
-
+  
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
-
+  
   const handleToggleDeleteMenu = (
     scheduleId: number,
-    event: React.MouseEvent
+    event: React.MouseEvent,
   ) => {
     event.stopPropagation();
     setActiveDeleteMenu((prevId) =>
-      prevId === scheduleId ? null : scheduleId
+      prevId === scheduleId ? null : scheduleId,
     );
   };
-
+  
   const { mutate: deleteScheduleMutate } = useDeleteSchedule();
-
+  
   const handleDeleteSchedule = (event: React.MouseEvent) => {
     event.stopPropagation();
     if (selectedScheduleId) {
@@ -77,25 +77,7 @@ export default function Schedule() {
       });
     }
   };
-
-  const formatDate = (dateString: string) => {
-    const [year, month, day] = dateString
-      .replace('년', '')
-      .replace('월', '')
-      .replace('일', '')
-      .trim()
-      .split(' ');
-    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-  };
-
-  const calculateDaysAgo = (sinceUpdate: string) => {
-    const today = new Date();
-    const formattedDate = new Date(formatDate(sinceUpdate));
-    const timeDiff = today.getTime() - formattedDate.getTime();
-    const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-    return daysDiff === 0 ? '오늘' : `${daysDiff}일 전`;
-  };
-
+  
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
       const target = entries[0];
@@ -113,48 +95,48 @@ export default function Schedule() {
       hasNextPage,
       hasNextSearchPage,
       isSearching,
-    ]
+    ],
   );
-
+  
   useEffect(() => {
     const option = {
       root: null,
       rootMargin: '20px',
       threshold: 1.0,
     };
-
+    
     const observer = new IntersectionObserver(handleObserver, option);
     if (observerRef.current) observer.observe(observerRef.current);
-
+    
     return () => {
       if (observerRef.current) observer.unobserve(observerRef.current);
     };
   }, [handleObserver]);
-
+  
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchKeyword(e.target.value);
   };
-
+  
   const handleTravelSearch = () => {
     setIsSearching(!!searchKeyword);
   };
-
+  
   if (isScheduleLoading || isSearchLoading) {
     return <DataLoading />;
   }
-
+  
   if (isScheduleError || isSearchError) {
     return <div>일정 목록을 불러오는 중 오류가 발생했습니다.</div>;
   }
-
+  
   const handleDetailClick = (e: React.MouseEvent, scheduleId: number) => {
     if (!activeDeleteMenu) {
       router.push(`/Schedule/${scheduleId}`);
     }
   };
-
+  
   const renderSchedules = (
-    scheduleListData: ApiResponse<ScheduleAllListType> | undefined
+    scheduleListData: ApiResponse<ScheduleAllListType> | undefined,
   ) => {
     return scheduleListData?.data?.content.map((place: Place) => {
       return (
@@ -170,7 +152,7 @@ export default function Schedule() {
           {place.thumbnailUrl ? (
             <Image
               src={place.thumbnailUrl}
-              alt='여행 루트 이미지'
+              alt="여행 루트 이미지"
               className={styles.scheduleImage}
               width={256}
               height={158}
@@ -181,9 +163,7 @@ export default function Schedule() {
           <div className={styles.scheduleContent}>
             <div className={styles.scheduleName}>{place.scheduleName}</div>
             <div className={styles.scheduleDates}>
-              {place.sinceUpdate
-                ? calculateDaysAgo(place.sinceUpdate)
-                : '업데이트 정보 없음'}
+              {place.sinceUpdate}
             </div>
           </div>
           <div className={styles.hoverMenu}>
@@ -217,7 +197,7 @@ export default function Schedule() {
       );
     });
   };
-
+  
   return (
     <div className={styles.createContainer}>
       <h2 className={styles.detailTitle}>
@@ -226,8 +206,8 @@ export default function Schedule() {
       </h2>
       <div className={styles.travelSearchContainer}>
         <input
-          type='text'
-          placeholder='원하는 일정을 검색하세요'
+          type="text"
+          placeholder="원하는 일정을 검색하세요"
           value={searchKeyword}
           onChange={handleSearchChange}
         />
@@ -241,11 +221,11 @@ export default function Schedule() {
       <div className={styles.scheduleList}>
         {!isSearching
           ? scheduleData?.pages?.map((page) =>
-              renderSchedules(page as ApiResponse<ScheduleAllListType>)
-            )
+            renderSchedules(page as ApiResponse<ScheduleAllListType>),
+          )
           : searchData?.pages?.map((page) =>
-              renderSchedules(page as ApiResponse<ScheduleAllListType>)
-            )}
+            renderSchedules(page as ApiResponse<ScheduleAllListType>),
+          )}
       </div>
       <div ref={observerRef} className={styles.loadingArea}>
         {isFetchingNextPage || isFetchingNextSearchPage ? (
@@ -254,7 +234,7 @@ export default function Schedule() {
           <p>더 이상 일정이 없습니다.</p>
         )}
       </div>
-
+      
       {isModalOpen && <ScheduleModal onClose={handleCloseModal} />}
     </div>
   );
