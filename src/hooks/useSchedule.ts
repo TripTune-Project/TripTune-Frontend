@@ -12,10 +12,10 @@ import {
   fetchTravelList,
   fetchTravelRoute,
   searchTravelDestinations,
-  updateExistingSchedule, updateScheduleAttendees,
+  updateExistingSchedule,
+  updateScheduleAttendees,
+  deleteSchedule,
 } from '@/api/scheduleApi';
-import { ScheduleAllListType, ApiResponse } from '@/types/scheduleType';
-import { deleteSchedule } from '@/api/myPageApi';
 
 // 1.1 일정 "최근" 목록 조회 (GET)
 export const useScheduleList = (enabled = true) => {
@@ -86,8 +86,13 @@ export const useDeleteSchedule = () => {
 export const useUpdateScheduleAttendees = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ scheduleId, attendeeList }: { scheduleId: number, attendeeList: { userId: string; role: string; permission: string; }[] }) =>
-      updateScheduleAttendees(scheduleId, attendeeList),
+    mutationFn: ({
+      scheduleId,
+      attendeeList,
+    }: {
+      scheduleId: number;
+      attendeeList: { userId: string; role: string; permission: string }[];
+    }) => updateScheduleAttendees(scheduleId, attendeeList),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['scheduleDetailList'] });
     },

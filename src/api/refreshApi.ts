@@ -7,6 +7,9 @@ export const refreshApi = async (): Promise<string | null> => {
   if (!refreshToken && window.location.pathname !== '/Login') {
     alert('세션이 만료되었습니다. 다시 로그인해주세요.');
     console.error('리프레시 토큰이 존재하지 않습니다.');
+    Cookies.remove('trip-tune_at');
+    Cookies.remove('trip-tune_rt');
+    Cookies.remove('userId');
     window.location.href = '/Login';
     return Promise.reject(
       '리프레시 토큰이 없습니다. 로그인 페이지로 이동합니다.'
@@ -31,6 +34,9 @@ export const refreshApi = async (): Promise<string | null> => {
         [400, 401, 403, 404].includes(error.status)
       ) {
         alert('토큰 갱신에 실패했습니다. 다시 로그인해주세요.');
+        Cookies.remove('trip-tune_at');
+        Cookies.remove('trip-tune_rt');
+        Cookies.remove('userId');
         window.location.href = '/Login';
         return Promise.reject(
           `토큰 갱신 실패: ${error.status}, 로그인 페이지로 이동합니다.`
