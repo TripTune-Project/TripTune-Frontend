@@ -59,7 +59,6 @@ const fetchData = async <T>(
     if (!isRetrying) {
       isRetrying = true;
       const newAccessToken = await handleTokenRefresh();
-      console.log(newAccessToken, 'TTT');
       if (newAccessToken) {
         headers = { ...headers, Authorization: `Bearer ${newAccessToken}` };
         response = await fetch(url, { ...requestConfig, headers });

@@ -14,7 +14,7 @@ interface ScheduleModalProps {
   onClose: () => void;
 }
 
-const ScheduleModal: React.FC<ScheduleModalProps> = ({ onClose }) => {
+const ScheduleModal = ({ onClose }: ScheduleModalProps) => {
   const today = new Date();
   const [startDate, setStartDate] = useState<Date | null>(today);
   const [endDate, setEndDate] = useState<Date | null>(today);
@@ -110,7 +110,6 @@ const ScheduleModal: React.FC<ScheduleModalProps> = ({ onClose }) => {
             onChange={(dates: [Date | null, Date | null]) => {
               let [start, end] = dates;
               if (end && start && start > end) {
-                // 시작일이 종료일보다 나중인 경우, 서로 변경
                 [start, end] = [end, start];
               }
               setStartDate(start);

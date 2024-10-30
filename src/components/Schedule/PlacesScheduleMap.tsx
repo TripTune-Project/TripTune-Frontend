@@ -10,11 +10,17 @@ const defaultCenter = {
   lng: 126.9976,
 };
 
-interface MapProps {
-  markers: { lat: number; lng: number }[];
+interface Marker {
+  lat: number;
+  lng: number;
+  placeId?: number;
 }
 
-const PlacesScheduleMap = ({ markers }: MapProps) => {
+interface PlacesScheduleMapProps {
+  markers: Marker[];
+}
+
+function PlacesScheduleMap({ markers }: PlacesScheduleMapProps) {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<google.maps.Map | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
@@ -43,7 +49,7 @@ const PlacesScheduleMap = ({ markers }: MapProps) => {
       mapRef.current = new google.maps.Map(mapContainerRef.current, {
         center: defaultCenter,
         zoom: 16,
-        mapId: mapId, // 지도 스타일 ID 적용
+        mapId: mapId,
       });
     }
   }, [mapId]);
@@ -70,7 +76,6 @@ const PlacesScheduleMap = ({ markers }: MapProps) => {
   useEffect(() => {
     if (mapRef.current && isMapLoaded && markers.length > 0) {
       markers.forEach((marker, index) => {
-        // 이미 존재하는 마커는 중복 추가하지 않음
         if (!markersRef.current[index]) {
           const advancedMarker = new google.maps.marker.AdvancedMarkerElement({
             map: mapRef.current,
@@ -80,13 +85,12 @@ const PlacesScheduleMap = ({ markers }: MapProps) => {
         }
       });
 
-      // 마지막 마커의 위치로 지도 중심 이동
       const lastMarker = markers[markers.length - 1];
       mapRef.current.setCenter({ lat: lastMarker.lat, lng: lastMarker.lng });
     }
   }, [markers, isMapLoaded]);
 
   return <div ref={mapContainerRef} style={containerStyle} />;
-};
+}
 
 export default PlacesScheduleMap;

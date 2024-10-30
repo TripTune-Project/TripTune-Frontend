@@ -67,7 +67,7 @@ export interface Place {
   sinceUpdate?: string;
 }
 
-// 여행지 조회, 여행지 검색, 여행루트
+// 여행지 조회, 여행지 검색, 여행루트 , 여행 일정
 export interface ScheduleTravelResultType {
   placeId?: number;
   content: Place[];

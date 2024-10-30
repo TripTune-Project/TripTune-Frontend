@@ -39,7 +39,34 @@ export const fetchScheduleList = async (
   }
 };
 
-// 1.2 일정 상세 조회 (GET)
+// 1.2 일정 목록 중 검색 (GET)
+export const fetchScheduleListSearch = async (
+  page = 1,
+  keyword: string
+): Promise<ApiResponse<ScheduleTravelResultType>> => {
+  const url = `/schedules/search?page=${page}&keyword=${keyword}`;
+
+  try {
+    const data = await get<ApiResponse<ScheduleTravelResultType>>(url, {
+      requiresAuth: true,
+    });
+    if (data.success) {
+      console.log('최근 일정 검색 성공:', data.data);
+    } else {
+      console.error('최근 일정 검색 실패:', data.message);
+    }
+    return data;
+  } catch (error) {
+    console.error('예기치 않은 오류:', error);
+    return {
+      success: false,
+      errorCode: 500,
+      message: '서버 내부 오류가 발생하였습니다.',
+    };
+  }
+};
+
+// 1.3 일정 상세 조회 (GET)
 export const fetchScheduleDetail = async (
   scheduleId: number,
   page: number = 1
@@ -66,7 +93,7 @@ export const fetchScheduleDetail = async (
   }
 };
 
-// 1.3 일정 만들기 생성 (POST)
+// 1.4 일정 만들기 생성 (POST)
 export const createNewSchedule = async (
   scheduleData: ScheduleType
 ): Promise<ApiResponse<ScheduleType>> => {
@@ -92,7 +119,7 @@ export const createNewSchedule = async (
   }
 };
 
-// 1.4 일정 만들기 수정/ 저장 (PATCH)
+// 1.5 일정 만들기 수정 / 저장 (PATCH)
 export const updateExistingSchedule = async (
   schedule: ScheduleDetailType
 ): Promise<ApiResponse<ScheduleDetailType>> => {
@@ -125,7 +152,8 @@ export const updateExistingSchedule = async (
   }
 };
 
-// 1.5 일정 삭제 (DELETE)
+// 1.6 일정 삭제 (DELETE)
+// TODO : 404 에러 확인
 export const deleteSchedule = async (
   scheduleId: number
 ): Promise<ApiResponse<null>> => {
@@ -152,7 +180,7 @@ export const deleteSchedule = async (
   }
 };
 
-// 1.6 일정 참석자 추가/수정 (PATCH)
+// 1.7 일정 참석자 추가 /수정 (PATCH)
 export const updateScheduleAttendees = async (
   scheduleId: number,
   attendeeList: { userId: string; role: string; permission: string }[]
@@ -239,27 +267,39 @@ export const searchTravelDestinations = async (
 
 // 3.1 여행 루트 추가 (POST)
 export const addTravelRoute = async (
-  scheduleId: number
+  scheduleId: number,
+  placeId: number
 ): Promise<ApiResponse<ScheduleTravelResultType>> => {
   const url = `/schedules/${scheduleId}/routes`;
-
+  
+  const body = {
+    placeId,
+  };
+  
   try {
-    const data = await post<ApiResponse<ScheduleTravelResultType>>(url, {
+    const data = await post<ApiResponse<ScheduleTravelResultType>>(url, body, {
       requiresAuth: true,
     });
+    
     if (data.success) {
-      console.log('여행지 루트 추가 성공:', data.data);
+      console.log('여행 루트 추가 성공:', data.message);
     } else {
-      console.error('여행지 루트 추가 실패:', data.message);
+      console.error('여행 루트 추가 실패:', data.message);
     }
+    
     return data;
-  } catch (error) {
-    console.error('예기치 않은 오류:', error);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('네트워크 또는 서버 오류:', error.message);
+    } else {
+      console.error('알 수 없는 오류 발생');
+    }
+    
     return {
       success: false,
       errorCode: 500,
       message: '서버 내부 오류가 발생하였습니다.',
-    };
+    } as ApiResponse<ScheduleTravelResultType>;
   }
 };
 

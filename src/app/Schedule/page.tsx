@@ -1,7 +1,11 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useScheduleList, useDeleteSchedule } from '@/hooks/useSchedule';
+import {
+  useScheduleList,
+  useDeleteSchedule,
+  useScheduleListSearch,
+} from '@/hooks/useSchedule';
 import styles from '@/styles/Schedule.module.css';
 import ScheduleModal from '@/components/Schedule/ScheduleModal';
 import DataLoading from '@/components/Common/DataLoading';
@@ -17,14 +21,26 @@ export default function Schedule() {
   const [selectedScheduleId, setSelectedScheduleId] = useState<number | null>(
     null
   );
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
+
   const {
-    data,
-    isLoading,
-    isError,
+    data: scheduleData,
+    isLoading: isScheduleLoading,
+    isError: isScheduleError,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useScheduleList(true);
+  } = useScheduleList(!isSearching);
+
+  const {
+    data: searchData,
+    isLoading: isSearchLoading,
+    isError: isSearchError,
+    fetchNextPage: fetchNextSearchPage,
+    hasNextPage: hasNextSearchPage,
+    isFetchingNextPage: isFetchingNextSearchPage,
+  } = useScheduleListSearch(searchKeyword, isSearching);
 
   const observerRef = useRef<HTMLDivElement | null>(null);
 
@@ -83,11 +99,21 @@ export default function Schedule() {
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
       const target = entries[0];
-      if (target.isIntersecting && hasNextPage) {
-        fetchNextPage();
+      if (target.isIntersecting && (hasNextPage || hasNextSearchPage)) {
+        if (isSearching) {
+          fetchNextSearchPage();
+        } else {
+          fetchNextPage();
+        }
       }
     },
-    [fetchNextPage, hasNextPage]
+    [
+      fetchNextPage,
+      fetchNextSearchPage,
+      hasNextPage,
+      hasNextSearchPage,
+      isSearching,
+    ]
   );
 
   useEffect(() => {
@@ -105,11 +131,19 @@ export default function Schedule() {
     };
   }, [handleObserver]);
 
-  if (isLoading) {
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchKeyword(e.target.value);
+  };
+
+  const handleTravelSearch = () => {
+    setIsSearching(!!searchKeyword);
+  };
+
+  if (isScheduleLoading || isSearchLoading) {
     return <DataLoading />;
   }
 
-  if (isError) {
+  if (isScheduleError || isSearchError) {
     return <div>일정 목록을 불러오는 중 오류가 발생했습니다.</div>;
   }
 
@@ -119,86 +153,102 @@ export default function Schedule() {
     }
   };
 
+  const renderSchedules = (
+    scheduleListData: ApiResponse<ScheduleAllListType> | undefined
+  ) => {
+    return scheduleListData?.data?.content.map((place: Place) => {
+      return (
+        <div
+          key={place.scheduleId}
+          className={styles.scheduleItem}
+          onClick={(e) => {
+            if (place.scheduleId !== undefined) {
+              handleDetailClick(e, place.scheduleId);
+            }
+          }}
+        >
+          {place.thumbnailUrl ? (
+            <Image
+              src={place.thumbnailUrl}
+              alt='여행 루트 이미지'
+              className={styles.scheduleImage}
+              width={256}
+              height={158}
+            />
+          ) : (
+            <div className={styles.noImage}>이미지 없음</div>
+          )}
+          <div className={styles.scheduleContent}>
+            <div className={styles.scheduleName}>{place.scheduleName}</div>
+            <div className={styles.scheduleDates}>
+              {place.sinceUpdate
+                ? calculateDaysAgo(place.sinceUpdate)
+                : '업데이트 정보 없음'}
+            </div>
+          </div>
+          <div className={styles.hoverMenu}>
+            <div
+              className={styles.threeDots}
+              onClick={(e) => {
+                if (place.scheduleId !== undefined) {
+                  handleToggleDeleteMenu(place.scheduleId, e);
+                }
+              }}
+            >
+              ...
+            </div>
+            {activeDeleteMenu === place.scheduleId && (
+              <div className={styles.deleteMenu}>
+                <button
+                  className={styles.deleteButton}
+                  onClick={(e) => {
+                    if (place.scheduleId !== undefined) {
+                      setSelectedScheduleId(place.scheduleId);
+                      handleDeleteSchedule(e);
+                    }
+                  }}
+                >
+                  일정 삭제
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    });
+  };
+
   return (
     <div className={styles.createContainer}>
       <h2 className={styles.detailTitle}>
         <Image src={triptuneIcon} alt={'상세설명'} priority />
         최근 일정
       </h2>
+      <div className={styles.travelSearchContainer}>
+        <input
+          type='text'
+          placeholder='원하는 일정을 검색하세요'
+          value={searchKeyword}
+          onChange={handleSearchChange}
+        />
+        <button onClick={handleTravelSearch}>돋보기</button>
+      </div>
       <button className={styles.allSchedule}>전체 일정</button>
       <button className={styles.allShareSchedule}>공유한 일정</button>
       <button className={styles.createAddButton} onClick={handleOpenModal}>
         {'+'} 일정 생성
       </button>
       <div className={styles.scheduleList}>
-        {data?.pages?.map((page) => {
-          const typedPage = page as ApiResponse<ScheduleAllListType>;
-          return typedPage.data?.content.map((place: Place) => {
-            return (
-              <div
-                key={place.scheduleId}
-                className={styles.scheduleItem}
-                onClick={(e) => {
-                  if (place.scheduleId !== undefined) {
-                    handleDetailClick(e, place.scheduleId);
-                  }
-                }}
-              >
-                {place.thumbnailUrl ? (
-                  <Image
-                    src={place.thumbnailUrl}
-                    alt='여행 루트 이미지'
-                    className={styles.scheduleImage}
-                    width={256}
-                    height={158}
-                  />
-                ) : (
-                  <div className={styles.noImage}>이미지 없음</div>
-                )}
-                <div className={styles.scheduleContent}>
-                  <div className={styles.scheduleName}>
-                    {place.scheduleName}
-                  </div>
-                  <div className={styles.scheduleDates}>
-                    {place.sinceUpdate
-                      ? calculateDaysAgo(place.sinceUpdate)
-                      : '업데이트 정보 없음'}
-                  </div>
-                </div>
-                <div className={styles.hoverMenu}>
-                  <div
-                    className={styles.threeDots}
-                    onClick={(e) => {
-                      if (place.scheduleId !== undefined) {
-                        handleToggleDeleteMenu(place.scheduleId, e);
-                      }
-                    }}
-                  >
-                    ...
-                  </div>
-                  {activeDeleteMenu === place.scheduleId && (
-                    <div className={styles.deleteMenu}>
-                      <button
-                        className={styles.deleteButton}
-                        onClick={(e) => {
-                          if (place.scheduleId !== undefined) {
-                            setSelectedScheduleId(place.scheduleId);
-                            handleDeleteSchedule(e);
-                          }
-                        }}
-                      >
-                        일정 삭제
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            );
-          });
-        })}
+        {!isSearching
+          ? scheduleData?.pages?.map((page) =>
+              renderSchedules(page as ApiResponse<ScheduleAllListType>)
+            )
+          : searchData?.pages?.map((page) =>
+              renderSchedules(page as ApiResponse<ScheduleAllListType>)
+            )}
       </div>
       <div ref={observerRef} className={styles.loadingArea}>
-        {isFetchingNextPage ? (
+        {isFetchingNextPage || isFetchingNextSearchPage ? (
           <p>Loading more...</p>
         ) : (
           <p>더 이상 일정이 없습니다.</p>
