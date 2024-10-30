@@ -13,7 +13,6 @@ const defaultCenter = {
 interface Marker {
   lat: number;
   lng: number;
-  placeId?: number;
 }
 
 interface PlacesScheduleMapProps {

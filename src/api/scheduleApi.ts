@@ -265,45 +265,7 @@ export const searchTravelDestinations = async (
   }
 };
 
-// 3.1 여행 루트 추가 (POST)
-export const addTravelRoute = async (
-  scheduleId: number,
-  placeId: number
-): Promise<ApiResponse<ScheduleTravelResultType>> => {
-  const url = `/schedules/${scheduleId}/routes`;
-  
-  const body = {
-    placeId,
-  };
-  
-  try {
-    const data = await post<ApiResponse<ScheduleTravelResultType>>(url, body, {
-      requiresAuth: true,
-    });
-    
-    if (data.success) {
-      console.log('여행 루트 추가 성공:', data.message);
-    } else {
-      console.error('여행 루트 추가 실패:', data.message);
-    }
-    
-    return data;
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error('네트워크 또는 서버 오류:', error.message);
-    } else {
-      console.error('알 수 없는 오류 발생');
-    }
-    
-    return {
-      success: false,
-      errorCode: 500,
-      message: '서버 내부 오류가 발생하였습니다.',
-    } as ApiResponse<ScheduleTravelResultType>;
-  }
-};
-
-// 3.2 여행 루트 조회 (GET)
+// 3.1 여행 루트 조회 (GET)
 export const fetchTravelRoute = async (
   scheduleId: number,
   page = 1

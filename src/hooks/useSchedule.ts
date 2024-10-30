@@ -5,7 +5,6 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import {
-  addTravelRoute,
   createNewSchedule,
   fetchScheduleDetail,
   fetchScheduleList,
@@ -151,28 +150,7 @@ export const useTravelListByLocation = (
   });
 };
 
-// 3.1 여행 루트 추가 (POST)
-export const useAddTravelRoute = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({
-      scheduleId,
-      placeId,
-    }: {
-      scheduleId: number;
-      placeId: number;
-    }) => addTravelRoute(scheduleId, placeId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['scheduleTravelRouteList'] });
-    },
-    onError: (error) => {
-      console.error('여행 루트 추가 실패:', error);
-    },
-  });
-};
-
-// 3.2 여행 루트 조회 (GET)
+// 3.1 여행 루트 조회 (GET)
 export const useScheduleTravelRoute = (
   scheduleId: number,
   page = 1,

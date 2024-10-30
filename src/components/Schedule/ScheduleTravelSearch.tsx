@@ -12,7 +12,7 @@ import DataLoading from '@/components/Common/DataLoading';
 import { Place } from '@/types/scheduleType';
 
 interface ScheduleTravelSearchProps {
-  onAddMarker: (marker: { lat: number; lng: number; placeId: number }) => void;
+  onAddMarker: (marker: { lat: number; lng: number; }) => void;
 }
 
 const ScheduleTravelSearch = ({ onAddMarker }: ScheduleTravelSearchProps) => {
@@ -100,8 +100,7 @@ const ScheduleTravelSearch = ({ onAddMarker }: ScheduleTravelSearchProps) => {
                       onClick={() =>
                         onAddMarker({
                           lat: place.latitude,
-                          lng: place.longitude,
-                          placeId: place.placeId,
+                          lng: place.longitude
                         })
                       }
                     >

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import styles from '@/styles/Schedule.module.css';
-import { useScheduleDetailList, useAddTravelRoute } from '@/hooks/useSchedule';
+import { useScheduleDetailList } from '@/hooks/useSchedule';
 import DataLoading from '@/components/Common/DataLoading';
 import ScheduleTravelSearch from '@/components/Schedule/ScheduleTravelSearch';
 import ScheduleRoute from '@/components/Schedule/ScheduleRoute';
@@ -13,7 +13,7 @@ interface ScheduleDetail {
 }
 
 interface ScheduleMakeProps {
-  onAddMarker: (marker: { lat: number; lng: number; placeId: number }) => void;
+  onAddMarker: (marker: { lat: number; lng: number;}) => void;
 }
 
 const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
@@ -35,8 +35,7 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
     currentPage,
     !scheduleDetail
   );
-  const addTravelRouteMutation = useAddTravelRoute();
-
+  
   useEffect(() => {
     if (scheduleDetailQuery.isSuccess && scheduleDetailQuery.data?.data) {
       const { scheduleName, startDate, endDate } =
@@ -64,19 +63,8 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
   const handleAddMarker = async (marker: {
     lat: number;
     lng: number;
-    placeId: number;
   }) => {
     onAddMarker(marker);
-
-    try {
-      await addTravelRouteMutation.mutateAsync({
-        scheduleId: Number(scheduleId),
-        placeId: Number(marker.placeId),
-      });
-      console.log('여행 루트 추가 성공');
-    } catch (error) {
-      console.error('여행 루트 추가 실패:', error);
-    }
   };
 
   if (scheduleDetailQuery.isLoading) return <DataLoading />;
