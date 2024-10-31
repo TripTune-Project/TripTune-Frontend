@@ -3,7 +3,7 @@ import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import styles from '@/styles/Schedule.module.css';
 import Image from 'next/image';
-import triptuneIcon from '../../../public/assets/icons/ic_triptune.png';
+import triptuneIcon from '../../../public/assets/images/로고/triptuneIcon-removebg.png';
 import { ko } from 'date-fns/locale';
 import { createNewSchedule } from '@/api/scheduleApi';
 import { useRouter } from 'next/navigation';

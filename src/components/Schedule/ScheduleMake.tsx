@@ -13,7 +13,7 @@ interface ScheduleDetail {
 }
 
 interface ScheduleMakeProps {
-  onAddMarker: (marker: { lat: number; lng: number;}) => void;
+  onAddMarker: (marker: { lat: number; lng: number }) => void;
 }
 
 const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
@@ -35,7 +35,7 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
     currentPage,
     !scheduleDetail
   );
-  
+
   useEffect(() => {
     if (scheduleDetailQuery.isSuccess && scheduleDetailQuery.data?.data) {
       const { scheduleName, startDate, endDate } =
@@ -60,10 +60,7 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
     }));
   };
 
-  const handleAddMarker = async (marker: {
-    lat: number;
-    lng: number;
-  }) => {
+  const handleAddMarker = async (marker: { lat: number; lng: number }) => {
     onAddMarker(marker);
   };
 

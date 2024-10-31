@@ -4,17 +4,18 @@ import React from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import styled from 'styled-components';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import favicon from '../../public/assets/favicon.ico';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
-import styled from 'styled-components';
-import HomeImage from '../../public/assets/images/HomeImage.png';
-import favicon from '../../public/assets/favicon.ico';
 import styles from '../styles/onBoard.module.css';
-import searchIcon from '../../public/assets/icons/ic_search.png';
-import locationIcon from '../../public/assets/icons/ic_location.png';
+import HomeImage from '../../public/assets/images/메인화면/ocean.jpg';
+import searchIcon from '../../public/assets/images/메인화면/main_searchIcon.png';
+import locationIcon from '../../public/assets/images/메인화면/main_slideMapIcon.png';
+import mainLinkBtn from '../../public/assets/images/메인화면/main_LinkBtn.png';
 import pictureImage from '../../public/assets/images/pictureImage.png';
 
 const StyledSwiperContainer = styled.div`
@@ -36,13 +37,14 @@ const StyledSwiperButtonPrev = styled.div`
   cursor: pointer;
   z-index: 10;
   user-select: none;
+
   &::after {
     content: '';
     display: block;
     width: 60px;
     height: 60px;
     background-size: cover;
-    background-image: url('/assets/images/leftBtnImage.png');
+    background-image: url('/assets/images/메인화면/main_slideLeftBtn.png');
   }
 `;
 const StyledSwiperButtonNext = styled.div`
@@ -57,13 +59,14 @@ const StyledSwiperButtonNext = styled.div`
   cursor: pointer;
   z-index: 10;
   user-select: none;
+
   &::after {
     content: '';
     display: block;
     width: 60px;
     height: 60px;
     background-size: cover;
-    background-image: url('/assets/images/rightBtnImage.png');
+    background-image: url('/assets/images/메인화면/main_slideRightBtn.png');
   }
 `;
 
@@ -181,7 +184,7 @@ const Home = () => {
                   <div className={styles.iconContainer}>
                     <div className={styles.goLink}>
                       <Image
-                        src='/assets/images/linkBtnImage.png'
+                        src={mainLinkBtn}
                         alt='바로가기'
                         width={50}
                         height={50}
@@ -202,7 +205,7 @@ const Home = () => {
                   <div className={styles.iconContainer}>
                     <div className={styles.goLink}>
                       <Image
-                        src='/assets/images/linkBtnImage.png'
+                        src={mainLinkBtn}
                         alt='바로가기'
                         width={50}
                         height={50}

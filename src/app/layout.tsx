@@ -7,7 +7,7 @@ import Header from './header';
 import styles from '../styles/Layout.module.css';
 import Image from 'next/image';
 import ReactGA from 'react-ga4';
-import FooterLogoImage from '../../public/assets/images/FooterLogoImage.png';
+import FooterLogoImage from '../../public/assets/images/로고/triptuneLogoWhite.png';
 import '../styles/global.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Noto_Sans_KR } from 'next/font/google';
