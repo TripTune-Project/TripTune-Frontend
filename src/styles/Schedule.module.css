@@ -569,6 +569,15 @@
   font-size: 18px;
 }
 
+.deleteZone {
+  margin-left:40%;
+  margin-top:100px;
+  width:120px;
+  height:30px;
+  color:#ffffff;
+  background-color:#004a55;
+}
+
 .placeInfo {
   position: relative;
   flex: 1;

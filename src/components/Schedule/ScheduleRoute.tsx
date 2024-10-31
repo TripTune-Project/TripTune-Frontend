@@ -25,11 +25,12 @@ interface PlaceItemProps {
   place: Place;
   index: number;
   movePlace: (dragIndex: number, hoverIndex: number) => void;
+  onDelete: (index: number) => void;
 }
 
-const PlaceItem = ({ place, index, movePlace }: PlaceItemProps) => {
+const PlaceItem = ({ place, index, movePlace, onDelete }: PlaceItemProps) => {
   const ref = useRef<HTMLLIElement>(null);
-
+  
   const [, drop] = useDrop({
     accept: 'PLACE',
     hover(item: { index: number }) {
@@ -41,15 +42,20 @@ const PlaceItem = ({ place, index, movePlace }: PlaceItemProps) => {
       item.index = hoverIndex;
     },
   });
-
+  
   const [{ isDragging }, drag] = useDrag({
     type: 'PLACE',
     item: { index },
     collect: (monitor) => ({ isDragging: monitor.isDragging() }),
+    end: (item, monitor) => {
+      if (monitor.didDrop() && monitor.getDropResult()?.isDelete) {
+        onDelete(item.index);
+      }
+    },
   });
-
+  
   drag(drop(ref));
-
+  
   return (
     <li
       ref={ref}
@@ -84,11 +90,24 @@ const PlaceItem = ({ place, index, movePlace }: PlaceItemProps) => {
   );
 };
 
+const DeleteDropZone = () => {
+  const [, drop] = useDrop({
+    accept: 'PLACE',
+    drop: () => ({ isDelete: true }),
+  });
+  
+  return (
+    <div ref={drop} className={styles.deleteZone}>
+      ❌ 삭제 하기 ❌
+    </div>
+  );
+};
+
 const ScheduleRoute = () => {
   const { scheduleId } = useParams();
   const [places, setPlaces] = useState<Place[]>([]);
   const travelRouteQuery = useScheduleTravelRoute(Number(scheduleId), 1, true);
-
+  
   const movePlace = (dragIndex: number, hoverIndex: number) => {
     const draggedPlace = places[dragIndex];
     const updatedPlaces = [...places];
@@ -96,7 +115,11 @@ const ScheduleRoute = () => {
     updatedPlaces.splice(hoverIndex, 0, draggedPlace);
     setPlaces(updatedPlaces);
   };
-
+  
+  const handleDelete = (index: number) => {
+    setPlaces((prevPlaces) => prevPlaces.filter((_, i) => i !== index));
+  };
+  
   useEffect(() => {
     if (travelRouteQuery?.data?.data?.content) {
       const sanitizedPlaces = travelRouteQuery.data.data.content.map(
@@ -108,11 +131,11 @@ const ScheduleRoute = () => {
       setPlaces(sanitizedPlaces);
     }
   }, [travelRouteQuery?.data?.data]);
-
+  
   if (travelRouteQuery.isLoading) return <DataLoading />;
   if (travelRouteQuery.error)
     return <p>데이터를 불러오는데 오류가 발생했습니다.</p>;
-
+  
   return (
     <DndProvider backend={HTML5Backend}>
       <ul>
@@ -122,9 +145,11 @@ const ScheduleRoute = () => {
             place={place}
             index={index}
             movePlace={movePlace}
+            onDelete={handleDelete}
           />
         ))}
       </ul>
+      <DeleteDropZone />
     </DndProvider>
   );
 };
