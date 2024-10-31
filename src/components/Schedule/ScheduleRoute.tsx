@@ -7,19 +7,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import Image from 'next/image';
 import locationIcon from '../../../public/assets/icons/ic_location.png';
 import { useParams } from 'next/navigation';
-
-interface Place {
-  placeId: number;
-  placeName: string;
-  thumbnailUrl: string | null;
-  country: string;
-  city: string;
-  district: string;
-  address: string;
-  detailAddress?: string;
-  latitude: number;
-  longitude: number;
-}
+import { Place } from '@/types/scheduleType';
 
 interface PlaceItemProps {
   place: Place;
@@ -103,34 +91,49 @@ const DeleteDropZone = () => {
   );
 };
 
-const ScheduleRoute = () => {
+interface ScheduleRouteProps {
+  places: Place[]; // prop으로 전달되는 초기 장소 리스트
+}
+
+const ScheduleRoute = ({ places }: ScheduleRouteProps) => {
+  const [routePlaces, setRoutePlaces] = useState<Place[]>([]);
   const { scheduleId } = useParams();
-  const [places, setPlaces] = useState<Place[]>([]);
   const travelRouteQuery = useScheduleTravelRoute(Number(scheduleId), 1, true);
   
+  // API에서 초기 데이터 불러오기
+  useEffect(() => {
+    if (travelRouteQuery.isSuccess && travelRouteQuery.data?.data?.content) {
+      const apiPlaces = travelRouteQuery.data.data.content.map((place: Place) => ({
+        ...place,
+        detailAddress: place.detailAddress ?? '',
+      }));
+      setRoutePlaces(apiPlaces);
+    }
+  }, [travelRouteQuery.isSuccess, travelRouteQuery.data]);
+  
+  // prop으로 전달된 places가 변경되면 누적하여 추가
+  useEffect(() => {
+    if (places) {
+      setRoutePlaces((prevPlaces) => [
+        ...prevPlaces,
+        ...places.filter(
+          (place) => !prevPlaces.some((p) => p.placeId === place.placeId)
+        ),
+      ]);
+    }
+  }, [places]);
+  
   const movePlace = (dragIndex: number, hoverIndex: number) => {
-    const draggedPlace = places[dragIndex];
-    const updatedPlaces = [...places];
+    const draggedPlace = routePlaces[dragIndex];
+    const updatedPlaces = [...routePlaces];
     updatedPlaces.splice(dragIndex, 1);
     updatedPlaces.splice(hoverIndex, 0, draggedPlace);
-    setPlaces(updatedPlaces);
+    setRoutePlaces(updatedPlaces);
   };
   
   const handleDelete = (index: number) => {
-    setPlaces((prevPlaces) => prevPlaces.filter((_, i) => i !== index));
+    setRoutePlaces((prevPlaces) => prevPlaces.filter((_, i) => i !== index));
   };
-  
-  useEffect(() => {
-    if (travelRouteQuery?.data?.data?.content) {
-      const sanitizedPlaces = travelRouteQuery.data.data.content.map(
-        (place: Place) => ({
-          ...place,
-          detailAddress: place.detailAddress ?? '',
-        })
-      );
-      setPlaces(sanitizedPlaces);
-    }
-  }, [travelRouteQuery?.data?.data]);
   
   if (travelRouteQuery.isLoading) return <DataLoading />;
   if (travelRouteQuery.error)
@@ -138,8 +141,8 @@ const ScheduleRoute = () => {
   
   return (
     <DndProvider backend={HTML5Backend}>
-      <ul>
-        {places.map((place, index) => (
+      <ul className={styles.routeList}>
+        {routePlaces.map((place, index) => (
           <PlaceItem
             key={place.placeId}
             place={place}
