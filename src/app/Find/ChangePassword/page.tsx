@@ -5,7 +5,7 @@ import Head from 'next/head';
 import { useSearchParams, useRouter } from 'next/navigation';
 import styles from '../../../styles/Find.module.css';
 import Image from 'next/image';
-import triptuneIcon from '../../../../public/assets/icons/ic_triptune.png';
+import triptuneIcon from '../../../../public/assets/images/로고/triptuneIcon-removebg.png';
 import VerificationLoading from '../../../components/Common/VerificationLoading';
 import { validatePassword } from '@/utils/validation';
 

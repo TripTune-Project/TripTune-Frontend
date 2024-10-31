@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import styles from '@/styles/Schedule.module.css';
 import {
@@ -10,9 +10,10 @@ import locationIcon from '../../../public/assets/icons/ic_location.png';
 import Pagination from '../Travel/Pagination';
 import DataLoading from '@/components/Common/DataLoading';
 import { Place } from '@/types/scheduleType';
+import { useDebounce } from '@/hooks/useDebounce';
 
 interface ScheduleTravelSearchProps {
-  onAddMarker: (marker: { lat: number; lng: number; }) => void;
+  onAddMarker: (marker: { lat: number; lng: number }) => void;
 }
 
 const ScheduleTravelSearch = ({ onAddMarker }: ScheduleTravelSearchProps) => {
@@ -21,6 +22,8 @@ const ScheduleTravelSearch = ({ onAddMarker }: ScheduleTravelSearchProps) => {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [isSearching, setIsSearching] = useState(false);
 
+  const debouncedSearchKeyword = useDebounce(searchKeyword, 800);
+
   const travelListQuery = useScheduleTravelList(
     Number(scheduleId),
     currentPage,
@@ -28,15 +31,19 @@ const ScheduleTravelSearch = ({ onAddMarker }: ScheduleTravelSearchProps) => {
   );
   const searchTravelQuery = useTravelListByLocation(
     Number(scheduleId),
-    searchKeyword,
+    debouncedSearchKeyword,
     currentPage,
     isSearching
   );
 
-  const handleTravelSearch = () => {
-    setCurrentPage(1);
-    setIsSearching(true);
-  };
+  useEffect(() => {
+    if (debouncedSearchKeyword.trim()) {
+      setCurrentPage(1);
+      setIsSearching(true);
+    } else {
+      setIsSearching(false);
+    }
+  }, [debouncedSearchKeyword]);
 
   const travels = isSearching
     ? searchTravelQuery?.data?.data?.content || []
@@ -59,7 +66,7 @@ const ScheduleTravelSearch = ({ onAddMarker }: ScheduleTravelSearchProps) => {
           value={searchKeyword}
           onChange={(e) => setSearchKeyword(e.target.value)}
         />
-        <button onClick={handleTravelSearch}>검색</button>
+        <button onClick={() => setIsSearching(true)}>검색</button>
       </div>
       <div className={styles.travelList}>
         {travels.length > 0 ? (
@@ -100,7 +107,7 @@ const ScheduleTravelSearch = ({ onAddMarker }: ScheduleTravelSearchProps) => {
                       onClick={() =>
                         onAddMarker({
                           lat: place.latitude,
-                          lng: place.longitude
+                          lng: place.longitude,
                         })
                       }
                     >

@@ -18,9 +18,9 @@ import styles from '../../styles/Travel.module.css';
 import { useTravelStore } from '@/store/travelStore';
 import { useDebounce } from '@/hooks/useDebounce';
 import { BookMarkApi, BookMarkDeleteApi } from '@/api/bookMarkApi';
-import bookMarkIcon from '../../../public/assets/icons/ic_bookmark.png';
-import bookMarkIconNo from '../../../public/assets/icons/ic_bookmark_no.png';
-import locationIcon from '../../../public/assets/icons/ic_location.png';
+import BookMarkNo from '../../../public/assets/images/여행지 탐색/홈화면/placeHome_bookmarkIcon.png';
+import BookMark from '../../../public/assets/images/여행지 탐색/홈화면/placeHome_bookmarkIconFill.png';
+import locationIcon from '../../../public/assets/images/여행지 탐색/홈화면/placeHome_mapIcon.png';
 
 const TravelPage = () => {
   const router = useRouter();
@@ -302,7 +302,7 @@ const TravelPage = () => {
                         >
                           {place.isBookmarked ? (
                             <Image
-                              src={bookMarkIcon}
+                              src={BookMark}
                               alt='북마크'
                               width={16}
                               height={16}
@@ -310,7 +310,7 @@ const TravelPage = () => {
                             />
                           ) : (
                             <Image
-                              src={bookMarkIconNo}
+                              src={BookMarkNo}
                               alt='북마크 해제'
                               width={16}
                               height={16}

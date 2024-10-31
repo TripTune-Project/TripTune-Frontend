@@ -12,18 +12,23 @@ import DataLoading from '@/components/Common/DataLoading';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Place, ApiResponse, ScheduleAllListType } from '@/types/scheduleType';
-import triptuneIcon from '../../../public/assets/icons/ic_triptune.png';
+import triptuneIcon from '../../../public/assets/images/로고/triptuneIcon-removebg.png';
+import { MODAL_MESSAGES } from '@/components/Common/ConfirmationModalMessage';
+import { useDebounce } from '@/hooks/useDebounce';
 
 export default function Schedule() {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeDeleteMenu, setActiveDeleteMenu] = useState<number | null>(null);
   const [selectedScheduleId, setSelectedScheduleId] = useState<number | null>(
-    null,
+    null
   );
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [isSearching, setIsSearching] = useState(false);
-  
+
+  const debouncedSearchKeyword = useDebounce(searchKeyword, 800); // 디바운스 적용
+
   const {
     data: scheduleData,
     isLoading: isScheduleLoading,
@@ -32,7 +37,7 @@ export default function Schedule() {
     hasNextPage,
     isFetchingNextPage,
   } = useScheduleList(!isSearching);
-  
+
   const {
     data: searchData,
     isLoading: isSearchLoading,
@@ -40,36 +45,36 @@ export default function Schedule() {
     fetchNextPage: fetchNextSearchPage,
     hasNextPage: hasNextSearchPage,
     isFetchingNextPage: isFetchingNextSearchPage,
-  } = useScheduleListSearch(searchKeyword, isSearching);
-  
+  } = useScheduleListSearch(debouncedSearchKeyword, isSearching); // 디바운스된 검색어로 검색 API 호출
+
   const observerRef = useRef<HTMLDivElement | null>(null);
-  
+
   const handleOpenModal = () => {
     setIsModalOpen(true);
   };
-  
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
-  
+
   const handleToggleDeleteMenu = (
     scheduleId: number,
-    event: React.MouseEvent,
+    event: React.MouseEvent
   ) => {
     event.stopPropagation();
     setActiveDeleteMenu((prevId) =>
-      prevId === scheduleId ? null : scheduleId,
+      prevId === scheduleId ? null : scheduleId
     );
   };
-  
+
   const { mutate: deleteScheduleMutate } = useDeleteSchedule();
-  
-  const handleDeleteSchedule = (event: React.MouseEvent) => {
-    event.stopPropagation();
+
+  const handleDeleteConfirmation = () => {
     if (selectedScheduleId) {
       deleteScheduleMutate(selectedScheduleId, {
         onSuccess: () => {
           setActiveDeleteMenu(null);
+          setIsDeleteModalOpen(false);
         },
         onError: () => {
           alert('일정 삭제 중 오류가 발생했습니다.');
@@ -77,7 +82,12 @@ export default function Schedule() {
       });
     }
   };
-  
+
+  const handleDeleteSchedule = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setIsDeleteModalOpen(true);
+  };
+
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
       const target = entries[0];
@@ -95,48 +105,49 @@ export default function Schedule() {
       hasNextPage,
       hasNextSearchPage,
       isSearching,
-    ],
+    ]
   );
-  
+
   useEffect(() => {
     const option = {
       root: null,
       rootMargin: '20px',
       threshold: 1.0,
     };
-    
+
     const observer = new IntersectionObserver(handleObserver, option);
     if (observerRef.current) observer.observe(observerRef.current);
-    
+
     return () => {
       if (observerRef.current) observer.unobserve(observerRef.current);
     };
   }, [handleObserver]);
-  
+
+  useEffect(() => {
+    // 디바운스된 검색어가 변경될 때 검색 여부와 페이지를 초기화
+    setIsSearching(!!debouncedSearchKeyword);
+  }, [debouncedSearchKeyword]);
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchKeyword(e.target.value);
   };
-  
-  const handleTravelSearch = () => {
-    setIsSearching(!!searchKeyword);
-  };
-  
+
   if (isScheduleLoading || isSearchLoading) {
     return <DataLoading />;
   }
-  
+
   if (isScheduleError || isSearchError) {
     return <div>일정 목록을 불러오는 중 오류가 발생했습니다.</div>;
   }
-  
+
   const handleDetailClick = (e: React.MouseEvent, scheduleId: number) => {
     if (!activeDeleteMenu) {
       router.push(`/Schedule/${scheduleId}`);
     }
   };
-  
+
   const renderSchedules = (
-    scheduleListData: ApiResponse<ScheduleAllListType> | undefined,
+    scheduleListData: ApiResponse<ScheduleAllListType> | undefined
   ) => {
     return scheduleListData?.data?.content.map((place: Place) => {
       return (
@@ -152,7 +163,7 @@ export default function Schedule() {
           {place.thumbnailUrl ? (
             <Image
               src={place.thumbnailUrl}
-              alt="여행 루트 이미지"
+              alt='여행 루트 이미지'
               className={styles.scheduleImage}
               width={256}
               height={158}
@@ -162,9 +173,7 @@ export default function Schedule() {
           )}
           <div className={styles.scheduleContent}>
             <div className={styles.scheduleName}>{place.scheduleName}</div>
-            <div className={styles.scheduleDates}>
-              {place.sinceUpdate}
-            </div>
+            <div className={styles.scheduleDates}>{place.sinceUpdate}</div>
           </div>
           <div className={styles.hoverMenu}>
             <div
@@ -197,7 +206,7 @@ export default function Schedule() {
       );
     });
   };
-  
+
   return (
     <div className={styles.createContainer}>
       <h2 className={styles.detailTitle}>
@@ -206,12 +215,14 @@ export default function Schedule() {
       </h2>
       <div className={styles.travelSearchContainer}>
         <input
-          type="text"
-          placeholder="원하는 일정을 검색하세요"
+          type='text'
+          placeholder='원하는 일정을 검색하세요'
           value={searchKeyword}
           onChange={handleSearchChange}
         />
-        <button onClick={handleTravelSearch}>돋보기</button>
+        <button onClick={() => setIsSearching(!!debouncedSearchKeyword)}>
+          돋보기
+        </button>
       </div>
       <button className={styles.allSchedule}>전체 일정</button>
       <button className={styles.allShareSchedule}>공유한 일정</button>
@@ -221,11 +232,11 @@ export default function Schedule() {
       <div className={styles.scheduleList}>
         {!isSearching
           ? scheduleData?.pages?.map((page) =>
-            renderSchedules(page as ApiResponse<ScheduleAllListType>),
-          )
+              renderSchedules(page as ApiResponse<ScheduleAllListType>)
+            )
           : searchData?.pages?.map((page) =>
-            renderSchedules(page as ApiResponse<ScheduleAllListType>),
-          )}
+              renderSchedules(page as ApiResponse<ScheduleAllListType>)
+            )}
       </div>
       <div ref={observerRef} className={styles.loadingArea}>
         {isFetchingNextPage || isFetchingNextSearchPage ? (
@@ -234,8 +245,21 @@ export default function Schedule() {
           <p>더 이상 일정이 없습니다.</p>
         )}
       </div>
-      
-      {isModalOpen && <ScheduleModal onClose={handleCloseModal} />}
+
+      {isDeleteModalOpen && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.deleteModal}>
+            <p>{MODAL_MESSAGES.confirmDeleteSchedule.title}</p>
+            <button onClick={handleDeleteConfirmation}>
+              {MODAL_MESSAGES.confirmDeleteSchedule.confirmButton}
+            </button>
+            <button onClick={() => setIsDeleteModalOpen(false)}>
+              {MODAL_MESSAGES.confirmDeleteSchedule.cancelButton}
+            </button>
+          </div>
+        </div>
+      )}
+      {isModalOpen && <ScheduleModal onClose={() => setIsModalOpen(false)} />}
     </div>
   );
 }

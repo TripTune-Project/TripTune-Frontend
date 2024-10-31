@@ -1,10 +1,39 @@
+// styled-components 설치가 필요합니다: `npm install styled-components`
+
 import Link from 'next/link';
 import Head from 'next/head';
-import styles from '../styles/Error.module.css';
+import styled from 'styled-components';
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  text-align: center;
+`;
+
+const ErrorCode = styled.h1`
+  font-size: 5rem;
+  margin-bottom: 1rem;
+`;
+
+const ErrorMessage = styled.p`
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+`;
+
+const HomeLink = styled.a`
+  font-size: 1.2rem;
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+`;
 
 export default function Custom500() {
   return (
-    <div className={styles.container}>
+    <Container>
       <Head>
         <title>500 - Internal Server Error | Your Website Name</title>
         <meta
@@ -21,11 +50,11 @@ export default function Custom500() {
         <meta property='og:url' content='https://triptune.netlify.app/500' />
         <meta name='viewport' content='width=device-width, initial-scale=1' />
       </Head>
-      <h1 className={styles.errorCode}>500</h1>
-      <p className={styles.errorMessage}>Internal Server Error</p>
-      <Link href='/'>
-        <a className={styles.homeLink}>Go back to Home</a>
+      <ErrorCode>500</ErrorCode>
+      <ErrorMessage>Internal Server Error</ErrorMessage>
+      <Link href='/' passHref>
+        <HomeLink>Go back to Home</HomeLink>
       </Link>
-    </div>
+    </Container>
   );
 }

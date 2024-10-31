@@ -13,17 +13,15 @@ import { useParams } from 'next/navigation';
 import DataLoading from '@/components/Common/DataLoading';
 import DetailPlaceMap from '@/components/Travel/DetailPlaceMap';
 import { BookMarkApi, BookMarkDeleteApi } from '@/api/bookMarkApi';
-import detailBookMarkNo from '../../../../public/assets/icons/ic_detail_no_bookmark.png';
-import detailBookMark from '../../../../public/assets/icons/ic_detail_bookmark.png';
-import scheduleIcon from '../../../../public/assets/icons/ic_schedule.png';
-import triptuneIcon from '../../../../public/assets/icons/ic_triptune.png';
-import locationIcon from '../../../../public/assets/icons/ic_location.png';
-import timeIcon from '../../../../public/assets/icons/ic_time.png';
-import homePageIcon from '../../../../public/assets/icons/ic_homepage.png';
-import phoneIcon from '../../../../public/assets/icons/ic_phone.png';
 import styled from 'styled-components';
-import pictureImage from '../../../../public/assets/images/pictureImage.png';
-import VerificationLoading from '@/components/Common/VerificationLoading';
+import detailBookMarkNo from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_bookmarkIcon.png';
+import detailBookMark from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_bookmarkIconFill.png';
+import scheduleIcon from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_timeIcon.png';
+import triptuneIcon from '../../../../public/assets/images/로고/triptuneIcon-removebg.png';
+import locationIcon from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_mapIcon.png';
+import timeIcon from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_timeIcon.png';
+import homePageIcon from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_homepageIcon.png';
+import phoneIcon from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_phoneIcon.png';
 
 const StyledSwiperContainer = styled.div`
   position: relative;

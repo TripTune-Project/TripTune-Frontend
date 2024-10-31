@@ -8,6 +8,7 @@ import {
   IconButton,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { MODAL_MESSAGES } from '@/components/Common/ConfirmationModalMessage';
 
 interface LogoutModalProps {
   isOpen: boolean;
@@ -39,10 +40,10 @@ const LogoutModal = ({ isOpen, onClose, onConfirm }: LogoutModalProps) => {
           </IconButton>
         </Stack>
         <Typography variant='h6' component='h2' gutterBottom>
-          로그아웃 하시겠습니까?
+          {MODAL_MESSAGES.confirmLogout.title}
         </Typography>
         <Typography variant='body2' color='text.secondary' mb={3}>
-          현재 세션이 종료되고 다시 로그인해야 합니다.
+          {MODAL_MESSAGES.confirmLogout.description}
         </Typography>
         <Stack direction='row' spacing={2} justifyContent='center'>
           <Button
@@ -50,35 +51,16 @@ const LogoutModal = ({ isOpen, onClose, onConfirm }: LogoutModalProps) => {
             variant='contained'
             color='error'
             size='large'
-            sx={{
-              'textTransform': 'none',
-              'borderRadius': '8px',
-              'boxShadow': 'none',
-              '&:hover': {
-                boxShadow: 'none',
-                backgroundColor: '#d32f2f',
-              },
-            }}
           >
-            확인
+            {MODAL_MESSAGES.confirmLogout.confirmButton}
           </Button>
           <Button
             onClick={onClose}
             variant='outlined'
             color='primary'
             size='large'
-            sx={{
-              'textTransform': 'none',
-              'borderRadius': '8px',
-              'boxShadow': 'none',
-              'borderColor': '#1976d2',
-              '&:hover': {
-                borderColor: '#115293',
-                backgroundColor: 'rgba(25, 118, 210, 0.04)',
-              },
-            }}
           >
-            취소
+            {MODAL_MESSAGES.confirmLogout.cancelButton}
           </Button>
         </Stack>
       </Box>
