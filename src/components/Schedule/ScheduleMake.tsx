@@ -38,18 +38,14 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
   const [tab, setTab] = useState(initialTab);
   const [currentPage, setCurrentPage] = useState(1);
   
-  const [scheduleDetail, setScheduleDetail] = useState<ScheduleDetail>({
-    scheduleName: '',
-    startDate: '',
-    endDate: '',
-  });
+  const [scheduleDetail, setScheduleDetail] = useState<ScheduleDetail | null>(null);
   const [addedPlaces, setAddedPlaces] = useState<Place[]>([]);
   const [showModal, setShowModal] = useState(false);
   
   const scheduleDetailQuery = useScheduleDetailList(
     Number(scheduleId),
     currentPage,
-    !scheduleDetail
+    scheduleDetail === null
   );
   
   useEffect(() => {
@@ -62,7 +58,7 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
       });
     }
     return () => {
-      setScheduleDetail({ scheduleName: '', startDate: '', endDate: '' });
+      setScheduleDetail(null);
     };
   }, [scheduleDetailQuery.isSuccess, scheduleDetailQuery.data]);
   
@@ -87,11 +83,15 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
   };
   
   const handleModalSubmit = (name: string, startDate: string, endDate: string) => {
-    setScheduleDetail({ scheduleName: name, startDate, endDate });
+    setScheduleDetail((prev) => ({
+      ...prev!,
+      startDate,
+      endDate,
+    }));
     setShowModal(false);
   };
   
-  if (scheduleDetailQuery.isLoading) {
+  if (scheduleDetailQuery.isLoading || scheduleDetail === null) {
     return <DataLoading />;
   }
   
@@ -109,8 +109,7 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
           className={styles.inputField}
           value={scheduleDetail?.scheduleName || ''}
           placeholder={'여행 이름'}
-          readOnly
-          onClick={() => setShowModal(true)}
+          onChange={(e) => handleScheduleDetailChange('scheduleName', e.target.value)}
         />
       </div>
       <div className={styles.inputGroup}>
@@ -120,7 +119,11 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
           className={styles.inputField}
           value={`${scheduleDetail?.startDate ?? ''} ~ ${scheduleDetail?.endDate ?? ''}`}
           placeholder={'시작일 ~ 종료일'}
-          readOnly
+          onChange={(e) => {
+            const [startDate, endDate] = e.target.value.split(' ~ ');
+            handleScheduleDetailChange('startDate', startDate);
+            handleScheduleDetailChange('endDate', endDate);
+          }}
           onClick={() => setShowModal(true)}
         />
       </div>
@@ -145,6 +148,8 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
       )}
       {showModal && (
         <CalendarModal
+          initialStartDate={scheduleDetail?.startDate || ''}
+          initialEndDate={scheduleDetail?.endDate || ''}
           onClose={() => setShowModal(false)}
           onSubmit={handleModalSubmit}
         />

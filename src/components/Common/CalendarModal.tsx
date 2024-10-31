@@ -7,14 +7,16 @@ import { ko } from 'date-fns/locale';
 registerLocale('ko', ko);
 
 interface CalendarModalProps {
+  initialStartDate: string;
+  initialEndDate: string;
   onClose: () => void;
   onSubmit: (name: string, startDate: string, endDate: string) => void;
 }
 
-const CalendarModal = ({ onClose, onSubmit }: CalendarModalProps) => {
+const CalendarModal = ({ initialStartDate, initialEndDate, onClose, onSubmit }: CalendarModalProps) => {
   const today = new Date();
-  const [startDate, setStartDate] = useState<Date | null>(today);
-  const [endDate, setEndDate] = useState<Date | null>(today);
+  const [startDate, setStartDate] = useState<Date | null>(initialStartDate ? new Date(initialStartDate) : null);
+  const [endDate, setEndDate] = useState<Date | null>(initialEndDate ? new Date(initialEndDate) : today);
   const [travelName, setTravelName] = useState<string>('');
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
   
@@ -23,10 +25,8 @@ const CalendarModal = ({ onClose, onSubmit }: CalendarModalProps) => {
     
     setIsFormValid(
       travelName.trim() !== '' &&
-      startDate !== null &&
       endDate !== null &&
-      startDate >= today &&
-      startDate <= endDate
+      endDate > today
     );
   }, [travelName, startDate, endDate]);
   
@@ -36,7 +36,7 @@ const CalendarModal = ({ onClose, onSubmit }: CalendarModalProps) => {
   
   const handleConfirm = () => {
     if (isFormValid) {
-      onSubmit(travelName, formatDateToString(startDate!), formatDateToString(endDate!));
+      onSubmit(travelName, startDate ? formatDateToString(startDate) : '', formatDateToString(endDate!));
       onClose();
     } else {
       console.error('모든 필드를 올바르게 입력해야 합니다.');
