@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useScheduleTravelRoute } from '@/hooks/useSchedule';
 import DataLoading from '@/components/Common/DataLoading';
 import styles from '@/styles/Schedule.module.css';
@@ -21,7 +21,7 @@ const PlaceItem = ({ place, index, movePlace, onDelete }: PlaceItemProps) => {
   
   const [, drop] = useDrop({
     accept: 'PLACE',
-    hover(item: { index: number }) {
+    hover(item: any) {
       if (!ref.current) return;
       const dragIndex = item.index;
       const hoverIndex = index;
@@ -36,7 +36,8 @@ const PlaceItem = ({ place, index, movePlace, onDelete }: PlaceItemProps) => {
     item: { index },
     collect: (monitor) => ({ isDragging: monitor.isDragging() }),
     end: (item, monitor) => {
-      if (monitor.didDrop() && monitor.getDropResult()?.isDelete) {
+      const dropResult = monitor.getDropResult() as any;
+      if (monitor.didDrop() && dropResult?.isDelete) {
         onDelete(item.index);
       }
     },
@@ -66,9 +67,9 @@ const PlaceItem = ({ place, index, movePlace, onDelete }: PlaceItemProps) => {
       </div>
       <div className={styles.placeInfo}>
         <div className={styles.placeName}>{place.placeName}</div>
-        <p
-          className={styles.placeAddress}
-        >{`${place.country} / ${place.city} / ${place.district}`}</p>
+        <p className={styles.placeAddress}>
+          {`${place.country} / ${place.city} / ${place.district}`}
+        </p>
         <p className={styles.placeDetailAddress}>
           <Image src={locationIcon} alt='장소' width={15} height={21} />
           &nbsp;{place.address} {place.detailAddress ?? ''}
@@ -84,15 +85,19 @@ const DeleteDropZone = () => {
     drop: () => ({ isDelete: true }),
   });
   
+  const setRef = useCallback((node: HTMLDivElement | null) => {
+    if (node) drop(node);
+  }, [drop]);
+  
   return (
-    <div ref={drop} className={styles.deleteZone}>
+    <div ref={setRef} className={styles.deleteZone}>
       ❌ 삭제 하기 ❌
     </div>
   );
 };
 
 interface ScheduleRouteProps {
-  places: Place[]; // prop으로 전달되는 초기 장소 리스트
+  places: Place[];
 }
 
 const ScheduleRoute = ({ places }: ScheduleRouteProps) => {
@@ -100,7 +105,6 @@ const ScheduleRoute = ({ places }: ScheduleRouteProps) => {
   const { scheduleId } = useParams();
   const travelRouteQuery = useScheduleTravelRoute(Number(scheduleId), 1, true);
   
-  // API에서 초기 데이터 불러오기
   useEffect(() => {
     if (travelRouteQuery.isSuccess && travelRouteQuery.data?.data?.content) {
       const apiPlaces = travelRouteQuery.data.data.content.map((place: Place) => ({
@@ -111,7 +115,6 @@ const ScheduleRoute = ({ places }: ScheduleRouteProps) => {
     }
   }, [travelRouteQuery.isSuccess, travelRouteQuery.data]);
   
-  // prop으로 전달된 places가 변경되면 누적하여 추가
   useEffect(() => {
     if (places) {
       setRoutePlaces((prevPlaces) => [

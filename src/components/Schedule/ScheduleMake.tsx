@@ -69,7 +69,7 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
   
   const handleScheduleDetailChange = (field: string, value: string) => {
     setScheduleDetail((prevState) => ({
-      ...prevState,
+      ...(prevState || { scheduleName: '', startDate: '', endDate: '' }),
       [field]: value ?? '',
     }));
   };
@@ -89,6 +89,15 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
       endDate,
     }));
     setShowModal(false);
+  };
+  
+  const ScheduleRouteWrapper = () => {
+    const processedPlaces = addedPlaces.map((place) => ({
+      ...place,
+      thumbnailUrl: place.thumbnailUrl || '',
+    }));
+    
+    return <ScheduleRoute places={processedPlaces} />;
   };
   
   if (scheduleDetailQuery.isLoading || scheduleDetail === null) {
@@ -144,7 +153,7 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
       {tab === 'scheduleTravel' ? (
         <ScheduleTravelSearch onAddMarker={handleAddMarker} />
       ) : (
-        <ScheduleRoute places={addedPlaces} />
+        <ScheduleRouteWrapper />
       )}
       {showModal && (
         <CalendarModal
