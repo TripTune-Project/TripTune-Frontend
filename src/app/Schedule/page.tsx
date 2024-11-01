@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import Head from 'next/head';
 import {
   useScheduleList,
   useDeleteSchedule,
@@ -20,15 +21,13 @@ export default function Schedule() {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeDeleteMenu, setActiveDeleteMenu] = useState<number | null>(null);
-  const [selectedScheduleId, setSelectedScheduleId] = useState<number | null>(
-    null
-  );
+  const [selectedScheduleId, setSelectedScheduleId] = useState<number | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [isSearching, setIsSearching] = useState(false);
-
-  const debouncedSearchKeyword = useDebounce(searchKeyword, 800); // 디바운스 적용
-
+  
+  const debouncedSearchKeyword = useDebounce(searchKeyword, 800);
+  
   const {
     data: scheduleData,
     isLoading: isScheduleLoading,
@@ -37,7 +36,7 @@ export default function Schedule() {
     hasNextPage,
     isFetchingNextPage,
   } = useScheduleList(!isSearching);
-
+  
   const {
     data: searchData,
     isLoading: isSearchLoading,
@@ -45,18 +44,18 @@ export default function Schedule() {
     fetchNextPage: fetchNextSearchPage,
     hasNextPage: hasNextSearchPage,
     isFetchingNextPage: isFetchingNextSearchPage,
-  } = useScheduleListSearch(debouncedSearchKeyword, isSearching); // 디바운스된 검색어로 검색 API 호출
-
+  } = useScheduleListSearch(debouncedSearchKeyword, isSearching);
+  
   const observerRef = useRef<HTMLDivElement | null>(null);
-
+  
   const handleOpenModal = () => {
     setIsModalOpen(true);
   };
-
+  
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
-
+  
   const handleToggleDeleteMenu = (
     scheduleId: number,
     event: React.MouseEvent
@@ -66,9 +65,9 @@ export default function Schedule() {
       prevId === scheduleId ? null : scheduleId
     );
   };
-
+  
   const { mutate: deleteScheduleMutate } = useDeleteSchedule();
-
+  
   const handleDeleteConfirmation = () => {
     if (selectedScheduleId) {
       deleteScheduleMutate(selectedScheduleId, {
@@ -82,12 +81,12 @@ export default function Schedule() {
       });
     }
   };
-
+  
   const handleDeleteSchedule = (event: React.MouseEvent) => {
     event.stopPropagation();
     setIsDeleteModalOpen(true);
   };
-
+  
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
       const target = entries[0];
@@ -107,45 +106,44 @@ export default function Schedule() {
       isSearching,
     ]
   );
-
+  
   useEffect(() => {
     const option = {
       root: null,
       rootMargin: '20px',
       threshold: 1.0,
     };
-
+    
     const observer = new IntersectionObserver(handleObserver, option);
     if (observerRef.current) observer.observe(observerRef.current);
-
+    
     return () => {
       if (observerRef.current) observer.unobserve(observerRef.current);
     };
   }, [handleObserver]);
-
+  
   useEffect(() => {
-    // 디바운스된 검색어가 변경될 때 검색 여부와 페이지를 초기화
     setIsSearching(!!debouncedSearchKeyword);
   }, [debouncedSearchKeyword]);
-
+  
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchKeyword(e.target.value);
   };
-
+  
   if (isScheduleLoading || isSearchLoading) {
     return <DataLoading />;
   }
-
+  
   if (isScheduleError || isSearchError) {
     return <div>일정 목록을 불러오는 중 오류가 발생했습니다.</div>;
   }
-
+  
   const handleDetailClick = (e: React.MouseEvent, scheduleId: number) => {
     if (!activeDeleteMenu) {
       router.push(`/Schedule/${scheduleId}`);
     }
   };
-
+  
   const renderSchedules = (
     scheduleListData: ApiResponse<ScheduleAllListType> | undefined
   ) => {
@@ -206,60 +204,76 @@ export default function Schedule() {
       );
     });
   };
-
+  
   return (
-    <div className={styles.createContainer}>
-      <h2 className={styles.detailTitle}>
-        <Image src={triptuneIcon} alt={'상세설명'} priority />
-        최근 일정
-      </h2>
-      <div className={styles.travelSearchContainer}>
-        <input
-          type='text'
-          placeholder='원하는 일정을 검색하세요'
-          value={searchKeyword}
-          onChange={handleSearchChange}
-        />
-        <button onClick={() => setIsSearching(!!debouncedSearchKeyword)}>
-          돋보기
+    <>
+      <Head>
+        <title>최근 일정 - 나만의 여행 계획 보기</title>
+        <meta name="description" content="여행 일정 관리 페이지에서 최근 계획을 확인하고 수정해보세요. 여행 계획을 관리하고 원하는 일정을 검색할 수 있습니다." />
+        <meta name="keywords" content="여행 일정, 여행 계획, 일정 관리, 최근 여행, 여행 검색" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        
+        <meta property="og:title" content="최근 일정 - 나만의 여행 계획 보기" />
+        <meta property="og:description" content="최근 일정에서 원하는 여행 계획을 쉽게 관리하고 검색할 수 있습니다." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://triptune.netlify.app/Schedule" />
+        
+        <meta name="robots" content="noindex, nofollow" />
+      </Head>
+      
+      <div className={styles.createContainer}>
+        <h2 className={styles.detailTitle}>
+          <Image src={triptuneIcon} alt={'상세설명'} priority />
+          최근 일정
+        </h2>
+        <div className={styles.travelSearchContainer}>
+          <input
+            type='text'
+            placeholder='원하는 일정을 검색하세요'
+            value={searchKeyword}
+            onChange={handleSearchChange}
+          />
+          <button onClick={() => setIsSearching(!!debouncedSearchKeyword)}>
+            돋보기
+          </button>
+        </div>
+        <button className={styles.allSchedule}>전체 일정</button>
+        <button className={styles.allShareSchedule}>공유한 일정</button>
+        <button className={styles.createAddButton} onClick={handleOpenModal}>
+          {'+'} 일정 생성
         </button>
-      </div>
-      <button className={styles.allSchedule}>전체 일정</button>
-      <button className={styles.allShareSchedule}>공유한 일정</button>
-      <button className={styles.createAddButton} onClick={handleOpenModal}>
-        {'+'} 일정 생성
-      </button>
-      <div className={styles.scheduleList}>
-        {!isSearching
-          ? scheduleData?.pages?.map((page) =>
+        <div className={styles.scheduleList}>
+          {!isSearching
+            ? scheduleData?.pages?.map((page) =>
               renderSchedules(page as ApiResponse<ScheduleAllListType>)
             )
-          : searchData?.pages?.map((page) =>
+            : searchData?.pages?.map((page) =>
               renderSchedules(page as ApiResponse<ScheduleAllListType>)
             )}
-      </div>
-      <div ref={observerRef} className={styles.loadingArea}>
-        {isFetchingNextPage || isFetchingNextSearchPage ? (
-          <p>Loading more...</p>
-        ) : (
-          <p>더 이상 일정이 없습니다.</p>
-        )}
-      </div>
-
-      {isDeleteModalOpen && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.deleteModal}>
-            <p>{MODAL_MESSAGES.confirmDeleteSchedule.title}</p>
-            <button onClick={handleDeleteConfirmation}>
-              {MODAL_MESSAGES.confirmDeleteSchedule.confirmButton}
-            </button>
-            <button onClick={() => setIsDeleteModalOpen(false)}>
-              {MODAL_MESSAGES.confirmDeleteSchedule.cancelButton}
-            </button>
-          </div>
         </div>
-      )}
-      {isModalOpen && <ScheduleModal onClose={() => setIsModalOpen(false)} />}
-    </div>
+        <div ref={observerRef} className={styles.loadingArea}>
+          {isFetchingNextPage || isFetchingNextSearchPage ? (
+            <p>Loading more...</p>
+          ) : (
+            <p>더 이상 일정이 없습니다.</p>
+          )}
+        </div>
+        
+        {isDeleteModalOpen && (
+          <div className={styles.modalOverlay}>
+            <div className={styles.deleteModal}>
+              <p>{MODAL_MESSAGES.confirmDeleteSchedule.title}</p>
+              <button onClick={handleDeleteConfirmation}>
+                {MODAL_MESSAGES.confirmDeleteSchedule.confirmButton}
+              </button>
+              <button onClick={() => setIsDeleteModalOpen(false)}>
+                {MODAL_MESSAGES.confirmDeleteSchedule.cancelButton}
+              </button>
+            </div>
+          </div>
+        )}
+        {isModalOpen && <ScheduleModal onClose={() => setIsModalOpen(false)} />}
+      </div>
+    </>
   );
 }
