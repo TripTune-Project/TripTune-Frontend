@@ -13,7 +13,7 @@ import { Place } from '@/types/scheduleType';
 import { useDebounce } from '@/hooks/useDebounce';
 
 interface ScheduleTravelSearchProps {
-  onAddMarker: (marker: { lat: number; lng: number }) => void;
+  onAddMarker: (place: Place) => void;
 }
 
 const ScheduleTravelSearch = ({ onAddMarker }: ScheduleTravelSearchProps) => {
@@ -21,9 +21,9 @@ const ScheduleTravelSearch = ({ onAddMarker }: ScheduleTravelSearchProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [isSearching, setIsSearching] = useState(false);
-
+  
   const debouncedSearchKeyword = useDebounce(searchKeyword, 800);
-
+  
   const travelListQuery = useScheduleTravelList(
     Number(scheduleId),
     currentPage,
@@ -35,7 +35,7 @@ const ScheduleTravelSearch = ({ onAddMarker }: ScheduleTravelSearchProps) => {
     currentPage,
     isSearching
   );
-
+  
   useEffect(() => {
     if (debouncedSearchKeyword.trim()) {
       setCurrentPage(1);
@@ -44,19 +44,19 @@ const ScheduleTravelSearch = ({ onAddMarker }: ScheduleTravelSearchProps) => {
       setIsSearching(false);
     }
   }, [debouncedSearchKeyword]);
-
+  
   const travels = isSearching
     ? searchTravelQuery?.data?.data?.content || []
     : travelListQuery?.data?.data?.content || [];
   const totalPages = isSearching
     ? searchTravelQuery?.data?.data?.totalPages || 0
     : travelListQuery?.data?.data?.totalPages || 0;
-
+  
   if (travelListQuery.isLoading || searchTravelQuery.isLoading)
     return <DataLoading />;
   if (travelListQuery.error || searchTravelQuery.error)
     return <p>데이터를 불러오는데 오류가 발생했습니다.</p>;
-
+  
   return (
     <>
       <div className={styles.travelSearchContainer}>
@@ -104,12 +104,7 @@ const ScheduleTravelSearch = ({ onAddMarker }: ScheduleTravelSearchProps) => {
                   <div className={styles.distanceInfo}>
                     <button
                       className={styles.addButton}
-                      onClick={() =>
-                        onAddMarker({
-                          lat: place.latitude,
-                          lng: place.longitude,
-                        })
-                      }
+                      onClick={() => onAddMarker(place)}
                     >
                       추가
                     </button>

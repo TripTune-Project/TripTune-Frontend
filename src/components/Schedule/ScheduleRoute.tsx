@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useScheduleTravelRoute } from '@/hooks/useSchedule';
 import DataLoading from '@/components/Common/DataLoading';
 import styles from '@/styles/Schedule.module.css';
@@ -7,32 +7,21 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import Image from 'next/image';
 import locationIcon from '../../../public/assets/icons/ic_location.png';
 import { useParams } from 'next/navigation';
-
-interface Place {
-  placeId: number;
-  placeName: string;
-  thumbnailUrl: string | null;
-  country: string;
-  city: string;
-  district: string;
-  address: string;
-  detailAddress?: string;
-  latitude: number;
-  longitude: number;
-}
+import { Place } from '@/types/scheduleType';
 
 interface PlaceItemProps {
   place: Place;
   index: number;
   movePlace: (dragIndex: number, hoverIndex: number) => void;
+  onDelete: (index: number) => void;
 }
 
-const PlaceItem = ({ place, index, movePlace }: PlaceItemProps) => {
+const PlaceItem = ({ place, index, movePlace, onDelete }: PlaceItemProps) => {
   const ref = useRef<HTMLLIElement>(null);
-
+  
   const [, drop] = useDrop({
     accept: 'PLACE',
-    hover(item: { index: number }) {
+    hover(item: any) {
       if (!ref.current) return;
       const dragIndex = item.index;
       const hoverIndex = index;
@@ -41,15 +30,21 @@ const PlaceItem = ({ place, index, movePlace }: PlaceItemProps) => {
       item.index = hoverIndex;
     },
   });
-
+  
   const [{ isDragging }, drag] = useDrag({
     type: 'PLACE',
     item: { index },
     collect: (monitor) => ({ isDragging: monitor.isDragging() }),
+    end: (item, monitor) => {
+      const dropResult = monitor.getDropResult() as any;
+      if (monitor.didDrop() && dropResult?.isDelete) {
+        onDelete(item.index);
+      }
+    },
   });
-
+  
   drag(drop(ref));
-
+  
   return (
     <li
       ref={ref}
@@ -72,9 +67,9 @@ const PlaceItem = ({ place, index, movePlace }: PlaceItemProps) => {
       </div>
       <div className={styles.placeInfo}>
         <div className={styles.placeName}>{place.placeName}</div>
-        <p
-          className={styles.placeAddress}
-        >{`${place.country} / ${place.city} / ${place.district}`}</p>
+        <p className={styles.placeAddress}>
+          {`${place.country} / ${place.city} / ${place.district}`}
+        </p>
         <p className={styles.placeDetailAddress}>
           <Image src={locationIcon} alt='장소' width={15} height={21} />
           &nbsp;{place.address} {place.detailAddress ?? ''}
@@ -84,47 +79,83 @@ const PlaceItem = ({ place, index, movePlace }: PlaceItemProps) => {
   );
 };
 
-const ScheduleRoute = () => {
-  const { scheduleId } = useParams();
-  const [places, setPlaces] = useState<Place[]>([]);
-  const travelRouteQuery = useScheduleTravelRoute(Number(scheduleId), 1, true);
+const DeleteDropZone = () => {
+  const [, drop] = useDrop({
+    accept: 'PLACE',
+    drop: () => ({ isDelete: true }),
+  });
+  
+  const setRef = useCallback((node: HTMLDivElement | null) => {
+    if (node) drop(node);
+  }, [drop]);
+  
+  return (
+    <div ref={setRef} className={styles.deleteZone}>
+      ❌ 삭제 하기 ❌
+    </div>
+  );
+};
 
+interface ScheduleRouteProps {
+  places: Place[];
+}
+
+const ScheduleRoute = ({ places }: ScheduleRouteProps) => {
+  const [routePlaces, setRoutePlaces] = useState<Place[]>([]);
+  const { scheduleId } = useParams();
+  const travelRouteQuery = useScheduleTravelRoute(Number(scheduleId), 1, true);
+  
+  useEffect(() => {
+    if (travelRouteQuery.isSuccess && travelRouteQuery.data?.data?.content) {
+      const apiPlaces = travelRouteQuery.data.data.content.map((place: Place) => ({
+        ...place,
+        detailAddress: place.detailAddress ?? '',
+      }));
+      setRoutePlaces(apiPlaces);
+    }
+  }, [travelRouteQuery.isSuccess, travelRouteQuery.data]);
+  
+  useEffect(() => {
+    if (places) {
+      setRoutePlaces((prevPlaces) => [
+        ...prevPlaces,
+        ...places.filter(
+          (place) => !prevPlaces.some((p) => p.placeId === place.placeId)
+        ),
+      ]);
+    }
+  }, [places]);
+  
   const movePlace = (dragIndex: number, hoverIndex: number) => {
-    const draggedPlace = places[dragIndex];
-    const updatedPlaces = [...places];
+    const draggedPlace = routePlaces[dragIndex];
+    const updatedPlaces = [...routePlaces];
     updatedPlaces.splice(dragIndex, 1);
     updatedPlaces.splice(hoverIndex, 0, draggedPlace);
-    setPlaces(updatedPlaces);
+    setRoutePlaces(updatedPlaces);
   };
-
-  useEffect(() => {
-    if (travelRouteQuery?.data?.data?.content) {
-      const sanitizedPlaces = travelRouteQuery.data.data.content.map(
-        (place: Place) => ({
-          ...place,
-          detailAddress: place.detailAddress ?? '',
-        })
-      );
-      setPlaces(sanitizedPlaces);
-    }
-  }, [travelRouteQuery?.data?.data]);
-
+  
+  const handleDelete = (index: number) => {
+    setRoutePlaces((prevPlaces) => prevPlaces.filter((_, i) => i !== index));
+  };
+  
   if (travelRouteQuery.isLoading) return <DataLoading />;
   if (travelRouteQuery.error)
     return <p>데이터를 불러오는데 오류가 발생했습니다.</p>;
-
+  
   return (
     <DndProvider backend={HTML5Backend}>
-      <ul>
-        {places.map((place, index) => (
+      <ul className={styles.routeList}>
+        {routePlaces.map((place, index) => (
           <PlaceItem
             key={place.placeId}
             place={place}
             index={index}
             movePlace={movePlace}
+            onDelete={handleDelete}
           />
         ))}
       </ul>
+      <DeleteDropZone />
     </DndProvider>
   );
 };
