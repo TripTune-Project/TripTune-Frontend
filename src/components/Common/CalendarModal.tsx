@@ -13,36 +13,47 @@ interface CalendarModalProps {
   onSubmit: (name: string, startDate: string, endDate: string) => void;
 }
 
-const CalendarModal = ({ initialStartDate, initialEndDate, onClose, onSubmit }: CalendarModalProps) => {
+const CalendarModal = ({
+  initialStartDate,
+  initialEndDate,
+  onClose,
+  onSubmit,
+}: CalendarModalProps) => {
   const today = new Date();
-  const [startDate, setStartDate] = useState<Date | null>(initialStartDate ? new Date(initialStartDate) : null);
-  const [endDate, setEndDate] = useState<Date | null>(initialEndDate ? new Date(initialEndDate) : today);
+  const [startDate, setStartDate] = useState<Date | null>(
+    initialStartDate ? new Date(initialStartDate) : null
+  );
+  const [endDate, setEndDate] = useState<Date | null>(
+    initialEndDate ? new Date(initialEndDate) : today
+  );
   const [travelName, setTravelName] = useState<string>('');
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
-  
+
   useEffect(() => {
     today.setHours(0, 0, 0, 0);
-    
+
     setIsFormValid(
-      travelName.trim() !== '' &&
-      endDate !== null &&
-      endDate > today
+      travelName.trim() !== '' && endDate !== null && endDate > today
     );
   }, [travelName, startDate, endDate]);
-  
+
   const formatDateToString = (date: Date): string => {
     return date.toISOString().split('T')[0];
   };
-  
+
   const handleConfirm = () => {
     if (isFormValid) {
-      onSubmit(travelName, startDate ? formatDateToString(startDate) : '', formatDateToString(endDate!));
+      onSubmit(
+        travelName,
+        startDate ? formatDateToString(startDate) : '',
+        formatDateToString(endDate!)
+      );
       onClose();
     } else {
       console.error('모든 필드를 올바르게 입력해야 합니다.');
     }
   };
-  
+
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContainer}>
@@ -51,7 +62,7 @@ const CalendarModal = ({ initialStartDate, initialEndDate, onClose, onSubmit }: 
         </button>
         <div className={styles.datePickerContainer}>
           <DatePicker
-            locale="ko"
+            locale='ko'
             selected={startDate || undefined}
             onChange={(dates: [Date | null, Date | null]) => {
               let [start, end] = dates;
@@ -67,10 +78,14 @@ const CalendarModal = ({ initialStartDate, initialEndDate, onClose, onSubmit }: 
             selectsRange
             inline
             monthsShown={2}
-            dateFormat="yyyy.MM.dd"
+            dateFormat='yyyy.MM.dd'
             dayClassName={(date: Date) => {
               const day = date.getDay();
-              return day === 0 ? styles.sunday : day === 6 ? styles.saturday : '';
+              return day === 0
+                ? styles.sunday
+                : day === 6
+                  ? styles.saturday
+                  : '';
             }}
           />
         </div>

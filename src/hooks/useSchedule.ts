@@ -14,10 +14,11 @@ import {
   updateExistingSchedule,
   updateScheduleAttendees,
   deleteSchedule,
-  fetchScheduleListSearch,
+  fetchScheduleListSearch, fetchSharedScheduleList,
 } from '@/api/scheduleApi';
 
-// 1.1 일정 "최근" 목록 조회 (GET)
+// 일정 만들기 - 일정
+// 일정 목록 조회 (GET)
 export const useScheduleList = (enabled = true) => {
   return useInfiniteQuery({
     queryKey: ['scheduleAllList'],
@@ -36,7 +37,26 @@ export const useScheduleList = (enabled = true) => {
   });
 };
 
-// 1.2 일정 목록 중 검색 (GET)
+// 공유 일정 목록 조회 (GET)
+export const useSharedScheduleList = (enabled = true) => {
+  return useInfiniteQuery({
+    queryKey: ['sharedScheduleList'],
+    queryFn: ({ pageParam }) => fetchSharedScheduleList(pageParam || 1),
+    enabled,
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      const currentPage = lastPage?.data?.currentPage ?? 0;
+      const totalPages = lastPage?.data?.totalPages ?? 0;
+      
+      if (currentPage < totalPages) {
+        return currentPage + 1;
+      }
+      return undefined;
+    },
+  });
+};
+
+// 일정 목록 중 검색 (GET)
 export const useScheduleListSearch = (
   keyword: string,
   enabled = true,
@@ -60,7 +80,7 @@ export const useScheduleListSearch = (
   });
 };
 
-// 1.3 일정 상세 조회 (GET)
+// 일정 상세 조회 (GET)
 export const useScheduleDetailList = (
   scheduleId: number,
   page = 1,
@@ -73,7 +93,7 @@ export const useScheduleDetailList = (
   });
 };
 
-// 1.4 일정 만들기 생성 (POST)
+// 일정 만들기 생성 (POST)
 export const useCreateNewSchedule = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -84,7 +104,7 @@ export const useCreateNewSchedule = () => {
   });
 };
 
-// 1.5 일정 만들기 수정/ 저장 (PATCH)
+// 일정 만들기 수정/ 저장 (PATCH)
 export const useUpdateExistingSchedule = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -95,7 +115,8 @@ export const useUpdateExistingSchedule = () => {
   });
 };
 
-// 1.6 일정 삭제 (DELETE)
+// 일정 삭제 (DELETE)
+// TODO : 일정 작성자만 가능한지 확인 필수
 export const useDeleteSchedule = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -106,24 +127,8 @@ export const useDeleteSchedule = () => {
   });
 };
 
-// 1.7 일정 참석자 추가/수정 (PATCH)
-export const useUpdateScheduleAttendees = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: ({
-      scheduleId,
-      attendeeList,
-    }: {
-      scheduleId: number;
-      attendeeList: { userId: string; role: string; permission: string }[];
-    }) => updateScheduleAttendees(scheduleId, attendeeList),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['scheduleDetailList'] });
-    },
-  });
-};
-
-// 2.1 여행지 조회 (GET)
+// 일정 만들기 - 여행지 탭  , 여행 루트 탭
+// 여행지 조회 (GET)
 export const useScheduleTravelList = (
   scheduleId: number,
   page = 1,
@@ -136,7 +141,7 @@ export const useScheduleTravelList = (
   });
 };
 
-// 2.2 여행지 검색 (GET)
+// 여행지 검색 (GET)
 export const useTravelListByLocation = (
   scheduleId: number,
   keyword: string,
@@ -150,7 +155,7 @@ export const useTravelListByLocation = (
   });
 };
 
-// 3.1 여행 루트 조회 (GET)
+// 여행 루트 조회 (GET)
 export const useScheduleTravelRoute = (
   scheduleId: number,
   page = 1,
@@ -160,5 +165,23 @@ export const useScheduleTravelRoute = (
     queryKey: ['scheduleTravelRouteList', scheduleId, page],
     queryFn: () => fetchTravelRoute(scheduleId, page),
     enabled,
+  });
+};
+
+// 일정 만들기 - 참석자 관련
+// 일정 나가기
+export const useUpdateScheduleAttendees = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+                   scheduleId,
+                   attendeeList,
+                 }: {
+      scheduleId: number;
+      attendeeList: { userId: string; role: string; permission: string }[];
+    }) => updateScheduleAttendees(scheduleId, attendeeList),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['scheduleDetailList'] });
+    },
   });
 };
