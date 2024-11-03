@@ -5,7 +5,7 @@ import styles from '@/styles/Schedule.module.css';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import Image from 'next/image';
-import locationIcon from '../../../public/assets/icons/ic_location.png';
+import locationIcon from '../../../public/assets/images/일정 만들기/일정 생성/scheduleDate_mapIcon.png';
 import { useParams } from 'next/navigation';
 import { Place } from '@/types/scheduleType';
 
@@ -18,7 +18,7 @@ interface PlaceItemProps {
 
 const PlaceItem = ({ place, index, movePlace, onDelete }: PlaceItemProps) => {
   const ref = useRef<HTMLLIElement>(null);
-  
+
   const [, drop] = useDrop({
     accept: 'PLACE',
     hover(item: any) {
@@ -30,7 +30,7 @@ const PlaceItem = ({ place, index, movePlace, onDelete }: PlaceItemProps) => {
       item.index = hoverIndex;
     },
   });
-  
+
   const [{ isDragging }, drag] = useDrag({
     type: 'PLACE',
     item: { index },
@@ -42,9 +42,9 @@ const PlaceItem = ({ place, index, movePlace, onDelete }: PlaceItemProps) => {
       }
     },
   });
-  
+
   drag(drop(ref));
-  
+
   return (
     <li
       ref={ref}
@@ -84,11 +84,14 @@ const DeleteDropZone = () => {
     accept: 'PLACE',
     drop: () => ({ isDelete: true }),
   });
-  
-  const setRef = useCallback((node: HTMLDivElement | null) => {
-    if (node) drop(node);
-  }, [drop]);
-  
+
+  const setRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (node) drop(node);
+    },
+    [drop]
+  );
+
   return (
     <div ref={setRef} className={styles.deleteZone}>
       ❌ 삭제 하기 ❌
@@ -104,17 +107,19 @@ const ScheduleRoute = ({ places }: ScheduleRouteProps) => {
   const [routePlaces, setRoutePlaces] = useState<Place[]>([]);
   const { scheduleId } = useParams();
   const travelRouteQuery = useScheduleTravelRoute(Number(scheduleId), 1, true);
-  
+
   useEffect(() => {
     if (travelRouteQuery.isSuccess && travelRouteQuery.data?.data?.content) {
-      const apiPlaces = travelRouteQuery.data.data.content.map((place: Place) => ({
-        ...place,
-        detailAddress: place.detailAddress ?? '',
-      }));
+      const apiPlaces = travelRouteQuery.data.data.content.map(
+        (place: Place) => ({
+          ...place,
+          detailAddress: place.detailAddress ?? '',
+        })
+      );
       setRoutePlaces(apiPlaces);
     }
   }, [travelRouteQuery.isSuccess, travelRouteQuery.data]);
-  
+
   useEffect(() => {
     if (places) {
       setRoutePlaces((prevPlaces) => [
@@ -125,7 +130,7 @@ const ScheduleRoute = ({ places }: ScheduleRouteProps) => {
       ]);
     }
   }, [places]);
-  
+
   const movePlace = (dragIndex: number, hoverIndex: number) => {
     const draggedPlace = routePlaces[dragIndex];
     const updatedPlaces = [...routePlaces];
@@ -133,15 +138,15 @@ const ScheduleRoute = ({ places }: ScheduleRouteProps) => {
     updatedPlaces.splice(hoverIndex, 0, draggedPlace);
     setRoutePlaces(updatedPlaces);
   };
-  
+
   const handleDelete = (index: number) => {
     setRoutePlaces((prevPlaces) => prevPlaces.filter((_, i) => i !== index));
   };
-  
+
   if (travelRouteQuery.isLoading) return <DataLoading />;
   if (travelRouteQuery.error)
     return <p>데이터를 불러오는데 오류가 발생했습니다.</p>;
-  
+
   return (
     <DndProvider backend={HTML5Backend}>
       <ul className={styles.routeList}>

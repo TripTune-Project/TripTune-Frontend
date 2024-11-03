@@ -16,7 +16,11 @@ import HomeImage from '../../public/assets/images/메인화면/ocean.jpg';
 import searchIcon from '../../public/assets/images/메인화면/main_searchIcon.png';
 import locationIcon from '../../public/assets/images/메인화면/main_slideMapIcon.png';
 import mainLinkBtn from '../../public/assets/images/메인화면/main_LinkBtn.png';
-import pictureImage from '../../public/assets/images/pictureImage.png';
+import pictureImage1 from '../../public/assets/images/메인화면/광화문.jpg';
+import pictureImage2 from '../../public/assets/images/메인화면/성산일출봉.jpg';
+import pictureImage3 from '../../public/assets/images/메인화면/에펠탑.jpg';
+import pictureImage4 from '../../public/assets/images/메인화면/타워브릿지.jpg';
+import pictureImage5 from '../../public/assets/images/메인화면/seoul.png';
 
 const StyledSwiperContainer = styled.div`
   overflow: hidden;
@@ -87,34 +91,34 @@ const Home = () => {
 
   const images = [
     {
-      src: pictureImage,
-      alt: '경복궁',
-      title: '경복궁',
-      description: '서울 종로구 경복궁',
+      src: pictureImage1,
+      alt: '광화문',
+      title: '광화문',
+      description: '서울 종로구 효자로 12 국립고궁박물관',
     },
     {
-      src: pictureImage,
-      alt: '남산타워',
-      title: '남산타워',
-      description: '서울 용산구 남산타워',
+      src: pictureImage2,
+      alt: '성산일출봉',
+      title: '성산일출봉',
+      description: '제주 서귀포시 성산읍 성산리 1',
     },
     {
-      src: pictureImage,
-      alt: '한라산',
-      title: '한라산',
-      description: '제주 서귀포시 한라산',
+      src: pictureImage3,
+      alt: '에펠탑',
+      title: '에펠탑',
+      description: 'Av. Gustave Eiffel, 75007 Paris France',
     },
     {
-      src: pictureImage,
-      alt: '해운대 해수욕장',
-      title: '해운대 해수욕장',
-      description: '부산 해운대구 해운대 해수욕장',
+      src: pictureImage4,
+      alt: '타워브릿지',
+      title: '타워브릿지',
+      description: 'Tower Bridge Road, London SE1 2UP England',
     },
     {
-      src: pictureImage,
-      alt: '동대문 디자인 플라자',
-      title: '동대문 디자인 플라자',
-      description: '서울 중구 동대문 디자인 플라자',
+      src: pictureImage5,
+      alt: '서울',
+      title: '서울',
+      description: '서울',
     },
   ];
 
@@ -191,7 +195,7 @@ const Home = () => {
                       />
                     </div>
                     <Image
-                      src='/assets/images/homeScheduleImage.png'
+                      src='/assets/images/메인화면/scheduleIcon.png'
                       className={styles.time}
                       alt='일정 만들기'
                       width={98}
@@ -212,7 +216,7 @@ const Home = () => {
                       />
                     </div>
                     <Image
-                      src='/assets/images/homeMapImage.png'
+                      src='/assets/images/메인화면/mapIcon.png'
                       className={styles.travel}
                       alt='여행지 탐색'
                       width={98}

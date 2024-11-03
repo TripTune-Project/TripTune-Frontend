@@ -60,29 +60,6 @@
   display: flex;
 }
 
-.allSchedule,
-.allShareSchedule {
-  width: 105.075px;
-  height: 32px;
-  flex-shrink: 0;
-  border-radius: 25px;
-  background: #a7cdcc;
-  flex-direction: column;
-  justify-content: center;
-  color: #fff;
-  text-align: center;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-  margin: 0 5px;
-}
-
-.allShareSchedule {
-  background: #ededed;
-  color: #000000;
-}
-
 .inputField {
   flex: 1;
   width: 722px;
@@ -137,6 +114,94 @@
 }
 
 /*일정 만들기 : 일정 만들기 최근 목록 틀*/
+.schedule {
+  margin: 0;
+  padding: 0;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.schedule::before {
+  content: '';
+  position: absolute;
+  width: 80vw;
+  height: 601px;
+  border-radius: 0 0 0 200px;
+  background: linear-gradient(264deg, #edf9f7 3.98%, #f1f5ff 98.44%);
+  top: 10%;
+  left: 20%;
+  z-index: -1;
+}
+
+.scheduleTop {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+}
+
+.scheduleImg {
+  width: 1920px;
+  height: 290px;
+  flex-shrink: 0;
+  background: rgba(0, 0, 0, 0.2);
+  display: inline-block;
+  object-fit: cover;
+  margin: 0;
+}
+
+.scheduleExplainDiv,
+.scheduleExplainP,
+.createAddButton {
+  color: #ffffff;
+  font-family: 'Noto Sans KR', sans-serif;
+  position: absolute;
+  left: 7%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.scheduleExplainDiv {
+  top: 18%;
+  font-weight: 800;
+  color: #fff;
+  text-align: center;
+  justify-content: center;
+  font-size: 30px;
+  font-style: normal;
+  line-height: 15px;
+  margin-left: 38%;
+}
+
+.scheduleExplainP {
+  top: 25%;
+  font-size: 20px;
+  font-weight: 500;
+  text-align: center;
+  justify-content: center;
+  margin-left: 32%;
+}
+
+.createAddButton {
+  top: 80%;
+  display: flex;
+  width: 338px;
+  height: 57px;
+  flex-direction: column;
+  text-align: center;
+  flex-shrink: 0;
+  color: #fff;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  background-color: black;
+  border-radius: 50px;
+  padding: 8px 20px 12px 120px;
+  margin-left: 38%;
+}
+
 .createContainer {
   margin-left: 10%;
   width: 1296px;
@@ -157,6 +222,44 @@
   z-index: -1;
 }
 
+.scheduleCounter,
+.scheduleCounterShare {
+  display: inline-flex;
+  align-items: center;
+  color: #76adac;
+  margin-right: 20px;
+  font-size: 22px;
+  font-weight: 700;
+  word-wrap: break-word;
+  margin-top: 77px;
+  margin-bottom: 17px;
+  margin-left: -90px;
+}
+
+.scheduleCounter .counterNumber,
+.scheduleCounterShare .counterNumber {
+  display: inline-block;
+  background-color: #76adac;
+  font-size: 18px;
+  font-weight: 700;
+  word-wrap: break-word;
+  color: #ffffff;
+  padding: 5px 10px;
+  border-radius: 20px;
+  margin-left: 10px;
+  width: 25px;
+  height: 25px;
+}
+
+.scheduleCounterShare {
+  color: #666666;
+  margin-left: 10px;
+}
+
+.scheduleCounterShare .counterNumber {
+  background-color: #666666;
+}
+
 .scheduleTitle {
   font-size: 32px;
   font-weight: bold;
@@ -166,22 +269,21 @@
   font-family: 'Noto Sans KR', sans-serif;
 }
 
-.createAddButton {
-  background-color: #76adac;
-  color: white;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 18px;
-  font-family: 'Noto Sans KR', sans-serif;
-  transition: background-color 0.3s ease;
-  margin-bottom: 30px;
-  float: right;
+.scheduleView {
+  display: flex;
+  position: relative;
 }
 
-.createAddButton:hover {
-  background-color: #76adac;
+.scheduleText {
+  flex: 1;
+  text-align: center;
+  color: #fff;
+  padding-right: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 50%;
+  font-family: 'Noto Sans KR', sans-serif;
 }
 
 .loadingArea {
@@ -192,6 +294,7 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  margin-left: 150px;
 }
 
 .deleteModal {
@@ -214,9 +317,15 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
+  margin-left: -7%;
 }
 
 .scheduleItem {
+  width: 416px;
+  height: 308px;
+  flex-shrink: 0;
+  border: 1px solid #d9d9d9;
+  background: #fff;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -224,21 +333,15 @@
   transition: box-shadow 0.3s ease;
 }
 
-.scheduleItem:hover .hoverMenu {
-  opacity: 1;
-}
-
 .hoverMenu {
   position: absolute;
   top: 0;
   left: 0;
-  width: 256px;
-  height: 158px;
-  background-color: rgba(0, 0, 0, 0.5);
+  width: 417px;
+  height: 308px;
   display: flex;
   justify-content: center;
   align-items: center;
-  opacity: 0;
   transition: opacity 0.3s ease;
 }
 
@@ -247,7 +350,7 @@
   top: 0;
   right: 10px;
   padding: 5px;
-  color: #ffffff;
+  color: black;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -281,8 +384,16 @@
 
 .scheduleImage {
   object-fit: cover;
-  width: 256px;
-  height: 158px;
+  width: 417px;
+  height: 212px;
+}
+
+.scheduleImageProfile {
+  margin-top: -40px;
+  margin-right: 15px;
+  width: 26px;
+  height: 26px;
+  float: right;
 }
 
 .scheduleContent {
@@ -558,8 +669,8 @@
 }
 
 .noImage {
-  width: 256px;
-  height: 158px;
+  width: 417px;
+  height: 308px;
   position: relative;
   display: flex;
   align-items: center;
@@ -570,12 +681,12 @@
 }
 
 .deleteZone {
-  margin-left:40%;
-  margin-top:100px;
-  width:120px;
-  height:30px;
-  color:#ffffff;
-  background-color:#004a55;
+  margin-left: 40%;
+  margin-top: 100px;
+  width: 120px;
+  height: 30px;
+  color: #ffffff;
+  background-color: #004a55;
 }
 
 .placeInfo {
@@ -633,14 +744,28 @@
   cursor: pointer;
 }
 
+.travelSearchContainerSearch,
 .travelSearchContainer {
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  margin-top: -57px;
+  margin-bottom: 17px;
+  margin-right: -340px;
+  gap: 10px;
+}
+
+.travelSearchContainerSearch {
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 20px;
+  margin-top: 0;
+  margin-right: 0;
   gap: 10px;
 }
 
+.travelSearchContainerSearch input,
 .travelSearchContainer input {
   width: 350px;
   padding: 10px 15px;
@@ -651,12 +776,14 @@
   transition: all 0.3s ease;
 }
 
+.travelSearchContainerSearch input:focus,
 .travelSearchContainer input:focus {
   border-color: #76adac;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   outline: none;
 }
 
+.travelSearchContainerSearch button,
 .travelSearchContainer button {
   padding: 10px 20px;
   background-color: #76adac;
@@ -850,8 +977,8 @@
 }
 
 .closeButton {
-  width:15px;
-  height:15px;
+  width: 15px;
+  height: 15px;
   position: absolute;
   background: none;
   border: none;
@@ -916,4 +1043,183 @@
 
 .linkContainer input[type='radio'] {
   margin-right: 10px;
+}
+
+/* 일정 목록이 없을 때 표시하는 메시지 컨테이너 */
+.noScheduleContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 100px;
+  color: #555;
+}
+
+.noScheduleIcon {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 20px;
+}
+
+.noScheduleMessage {
+  font-size: 22px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.noScheduleSubMessage {
+  font-size: 18px;
+  color: #777;
+}
+
+/* 일정 검색 바 */
+.travelSearchContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: -57px;
+  margin-bottom: 17px;
+  gap: 10px;
+}
+
+.travelSearchContainer input {
+  width: 350px;
+  padding: 10px 15px;
+  font-size: 16px;
+  border-radius: 25px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.travelSearchContainer input:focus {
+  border-color: #76adac;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  outline: none;
+}
+
+.travelSearchContainer button {
+  padding: 10px 20px;
+  background-color: #76adac;
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 일정 리스트와 항목 스타일 */
+.scheduleList {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-left: -7%;
+}
+
+.scheduleItem {
+  width: 416px;
+  height: 308px;
+  border: 1px solid #d9d9d9;
+  background: #fff;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  transition: box-shadow 0.3s ease;
+}
+
+.scheduleItem:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.hoverMenu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 417px;
+  height: 308px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.3s ease;
+}
+
+.threeDots {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  padding: 5px;
+  color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.deleteMenu {
+  position: absolute;
+  top: 40px;
+  right: 10px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
+
+.deleteButton,
+.leaveButton {
+  background-color: #f44336;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.leaveButton {
+  background-color: #ff9800;
+}
+
+.deleteButton:hover,
+.leaveButton:hover {
+  opacity: 0.8;
+}
+
+/* 로딩 및 에러 영역 스타일 */
+.loadingArea {
+  margin-top: 50px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.deleteModal {
+  position: fixed;
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ffffff;
+  padding: 20px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.deleteModal button {
+  margin: 0 10px;
+}
+
+.deleteModal p {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  margin-bottom: 15px;
 }

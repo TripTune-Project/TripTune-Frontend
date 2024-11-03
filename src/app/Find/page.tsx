@@ -12,7 +12,7 @@ const FindPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const initialTab = searchParams.get('tab') || 'findId';
-  
+
   const [tab, setTab] = useState<'findId' | 'findPassword'>(
     initialTab as 'findId' | 'findPassword'
   );
@@ -27,16 +27,16 @@ const FindPage = () => {
   const [loading, setLoading] = useState(false);
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [isUserIdValid, setIsUserIdValid] = useState(false);
-  
+
   useEffect(() => {
     setTab(initialTab as 'findId' | 'findPassword');
   }, [initialTab]);
-  
+
   useEffect(() => {
     setIsEmailValid(validateEmail(email) === true);
     setIsUserIdValid(validateUserId(userId) === true);
   }, [email, userId]);
-  
+
   const handleTabChange = (tab: 'findId' | 'findPassword') => {
     setTab(tab);
     setEmail('');
@@ -45,18 +45,18 @@ const FindPage = () => {
     setErrorMessage('');
     setAlertOpen(false);
   };
-  
+
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
   };
-  
+
   const handleUserIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUserId(event.target.value);
   };
-  
+
   const handleFindIdSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    
+
     if (!isEmailValid) {
       setErrorMessage('유효한 이메일을 입력해주세요.');
       setAlertSeverity('error');
@@ -64,7 +64,7 @@ const FindPage = () => {
       setTimeout(() => setAlertOpen(false), 5000);
       return;
     }
-    
+
     setLoading(true);
     try {
       const responseMessage = await requestFindId(email);
@@ -84,10 +84,10 @@ const FindPage = () => {
       setLoading(false);
     }
   };
-  
+
   const handleFindPasswordSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    
+
     if (!isEmailValid || !isUserIdValid) {
       setErrorMessage('유효한 이메일과 아이디를 입력해주세요.');
       setAlertSeverity('error');
@@ -95,7 +95,7 @@ const FindPage = () => {
       setTimeout(() => setAlertOpen(false), 5000);
       return;
     }
-    
+
     setLoading(true);
     try {
       const responseMessage = await requestFindPassword(email, userId);
@@ -129,20 +129,26 @@ const FindPage = () => {
       }, 5000);
     }
   };
-  
+
   return (
     <>
       <Head>
         <title>아이디 / 비밀번호 찾기</title>
-        <meta name="description" content="아이디 및 비밀번호 찾기 페이지입니다. 이메일과 아이디를 입력하여 정보를 찾으세요." />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta property="og:title" content="아이디 / 비밀번호 찾기" />
-        <meta property="og:description" content="아이디와 비밀번호를 찾는 페이지입니다." />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://triptune.netlify.app/Find" />
-        <meta name="robots" content="noindex, nofollow" />
+        <meta
+          name='description'
+          content='아이디 및 비밀번호 찾기 페이지입니다. 이메일과 아이디를 입력하여 정보를 찾으세요.'
+        />
+        <meta name='viewport' content='width=device-width, initial-scale=1' />
+        <meta property='og:title' content='아이디 / 비밀번호 찾기' />
+        <meta
+          property='og:description'
+          content='아이디와 비밀번호를 찾는 페이지입니다.'
+        />
+        <meta property='og:type' content='website' />
+        <meta property='og:url' content='https://triptune.netlify.app/Find' />
+        <meta name='robots' content='noindex, nofollow' />
       </Head>
-      
+
       <div className={styles.pageContainer}>
         <h1 className={styles.FindTitle}>아이디 / 비밀번호 찾기</h1>
         <div className={styles.tabContainer}>

@@ -38,7 +38,7 @@
 }
 
 .footer {
-  margin-top: 64px;
+  margin-top: 55px;
   padding-top: 5px;
   width: 100vw;
   height: 324px;
@@ -52,7 +52,7 @@
 .email,
 .github,
 .copyright {
-  margin-left: 170px;
+  margin-left: 135px;
   color: #fff;
   font-family: 'Noto Sans KR', serif;
   font-size: 17px;
@@ -62,8 +62,11 @@
 }
 
 .logoImg {
+  width: 183px;
+  height: 55px;
+  flex-shrink: 0;
   margin-top: 40px;
-  margin-left: 145px;
+  margin-left: 125px;
 }
 
 .logoText {
