@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import favicon from '../../public/assets/favicon.ico';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -21,6 +20,7 @@ import pictureImage2 from '../../public/assets/images/메인화면/성산일출�
 import pictureImage3 from '../../public/assets/images/메인화면/에펠탑.jpg';
 import pictureImage4 from '../../public/assets/images/메인화면/타워브릿지.jpg';
 import pictureImage5 from '../../public/assets/images/메인화면/seoul.png';
+import triptuneIcon from '../../public/assets/images/로고/triptuneIcon-removebg.png';
 
 const StyledSwiperContainer = styled.div`
   overflow: hidden;
@@ -232,9 +232,9 @@ const Home = () => {
       <div className={styles.recommendedDestinations}>
         <h2 className={styles.chooseRecomend}>
           <Image
-            src={favicon}
-            alt={'파비콘'}
-            style={{ marginLeft: '-15px' }}
+            src={triptuneIcon}
+            alt={'홈화면'}
+            width={"30"}
             priority
           />
           추천 여행지
