@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Pagination from '../../components/Travel/Pagination';
 import PlacesMap from '../../components/Travel/PlacesMap';
@@ -24,7 +24,7 @@ import locationIcon from '../../../public/assets/images/여행지 탐색/홈화�
 
 const TravelPage = () => {
   const router = useRouter();
-
+  
   const {
     currentPage,
     searchTerm,
@@ -33,11 +33,11 @@ const TravelPage = () => {
     setSearchTerm,
     setIsSearching,
   } = useTravelStore();
-
+  
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertSeverity, setAlertSeverity] = useState<AlertColor>('info');
-
+  
   const {
     userCoordinates,
     errorMessage: geoErrorMessage,
@@ -47,12 +47,12 @@ const TravelPage = () => {
     latitude: number;
     longitude: number;
   } | null>(null);
-
+  
   const defaultCoordinates = {
     latitude: 37.5642135,
     longitude: 127.0016985,
   };
-
+  
   const {
     data: locationData,
     isLoading: isLoadingLocation,
@@ -62,7 +62,7 @@ const TravelPage = () => {
     currentPage,
     !isSearching
   );
-
+  
   const {
     data: searchData,
     isLoading: isLoadingSearch,
@@ -76,9 +76,9 @@ const TravelPage = () => {
     currentPage,
     isSearching
   );
-
+  
   const debouncedSearchTerm = useDebounce(searchTerm, 800);
-
+  
   useEffect(() => {
     if (permissionState === 'granted' && userCoordinates) {
       setCoordinates(userCoordinates);
@@ -91,7 +91,7 @@ const TravelPage = () => {
       }
     }
   }, [permissionState, userCoordinates, geoErrorMessage]);
-
+  
   useEffect(() => {
     if (debouncedSearchTerm.trim()) {
       setIsSearching(true);
@@ -108,8 +108,8 @@ const TravelPage = () => {
     setCurrentPage,
     setIsSearching,
   ]);
-
-  const handleSearch = useCallback(() => {
+  
+  const handleSearch = () => {
     if (searchTerm.trim()) {
       setIsSearching(true);
       setCurrentPage(1);
@@ -117,29 +117,29 @@ const TravelPage = () => {
     } else {
       alert('검색어를 입력해주세요.');
     }
-  }, [searchTerm, setIsSearching, setCurrentPage, refetchSearch]);
-
+  };
+  
   const handleSearchInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const input = event.target.value;
     const regex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]*$/;
-
+    
     if (regex.test(input)) {
       setSearchTerm(input);
     } else {
       alert('특수문자는 사용할 수 없습니다. 다른 검색어를 입력해 주세요.');
     }
   };
-
-  const handleSearchInputBlur = useCallback(() => {
+  
+  const handleSearchInputBlur = () => {
     if (searchTerm.trim() === '') {
       setIsSearching(false);
       setCurrentPage(1);
       refetchLocation();
     }
-  }, [searchTerm, setIsSearching, setCurrentPage, refetchLocation]);
-
+  };
+  
   const handleSearchKeyPress = (
     event: React.KeyboardEvent<HTMLInputElement>
   ) => {
@@ -147,46 +147,34 @@ const TravelPage = () => {
       handleSearch();
     }
   };
-  useCallback(() => {
-    setSearchTerm('');
-    setIsSearching(false);
-    setCurrentPage(1);
-    refetchLocation();
-  }, [setSearchTerm, setIsSearching, setCurrentPage, refetchLocation]);
-
-  const toggleBookmark = useCallback(
-    async (placeId: number, isBookmarked = false) => {
-      try {
-        if (isBookmarked) {
-          await BookMarkDeleteApi({ placeId });
-          setAlertMessage('북마크가 해제되었습니다.');
-        } else {
-          await BookMarkApi({ placeId });
-          setAlertMessage('북마크가 등록되었습니다.');
-        }
-        setAlertSeverity('success');
-        setAlertOpen(true);
-      } catch (error) {
-        setAlertMessage('북마크 처리 중 오류가 발생했습니다.');
-        setAlertSeverity('error');
-        setAlertOpen(true);
+  
+  const toggleBookmark = async (placeId: number, isBookmarked = false) => {
+    try {
+      if (isBookmarked) {
+        await BookMarkDeleteApi({ placeId });
+        setAlertMessage('북마크가 해제되었습니다.');
+      } else {
+        await BookMarkApi({ placeId });
+        setAlertMessage('북마크가 등록되었습니다.');
       }
-    },
-    []
-  );
-
-  const handleAlertClose = useCallback(
-    (event?: React.SyntheticEvent | Event, reason?: string) => {
-      if (reason === 'clickaway') return;
-      setAlertOpen(false);
-    },
-    []
-  );
-
+      setAlertSeverity('success');
+      setAlertOpen(true);
+    } catch (error) {
+      setAlertMessage('북마크 처리 중 오류가 발생했습니다.');
+      setAlertSeverity('error');
+      setAlertOpen(true);
+    }
+  };
+  
+  const handleAlertClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') return;
+    setAlertOpen(false);
+  };
+  
   const handleDetailClick = (placeId: number) => {
     router.push(`/Travel/${placeId}`);
   };
-
+  
   const calculateTravelTime = (distance: number) => {
     if (isNaN(distance)) {
       return {
@@ -194,36 +182,33 @@ const TravelPage = () => {
         driving: '차로 거리 정보 없음',
       };
     }
-
+    
     const distanceInKm = Math.floor(distance * 10) / 10;
     const walkingSpeed = 5;
     const drivingSpeed = 50;
-
+    
     const walkingTime = Math.round((distanceInKm / walkingSpeed) * 60);
     const drivingTime = Math.round((distanceInKm / drivingSpeed) * 60);
-
+    
     return {
       walking: `도보 ${walkingTime}분 (${distanceInKm} km)`,
       driving: `차로 ${drivingTime}분 (${distanceInKm} km)`,
     };
   };
-
+  
   const places = isSearching
     ? searchData?.data?.content
     : locationData?.data?.content;
-
+  
   const totalPages = isSearching
     ? (searchData?.data?.totalPages ?? 0)
     : (locationData?.data?.totalPages ?? 0);
-
-  const handlePageChange = useCallback(
-    (page: number) => {
-      setCurrentPage(page);
-      window.scrollTo(0, 0);
-    },
-    [setCurrentPage]
-  );
-
+  
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo(0, 0);
+  };
+  
   return (
     <>
       <Head>

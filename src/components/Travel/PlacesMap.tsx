@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { TravelPlace } from '@/types/travelType';
 
 const containerStyle = {
@@ -21,8 +21,8 @@ const PlacesMap = ({ places }: MapProps) => {
   const [zoom, setZoom] = useState(16);
   const [center, setCenter] = useState(defaultCenter);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
-
-  const loadGoogleMapsScript = useCallback(() => {
+  
+  const loadGoogleMapsScript = () => {
     const existingScript = document.getElementById('google-maps-script');
     if (!existingScript) {
       const script = document.createElement('script');
@@ -41,9 +41,9 @@ const PlacesMap = ({ places }: MapProps) => {
       setIsMapLoaded(true);
       initializeMap();
     }
-  }, []);
-
-  const initializeMap = useCallback(() => {
+  };
+  
+  const initializeMap = () => {
     if (mapContainerRef.current && !mapRef.current && window.google) {
       mapRef.current = new google.maps.Map(mapContainerRef.current, {
         center: defaultCenter,
@@ -51,25 +51,25 @@ const PlacesMap = ({ places }: MapProps) => {
         mapId: process.env.NEXT_PUBLIC_GOOGLE_MAPS_STYLE_ID,
       });
     }
-  }, []);
-
+  };
+  
   useEffect(() => {
     loadGoogleMapsScript();
-
+    
     return () => {
       if (mapRef.current) {
         google.maps.event.clearInstanceListeners(mapRef.current);
         mapRef.current = null;
       }
     };
-  }, [loadGoogleMapsScript]);
-
+  }, []);
+  
   useEffect(() => {
     if (isMapLoaded) {
       initializeMap();
     }
-  }, [isMapLoaded, initializeMap]);
-
+  }, [isMapLoaded]);
+  
   useEffect(() => {
     const map = mapRef.current;
     if (map && isMapLoaded) {
@@ -85,7 +85,7 @@ const PlacesMap = ({ places }: MapProps) => {
       map.fitBounds(bounds);
     }
   }, [places, isMapLoaded]);
-
+  
   useEffect(() => {
     const map = mapRef.current;
     if (map) {
@@ -95,27 +95,27 @@ const PlacesMap = ({ places }: MapProps) => {
           setZoom(newZoom);
         }
       };
-
+      
       const handleCenterChange = () => {
         const newCenter = map.getCenter();
         if (newCenter) {
           setCenter({ lat: newCenter.lat(), lng: newCenter.lng() });
         }
       };
-
+      
       const zoomListener = map.addListener('zoom_changed', handleZoomChange);
       const centerListener = map.addListener(
         'center_changed',
         handleCenterChange
       );
-
+      
       return () => {
         google.maps.event.removeListener(zoomListener);
         google.maps.event.removeListener(centerListener);
       };
     }
   }, []);
-
+  
   return <div ref={mapContainerRef} style={containerStyle} />;
 };
 

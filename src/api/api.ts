@@ -28,8 +28,18 @@ const handleTokenRefresh = async (): Promise<string | null> => {
   if (window.location.pathname === '/Login') {
     return null;
   }
-  await refreshApi();
-  return null;
+  return refreshApi();
+};
+
+const handleRedirectToLogin = (message: string) => {
+  if (!isRedirectingToLogin && window.location.pathname !== '/Login') {
+    isRedirectingToLogin = true;
+    alert(message);
+    Cookies.remove('trip-tune_at');
+    Cookies.remove('trip-tune_rt');
+    Cookies.remove('userId');
+    window.location.href = '/Login';
+  }
 };
 
 const fetchData = async <T>(
@@ -37,63 +47,41 @@ const fetchData = async <T>(
   options: FetchOptions = {}
 ): Promise<T> => {
   const url = `${BASE_URL}${endpoint}`;
-
   let headers: HeadersInit = {
     ...DEFAULT_HEADERS,
     ...options.headers,
   };
-
+  
   if (options.requiresAuth) {
-    headers = { ...headers, ...getAuthHeaders() };
+    try {
+      headers = { ...headers, ...getAuthHeaders() };
+    } catch {
+      handleRedirectToLogin('액세스 토큰이 없습니다. 다시 로그인 해주세요.');
+    }
   }
-
-  const requestConfig: FetchOptions & { url: string } = {
-    ...options,
-    headers,
-    url,
-  };
-
+  
+  const requestConfig: FetchOptions = { ...options, headers };
   let response = await fetch(url, requestConfig);
-
+  
   if (response.status === 401 || response.status === 400) {
     if (!isRetrying) {
-      isRetrying = true;
+      isRetrying = true; // 중복 요청 방지
       const newAccessToken = await handleTokenRefresh();
       if (newAccessToken) {
         headers = { ...headers, Authorization: `Bearer ${newAccessToken}` };
         response = await fetch(url, { ...requestConfig, headers });
       } else {
-        if (!isRedirectingToLogin && window.location.pathname !== '/Login') {
-          isRedirectingToLogin = true;
-          alert('세션이 만료되었습니다. 다시 로그인해주세요.');
-          Cookies.remove('trip-tune_at');
-          Cookies.remove('trip-tune_rt');
-          Cookies.remove('userId');
-          window.location.href = '/Login';
-        }
-        return Promise.reject(
-          '토큰 갱신에 실패했습니다. 로그인 페이지로 이동합니다.'
-        );
+        handleRedirectToLogin('토큰 갱신에 실패했습니다. 다시 로그인 해주세요.');
       }
     } else {
-      if (!isRedirectingToLogin && window.location.pathname !== '/Login') {
-        isRedirectingToLogin = true;
-        alert('토큰 갱신 시도 후에도 실패했습니다. 다시 로그인해주세요.');
-        Cookies.remove('trip-tune_at');
-        Cookies.remove('trip-tune_rt');
-        Cookies.remove('userId');
-        window.location.href = '/Login';
-      }
-      return Promise.reject(
-        '토큰 갱신 시도 후에도 실패했습니다. 로그인 페이지로 이동합니다.'
-      );
+      handleRedirectToLogin('토큰 갱신 시도 후에도 실패했습니다. 다시 로그인 해주세요.');
     }
   }
-
+  
   if (!response.ok) {
     throw new Error(`API 요청 실패: ${response.statusText}`);
   }
-
+  
   isRetrying = false;
   return response.json();
 };

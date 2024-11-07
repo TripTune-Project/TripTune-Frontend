@@ -1,11 +1,11 @@
-import { useEffect, useCallback, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import Cookies from 'js-cookie';
 import { refreshApi } from '@/api/refreshApi';
 
 const useAuth = () => {
   const isRefreshing = useRef(false);
-
-  const isTokenExpired = useCallback((token: string) => {
+  
+  const isTokenExpired = (token: string) => {
     try {
       const [, payload] = token.split('.');
       const decoded = JSON.parse(atob(payload));
@@ -13,17 +13,17 @@ const useAuth = () => {
     } catch (error) {
       return true;
     }
-  }, []);
-
-  const showLoginModal = useCallback(() => {
+  };
+  
+  const showLoginModal = () => {
     const event = new CustomEvent('showLoginModal');
     window.dispatchEvent(event);
-  }, []);
-
-  const checkAuthStatus = useCallback(async () => {
+  };
+  
+  const checkAuthStatus = async () => {
     const accessToken = Cookies.get('trip-tune_at');
     const refreshToken = Cookies.get('trip-tune_rt');
-
+    
     if (!accessToken || isTokenExpired(accessToken)) {
       if (refreshToken && !isRefreshing.current) {
         isRefreshing.current = true;
@@ -38,12 +38,12 @@ const useAuth = () => {
         showLoginModal();
       }
     }
-  }, [isTokenExpired, showLoginModal]);
-
+  };
+  
   useEffect(() => {
     checkAuthStatus();
-  }, [checkAuthStatus]);
-
+  }, []);
+  
   return { checkAuthStatus };
 };
 

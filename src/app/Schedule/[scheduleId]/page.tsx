@@ -1,15 +1,21 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import PlacesScheduleMap from '@/components/Schedule/PlacesScheduleMap';
 import ScheduleMake from '@/components/Schedule/ScheduleMake';
 import styles from '../../../styles/Schedule.module.css';
 import Chatting from '@/components/Schedule/Chatting';
+import useAuth from '@/hooks/useAuth';
 
 export default function ScheduleDetail() {
   const [markers, setMarkers] = useState<{ lat: number; lng: number }[]>([]);
-
+  const { checkAuthStatus } = useAuth();
+  
+  useEffect(() => {
+    checkAuthStatus();
+  }, [checkAuthStatus]);
+  
   const handleAddMarker = (marker: { lat: number; lng: number }) => {
     setMarkers((prevMarkers) => [...prevMarkers, marker]);
   };
