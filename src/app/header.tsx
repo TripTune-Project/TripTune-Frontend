@@ -21,9 +21,9 @@ const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userId, setUserId] = useState('');
   const [isAuthChecked, setIsAuthChecked] = useState(false);
-
+  
   const { checkAuthStatus } = useAuth();
-
+  
   useEffect(() => {
     const checkLoginStatus = async () => {
       const storedUserId = Cookies.get('userId');
@@ -36,32 +36,46 @@ const Header = () => {
       }
       setIsAuthChecked(true);
     };
-
+    
     checkLoginStatus();
-  }, []);
-
+    
+    const intervalId = setInterval(() => {
+      checkAuthStatus().catch(() => {
+        setIsLoggedIn(false);
+        setUserId('');
+        Cookies.remove('trip-tune_at');
+        Cookies.remove('trip-tune_rt');
+        Cookies.remove('userId');
+        alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+        router.push('/Login');
+      });
+    }, 5 * 60 * 1000);
+    
+    return () => clearInterval(intervalId);
+  }, [checkAuthStatus, router]);
+  
   useEffect(() => {
     checkAuthStatus();
-
+    
     const handleAuthChange = () => {
       checkAuthStatus();
     };
-
+    
     window.addEventListener('storage', handleAuthChange);
     return () => {
       window.removeEventListener('storage', handleAuthChange);
     };
   }, [checkAuthStatus, isLogoutClicked]);
-
+  
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-
+  
   const handleLogout = async () => {
     setIsLogoutClicked(true);
     closeModal();
     await performLogout();
   };
-
+  
   const performLogout = async () => {
     try {
       await logoutApi();
@@ -73,15 +87,15 @@ const Header = () => {
       setAlertOpen(true);
     }
   };
-
+  
   const handleAlertClose = () => setAlertOpen(false);
-
+  
   const handleLogin = () => {
     router.push(`/Login?next=${encodeURIComponent(pathname)}`);
   };
-
+  
   const isActive = (path: string) => (pathname === path ? styles.active : '');
-
+  
   return (
     <>
       <ul className={styles.headerMenu}>

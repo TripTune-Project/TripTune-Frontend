@@ -19,9 +19,16 @@ import { useDebounce } from '@/hooks/useDebounce';
 import ScheduleImage from '../../../public/assets/images/일정 만들기/일정 목록 조회/computer.jpg';
 import NoscheduleIcon from '../../../public/assets/images/일정 만들기/일정 목록 조회/scheduleIcon.png';
 import searchIcon from '../../../public/assets/images/일정 만들기/일정 목록 조회/searchIcon.png';
+import useAuth from '@/hooks/useAuth';
 
 export default function Schedule() {
   const router = useRouter();
+  const { checkAuthStatus } = useAuth();
+  
+  useEffect(() => {
+    checkAuthStatus();
+  }, [checkAuthStatus]);
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeDeleteMenu, setActiveDeleteMenu] = useState<number | null>(null);
   const [selectedScheduleId, setSelectedScheduleId] = useState<number | null>(null);
