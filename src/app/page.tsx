@@ -231,12 +231,7 @@ const Home = () => {
       </div>
       <div className={styles.recommendedDestinations}>
         <h2 className={styles.chooseRecomend}>
-          <Image
-            src={triptuneIcon}
-            alt={'홈화면'}
-            width={"30"}
-            priority
-          />
+          <Image src={triptuneIcon} alt={'홈화면'} width={'30'} priority />
           추천 여행지
         </h2>
         <button className={styles.onBoardChooseBtn}>전체</button>

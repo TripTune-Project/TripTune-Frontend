@@ -11,11 +11,11 @@ import useAuth from '@/hooks/useAuth';
 export default function ScheduleDetail() {
   const [markers, setMarkers] = useState<{ lat: number; lng: number }[]>([]);
   const { checkAuthStatus } = useAuth();
-  
+
   useEffect(() => {
     checkAuthStatus();
   }, [checkAuthStatus]);
-  
+
   const handleAddMarker = (marker: { lat: number; lng: number }) => {
     setMarkers((prevMarkers) => [...prevMarkers, marker]);
   };

@@ -24,7 +24,7 @@ import locationIcon from '../../../public/assets/images/여행지 탐색/홈화�
 
 const TravelPage = () => {
   const router = useRouter();
-  
+
   const {
     currentPage,
     searchTerm,
@@ -33,11 +33,11 @@ const TravelPage = () => {
     setSearchTerm,
     setIsSearching,
   } = useTravelStore();
-  
+
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertSeverity, setAlertSeverity] = useState<AlertColor>('info');
-  
+
   const {
     userCoordinates,
     errorMessage: geoErrorMessage,
@@ -47,12 +47,12 @@ const TravelPage = () => {
     latitude: number;
     longitude: number;
   } | null>(null);
-  
+
   const defaultCoordinates = {
     latitude: 37.5642135,
     longitude: 127.0016985,
   };
-  
+
   const {
     data: locationData,
     isLoading: isLoadingLocation,
@@ -62,7 +62,7 @@ const TravelPage = () => {
     currentPage,
     !isSearching
   );
-  
+
   const {
     data: searchData,
     isLoading: isLoadingSearch,
@@ -76,9 +76,9 @@ const TravelPage = () => {
     currentPage,
     isSearching
   );
-  
+
   const debouncedSearchTerm = useDebounce(searchTerm, 800);
-  
+
   useEffect(() => {
     if (permissionState === 'granted' && userCoordinates) {
       setCoordinates(userCoordinates);
@@ -91,7 +91,7 @@ const TravelPage = () => {
       }
     }
   }, [permissionState, userCoordinates, geoErrorMessage]);
-  
+
   useEffect(() => {
     if (debouncedSearchTerm.trim()) {
       setIsSearching(true);
@@ -108,7 +108,7 @@ const TravelPage = () => {
     setCurrentPage,
     setIsSearching,
   ]);
-  
+
   const handleSearch = () => {
     if (searchTerm.trim()) {
       setIsSearching(true);
@@ -118,20 +118,20 @@ const TravelPage = () => {
       alert('검색어를 입력해주세요.');
     }
   };
-  
+
   const handleSearchInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const input = event.target.value;
     const regex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]*$/;
-    
+
     if (regex.test(input)) {
       setSearchTerm(input);
     } else {
       alert('특수문자는 사용할 수 없습니다. 다른 검색어를 입력해 주세요.');
     }
   };
-  
+
   const handleSearchInputBlur = () => {
     if (searchTerm.trim() === '') {
       setIsSearching(false);
@@ -139,7 +139,7 @@ const TravelPage = () => {
       refetchLocation();
     }
   };
-  
+
   const handleSearchKeyPress = (
     event: React.KeyboardEvent<HTMLInputElement>
   ) => {
@@ -147,7 +147,7 @@ const TravelPage = () => {
       handleSearch();
     }
   };
-  
+
   const toggleBookmark = async (placeId: number, isBookmarked = false) => {
     try {
       if (isBookmarked) {
@@ -165,16 +165,19 @@ const TravelPage = () => {
       setAlertOpen(true);
     }
   };
-  
-  const handleAlertClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+
+  const handleAlertClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
     if (reason === 'clickaway') return;
     setAlertOpen(false);
   };
-  
+
   const handleDetailClick = (placeId: number) => {
     router.push(`/Travel/${placeId}`);
   };
-  
+
   const calculateTravelTime = (distance: number) => {
     if (isNaN(distance)) {
       return {
@@ -182,33 +185,33 @@ const TravelPage = () => {
         driving: '차로 거리 정보 없음',
       };
     }
-    
+
     const distanceInKm = Math.floor(distance * 10) / 10;
     const walkingSpeed = 5;
     const drivingSpeed = 50;
-    
+
     const walkingTime = Math.round((distanceInKm / walkingSpeed) * 60);
     const drivingTime = Math.round((distanceInKm / drivingSpeed) * 60);
-    
+
     return {
       walking: `도보 ${walkingTime}분 (${distanceInKm} km)`,
       driving: `차로 ${drivingTime}분 (${distanceInKm} km)`,
     };
   };
-  
+
   const places = isSearching
     ? searchData?.data?.content
     : locationData?.data?.content;
-  
+
   const totalPages = isSearching
     ? (searchData?.data?.totalPages ?? 0)
     : (locationData?.data?.totalPages ?? 0);
-  
+
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo(0, 0);
   };
-  
+
   return (
     <>
       <Head>
@@ -229,120 +232,122 @@ const TravelPage = () => {
         <meta property='og:image' content='/assets/Logo.png' />
         <meta name='viewport' content='width=device-width, initial-scale=1' />
       </Head>
-      <div className={styles.container}>
+      <>
         {isLoadingLocation || isLoadingSearch ? (
           <DataLoading />
         ) : (
-          <div className={styles.listContainer}>
-            <div className={styles.searchContainer}>
-              <input
-                type='text'
-                placeholder='원하는 여행지를 검색하세요.'
-                value={searchTerm}
-                onChange={handleSearchInputChange}
-                onKeyPress={handleSearchKeyPress}
-                onBlur={handleSearchInputBlur}
-                className={styles.input}
-              />
-              <button onClick={handleSearch} className={styles.searchButton}>
-                검색
-              </button>
-            </div>
-            <ul className={styles.placeList}>
-              {places && places.length > 0 ? (
-                places.map((place) => {
-                  const { walking, driving } = calculateTravelTime(
-                    place.distance
-                  );
-                  return (
-                    <li
-                      key={place.placeId}
-                      className={styles.placeItem}
-                      onClick={() => handleDetailClick(place.placeId)}
-                    >
-                      <div className={styles.placeThumbnail}>
-                        {place.thumbnailUrl ? (
-                          <Image
-                            src={place.thumbnailUrl}
-                            alt={place.placeName}
-                            width={150}
-                            height={150}
-                            className={styles.thumbnailImage}
-                            priority
-                          />
-                        ) : (
-                          <div className={styles.noImage}>이미지 없음</div>
-                        )}
-                      </div>
-                      <div className={styles.placeInfo}>
-                        <button
-                          className={styles.bookmarkButton}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleBookmark(
-                              place.placeId,
-                              place.isBookmarked ?? false
-                            );
-                          }}
-                        >
-                          {place.isBookmarked ? (
+          <div className={styles.container}>
+            <div className={styles.listContainer}>
+              <div className={styles.searchContainer}>
+                <input
+                  type='text'
+                  placeholder='원하는 여행지를 검색하세요.'
+                  value={searchTerm}
+                  onChange={handleSearchInputChange}
+                  onKeyPress={handleSearchKeyPress}
+                  onBlur={handleSearchInputBlur}
+                  className={styles.input}
+                />
+                <button onClick={handleSearch} className={styles.searchButton}>
+                  검색
+                </button>
+              </div>
+              <ul className={styles.placeList}>
+                {places && places.length > 0 ? (
+                  places.map((place) => {
+                    const { walking, driving } = calculateTravelTime(
+                      place.distance
+                    );
+                    return (
+                      <li
+                        key={place.placeId}
+                        className={styles.placeItem}
+                        onClick={() => handleDetailClick(place.placeId)}
+                      >
+                        <div className={styles.placeThumbnail}>
+                          {place.thumbnailUrl ? (
                             <Image
-                              src={BookMark}
-                              alt='북마크'
-                              width={16}
-                              height={16}
+                              src={place.thumbnailUrl}
+                              alt={place.placeName}
+                              width={150}
+                              height={150}
+                              className={styles.thumbnailImage}
                               priority
                             />
                           ) : (
-                            <Image
-                              src={BookMarkNo}
-                              alt='북마크 해제'
-                              width={16}
-                              height={16}
-                              priority
-                            />
+                            <div className={styles.noImage}>이미지 없음</div>
                           )}
-                        </button>
-                        <div className={styles.placeName}>
-                          {place.placeName}
                         </div>
-                        <p className={styles.placeAddress}>
-                          {`${place.country} / ${place.city} / ${place.district}`}
-                        </p>
-                        <p className={styles.placeDetailAddress}>
-                          <Image
-                            src={locationIcon}
-                            alt='장소'
-                            width={15}
-                            height={21}
-                          />
-                          &nbsp;
-                          {place.address} {place.detailAddress}
-                        </p>
-                        <div className={styles.distanceInfo}>
-                          <span>{walking}</span> | <span>{driving}</span>
+                        <div className={styles.placeInfo}>
+                          <button
+                            className={styles.bookmarkButton}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleBookmark(
+                                place.placeId,
+                                place.isBookmarked ?? false
+                              );
+                            }}
+                          >
+                            {place.isBookmarked ? (
+                              <Image
+                                src={BookMark}
+                                alt='북마크'
+                                width={16}
+                                height={16}
+                                priority
+                              />
+                            ) : (
+                              <Image
+                                src={BookMarkNo}
+                                alt='북마크 해제'
+                                width={16}
+                                height={16}
+                                priority
+                              />
+                            )}
+                          </button>
+                          <div className={styles.placeName}>
+                            {place.placeName}
+                          </div>
+                          <p className={styles.placeAddress}>
+                            {`${place.country} / ${place.city} / ${place.district}`}
+                          </p>
+                          <p className={styles.placeDetailAddress}>
+                            <Image
+                              src={locationIcon}
+                              alt='장소'
+                              width={15}
+                              height={21}
+                            />
+                            &nbsp;
+                            {place.address} {place.detailAddress}
+                          </p>
+                          <div className={styles.distanceInfo}>
+                            <span>{walking}</span> | <span>{driving}</span>
+                          </div>
                         </div>
-                      </div>
-                    </li>
-                  );
-                })
-              ) : (
-                <p className={styles.noResults}>검색 결과가 없습니다.</p>
+                      </li>
+                    );
+                  })
+                ) : (
+                  <p className={styles.noResults}>검색 결과가 없습니다.</p>
+                )}
+              </ul>
+              {places && places.length > 0 && totalPages > 0 && (
+                <Pagination
+                  total={totalPages * 5}
+                  currentPage={currentPage}
+                  pageSize={5}
+                  onPageChange={handlePageChange}
+                />
               )}
-            </ul>
-            {places && places.length > 0 && totalPages > 0 && (
-              <Pagination
-                total={totalPages * 5}
-                currentPage={currentPage}
-                pageSize={5}
-                onPageChange={handlePageChange}
-              />
-            )}
+            </div>
+            <div className={styles.mapContainer}>
+              <PlacesMap places={places || []} />
+            </div>
           </div>
         )}
-        <div className={styles.mapContainer}>
-          <PlacesMap places={places || []} />
-        </div>
         <Snackbar
           open={alertOpen}
           autoHideDuration={3000}
@@ -353,7 +358,7 @@ const TravelPage = () => {
             {alertMessage}
           </Alert>
         </Snackbar>
-      </div>
+      </>
     </>
   );
 };

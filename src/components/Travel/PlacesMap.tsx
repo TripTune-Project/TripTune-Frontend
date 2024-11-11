@@ -21,7 +21,7 @@ const PlacesMap = ({ places }: MapProps) => {
   const [zoom, setZoom] = useState(16);
   const [center, setCenter] = useState(defaultCenter);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
-  
+
   const loadGoogleMapsScript = () => {
     const existingScript = document.getElementById('google-maps-script');
     if (!existingScript) {
@@ -42,7 +42,7 @@ const PlacesMap = ({ places }: MapProps) => {
       initializeMap();
     }
   };
-  
+
   const initializeMap = () => {
     if (mapContainerRef.current && !mapRef.current && window.google) {
       mapRef.current = new google.maps.Map(mapContainerRef.current, {
@@ -52,10 +52,10 @@ const PlacesMap = ({ places }: MapProps) => {
       });
     }
   };
-  
+
   useEffect(() => {
     loadGoogleMapsScript();
-    
+
     return () => {
       if (mapRef.current) {
         google.maps.event.clearInstanceListeners(mapRef.current);
@@ -63,13 +63,13 @@ const PlacesMap = ({ places }: MapProps) => {
       }
     };
   }, []);
-  
+
   useEffect(() => {
     if (isMapLoaded) {
       initializeMap();
     }
   }, [isMapLoaded]);
-  
+
   useEffect(() => {
     const map = mapRef.current;
     if (map && isMapLoaded) {
@@ -85,7 +85,7 @@ const PlacesMap = ({ places }: MapProps) => {
       map.fitBounds(bounds);
     }
   }, [places, isMapLoaded]);
-  
+
   useEffect(() => {
     const map = mapRef.current;
     if (map) {
@@ -95,27 +95,27 @@ const PlacesMap = ({ places }: MapProps) => {
           setZoom(newZoom);
         }
       };
-      
+
       const handleCenterChange = () => {
         const newCenter = map.getCenter();
         if (newCenter) {
           setCenter({ lat: newCenter.lat(), lng: newCenter.lng() });
         }
       };
-      
+
       const zoomListener = map.addListener('zoom_changed', handleZoomChange);
       const centerListener = map.addListener(
         'center_changed',
         handleCenterChange
       );
-      
+
       return () => {
         google.maps.event.removeListener(zoomListener);
         google.maps.event.removeListener(centerListener);
       };
     }
   }, []);
-  
+
   return <div ref={mapContainerRef} style={containerStyle} />;
 };
 

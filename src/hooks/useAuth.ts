@@ -4,7 +4,7 @@ import { refreshApi } from '@/api/refreshApi';
 
 const useAuth = () => {
   const isRefreshing = useRef(false);
-  
+
   const isTokenExpired = (token: string) => {
     try {
       const [, payload] = token.split('.');
@@ -14,16 +14,16 @@ const useAuth = () => {
       return true;
     }
   };
-  
+
   const showLoginModal = () => {
     const event = new CustomEvent('showLoginModal');
     window.dispatchEvent(event);
   };
-  
+
   const checkAuthStatus = async () => {
     const accessToken = Cookies.get('trip-tune_at');
     const refreshToken = Cookies.get('trip-tune_rt');
-    
+
     if (!accessToken || isTokenExpired(accessToken)) {
       if (refreshToken && !isRefreshing.current) {
         isRefreshing.current = true;
@@ -39,11 +39,11 @@ const useAuth = () => {
       }
     }
   };
-  
+
   useEffect(() => {
     checkAuthStatus();
   }, []);
-  
+
   return { checkAuthStatus };
 };
 
