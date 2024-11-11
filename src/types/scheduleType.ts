@@ -66,7 +66,7 @@ export interface Place {
   endDate?: string;
   sinceUpdate?: string;
   author?: { profileUrl: string; userId: string };
-  role?:string;
+  role?: string;
 }
 
 // 여행지 조회, 여행지 검색, 여행루트 , 여행 일정

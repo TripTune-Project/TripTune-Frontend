@@ -51,7 +51,7 @@ const fetchData = async <T>(
     ...DEFAULT_HEADERS,
     ...options.headers,
   };
-  
+
   if (options.requiresAuth) {
     try {
       headers = { ...headers, ...getAuthHeaders() };
@@ -59,10 +59,10 @@ const fetchData = async <T>(
       handleRedirectToLogin('액세스 토큰이 없습니다. 다시 로그인 해주세요.');
     }
   }
-  
+
   const requestConfig: FetchOptions = { ...options, headers };
   let response = await fetch(url, requestConfig);
-  
+
   if (response.status === 401 || response.status === 400) {
     if (!isRetrying) {
       isRetrying = true; // 중복 요청 방지
@@ -71,17 +71,21 @@ const fetchData = async <T>(
         headers = { ...headers, Authorization: `Bearer ${newAccessToken}` };
         response = await fetch(url, { ...requestConfig, headers });
       } else {
-        handleRedirectToLogin('토큰 갱신에 실패했습니다. 다시 로그인 해주세요.');
+        handleRedirectToLogin(
+          '토큰 갱신에 실패했습니다. 다시 로그인 해주세요.'
+        );
       }
     } else {
-      handleRedirectToLogin('토큰 갱신 시도 후에도 실패했습니다. 다시 로그인 해주세요.');
+      handleRedirectToLogin(
+        '토큰 갱신 시도 후에도 실패했습니다. 다시 로그인 해주세요.'
+      );
     }
   }
-  
+
   if (!response.ok) {
     throw new Error(`API 요청 실패: ${response.statusText}`);
   }
-  
+
   isRetrying = false;
   return response.json();
 };

@@ -82,13 +82,8 @@ const ScheduleModal = ({ onClose }: ScheduleModalProps) => {
           &times;
         </button>
         <h2 className={styles.detailTitle}>
-          <Image
-            src={triptuneIcon}
-            alt='일정만들기'
-            width={"40"}
-            priority />
-          &nbsp;
-          일정 만들기
+          <Image src={triptuneIcon} alt='일정만들기' width={'40'} priority />
+          &nbsp; 일정 만들기
         </h2>
         <div className={styles.inputGroup}>
           <label>여행 이름</label>

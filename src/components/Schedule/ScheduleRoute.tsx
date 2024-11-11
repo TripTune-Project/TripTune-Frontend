@@ -130,7 +130,7 @@ const ScheduleRoute = ({ places }: ScheduleRouteProps) => {
       ]);
     }
   }, [places]);
-  
+
   const movePlace = (dragIndex: number, hoverIndex: number) => {
     const draggedPlace = routePlaces[dragIndex];
     const updatedPlaces = [...routePlaces];
@@ -138,11 +138,11 @@ const ScheduleRoute = ({ places }: ScheduleRouteProps) => {
     updatedPlaces.splice(hoverIndex, 0, draggedPlace);
     setRoutePlaces(updatedPlaces);
   };
-  
+
   const handleDelete = (index: number) => {
     setRoutePlaces((prevPlaces) => prevPlaces.filter((_, i) => i !== index));
   };
-  
+
   if (travelRouteQuery.isLoading) return <DataLoading />;
   if (travelRouteQuery.error)
     return <p>데이터를 불러오는데 오류가 발생했습니다.</p>;
