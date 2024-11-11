@@ -8,40 +8,22 @@ import {
   createNewSchedule,
   fetchScheduleDetail,
   fetchScheduleList,
+  updateExistingSchedule,
+  deleteSchedule,
+  fetchScheduleListSearch,
+} from '@/api/scheduleApi';
+import {
   fetchTravelList,
   fetchTravelRoute,
   searchTravelDestinations,
-  updateExistingSchedule,
-  updateScheduleAttendees,
-  deleteSchedule,
-  fetchScheduleListSearch, fetchSharedScheduleList,
-} from '@/api/scheduleApi';
+} from '@/api/locationRouteApi';
+import { leaveSchedule, shareSchedule } from '@/api/attendeeApi';
 
-// 일정 만들기 - 일정
 // 일정 목록 조회 (GET)
-export const useScheduleList = (enabled = true) => {
+export const useScheduleList = (type: string = 'all', enabled = true) => {
   return useInfiniteQuery({
-    queryKey: ['scheduleAllList'],
-    queryFn: ({ pageParam }) => fetchScheduleList(pageParam || 1),
-    enabled,
-    initialPageParam: 1,
-    getNextPageParam: (lastPage) => {
-      const currentPage = lastPage?.data?.currentPage ?? 0;
-      const totalPages = lastPage?.data?.totalPages ?? 0;
-
-      if (currentPage < totalPages) {
-        return currentPage + 1;
-      }
-      return undefined;
-    },
-  });
-};
-
-// 공유 일정 목록 조회 (GET)
-export const useSharedScheduleList = (enabled = true) => {
-  return useInfiniteQuery({
-    queryKey: ['sharedScheduleList'],
-    queryFn: ({ pageParam }) => fetchSharedScheduleList(pageParam || 1),
+    queryKey: ['scheduleAllList', type],
+    queryFn: ({ pageParam }) => fetchScheduleList(pageParam || 1, type),
     enabled,
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
@@ -59,19 +41,20 @@ export const useSharedScheduleList = (enabled = true) => {
 // 일정 목록 중 검색 (GET)
 export const useScheduleListSearch = (
   keyword: string,
+  type: string = 'all',
   enabled = true,
   page = 1
 ) => {
   return useInfiniteQuery({
-    queryKey: ['scheduleListSearch', keyword],
+    queryKey: ['scheduleListSearch', keyword, type],
     queryFn: ({ pageParam }) =>
-      fetchScheduleListSearch(pageParam || page, keyword),
+      fetchScheduleListSearch(pageParam || page, keyword, type),
     enabled: !!keyword && enabled,
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
       const currentPage = lastPage?.data?.currentPage ?? 0;
       const totalPages = lastPage?.data?.totalPages ?? 0;
-
+      
       if (currentPage < totalPages) {
         return currentPage + 1;
       }
@@ -99,12 +82,12 @@ export const useCreateNewSchedule = () => {
   return useMutation({
     mutationFn: createNewSchedule,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['scheduleDetailList'] });
+      queryClient.invalidateQueries({ queryKey: ['scheduleAllList'] });
     },
   });
 };
 
-// 일정 만들기 수정/ 저장 (PATCH)
+// 일정 만들기 수정 / 저장 (PATCH)
 export const useUpdateExistingSchedule = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -116,7 +99,6 @@ export const useUpdateExistingSchedule = () => {
 };
 
 // 일정 삭제 (DELETE)
-// TODO : 일정 작성자만 가능한지 확인 필수
 export const useDeleteSchedule = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -127,7 +109,6 @@ export const useDeleteSchedule = () => {
   });
 };
 
-// 일정 만들기 - 여행지 탭  , 여행 루트 탭
 // 여행지 조회 (GET)
 export const useScheduleTravelList = (
   scheduleId: number,
@@ -168,20 +149,32 @@ export const useScheduleTravelRoute = (
   });
 };
 
-// 일정 만들기 - 참석자 관련
-// 일정 나가기
-export const useUpdateScheduleAttendees = () => {
+// 일정 참석자 관련 - 일정 공유하기 (POST)
+export const useShareSchedule = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({
                    scheduleId,
-                   attendeeList,
+                   userId,
+                   permission,
                  }: {
       scheduleId: number;
-      attendeeList: { userId: string; role: string; permission: string }[];
-    }) => updateScheduleAttendees(scheduleId, attendeeList),
+      userId: string;
+      permission: 'ALL' | 'EDIT' | 'CHAT' | 'READ';
+    }) => shareSchedule(scheduleId, userId, permission),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['scheduleDetailList'] });
+    },
+  });
+};
+
+// 일정 참석자 관련 - 일정 나가기 (DELETE)
+export const useLeaveSchedule = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (scheduleId: number) => leaveSchedule(scheduleId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['scheduleAllList'] });
     },
   });
 };

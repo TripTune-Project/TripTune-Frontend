@@ -6,7 +6,7 @@ import {
   useScheduleList,
   useDeleteSchedule,
   useScheduleListSearch,
-  useUpdateScheduleAttendees,
+  useLeaveSchedule,
 } from '@/hooks/useSchedule';
 import styles from '@/styles/Schedule.module.css';
 import ScheduleModal from '@/components/Schedule/ScheduleModal';
@@ -45,7 +45,7 @@ export default function Schedule() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useScheduleList(!isSearching);
+  } = useScheduleList(isSearching ? 'share' : 'all', !isSearching);
   
   const {
     data: searchData,
@@ -54,12 +54,12 @@ export default function Schedule() {
     fetchNextPage: fetchNextSearchPage,
     hasNextPage: hasNextSearchPage,
     isFetchingNextPage: isFetchingNextSearchPage,
-  } = useScheduleListSearch(debouncedSearchKeyword, isSearching);
-  
+  } = useScheduleListSearch(debouncedSearchKeyword, isSearching ? 'share' : 'all', isSearching);
+
   const observerRef = useRef<HTMLDivElement | null>(null);
   
   const { mutate: deleteScheduleMutate } = useDeleteSchedule();
-  const { mutate: leaveScheduleMutate } = useUpdateScheduleAttendees();
+  const { mutate: leaveScheduleMutate } = useLeaveSchedule();
   
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -250,7 +250,7 @@ export default function Schedule() {
     if (!scheduleId) return;
     
     leaveScheduleMutate(
-      { scheduleId, attendeeList: [] },
+      scheduleId,
       {
         onSuccess: () => {
           alert('일정에서 나갔습니다.');

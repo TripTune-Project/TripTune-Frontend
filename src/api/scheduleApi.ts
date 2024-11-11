@@ -7,95 +7,49 @@ import {
   ScheduleTravelResultType,
 } from '@/types/scheduleType';
 
-// 일정 만들기 - 일정
-// 일정 목록 조회 (GET)
-export const fetchScheduleList = async (
-  page: number = 1
-): Promise<ApiResponse<ScheduleAllListType>> => {
-  const url = `/schedules?page=${page}`;
-
-  try {
-    const data = await get<ApiResponse<ScheduleAllListType>>(url, {
-      requiresAuth: true,
-    });
-    if (data.success) {
-      console.log('일정 목록 조회 성공:', data);
-    } else {
-      console.error('일정 목록 조회 실패:', data.message);
-    }
-
-    return data;
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error('네트워크 또는 서버 오류:', error.message);
-    } else {
-      console.error('알 수 없는 오류 발생');
-    }
-
-    return {
-      success: false,
-      errorCode: 500,
-      message: '서버 내부 오류가 발생하였습니다.',
-    } as ApiResponse<ScheduleAllListType>;
-  }
+const handleApiError = (error: unknown, defaultMessage: string) => {
+  console.error(error instanceof Error ? error.message : '알 수 없는 오류 발생');
+  return {
+    success: false,
+    errorCode: 500,
+    message: defaultMessage,
+  };
 };
 
-// 공유 일정 목록 조회 (GET)
-export const fetchSharedScheduleList = async (
-  page: number = 1
+// 일정 목록 조회 (GET)
+export const fetchScheduleList = async (
+  page: number = 1,
+  type: string = 'all'
 ): Promise<ApiResponse<ScheduleAllListType>> => {
-  const url = `/api/schedules/shared?page=${page}`;
+  const url = `/api/schedules?page=${page}&type=${type}`;
   
   try {
     const data = await get<ApiResponse<ScheduleAllListType>>(url, {
       requiresAuth: true,
     });
-    if (data.success) {
-      console.log('공유 일정 목록 조회 성공:', data);
-    } else {
-      console.error('공유 일정 목록 조회 실패:', data.message);
-    }
-    
+    console.log(data.success ? '일정 목록 조회 성공:' : '일정 목록 조회 실패:', data.message);
     return data;
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error('네트워크 또는 서버 오류:', error.message);
-    } else {
-      console.error('알 수 없는 오류 발생');
-    }
-    
-    return {
-      success: false,
-      errorCode: 500,
-      message: '서버 내부 오류가 발생하였습니다.',
-    } as ApiResponse<ScheduleAllListType>;
+  } catch (error) {
+    return handleApiError(error, '서버 내부 오류가 발생하였습니다.');
   }
 };
 
 // 일정 목록 중 검색 (GET)
 export const fetchScheduleListSearch = async (
   page = 1,
-  keyword: string
+  keyword: string,
+  type: string = 'all' // 'all' 혹은 'share'로 설정 가능
 ): Promise<ApiResponse<ScheduleTravelResultType>> => {
-  const url = `/schedules/search?page=${page}&keyword=${keyword}`;
-
+  const url = `/api/schedules/search?page=${page}&keyword=${keyword}&type=${type}`;
+  
   try {
     const data = await get<ApiResponse<ScheduleTravelResultType>>(url, {
       requiresAuth: true,
     });
-    if (data.success) {
-      console.log('최근 일정 검색 성공:', data.data);
-    } else {
-      console.error('최근 일정 검색 실패:', data.message);
-    }
+    console.log(data.success ? '최근 일정 검색 성공:' : '최근 일정 검색 실패:', data.message);
     return data;
   } catch (error) {
-    console.error('예기치 않은 오류:', error);
-    return {
-      success: false,
-      errorCode: 500,
-      message: '서버 내부 오류가 발생하였습니다.',
-    };
+    return handleApiError(error, '서버 내부 오류가 발생하였습니다.');
   }
 };
 
@@ -104,25 +58,16 @@ export const fetchScheduleDetail = async (
   scheduleId: number,
   page: number = 1
 ): Promise<ApiResponse<ScheduleDetailType>> => {
-  const url = `/schedules/${scheduleId}?page=${page}`;
-
+  const url = `/api/schedules/${scheduleId}?page=${page}`;
+  
   try {
     const data = await get<ApiResponse<ScheduleDetailType>>(url, {
       requiresAuth: true,
     });
-    if (data.success) {
-      console.log('일정 조회 성공:', data);
-    } else {
-      console.error('일정 조회 실패:', data.message);
-    }
+    console.log(data.success ? '일정 조회 성공:' : '일정 조회 실패:', data.message);
     return data;
   } catch (error) {
-    console.error('예기치 않은 오류:', error);
-    return {
-      success: false,
-      errorCode: 500,
-      message: '서버 내부 오류가 발생하였습니다.',
-    };
+    return handleApiError(error, '서버 내부 오류가 발생하였습니다.');
   }
 };
 
@@ -130,25 +75,16 @@ export const fetchScheduleDetail = async (
 export const createNewSchedule = async (
   scheduleData: ScheduleType
 ): Promise<ApiResponse<ScheduleType>> => {
-  const url = '/schedules';
-
+  const url = '/api/schedules';
+  
   try {
     const data = await post<ApiResponse<ScheduleType>>(url, scheduleData, {
       requiresAuth: true,
     });
-    if (data.success) {
-      console.log('일정 생성 성공:', data);
-    } else {
-      console.error('일정 생성 실패:', data.message);
-    }
+    console.log(data.success ? '일정 생성 성공:' : '일정 생성 실패:', data.message);
     return data;
   } catch (error) {
-    console.error('예기치 않은 오류:', error);
-    return {
-      success: false,
-      errorCode: 500,
-      message: '서버 내부 오류가 발생하였습니다.',
-    };
+    return handleApiError(error, '서버 내부 오류가 발생하였습니다.');
   }
 };
 
@@ -156,8 +92,8 @@ export const createNewSchedule = async (
 export const updateExistingSchedule = async (
   schedule: ScheduleDetailType
 ): Promise<ApiResponse<ScheduleDetailType>> => {
-  const url = `/schedules/${schedule.scheduleId}`;
-
+  const url = `/api/schedules/${schedule.scheduleId}`;
+  
   try {
     const data = await patch<ApiResponse<ScheduleDetailType>>(
       url,
@@ -168,162 +104,26 @@ export const updateExistingSchedule = async (
       },
       { requiresAuth: true }
     );
-
-    if (data.success) {
-      console.log('일정 수정 성공:', data.message);
-    } else {
-      console.error('일정 수정 실패:', data.message);
-    }
+    console.log(data.success ? '일정 수정 성공:' : '일정 수정 실패:', data.message);
     return data;
   } catch (error) {
-    console.error('예기치 않은 오류:', error);
-    return {
-      success: false,
-      errorCode: 500,
-      message: '서버 내부 오류가 발생하였습니다.',
-    };
+    return handleApiError(error, '서버 내부 오류가 발생하였습니다.');
   }
 };
 
 // 일정 삭제 (DELETE)
-// TODO : 일정 작성자만 가능한지 확인 필수
 export const deleteSchedule = async (
   scheduleId: number
 ): Promise<ApiResponse<null>> => {
-  const url = `/schedules/${scheduleId}`;
-
+  const url = `/api/schedules/${scheduleId}`;
+  
   try {
     const data = await remove<ApiResponse<null>>(url, {
       requiresAuth: true,
     });
-
-    if (data.success) {
-      console.log('일정 삭제 성공:', data.message);
-    } else {
-      console.error('일정 삭제 실패:', data.message);
-    }
+    console.log(data.success ? '일정 삭제 성공:' : '일정 삭제 실패:', data.message);
     return data;
   } catch (error) {
-    console.error('예기치 않은 오류:', error);
-    return {
-      success: false,
-      errorCode: 500,
-      message: '서버 내부 오류가 발생하였습니다.',
-    };
-  }
-};
-
-// 일정 만들기 - 여행지 탭  , 여행 루트 탭
-// 여행지 조회 (GET)
-export const fetchTravelList = async (
-  scheduleId: number,
-  page = 1
-): Promise<ApiResponse<ScheduleTravelResultType>> => {
-  const url = `/schedules/${scheduleId}/travels?page=${page}`;
-
-  try {
-    const data = await get<ApiResponse<ScheduleTravelResultType>>(url, {
-      requiresAuth: true,
-    });
-    if (data.success) {
-      console.log('여행지 조회 성공:', data.data);
-    } else {
-      console.error('여행지 조회 실패:', data.message);
-    }
-    return data;
-  } catch (error) {
-    console.error('예기치 않은 오류:', error);
-    return {
-      success: false,
-      errorCode: 500,
-      message: '서버 내부 오류가 발생하였습니다.',
-    };
-  }
-};
-
-// 여행지 검색 (GET)
-export const searchTravelDestinations = async (
-  scheduleId: number,
-  page = 1,
-  keyword: string
-): Promise<ApiResponse<ScheduleTravelResultType>> => {
-  const url = `/schedules/${scheduleId}/travels/search?page=${page}&keyword=${keyword}`;
-
-  try {
-    const data = await get<ApiResponse<ScheduleTravelResultType>>(url, {
-      requiresAuth: true,
-    });
-    if (data.success) {
-      console.log('여행지 검색 성공:', data.data);
-    } else {
-      console.error('여행지 검색 실패:', data.message);
-    }
-    return data;
-  } catch (error) {
-    console.error('예기치 않은 오류:', error);
-    return {
-      success: false,
-      errorCode: 500,
-      message: '서버 내부 오류가 발생하였습니다.',
-    };
-  }
-};
-
-// 여행 루트 조회 (GET)
-export const fetchTravelRoute = async (
-  scheduleId: number,
-  page = 1
-): Promise<ApiResponse<ScheduleTravelResultType>> => {
-  const url = `/schedules/${scheduleId}/routes?page=${page}`;
-
-  try {
-    const data = await get<ApiResponse<ScheduleTravelResultType>>(url, {
-      requiresAuth: true,
-    });
-    if (data.success) {
-      console.log('여행지 루트 조회 성공:', data.data);
-    } else {
-      console.error('여행지 루트 조회 실패:', data.message);
-    }
-    return data;
-  } catch (error) {
-    console.error('예기치 않은 오류:', error);
-    return {
-      success: false,
-      errorCode: 500,
-      message: '서버 내부 오류가 발생하였습니다.',
-    };
-  }
-};
-
-
-// 일정 만들기 - 참석자 관련
-// 일정 나가기
-export const updateScheduleAttendees = async (
-  scheduleId: number,
-  attendeeList: { userId: string; role: string; permission: string }[]
-): Promise<ApiResponse<ScheduleDetailType>> => {
-  const url = `/schedules/${scheduleId}/attendees`;
-  
-  try {
-    const data = await patch<ApiResponse<ScheduleDetailType>>(
-      url,
-      { attendeeList },
-      { requiresAuth: true }
-    );
-    
-    if (data.success) {
-      console.log('참석자 추가/수정 성공:', data.message);
-    } else {
-      console.error('참석자 추가/수정 실패:', data.message);
-    }
-    return data;
-  } catch (error) {
-    console.error('예기치 않은 오류:', error);
-    return {
-      success: false,
-      errorCode: 500,
-      message: '서버 내부 오류가 발생하였습니다.',
-    };
+    return handleApiError(error, '서버 내부 오류가 발생하였습니다.');
   }
 };
