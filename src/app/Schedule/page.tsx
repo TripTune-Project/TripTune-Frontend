@@ -38,7 +38,7 @@ export default function Schedule() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [isSearching, setIsSearching] = useState(false);
-  const [selectedTab, setSelectedTab] = useState<'all' | 'shared'>('all');
+  const [selectedTab, setSelectedTab] = useState<'all' | 'share'>('all');
 
   const debouncedSearchKeyword = useDebounce(searchKeyword, 800);
 
@@ -58,7 +58,7 @@ export default function Schedule() {
     fetchNextPage: fetchNextSharedPage,
     hasNextPage: hasNextSharedPage,
     isFetchingNextPage: isFetchingNextSharedPage,
-  } = useSharedScheduleList(selectedTab === 'shared' && !isSearching);
+  } = useSharedScheduleList(selectedTab === 'share' && !isSearching);
 
   const {
     data: searchData,
@@ -345,12 +345,12 @@ export default function Schedule() {
         </button>
 
         <button
-          className={`${styles.scheduleCounterShare} ${selectedTab === 'shared' ? styles.activeTab : ''}`}
-          onClick={() => setSelectedTab('shared')}
+          className={`${styles.scheduleCounterShare} ${selectedTab === 'share' ? styles.activeTab : ''}`}
+          onClick={() => setSelectedTab('share')}
         >
           공유된 일정
           <span className={styles.counterNumber}>
-            {allScheduleData?.pages[0]?.data?.totalSharedElements ?? 0}
+            {allScheduleData?.pages[0]?.data?.totalSharedElements  ?? 0}
           </span>
         </button>
 
@@ -368,7 +368,7 @@ export default function Schedule() {
         <div className={styles.scheduleList}>
           {renderSchedules(
             isSearching
-              ? searchData?.pages[0]
+              ? (searchData?.pages[0] as ApiResponse<ScheduleAllListType>)
               : selectedTab === 'all'
                 ? allScheduleData?.pages[0]
                 : sharedScheduleData?.pages[0]
