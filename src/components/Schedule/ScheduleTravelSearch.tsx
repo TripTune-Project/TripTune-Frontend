@@ -118,7 +118,7 @@ const ScheduleTravelSearch = ({ onAddMarker }: ScheduleTravelSearchProps) => {
         )}
       </div>
       <Pagination
-        total={totalPages * 5}
+        total={totalPages * 4}
         currentPage={currentPage}
         pageSize={5}
         onPageChange={setCurrentPage}
