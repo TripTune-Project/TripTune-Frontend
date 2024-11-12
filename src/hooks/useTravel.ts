@@ -2,7 +2,6 @@ import { useQuery } from '@tanstack/react-query';
 import {
   fetchTravelListByLocation,
   fetchTravelListSearch,
-  fetchTravelDetail,
 } from '@/api/travelApi';
 import { Coordinates } from '@/types';
 import { TravelListSearchParams } from '@/types/travelType';
@@ -28,12 +27,5 @@ export const useTravelListSearch = (
     queryKey: ['travelListSearch', params, page],
     queryFn: () => fetchTravelListSearch(params, page),
     enabled,
-  });
-};
-
-export const useTravelDetail = (placeId: number) => {
-  return useQuery({
-    queryKey: ['travelDetail', placeId],
-    queryFn: () => fetchTravelDetail(placeId),
   });
 };

@@ -6,7 +6,6 @@ import {
 } from '@tanstack/react-query';
 import {
   createNewSchedule,
-  fetchScheduleDetail,
   fetchScheduleList,
   updateExistingSchedule,
   deleteSchedule,
@@ -80,19 +79,6 @@ export const useScheduleListSearch = (
       }
       return undefined;
     },
-  });
-};
-
-// 일정 상세 조회 (GET)
-export const useScheduleDetailList = (
-  scheduleId: number,
-  page = 1,
-  enabled = true
-) => {
-  return useQuery({
-    queryKey: ['scheduleDetailList', scheduleId, page],
-    queryFn: () => fetchScheduleDetail(scheduleId, page),
-    enabled,
   });
 };
 

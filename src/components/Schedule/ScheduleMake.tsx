@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useSearchParams } from 'next/navigation';
+import React, { useState } from 'react';
 import styles from '@/styles/Schedule.module.css';
-import { useScheduleDetailList } from '@/hooks/useSchedule';
 import DataLoading from '@/components/Common/DataLoading';
 import ScheduleTravelSearch from '@/components/Schedule/ScheduleTravelSearch';
 import ScheduleRoute from '@/components/Schedule/ScheduleRoute';
@@ -27,56 +25,31 @@ interface Place {
 }
 
 interface ScheduleMakeProps {
+  scheduleDetail: ScheduleDetail | null;
+  initialTab: string;
+  scheduleId: string;
   onAddMarker: (marker: { lat: number; lng: number }) => void;
 }
 
-const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
-  const { scheduleId } = useParams();
-  const searchParams = useSearchParams();
-
-  const initialTab = searchParams.get('tab') || 'scheduleTravel';
+const ScheduleMake = ({ scheduleDetail: initialScheduleDetail, initialTab, scheduleId, onAddMarker }: ScheduleMakeProps) => {
   const [tab, setTab] = useState(initialTab);
   const [currentPage, setCurrentPage] = useState(1);
-
-  const [scheduleDetail, setScheduleDetail] = useState<ScheduleDetail | null>(
-    null
-  );
+  const [scheduleDetail, setScheduleDetail] = useState<ScheduleDetail | null>(initialScheduleDetail);
   const [addedPlaces, setAddedPlaces] = useState<Place[]>([]);
   const [showModal, setShowModal] = useState(false);
-
-  const scheduleDetailQuery = useScheduleDetailList(
-    Number(scheduleId),
-    currentPage,
-    scheduleDetail === null
-  );
-
-  useEffect(() => {
-    if (scheduleDetailQuery.isSuccess && scheduleDetailQuery.data?.data) {
-      const { scheduleName, startDate, endDate } =
-        scheduleDetailQuery.data.data;
-      setScheduleDetail({
-        scheduleName: scheduleName || '',
-        startDate: startDate || '',
-        endDate: endDate || '',
-      });
-    }
-    return () => {
-      setScheduleDetail(null);
-    };
-  }, [scheduleDetailQuery.isSuccess, scheduleDetailQuery.data]);
-
+  
   const handleTabChange = (newTab: string) => {
     setTab(newTab);
     setCurrentPage(1);
   };
-
+  
   const handleScheduleDetailChange = (field: string, value: string) => {
     setScheduleDetail((prevState) => ({
       ...(prevState || { scheduleName: '', startDate: '', endDate: '' }),
       [field]: value ?? '',
     }));
   };
-
+  
   const handleAddMarker = (place: Place) => {
     setAddedPlaces((prevPlaces) =>
       prevPlaces.some((p) => p.placeId === place.placeId)
@@ -84,7 +57,7 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
         : [...prevPlaces, place]
     );
   };
-
+  
   const handleModalSubmit = (
     name: string,
     startDate: string,
@@ -97,24 +70,20 @@ const ScheduleMake = ({ onAddMarker }: ScheduleMakeProps) => {
     }));
     setShowModal(false);
   };
-
+  
   const ScheduleRouteWrapper = () => {
     const processedPlaces = addedPlaces.map((place) => ({
       ...place,
       thumbnailUrl: place.thumbnailUrl || '',
     }));
-
+    
     return <ScheduleRoute places={processedPlaces} />;
   };
-
-  if (scheduleDetailQuery.isLoading || scheduleDetail === null) {
+  
+  if (!scheduleDetail) {
     return <DataLoading />;
   }
-
-  if (scheduleDetailQuery.error) {
-    return <p>데이터를 불러오는데 오류가 발생했습니다.</p>;
-  }
-
+  
   return (
     <div className={styles.pageContainer}>
       <h1 className={styles.detailTitle}>일정 만들기</h1>
