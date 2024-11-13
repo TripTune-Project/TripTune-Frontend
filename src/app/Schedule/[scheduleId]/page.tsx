@@ -56,13 +56,13 @@ type TravelDetailProps = {
 const TravelDetailPage = async ({ params }: TravelDetailProps) => {
   const { scheduleId } = params;
   const response = await fetchTravelDetail(Number(scheduleId));
-  
+
   if (!response.success) {
     return <p>Error: 데이터 로딩 실패</p>;
   }
-  
+
   const data = response.data;
-  
+
   return (
     <>
       <Head>
@@ -76,26 +76,26 @@ const TravelDetailPage = async ({ params }: TravelDetailProps) => {
 type ClientContentProps = TravelDetailData;
 
 const ClientContent = ({
-                         placeName,
-                         country,
-                         city,
-                         district,
-                         address,
-                         description,
-                         imageList,
-                         latitude,
-                         longitude,
-                         phoneNumber,
-                         homepage,
-                         useTime,
-                         isBookmarked: initialBookmarkState,
-                       }: ClientContentProps) => {
+  placeName,
+  country,
+  city,
+  district,
+  address,
+  description,
+  imageList,
+  latitude,
+  longitude,
+  phoneNumber,
+  homepage,
+  useTime,
+  isBookmarked: initialBookmarkState,
+}: ClientContentProps) => {
   const [isBookmarked, setIsBookmarked] = useState(initialBookmarkState);
   const nextRef = useRef<HTMLButtonElement | null>(null);
   const prevRef = useRef<HTMLButtonElement | null>(null);
-  
+
   const toggleBookmark = () => setIsBookmarked((prev) => !prev);
-  
+
   return (
     <div>
       <StyledSwiperContainer>
@@ -111,7 +111,12 @@ const ClientContent = ({
           >
             {imageList.map((image, index) => (
               <SwiperSlide key={index}>
-                <Image src={image.imageUrl} alt={image.imageName} width={749} height={512} />
+                <Image
+                  src={image.imageUrl}
+                  alt={image.imageName}
+                  width={749}
+                  height={512}
+                />
               </SwiperSlide>
             ))}
           </Swiper>
@@ -121,36 +126,56 @@ const ClientContent = ({
       </StyledSwiperContainer>
       <div>
         <p>
-          <Image src={locationIcon} alt="Location icon" width={14} height={21} />
+          <Image
+            src={locationIcon}
+            alt='Location icon'
+            width={14}
+            height={21}
+          />
           {country} &gt; {city} &gt; {district}
         </p>
         <h1>{placeName}</h1>
         <p>{address}</p>
         <p>
-          <Image src={timeIcon} alt="Time icon" width={18} height={18} />
+          <Image src={timeIcon} alt='Time icon' width={18} height={18} />
           {useTime}
         </p>
         <p>
-          <Image src={phoneIcon} alt="Phone icon" width={18} height={18} />
+          <Image src={phoneIcon} alt='Phone icon' width={18} height={18} />
           {phoneNumber}
         </p>
         <p>
-          <Image src={homePageIcon} alt="Homepage icon" width={18} height={18} />
-          <a href={homepage} target="_blank" rel="noopener noreferrer">
+          <Image
+            src={homePageIcon}
+            alt='Homepage icon'
+            width={18}
+            height={18}
+          />
+          <a href={homepage} target='_blank' rel='noopener noreferrer'>
             {homepage}
           </a>
         </p>
         <button onClick={toggleBookmark}>
-          <Image src={isBookmarked ? detailBookMark : detailBookMarkNo} alt="Bookmark icon" width={13} height={17} />
+          <Image
+            src={isBookmarked ? detailBookMark : detailBookMarkNo}
+            alt='Bookmark icon'
+            width={13}
+            height={17}
+          />
           {isBookmarked ? '북마크 해제' : '북마크'}
         </button>
         <button>
-          <Image src={scheduleIcon} alt="Schedule icon" width={25} height={21} />
+          <Image
+            src={scheduleIcon}
+            alt='Schedule icon'
+            width={25}
+            height={21}
+          />
           내 일정 담기
         </button>
       </div>
       <h2>
-        <Image src={triptuneIcon} alt="Triptune icon" />
+        <Image src={triptuneIcon} alt='Triptune icon' />
         상세 설명
       </h2>
       <p>{description}</p>

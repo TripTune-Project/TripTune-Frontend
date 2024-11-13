@@ -162,7 +162,7 @@ export default function Schedule() {
 
   const handleDetailClick = (e: React.MouseEvent, scheduleId: number) => {
     if (!activeDeleteMenu) {
-      router.push(`/Schedule/${scheduleId}`);
+      router.push(`/Travel/${scheduleId}`);
     }
   };
 
@@ -350,7 +350,7 @@ export default function Schedule() {
         >
           공유된 일정
           <span className={styles.counterNumber}>
-            {allScheduleData?.pages[0]?.data?.totalSharedElements  ?? 0}
+            {allScheduleData?.pages[0]?.data?.totalSharedElements ?? 0}
           </span>
         </button>
 

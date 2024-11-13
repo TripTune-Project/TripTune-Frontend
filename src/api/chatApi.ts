@@ -21,7 +21,7 @@ interface ChatListType {
 
 const handleApiError = (error: unknown, defaultMessage: string) => {
   console.error(
-    error instanceof Error ? error.message : '알 수 없는 오류 발생',
+    error instanceof Error ? error.message : '알 수 없는 오류 발생'
   );
   return {
     success: false,
@@ -33,17 +33,17 @@ const handleApiError = (error: unknown, defaultMessage: string) => {
 // 채팅 목록 조회 (GET)
 export const fetchScheduleChats = async (
   scheduleId: number,
-  page: number = 1,
+  page: number = 1
 ): Promise<ApiResponse<ChatListType>> => {
   const url = `/schedules/${scheduleId}/chats?page=${page}`;
-  
+
   try {
     const data = await get<ApiResponse<ChatListType>>(url, {
       requiresAuth: true,
     });
     console.log(
       data.success ? '채팅 목록 조회 성공:' : '채팅 목록 조회 실패:',
-      data.message,
+      data.message
     );
     return data;
   } catch (error) {
@@ -54,23 +54,22 @@ export const fetchScheduleChats = async (
 // 채팅 보내기
 export const sendScheduleChat = async (
   scheduleId: number,
-  chatMessage: string,
+  chatMessage: string
 ): Promise<ApiResponse<ChatType>> => {
   const url = `/schedules/${scheduleId}/chats`;
-  
+
   try {
     const data = await post<ApiResponse<ChatType>>(
       url,
       { message: chatMessage },
-      { requiresAuth: true },
+      { requiresAuth: true }
     );
     console.log(
       data.success ? '채팅 전송 성공:' : '채팅 전송 실패:',
-      data.message,
+      data.message
     );
     return data;
   } catch (error) {
     return handleApiError(error, '서버 내부 오류가 발생하였습니다.');
   }
 };
-
