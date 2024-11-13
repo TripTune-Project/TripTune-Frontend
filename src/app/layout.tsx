@@ -11,6 +11,8 @@ import FooterLogoImage from '../../public/assets/images/로고/triptuneLogoWhite
 import '../styles/global.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Noto_Sans_KR } from 'next/font/google';
+import Link from 'next/link';
+import MainLogoImage from '../../public/assets/images/로고/triptuneLogo.png';
 
 const notoSansKR = Noto_Sans_KR({
   subsets: ['latin'],
@@ -33,27 +35,28 @@ interface LayoutProps {
 const Layout = ({ children }: LayoutProps) => {
   const pathname = usePathname();
   const isFindPage = pathname.includes('Find');
-
+  const isSchedulePage = pathname.includes('/Schedule/');
+  
   return (
-    <html lang='ko' className={notoSansKR.className}>
-      <Head>
-        <title>TripTune</title>
-        <meta
-          http-equiv='Content-Security-Policy'
-          content='upgrade-insecure-requests'
-        />
-        <meta
-          name='description'
-          content='TripTune은 여행자들을 위한 일정 플랫폼 서비스 입니다.'
-        />
-        <link rel='icon' href='/favicon.ico' />
-        <script
-          async
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA4_MEASUREMENT_ID}`}
-        ></script>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
+    <html lang="ko" className={notoSansKR.className}>
+    <Head>
+      <title>TripTune</title>
+      <meta
+        http-equiv="Content-Security-Policy"
+        content="upgrade-insecure-requests"
+      />
+      <meta
+        name="description"
+        content="TripTune은 여행자들을 위한 일정 플랫폼 서비스 입니다."
+      />
+      <link rel="icon" href="/favicon.ico" />
+      <script
+        async
+        src={`https://www.googletagmanager.com/gtag/js?id=${GA4_MEASUREMENT_ID}`}
+      ></script>
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
@@ -61,45 +64,67 @@ const Layout = ({ children }: LayoutProps) => {
                 page_path: window.location.pathname,
               });
             `,
-          }}
-        />
-      </Head>
-      <body>
-        <QueryClientProvider client={queryClient}>
-          {isFindPage ? (
-            <>{children}</>
-          ) : (
-            <div className={styles.main}>
+        }}
+      />
+    </Head>
+    <body>
+    <QueryClientProvider client={queryClient}>
+      
+      {isFindPage || isSchedulePage ? (
+          <>
+            {isSchedulePage && (
               <header className={styles.header}>
-                <Header />
+                <ul className={styles.headerMenu}>
+                  <li>
+                    <Link href="/">
+                      <Image
+                        src={MainLogoImage}
+                        alt="로고"
+                        className={styles.logo}
+                        width={183}
+                        height={57}
+                        priority
+                      />
+                    </Link>
+                  </li>
+                </ul>
               </header>
-              <main className={styles.section}>
-                <div className={styles.content}>{children}</div>
-              </main>
-              <footer className={styles.footer}>
-                <Image
-                  className={styles.logoImg}
-                  src={FooterLogoImage}
-                  alt='FooterLogoImage'
-                  priority
-                />
-                <p className={styles.email}>
-                  <b>Email</b>: triptunehost@gmail.com
-                </p>
-                <p className={styles.github}>
-                  <b>Github</b>:{' '}
-                  <a href='https://github.com/TripTune-Project'>
-                    https://github.com/TripTune-Project
-                  </a>
-                </p>
-                <p className={styles.copyright}>
-                  Copyright © 2024 TripTune. All rights reserved.
-                </p>
-              </footer>
-            </div>
-          )}
-        </QueryClientProvider>
-      </body>
+            )}
+            {children}
+          </>
+        )
+        : (
+          <div className={styles.main}>
+            <header className={styles.header}>
+              <Header />
+            </header>
+            <main className={styles.section}>
+              <div className={styles.content}>{children}</div>
+            </main>
+            <footer className={styles.footer}>
+              <Image
+                className={styles.logoImg}
+                src={FooterLogoImage}
+                alt="FooterLogoImage"
+                priority
+              />
+              <p className={styles.email}>
+                <b>Email</b>: triptunehost@gmail.com
+              </p>
+              <p className={styles.github}>
+                <b>Github</b>:{' '}
+                <a href="https://github.com/TripTune-Project">
+                  https://github.com/TripTune-Project
+                </a>
+              </p>
+              <p className={styles.copyright}>
+                Copyright © 2024 TripTune. All rights reserved.
+              </p>
+            </footer>
+          </div>
+        )}
+    </QueryClientProvider>
+    </body>
     </html>
   );
 };
