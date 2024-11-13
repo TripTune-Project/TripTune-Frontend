@@ -1064,7 +1064,6 @@
   margin-right: 10px;
 }
 
-/* 일정 목록이 없을 때 표시하는 메시지 컨테이너 */
 .noScheduleContainer {
   width: 100%;
   height: 100%;
@@ -1089,7 +1088,6 @@
   color: #777;
 }
 
-/* 일정 검색 바 */
 .travelSearchContainer {
   display: flex;
   align-items: center;
@@ -1127,7 +1125,6 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* 일정 리스트와 항목 스타일 */
 .scheduleList {
   margin-top: 40px;
   display: grid;
@@ -1207,7 +1204,6 @@
   opacity: 0.8;
 }
 
-/* 로딩 및 에러 영역 스타일 */
 .loadingArea {
   margin-top: 50px;
   width: 100%;
@@ -1400,4 +1396,114 @@
 
 .confirmButton:hover {
   background-color: #0056b3;
+}
+
+.messageContainer {
+  flex-grow: 1;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e0e0e0;
+  border-radius: 12px 12px 0 0;
+  max-height: 500px;
+}
+
+.message.sent {
+  background-color: #e9f7fe;
+  align-self: flex-end;
+  border-radius: 16px 16px 0 16px;
+  padding: 10px;
+  max-width: 60%;
+  color: #333;
+  font-size: 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.message.received {
+  background-color: #f1f0f0;
+  align-self: flex-start;
+  border-radius: 16px 16px 16px 0;
+  padding: 10px;
+  max-width: 60%;
+  color: #333;
+  font-size: 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.loadingArea {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  color: #888;
+  margin-top: 20px;
+}
+
+.sendButton:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  color: #666666;
+}
+
+.loadMoreButton {
+  background-color: #e0e0e0;
+  color: #555555;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+.loadMoreButton:hover {
+  background-color: #cccccc;
+}
+
+.alertMessage {
+  background-color: #ffecb3;
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: #555555;
+  font-size: 12px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.userMessages {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.nickname {
+  font-weight: bold;
+  font-size: 14px;
+  color: #333;
+  margin-left: 10px;
+}
+
+.profileImage {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.timestamp {
+  font-size: 12px;
+  color: #888;
+  margin-left: 10px;
+  display: block;
+  text-align: right;
+  margin-top: 5px;
 }

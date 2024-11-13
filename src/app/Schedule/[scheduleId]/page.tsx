@@ -8,13 +8,9 @@ import InviteModal from '@/components/Schedule/InviteModal';
 import styles from '../../../styles/Schedule.module.css';
 import Chatting from '@/components/Schedule/Chatting';
 import useAuth from '@/hooks/useAuth';
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  permission: string;
-}
+import { useRouter } from 'next/navigation';
+import { updateExistingSchedule } from '@/api/scheduleApi';
+import { Attendee, ScheduleDetailType } from '@/types/scheduleType';
 
 interface PageProps {
   params: {
@@ -23,13 +19,14 @@ interface PageProps {
 }
 
 export default function ScheduleDetail({ params }: PageProps) {
+  const [scheduleData, setScheduleData] = useState<ScheduleDetailType | null>(null);
   const [markers, setMarkers] = useState<{ lat: number; lng: number }[]>([]);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
-  const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
-  const [allUsers, setAllUsers] = useState<User[]>([]); // 서버에서 받아온 사용자 목록
-  const [permission, setPermission] = useState('edit'); // 초기 권한 상태
+  const [selectedUsers, setSelectedUsers] = useState<Attendee[]>([]);
+  const [allUsers, setAllUsers] = useState<Attendee[]>([]);
+  const [permission, setPermission] = useState('edit');
   const { checkAuthStatus } = useAuth();
-  
+  const router = useRouter();
   const scheduleId = parseInt(params.scheduleId, 10);
   
   useEffect(() => {
@@ -37,18 +34,31 @@ export default function ScheduleDetail({ params }: PageProps) {
   }, [checkAuthStatus]);
   
   useEffect(() => {
-    // 서버에서 사용자 목록 데이터를 가져오는 함수
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`/api/users?scheduleId=${scheduleId}`); // 일정 ID를 포함하여 사용자 목록 요청
+        const response = await fetch(`/api/users?scheduleId=${scheduleId}`);
         const data = await response.json();
         setAllUsers(data);
       } catch (error) {
         console.error('사용자 목록을 가져오는 중 오류 발생:', error);
       }
     };
-    
     fetchUsers();
+  }, [scheduleId]);
+  
+  useEffect(() => {
+    const fetchScheduleDetail = async () => {
+      try {
+        const response = await fetch(`/api/schedules/${scheduleId}`);
+        const data = await response.json();
+        setScheduleData(data);
+        setMarkers(data.travelRoute || []);
+        setSelectedUsers(data.attendeeList || []);
+      } catch (error) {
+        console.error('일정 데이터를 가져오는 중 오류 발생:', error);
+      }
+    };
+    fetchScheduleDetail();
   }, [scheduleId]);
   
   const handleAddMarker = (marker: { lat: number; lng: number }) => {
@@ -63,28 +73,25 @@ export default function ScheduleDetail({ params }: PageProps) {
     setIsInviteModalOpen(false);
   };
   
-  const handleLinkCopy = () => {
-    navigator.clipboard.writeText('초대 링크를 여기에 넣습니다.');
-    alert('초대 링크가 복사되었습니다.');
-  };
-  
-  const handlePermissionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPermission(event.target.value);
-  };
-  
-  const handleUserSelect = (user: User) => {
-    setSelectedUsers((prevSelectedUsers) => {
-      if (prevSelectedUsers.some((u) => u.id === user.id)) {
-        return prevSelectedUsers.filter((u) => u.id !== user.id);
-      } else {
-        return [...prevSelectedUsers, user];
-      }
-    });
-  };
-  
-  const handleInviteConfirm = () => {
-    alert('사용자 초대가 완료되었습니다.');
-    setIsInviteModalOpen(false);
+  const handleSaveSchedule = async () => {
+    if (!scheduleData) return;
+    
+    const updatedScheduleData: ScheduleDetailType = {
+      ...scheduleData,
+      travelRoute: markers,
+      attendeeList: selectedUsers,
+      createdAt: scheduleData.createdAt || '',
+      placeList: scheduleData.placeList || [],
+      totalPages: scheduleData.totalPages || 0,
+      currentPage: scheduleData.currentPage || 0,
+    };
+    
+    const response = await updateExistingSchedule(updatedScheduleData);
+    if (response.success) {
+      router.push('/Schedule');
+    } else {
+      console.error('일정 저장에 실패했습니다:', response.message);
+    }
   };
   
   return (
@@ -111,21 +118,15 @@ export default function ScheduleDetail({ params }: PageProps) {
         <meta property="og:type" content="website" />
         <meta name="robots" content="noindex, nofollow" />
       </Head>
-      <button className={styles.scheduleUpdateBtn}>저장</button>
+      <button className={styles.scheduleUpdateBtn} onClick={handleSaveSchedule}>저장</button>
       <button className={styles.scheduleShareBtn} onClick={handleShareClick}>공유</button>
-      
       <InviteModal
         isOpen={isInviteModalOpen}
+        scheduleId={scheduleId}
         permission={permission}
         allUsers={allUsers}
-        selectedUsers={selectedUsers}
         onClose={handleCloseModal}
-        onLinkCopy={handleLinkCopy}
-        onPermissionChange={handlePermissionChange}
-        onUserSelect={handleUserSelect}
-        onInviteConfirm={handleInviteConfirm}
       />
-      
       <div className={styles.layoutContainer}>
         <div className={styles.leftSection}>
           <ScheduleMake

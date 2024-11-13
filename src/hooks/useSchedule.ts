@@ -1,14 +1,9 @@
 import {
   useInfiniteQuery,
-  useMutation,
-  useQuery,
-  useQueryClient,
+  useQuery
 } from '@tanstack/react-query';
 import {
-  createNewSchedule,
   fetchScheduleList,
-  updateExistingSchedule,
-  deleteSchedule,
   fetchScheduleListSearch,
   fetchSharedScheduleList,
 } from '@/api/scheduleApi';
@@ -17,7 +12,6 @@ import {
   fetchTravelRoute,
   searchTravelDestinations,
 } from '@/api/locationRouteApi';
-import { leaveSchedule, shareSchedule } from '@/api/attendeeApi';
 
 // 일정 목록 조회 (GET)
 export const useScheduleList = (enabled = true) => {
@@ -82,39 +76,6 @@ export const useScheduleListSearch = (
   });
 };
 
-// 일정 만들기 생성 (POST)
-export const useCreateNewSchedule = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: createNewSchedule,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['scheduleAllList'] });
-    },
-  });
-};
-
-// 일정 만들기 수정 / 저장 (PATCH)
-export const useUpdateExistingSchedule = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: updateExistingSchedule,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['scheduleDetailList'] });
-    },
-  });
-};
-
-// 일정 삭제 (DELETE)
-export const useDeleteSchedule = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: deleteSchedule,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['scheduleAllList'] });
-    },
-  });
-};
-
 // 여행지 조회 (GET)
 export const useScheduleTravelList = (
   scheduleId: number,
@@ -152,16 +113,5 @@ export const useScheduleTravelRoute = (
     queryKey: ['scheduleTravelRouteList', scheduleId, page],
     queryFn: () => fetchTravelRoute(scheduleId, page),
     enabled,
-  });
-};
-
-// 일정 참석자 관련 - 일정 나가기 (DELETE)
-export const useLeaveSchedule = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (scheduleId: number) => leaveSchedule(scheduleId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['scheduleAllList'] });
-    },
   });
 };

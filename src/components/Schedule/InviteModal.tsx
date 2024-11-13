@@ -1,22 +1,14 @@
 import React, { useState } from 'react';
 import styles from '../../styles/Schedule.module.css';
 import { shareSchedule } from '@/api/attendeeApi';
-
-interface User {
-  id: number;
-  name: string;
-  ImageSrc :string;
-  email: string;
-  permission: string;
-}
+import { Attendee } from '@/types/scheduleType';
 
 interface InviteModalProps {
   isOpen: boolean;
   scheduleId: number;
   permission: string;
-  allUsers: User[];
+  allUsers: Attendee[];
   onClose: () => void;
-  onPermissionChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
 const InviteModal = ({
@@ -33,7 +25,11 @@ const InviteModal = ({
   
   const handleShareClick = async () => {
     try {
-      const response = await shareSchedule(scheduleId, email, selectedPermission as 'ALL' | 'EDIT' | 'CHAT' | 'READ');
+      const response = await shareSchedule(
+        scheduleId,
+        email,
+        selectedPermission as 'ALL' | 'EDIT' | 'CHAT' | 'READ'
+      );
       if (response.success) {
         alert('공유가 완료되었습니다.');
         onClose();
@@ -50,7 +46,9 @@ const InviteModal = ({
       <div className={styles.modalContainer}>
         <div className={styles.modalHeader}>
           <h2>공유하기</h2>
-          <button onClick={onClose} className={styles.closeButton}>X</button>
+          <button onClick={onClose} className={styles.closeButton}>
+            X
+          </button>
         </div>
         
         <div className={styles.emailInputContainer}>
@@ -70,18 +68,27 @@ const InviteModal = ({
             <option value="EDIT">채팅 허용</option>
             <option value="CHAT">읽기 허용</option>
           </select>
-          <button className={styles.shareButton} onClick={handleShareClick}>공유</button>
+          <button className={styles.shareButton} onClick={handleShareClick}>
+            공유
+          </button>
         </div>
         
         <h3>공유중인 사용자</h3>
         <ul className={styles.userList}>
-          {allUsers && allUsers.map((user) => (
-            <li key={user.id} className={styles.userListItem}>
-              <span className={styles.userIcon}>({user.ImageSrc})</span>
-              <span className={styles.userName}>{user.name} ({user.email})</span>
-              <span className={styles.userPermission}>{user.permission}</span>
-            </li>
-          ))}
+          {allUsers &&
+            allUsers.map((user) => (
+              <li key={user.userId} className={styles.userListItem}>
+                <img
+                  src={user.ImageSrc}
+                  alt={`${user.name}'s profile`}
+                  className={styles.userIcon}
+                />
+                <span className={styles.userName}>
+                  {user.name} ({user.email})
+                </span>
+                <span className={styles.userPermission}>{user.permission}</span>
+              </li>
+            ))}
         </ul>
       </div>
     </div>

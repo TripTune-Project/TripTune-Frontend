@@ -6,25 +6,7 @@ import ScheduleTravelSearch from '@/components/Schedule/ScheduleTravelSearch';
 import ScheduleRoute from '@/components/Schedule/ScheduleRoute';
 import CalendarModal from '@/components/Common/CalendarModal';
 import { fetchScheduleDetail } from '@/api/scheduleApi';
-
-interface ScheduleDetail {
-  scheduleName: string;
-  startDate: string;
-  endDate: string;
-}
-
-interface Place {
-  placeId: number;
-  placeName: string;
-  thumbnailUrl: string | null;
-  country: string;
-  city: string;
-  district: string;
-  address: string;
-  detailAddress?: string;
-  latitude: number;
-  longitude: number;
-}
+import { ScheduleType, Place } from '@/types/scheduleType';
 
 interface ScheduleMakeProps {
   scheduleId: number;
@@ -39,7 +21,7 @@ const ScheduleMake = ({
 }: ScheduleMakeProps) => {
   const [tab, setTab] = useState(initialTab);
   const [currentPage, setCurrentPage] = useState(1);
-  const [scheduleDetail, setScheduleDetail] = useState<ScheduleDetail | null>(
+  const [scheduleDetail, setScheduleDetail] = useState<ScheduleType | null>(
     null
   );
   const [addedPlaces, setAddedPlaces] = useState<Place[]>([]);
