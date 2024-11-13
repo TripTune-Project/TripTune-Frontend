@@ -1,4 +1,7 @@
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import {
+  useInfiniteQuery,
+  useQuery
+} from '@tanstack/react-query';
 import {
   fetchScheduleList,
   fetchScheduleListSearch,
@@ -20,7 +23,7 @@ export const useScheduleList = (enabled = true) => {
     getNextPageParam: (lastPage) => {
       const currentPage = lastPage?.data?.currentPage ?? 0;
       const totalPages = lastPage?.data?.totalPages ?? 0;
-
+      
       if (currentPage < totalPages) {
         return currentPage + 1;
       }
@@ -39,7 +42,7 @@ export const useSharedScheduleList = (enabled = true) => {
     getNextPageParam: (lastPage) => {
       const currentPage = lastPage?.data?.currentPage ?? 0;
       const totalPages = lastPage?.data?.totalPages ?? 0;
-
+      
       if (currentPage < totalPages) {
         return currentPage + 1;
       }
@@ -64,7 +67,7 @@ export const useScheduleListSearch = (
     getNextPageParam: (lastPage) => {
       const currentPage = lastPage?.data?.currentPage ?? 0;
       const totalPages = lastPage?.data?.totalPages ?? 0;
-
+      
       if (currentPage < totalPages) {
         return currentPage + 1;
       }

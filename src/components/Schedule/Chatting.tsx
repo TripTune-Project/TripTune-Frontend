@@ -1,209 +1,115 @@
 import React, { useState, useEffect } from 'react';
+import { Client, StompSubscription } from '@stomp/stompjs';
+import { fetchScheduleChats, sendScheduleChat } from '@/api/chatApi';
 import styles from '../../styles/Schedule.module.css';
+import { ChatUserType } from '@/types/scheduleType';
 
-interface User {
-  id: number;
-  name: string;
-  email: string;
-}
-
-const Chatting = () => {
-  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+const Chatting = ({ scheduleId }: { scheduleId: number }) => {
   const [message, setMessage] = useState('');
-  const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
-  const [link, setLink] = useState('https://chat.example.com');
-  const [allUsers, setAllUsers] = useState<User[]>([]);
-  const [messages, setMessages] = useState<string[]>([]);
-  const [socket, setSocket] = useState<WebSocket | null>(null);
-  const [permission, setPermission] = useState('모두허용');
-
-  useEffect(() => {
-    // 기본 채팅방 WebSocket 설정
-    const newSocket = new WebSocket('wss://chat.example.com/websocket');
-    setSocket(newSocket);
-
-    newSocket.onmessage = (event) => {
-      setMessages((prevMessages) => [...prevMessages, event.data]);
-    };
-
-    return () => {
-      newSocket.close();
-    };
-  }, []);
-
-  const handleInviteClick = () => {
-    setIsInviteModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsInviteModalOpen(false);
-  };
-
-  const handleMessageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setMessage(event.target.value);
-  };
-
-  const handleSendMessage = () => {
-    if (message.trim() && socket) {
-      socket.send(message);
-      setMessage('');
-    }
-  };
-
-  const handleUserSelect = (user: User) => {
-    setSelectedUsers((prevSelected) =>
-      prevSelected.some((u) => u.id === user.id)
-        ? prevSelected.filter((u) => u.id !== user.id)
-        : [...prevSelected, user]
-    );
-  };
-
-  const handleInviteConfirm = () => {
-    if (selectedUsers.length > 0) {
-      console.log('초대된 대화 상대:', selectedUsers);
-      selectedUsers.forEach((user) => {
-        console.log(`초대 링크를 ${user.email}로 전송: ${link}`);
-        sendEmail(user.email, link);
-      });
-      setIsInviteModalOpen(false);
+  const [messages, setMessages] = useState<ChatUserType[]>([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [client, setClient] = useState<Client | null>(null);
+  
+  const loadMessages = async () => {
+    const response = await fetchScheduleChats(scheduleId, page);
+    if (response.success && response.data) {
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        ...response.data.content,
+      ]);
+      setPage((prevPage) => prevPage + 1);
+      setHasMore(response.data.currentPage < response.data.totalPages);
     } else {
-      console.log('선택된 대화 상대가 없습니다.');
+      console.error('채팅 기록을 불러오는 데 실패했습니다:', response.message);
     }
   };
-
-  const sendEmail = (email: string, link: string) => {
-    // 이메일 전송을 위한 모의 함수
-    console.log(`이메일 전송: ${email} - 초대 링크: ${link}`);
-    // 실제 이메일 전송 로직은 백엔드 API를 통해 구현해야 합니다.
-  };
-
-  const handleLinkCopy = () => {
-    navigator.clipboard.writeText(link).then(() => {
-      console.log('링크가 클립보드에 복사되었습니다.');
+  
+  useEffect(() => {
+    loadMessages();
+    
+    const stompClient = new Client({
+      brokerURL: `ws://13.209.177.247:8080/ws`,
+      reconnectDelay: 5000,
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
     });
+    
+    stompClient.onConnect = () => {
+      const subscription: StompSubscription = stompClient.subscribe(
+        `/schedule/${scheduleId}`,
+        (message) => {
+          const newMessage = JSON.parse(message.body);
+          setMessages((prevMessages) => [...prevMessages, newMessage]);
+        }
+      );
+    };
+    
+    stompClient.activate();
+    setClient(stompClient);
+    
+    return () => {
+      stompClient.deactivate();
+    };
+  }, [scheduleId]);
+  
+  const handleSendMessage = async () => {
+    if (message.trim() && client) {
+      client.publish({
+        destination: `/schedules/${scheduleId}/chats`,
+        body: JSON.stringify({ message }),
+      });
+      setMessage('');
+      
+      const response = await sendScheduleChat(scheduleId, message);
+      if (!response.success) {
+        console.error('메시지 전송 실패:', response.message);
+      }
+    }
   };
-
-  const handlePermissionChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setPermission(event.target.value);
-    setLink(`https://chat.example.com?permission=${event.target.value}`);
-  };
-
+  
   return (
     <div className={styles.chatContainer}>
       <div className={styles.header}>
-        <h1 className={styles.chatTitle}>채팅하기</h1>
-        <button className={styles.plusButton} onClick={handleInviteClick}>
-          {'+'}
-        </button>
-      </div>
-      <div className={styles.centerContainer}>
-        <button className={styles.inviteButton} onClick={handleInviteClick}>
-          대화상대 초대하기
-        </button>
+        <h1 className={styles.chatTitle}>그룹 채팅</h1>
       </div>
       <div className={styles.messageContainer}>
-        {messages.map((msg, index) => (
-          <div key={index} className={styles.message}>
-            {msg}
+        {messages.map((user, userIndex) => (
+          <div key={userIndex} className={styles.userMessages}>
+            <div className={styles.userInfo}>
+              <img
+                src={user.profileImage}
+                alt={`${user.nickname} 프로필`}
+                className={styles.profileImage}
+              />
+              <span className={styles.nickname}>{user.nickname}</span>
+            </div>
+            {user.messages.map((msg) => (
+              <div key={msg.messageId} className={styles.message}>
+                <span>{msg.message}</span>
+                <span className={styles.timestamp}>{msg.timestamp}</span>
+              </div>
+            ))}
           </div>
         ))}
+        {hasMore && (
+          <button onClick={loadMessages} className={styles.loadMoreButton}>
+            더 불러오기
+          </button>
+        )}
       </div>
       <div className={styles.inputContainer}>
         <input
-          type='text'
+          type="text"
           value={message}
-          onChange={handleMessageChange}
+          onChange={(e) => setMessage(e.target.value)}
           className={styles.messageInput}
-          placeholder='메시지를 입력하세요.'
+          placeholder="메시지를 입력하세요."
         />
         <button onClick={handleSendMessage} className={styles.sendButton}>
           전송
         </button>
       </div>
-
-      {isInviteModalOpen && (
-        <div className={styles.chattingModalOverlay}>
-          <div className={styles.chattingModalContainer}>
-            <button onClick={handleCloseModal} className={styles.closeButton}>
-              X
-            </button>
-            <h3>대화상대 초대하기</h3>
-            <div className={styles.permissionContainer}>
-              <label>
-                <input
-                  type='radio'
-                  name='permission'
-                  value='all'
-                  checked={permission === 'all'}
-                  onChange={handlePermissionChange}
-                />
-                모두 허용
-              </label>
-              <label>
-                <input
-                  type='radio'
-                  name='permission'
-                  value='edit'
-                  checked={permission === 'edit'}
-                  onChange={handlePermissionChange}
-                />
-                편집 가능
-              </label>
-              <label>
-                <input
-                  type='radio'
-                  name='permission'
-                  value='chat'
-                  checked={permission === 'chat'}
-                  onChange={handlePermissionChange}
-                />
-                채팅 가능
-              </label>
-              <label>
-                <input
-                  type='radio'
-                  name='permission'
-                  value='read'
-                  checked={permission === 'read'}
-                  onChange={handlePermissionChange}
-                />
-                읽기 전용
-              </label>
-            </div>
-            <div className={styles.linkContainer}>
-              <label>
-                초대 링크:
-                <input type='text' value={link} readOnly />
-              </label>
-              <button onClick={handleLinkCopy} className={styles.copyButton}>
-                링크 복사하기
-              </button>
-            </div>
-            <ul className={styles.userList}>
-              {allUsers.map((user) => (
-                <li key={user.id}>
-                  <label>
-                    <input
-                      type='checkbox'
-                      checked={selectedUsers.some((u) => u.id === user.id)}
-                      onChange={() => handleUserSelect(user)}
-                    />
-                    {user.name} ({user.email})
-                  </label>
-                </li>
-              ))}
-            </ul>
-            <button
-              onClick={handleInviteConfirm}
-              className={styles.confirmButton}
-            >
-              초대 확인
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
