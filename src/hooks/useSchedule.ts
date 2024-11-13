@@ -1,6 +1,14 @@
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
+import {
+  createNewSchedule,
   fetchScheduleList,
+  updateExistingSchedule,
+  deleteSchedule,
   fetchScheduleListSearch,
   fetchSharedScheduleList,
 } from '@/api/scheduleApi';
@@ -9,6 +17,7 @@ import {
   fetchTravelRoute,
   searchTravelDestinations,
 } from '@/api/locationRouteApi';
+import { leaveSchedule, shareSchedule } from '@/api/attendeeApi';
 
 // 일정 목록 조회 (GET)
 export const useScheduleList = (enabled = true) => {
@@ -20,7 +29,7 @@ export const useScheduleList = (enabled = true) => {
     getNextPageParam: (lastPage) => {
       const currentPage = lastPage?.data?.currentPage ?? 0;
       const totalPages = lastPage?.data?.totalPages ?? 0;
-
+      
       if (currentPage < totalPages) {
         return currentPage + 1;
       }
@@ -39,7 +48,7 @@ export const useSharedScheduleList = (enabled = true) => {
     getNextPageParam: (lastPage) => {
       const currentPage = lastPage?.data?.currentPage ?? 0;
       const totalPages = lastPage?.data?.totalPages ?? 0;
-
+      
       if (currentPage < totalPages) {
         return currentPage + 1;
       }
@@ -64,11 +73,44 @@ export const useScheduleListSearch = (
     getNextPageParam: (lastPage) => {
       const currentPage = lastPage?.data?.currentPage ?? 0;
       const totalPages = lastPage?.data?.totalPages ?? 0;
-
+      
       if (currentPage < totalPages) {
         return currentPage + 1;
       }
       return undefined;
+    },
+  });
+};
+
+// 일정 만들기 생성 (POST)
+export const useCreateNewSchedule = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: createNewSchedule,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['scheduleAllList'] });
+    },
+  });
+};
+
+// 일정 만들기 수정 / 저장 (PATCH)
+export const useUpdateExistingSchedule = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updateExistingSchedule,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['scheduleDetailList'] });
+    },
+  });
+};
+
+// 일정 삭제 (DELETE)
+export const useDeleteSchedule = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deleteSchedule,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['scheduleAllList'] });
     },
   });
 };
@@ -110,5 +152,16 @@ export const useScheduleTravelRoute = (
     queryKey: ['scheduleTravelRouteList', scheduleId, page],
     queryFn: () => fetchTravelRoute(scheduleId, page),
     enabled,
+  });
+};
+
+// 일정 참석자 관련 - 일정 나가기 (DELETE)
+export const useLeaveSchedule = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (scheduleId: number) => leaveSchedule(scheduleId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['scheduleAllList'] });
+    },
   });
 };
