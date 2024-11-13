@@ -2,13 +2,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
-import {
-  useScheduleList,
-  useSharedScheduleList,
-  useDeleteSchedule,
-  useScheduleListSearch,
-  useLeaveSchedule,
-} from '@/hooks/useSchedule';
 import styles from '@/styles/Schedule.module.css';
 import ScheduleModal from '@/components/Schedule/ScheduleModal';
 import DataLoading from '@/components/Common/DataLoading';
@@ -21,6 +14,13 @@ import ScheduleImage from '../../../public/assets/images/일정 만들기/일정
 import NoscheduleIcon from '../../../public/assets/images/일정 만들기/일정 목록 조회/scheduleIcon.png';
 import searchIcon from '../../../public/assets/images/일정 만들기/일정 목록 조회/searchIcon.png';
 import useAuth from '@/hooks/useAuth';
+import {
+  useScheduleList,
+  useSharedScheduleList,
+  useScheduleListSearch,
+} from '@/hooks/useSchedule';
+import { deleteSchedule } from '@/api/scheduleApi';
+import { leaveSchedule } from '@/api/attendeeApi';
 
 export default function Schedule() {
   const router = useRouter();
@@ -69,9 +69,6 @@ export default function Schedule() {
 
   const observerRef = useRef<HTMLDivElement | null>(null);
 
-  const { mutate: deleteScheduleMutate } = useDeleteSchedule();
-  const { mutate: leaveScheduleMutate } = useLeaveSchedule();
-
   const handleOpenModal = () => {
     setIsModalOpen(true);
   };
@@ -86,23 +83,41 @@ export default function Schedule() {
     );
   };
 
-  const handleDeleteConfirmation = () => {
+  const handleDeleteConfirmation = async () => {
     if (selectedScheduleId) {
-      deleteScheduleMutate(selectedScheduleId, {
-        onSuccess: () => {
-          setActiveDeleteMenu(null);
-          setIsDeleteModalOpen(false);
-        },
-        onError: () => {
+      try {
+        const response = await deleteSchedule(selectedScheduleId);
+        if (response.success) {
+          alert('일정이 성공적으로 삭제되었습니다.');
+          window.location.reload();
+        } else {
           alert('일정 삭제 중 오류가 발생했습니다.');
-        },
-      });
+        }
+      } catch (error) {
+        alert('서버 내부 오류가 발생하였습니다.');
+      }
     }
   };
 
   const handleDeleteSchedule = (event: React.MouseEvent) => {
     event.stopPropagation();
     setIsDeleteModalOpen(true);
+  };
+
+  const handleLeaveSchedule = async (scheduleId: number) => {
+    if (!scheduleId) return;
+
+    try {
+      const response = await leaveSchedule(scheduleId);
+      if (response.success) {
+        alert('일정에서 성공적으로 나갔습니다.');
+        window.location.reload();
+      } else {
+        alert('일정 나가기 중 오류가 발생했습니다.');
+      }
+    } catch (error) {
+      alert('서버 내부 오류가 발생하였습니다.');
+    }
   };
 
   const fetchNextPage = isSearching
@@ -152,17 +167,9 @@ export default function Schedule() {
     setSearchKeyword(e.target.value);
   };
 
-  if (isAllScheduleLoading || isSharedScheduleLoading) {
-    return <DataLoading />;
-  }
-
-  if (isAllScheduleError || isSharedScheduleError) {
-    return <div>일정 목록을 불러오는 중 오류가 발생했습니다.</div>;
-  }
-
   const handleDetailClick = (e: React.MouseEvent, scheduleId: number) => {
     if (!activeDeleteMenu) {
-      router.push(`/Schedule/${scheduleId}`);
+      router.push(`/Travel/${scheduleId}`);
     }
   };
 
@@ -265,19 +272,13 @@ export default function Schedule() {
     ));
   };
 
-  const handleLeaveSchedule = (scheduleId: number) => {
-    if (!scheduleId) return;
+  if (isAllScheduleLoading || isSharedScheduleLoading) {
+    return <DataLoading />;
+  }
 
-    leaveScheduleMutate(scheduleId, {
-      onSuccess: () => {
-        alert('일정에서 나갔습니다.');
-        setActiveDeleteMenu(null);
-      },
-      onError: () => {
-        alert('일정 나가기 중 오류가 발생했습니다.');
-      },
-    });
-  };
+  if (isAllScheduleError || isSharedScheduleError) {
+    return <div>일정 목록을 불러오는 중 오류가 발생했습니다.</div>;
+  }
 
   return (
     <div className={styles.schedule}>
@@ -292,7 +293,6 @@ export default function Schedule() {
           content='여행 일정, 여행 계획, 일정 관리, 최근 여행, 여행 검색'
         />
         <meta name='viewport' content='width=device-width, initial-scale=1' />
-
         <meta property='og:title' content='최근 일정 - 나만의 여행 계획 보기' />
         <meta
           property='og:description'
@@ -303,7 +303,6 @@ export default function Schedule() {
           property='og:url'
           content='https://triptune.netlify.app/Schedule'
         />
-
         <meta name='robots' content='noindex, nofollow' />
       </Head>
       <div className={styles.scheduleTop}>

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import PlacesScheduleMap from '@/components/Schedule/PlacesScheduleMap';
 import ScheduleMake from '@/components/Schedule/ScheduleMake';
-import InviteModal from '@/components/Schedule/InviteModal'; // InviteModal 임포트
+import InviteModal from '@/components/Schedule/InviteModal';
 import styles from '../../../styles/Schedule.module.css';
 import Chatting from '@/components/Schedule/Chatting';
 import useAuth from '@/hooks/useAuth';
