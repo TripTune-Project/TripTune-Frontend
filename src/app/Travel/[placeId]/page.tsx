@@ -1,5 +1,6 @@
 'use client';
 
+import React, { useRef, useState, useEffect } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -21,68 +22,47 @@ import timeIcon from '../../../../public/assets/images/여행지 탐색/상세�
 import homePageIcon from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_homepageIcon.png';
 import phoneIcon from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_phoneIcon.png';
 import { fetchTravelDetail } from '@/api/travelApi';
-import { useState, useEffect } from 'react';
+import { TravelPlaceDetail } from '@/types/travelType';
 
 const StyledSwiperContainer = styled.div`
-    position: relative;
-    width: 749px;
-    height: 512px;
+  position: relative;
+  width: 749px;
+  height: 512px;
 `;
 
 const StyledSwiperButtonPrev = styled.button`
-    position: absolute;
-    top: 50%;
-    left: 10px;
-    transform: translateY(-50%);
-    border: none;
-    cursor: pointer;
-    z-index: 10;
-    user-select: none;
-
-    &::after {
-        content: '';
-        display: block;
-        width: 20px;
-        height: 30px;
-        background-repeat: no-repeat;
-        background-image: url('/assets/images/여행지 탐색/상세화면/placeDetail_imageLeftBtn.png');
-    }
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+  user-select: none;
+  width: 50px;
+  height: 50px;
+  background-image: url('/assets/images/여행지 탐색/상세화면/placeDetail_imageLeftBtn.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 `;
 
 const StyledSwiperButtonNext = styled.button`
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-    border: none;
-    cursor: pointer;
-    z-index: 10;
-    user-select: none;
-
-    &::after {
-        content: '';
-        display: block;
-        width: 20px;
-        height: 30px;
-        background-repeat: no-repeat;
-        background-image: url('/assets/images/여행지 탐색/상세화면/placeDetail_imageRightBtn.png');
-    }
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+  user-select: none;
+  width: 50px;
+  height: 50px;
+  background-image: url('/assets/images/여행지 탐색/상세화면/placeDetail_imageRightBtn.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 `;
-
-interface TravelPlaceDetail {
-  placeName: string;
-  country: string;
-  city: string;
-  district: string;
-  address: string;
-  description: string;
-  imageList: { imageUrl: string; imageName: string }[];
-  latitude: number;
-  longitude: number;
-  phoneNumber?: string;
-  homepage?: string;
-  useTime?: string;
-}
 
 interface TravelDetailPageProps {
   params: { placeId: string };
@@ -91,9 +71,15 @@ interface TravelDetailPageProps {
 const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
   const placeIdNumber = parseInt(params.placeId, 10);
   const [data, setData] = useState<TravelPlaceDetail | null>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const [showExpandButton, setShowExpandButton] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  
+
+  const descriptionRef = useRef<HTMLParagraphElement | null>(null);
+  const prevButtonRef = useRef<HTMLButtonElement | null>(null);
+  const nextButtonRef = useRef<HTMLButtonElement | null>(null);
+
   useEffect(() => {
     const fetchData = async () => {
       const result = await fetchTravelDetail(placeIdNumber);
@@ -105,7 +91,24 @@ const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
     };
     fetchData();
   }, [placeIdNumber]);
-  
+
+  useEffect(() => {
+    if (descriptionRef.current) {
+      requestAnimationFrame(() => {
+        const descriptionElement = descriptionRef.current;
+        if (descriptionElement) {
+          const style = getComputedStyle(descriptionElement);
+          const lineHeight = parseFloat(style.lineHeight) || 20;
+          const scrollHeight = descriptionElement.scrollHeight;
+          if (!isNaN(lineHeight)) {
+            const lineCount = scrollHeight / lineHeight;
+            setShowExpandButton(lineCount > 3);
+          }
+        }
+      });
+    }
+  }, [isExpanded, data]);
+
   const toggleBookmark = async () => {
     setIsLoading(true);
     try {
@@ -122,13 +125,68 @@ const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
       setIsLoading(false);
     }
   };
-  
+
   const handleScheduleAdd = () => {
     console.log('내 일정에 추가되었습니다.');
   };
-  
+
+  const UseTimeUI = ({ useTime }: { useTime: string }) => (
+    <div className={styles.useTimeLabel}>
+      <Image width={18} height={18} src={timeIcon} alt={'이용 시간'} />
+      <p>이용시간</p> {useTime}
+    </div>
+  );
+
+  const CheckInOutUI = ({
+    checkInTime,
+    checkOutTime,
+  }: {
+    checkInTime: string;
+    checkOutTime: string;
+  }) => (
+    <div className={styles.useTimeLabel}>
+      <Image width={18} height={18} src={timeIcon} alt={'입/퇴실 시간'} />
+      <p>입실시간</p> {checkInTime}
+      <p>퇴실시간</p> {checkOutTime}
+    </div>
+  );
+
+  const renderTimeContent = (
+    checkInTime?: string,
+    checkOutTime?: string,
+    useTime?: string
+  ) => {
+    if (checkInTime || checkOutTime) {
+      return (
+        <CheckInOutUI
+          checkInTime={checkInTime ?? ''}
+          checkOutTime={checkOutTime ?? ''}
+        />
+      );
+    } else if (useTime) {
+      return <UseTimeUI useTime={useTime} />;
+    } else {
+      return null;
+    }
+  };
+
+  const formatDescriptionWithParagraphs = (text: string) => {
+    const paragraphs = text.split(/\n+/);
+    return paragraphs.map((paragraph, index) => (
+      <React.Fragment key={index}>
+        {paragraph}
+        {index < paragraphs.length - 1 && <br />}
+        {index < paragraphs.length - 1 && <br />}
+      </React.Fragment>
+    ));
+  };
+
+  const handleExpandClick = () => {
+    setIsExpanded(!isExpanded);
+  };
+
   if (!data) return <DataLoading />;
-  
+
   const {
     placeName,
     country,
@@ -142,35 +200,56 @@ const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
     phoneNumber,
     homepage,
     useTime,
+    checkOutTime,
+    checkInTime,
   } = data;
-  
+
   const extractHomepageUrl = (htmlString: string) => {
     if (!htmlString) return '';
     const urlMatch = htmlString.match(/href="([^"]*)"/);
     return urlMatch ? urlMatch[1] : '';
   };
-  
+
   const homepageUrl = homepage ? extractHomepageUrl(homepage) : '';
-  
+
   return (
     <>
       <Head>
         <title>{placeName} - 여행지 상세 정보</title>
-        <meta name="description" content={`${placeName}의 상세 정보를 확인하세요.`} />
-        <meta property="og:title" content={`${placeName} - 여행지 상세 정보`} />
+        <meta
+          name='description'
+          content={`${placeName}의 상세 정보를 확인하세요.`}
+        />
       </Head>
       <div className={styles.travelDetailContent}>
         <div className={styles.topSection}>
           {imageList && imageList.length > 0 ? (
             <StyledSwiperContainer>
-              <Swiper modules={[Navigation, Pagination]} slidesPerView={1} loop>
+              <Swiper
+                modules={[Navigation, Pagination]}
+                slidesPerView={1}
+                loop
+                navigation={{
+                  prevEl: prevButtonRef.current,
+                  nextEl: nextButtonRef.current,
+                }}
+                onBeforeInit={(swiper) => {
+                  if (
+                    swiper.params.navigation &&
+                    typeof swiper.params.navigation === 'object'
+                  ) {
+                    swiper.params.navigation.prevEl = prevButtonRef.current;
+                    swiper.params.navigation.nextEl = nextButtonRef.current;
+                  }
+                }}
+              >
                 {imageList.map((image, index) => (
                   <SwiperSlide key={index}>
                     <div className={styles.sliderImageContainer}>
                       <Image
                         src={image.imageUrl}
                         alt={image.imageName}
-                        layout="responsive"
+                        layout='responsive'
                         width={749}
                         height={512}
                       />
@@ -178,8 +257,8 @@ const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
                   </SwiperSlide>
                 ))}
               </Swiper>
-              <StyledSwiperButtonPrev />
-              <StyledSwiperButtonNext />
+              <StyledSwiperButtonPrev ref={prevButtonRef} />
+              <StyledSwiperButtonNext ref={nextButtonRef} />
             </StyledSwiperContainer>
           ) : (
             <div className={styles.noImage}>이미지가 없습니다.</div>
@@ -193,33 +272,42 @@ const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
               <Image width={14} height={21} src={locationIcon} alt={'주소'} />
               <p> 주소 </p> {address}
             </div>
-            {useTime && (
-              <div className={styles.useTimeLabel}>
-                <Image width={18} height={18} src={timeIcon} alt={'이용 시간'} />
-                <p> 이용 시간</p> {useTime}
-              </div>
-            )}
+            {renderTimeContent(checkInTime, checkOutTime, useTime)}
             {homepageUrl && (
               <div className={styles.homepageLabel}>
-                <Image width={18} height={18} src={homePageIcon} alt="홈페이지" />
-                <a href={homepageUrl} target="_blank" rel="noopener noreferrer">
+                <Image
+                  width={18}
+                  height={18}
+                  src={homePageIcon}
+                  alt='홈페이지'
+                />
+                <a href={homepageUrl} target='_blank' rel='noopener noreferrer'>
                   {homepageUrl}
                 </a>
               </div>
             )}
             {phoneNumber && (
               <div className={styles.phoneLabel}>
-                <Image width={36} height={28} src={phoneIcon} alt={'문의 및 안내'} />
+                <Image
+                  width={36}
+                  height={28}
+                  src={phoneIcon}
+                  alt={'문의 및 안내'}
+                />
                 <p> 문의 및 안내 </p> {phoneNumber}
               </div>
             )}
             <div className={styles.buttonContainer}>
-              <button onClick={toggleBookmark} className={styles.bookmarkBtn} disabled={isLoading}>
+              <button
+                onClick={toggleBookmark}
+                className={styles.bookmarkBtn}
+                disabled={isLoading}
+              >
                 <Image
                   width={13}
                   height={17}
                   src={isBookmarked ? detailBookMark : detailBookMarkNo}
-                  alt="북마크"
+                  alt='북마크'
                 />
                 {isBookmarked ? '북마크 해제' : '북마크'}
               </button>
@@ -228,7 +316,7 @@ const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
                   width={25}
                   height={21}
                   src={scheduleIcon}
-                  alt="일정 등록"
+                  alt='일정 등록'
                 />
                 내 일정 담기
               </button>
@@ -236,11 +324,31 @@ const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
           </div>
         </div>
         <h2 className={styles.detailTitle}>
-          <Image className={styles.detailTitleIcon} src={triptuneIcon} alt="상세 설명" />
+          <Image
+            className={styles.detailTitleIcon}
+            src={triptuneIcon}
+            alt='상세 설명'
+          />
           상세 설명
         </h2>
         <div className={styles.infoSection}>
-          <p className={styles.infoText}>{description}</p>
+          <p
+            ref={descriptionRef}
+            className={styles.infoText}
+            style={{
+              display: isExpanded ? 'block' : '-webkit-box',
+              WebkitLineClamp: isExpanded ? 'unset' : 3,
+            }}
+          >
+            {description
+              ? formatDescriptionWithParagraphs(description)
+              : '상세 설명을 불러오는 중입니다...'}
+          </p>
+          {showExpandButton && (
+            <button onClick={handleExpandClick} className={styles.expandButton}>
+              {isExpanded ? '접기 ▲' : '내용 더 보기 ▼'}
+            </button>
+          )}
         </div>
         <DetailPlaceMap latitude={latitude ?? 0} longitude={longitude ?? 0} />
       </div>

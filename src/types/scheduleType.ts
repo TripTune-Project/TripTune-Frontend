@@ -27,7 +27,7 @@ export interface ScheduleAllListType {
   totalPages: number;
   currentPage: number;
   totalElements: number;
-  totalSharedElements :number;
+  totalSharedElements: number;
   pageSize: number;
   content: Place[];
 }
