@@ -78,8 +78,8 @@ const ScheduleTravelSearch = ({ onAddMarker }: ScheduleTravelSearchProps) => {
                     <Image
                       src={place.thumbnailUrl}
                       alt={place.placeName}
-                      width={150}
-                      height={150}
+                      width={100}
+                      height={100}
                       className={styles.thumbnailImage}
                       priority
                     />
@@ -89,9 +89,9 @@ const ScheduleTravelSearch = ({ onAddMarker }: ScheduleTravelSearchProps) => {
                 </div>
                 <div className={styles.placeInfo}>
                   <div className={styles.placeName}>{place.placeName}</div>
-                  <p
-                    className={styles.placeAddress}
-                  >{`${place.country} / ${place.city} / ${place.district}`}</p>
+                  <p className={styles.placeAddress}>
+                    {`${place.country} / ${place.city} / ${place.district}`}
+                  </p>
                   <p className={styles.placeDetailAddress}>
                     <Image
                       src={locationIcon}
@@ -101,15 +101,14 @@ const ScheduleTravelSearch = ({ onAddMarker }: ScheduleTravelSearchProps) => {
                     />
                     &nbsp;{place.address} {place.detailAddress}
                   </p>
-                  <div className={styles.distanceInfo}>
-                    <button
-                      className={styles.addButton}
-                      onClick={() => onAddMarker(place)}
-                    >
-                      추가
-                    </button>
-                  </div>
                 </div>
+                {/* TODO : +의 역할 그리고 -의 역할 */}
+                <button
+                  className={styles.addButton}
+                  onClick={() => onAddMarker(place)}
+                >
+                  +
+                </button>
               </li>
             ))}
           </ul>
@@ -118,7 +117,7 @@ const ScheduleTravelSearch = ({ onAddMarker }: ScheduleTravelSearchProps) => {
         )}
       </div>
       <Pagination
-        total={totalPages * 4}
+        total={totalPages * 5}
         currentPage={currentPage}
         pageSize={5}
         onPageChange={setCurrentPage}

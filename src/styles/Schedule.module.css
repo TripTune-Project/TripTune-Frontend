@@ -421,18 +421,24 @@
 }
 
 /* 일정만들기 : 일정 기본 틀 */
-.scheduleUpdateBtn {
+.scheduleUpdateBtn,
+.scheduleShareBtn {
   background-color: #76adac;
   color: white;
   padding: 12px 24px;
   border: none;
-  border-radius: 8px;
   cursor: pointer;
   font-size: 18px;
   font-family: 'Noto Sans KR', sans-serif;
   transition: background-color 0.3s ease;
   margin: 20px 0;
   float: right;
+  margin-left: 10px;
+}
+
+.scheduleShareBtn {
+  background-color: #f5f5f5;
+  color: black;
 }
 
 .pageContainer {
@@ -468,12 +474,12 @@
   line-height: normal;
   background-color: #ffffff;
   border: 1px solid #848282;
-  border-bottom: 3px solid #76adac;
+  border-bottom: 3px solid #74a5da;
   cursor: pointer;
 }
 
 .tabButton.activeTab {
-  border: 3px solid #76adac;
+  border: 3px solid #74a5da;
   border-bottom: none;
   color: #000;
 }
@@ -636,14 +642,15 @@
 
 .placeItem {
   display: flex;
-  margin-bottom: 20px;
-  padding: 15px;
+  align-items: center;
+  padding: 10px;
   border: 1px solid #ddd;
   border-radius: 8px;
-  align-items: center;
-  justify-content: space-between;
   background-color: #fff;
+  margin-bottom: 20px;
+  position: relative;
   transition: box-shadow 0.3s ease;
+  height: 130px;
 }
 
 .placeItem:hover {
@@ -651,19 +658,18 @@
 }
 
 .placeThumbnail {
-  margin-right: 20px;
-  width: 150px;
-  height: 150px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f0f0f0;
+  width: 100px;
+  height: 100px;
   border-radius: 8px;
   overflow: hidden;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
 }
 
 .thumbnailImage {
-  border-radius: 8px;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -691,10 +697,46 @@
 }
 
 .placeInfo {
-  position: relative;
   flex: 1;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+}
+
+.placeName {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.placeAddress,
+.placeDetailAddress {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 4px;
+}
+
+.placeDetailAddress {
+  display: flex;
+  align-items: center;
+}
+
+.addButton {
+  width: 34px;
+  height: 80px;
+  background-color: #74a5da;
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  border: none;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 10px;
 }
 
 .bookmarkButton {
@@ -714,35 +756,12 @@
   margin-left: 0;
 }
 
-.placeAddress,
-.placeDetailAddress {
-  line-height: 2em;
-  margin: 2px 0;
-  color: #555;
-  font-size: 14px;
-}
-
-.placeDetailAddress {
-  display: flex;
-  align-items: center;
-}
-
 .distanceInfo {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
   color: #555;
   font-size: 14px;
-}
-
-.addButton {
-  background-color: #76adac;
-  color: #fff;
-  font-size: 16px;
-  font-family: 'Noto Sans KR', sans-serif;
-  padding: 12px 20px;
-  border: none;
-  cursor: pointer;
 }
 
 .travelSearchContainerSearch,
@@ -768,10 +787,10 @@
 
 .travelSearchContainerSearch input,
 .travelSearchContainer input {
-  width: 350px;
+  width: 460px;
   padding: 10px 15px;
   font-size: 16px;
-  border-radius: 25px;
+  border-radius: 18px;
   border: 1px solid #ccc;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
@@ -779,7 +798,7 @@
 
 .travelSearchContainerSearch input:focus,
 .travelSearchContainer input:focus {
-  border-color: #76adac;
+  border-color: #74a5da;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   outline: none;
 }
@@ -787,10 +806,9 @@
 .travelSearchContainerSearch button,
 .travelSearchContainer button {
   padding: 10px 20px;
-  background-color: #76adac;
-  color: #fff;
+  background-color: #74a5da;
+  color: #ffffff;
   border: none;
-  border-radius: 25px;
   cursor: pointer;
   font-size: 16px;
   transition: all 0.3s ease;
@@ -905,12 +923,12 @@
 }
 
 .messageInput:focus {
-  border-color: #007bff;
+  border-color: #74a5da;
   outline: none;
 }
 
 .sendButton {
-  background-color: #007bff;
+  background-color: #74a5da;
   color: #ffffff;
   padding: 12px 20px;
   border: none;
@@ -1092,14 +1110,14 @@
 }
 
 .travelSearchContainer input:focus {
-  border-color: #76adac;
+  border-color: #74a5da;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   outline: none;
 }
 
 .travelSearchContainer button {
   padding: 10px 20px;
-  background-color: #76adac;
+  background-color: #74a5da;
   color: #fff;
   border: none;
   border-radius: 25px;
@@ -1220,4 +1238,166 @@
   color: #333;
   text-align: center;
   margin-bottom: 15px;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContainer {
+  background-color: #ffffff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 500px;
+  position: relative;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #333333;
+  padding: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.closeButton:hover {
+  background-color: #f0f0f0;
+  border-radius: 50%;
+}
+
+.emailInputContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.emailInput {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.permissionSelect {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: #ffffff;
+}
+
+.shareButton {
+  background-color: #007bff;
+  color: #ffffff;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.shareButton:hover {
+  background-color: #0056b3;
+}
+
+.userList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.userListItem {
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.userIcon {
+  width: 30px;
+  height: 30px;
+  background-color: #ddd;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.userName {
+  flex: 1;
+  font-size: 14px;
+  color: #333;
+}
+
+.userPermission {
+  font-size: 12px;
+  color: #666;
+}
+
+.linkContainer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.linkInput {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: #f9f9f9;
+}
+
+.copyButton {
+  background-color: #007bff;
+  color: #ffffff;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.copyButton:hover {
+  background-color: #0056b3;
+}
+
+.confirmButton {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.confirmButton:hover {
+  background-color: #0056b3;
 }

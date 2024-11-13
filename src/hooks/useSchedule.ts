@@ -29,7 +29,7 @@ export const useScheduleList = (enabled = true) => {
     getNextPageParam: (lastPage) => {
       const currentPage = lastPage?.data?.currentPage ?? 0;
       const totalPages = lastPage?.data?.totalPages ?? 0;
-
+      
       if (currentPage < totalPages) {
         return currentPage + 1;
       }
@@ -48,7 +48,7 @@ export const useSharedScheduleList = (enabled = true) => {
     getNextPageParam: (lastPage) => {
       const currentPage = lastPage?.data?.currentPage ?? 0;
       const totalPages = lastPage?.data?.totalPages ?? 0;
-
+      
       if (currentPage < totalPages) {
         return currentPage + 1;
       }
@@ -73,7 +73,7 @@ export const useScheduleListSearch = (
     getNextPageParam: (lastPage) => {
       const currentPage = lastPage?.data?.currentPage ?? 0;
       const totalPages = lastPage?.data?.totalPages ?? 0;
-
+      
       if (currentPage < totalPages) {
         return currentPage + 1;
       }
@@ -152,25 +152,6 @@ export const useScheduleTravelRoute = (
     queryKey: ['scheduleTravelRouteList', scheduleId, page],
     queryFn: () => fetchTravelRoute(scheduleId, page),
     enabled,
-  });
-};
-
-// 일정 참석자 관련 - 일정 공유하기 (POST)
-export const useShareSchedule = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: ({
-      scheduleId,
-      userId,
-      permission,
-    }: {
-      scheduleId: number;
-      userId: string;
-      permission: 'ALL' | 'EDIT' | 'CHAT' | 'READ';
-    }) => shareSchedule(scheduleId, userId, permission),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['scheduleDetailList'] });
-    },
   });
 };
 
