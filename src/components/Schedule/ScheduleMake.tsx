@@ -15,10 +15,10 @@ interface ScheduleMakeProps {
 }
 
 const ScheduleMake = ({
-  scheduleId,
-  initialTab,
-  onAddMarker,
-}: ScheduleMakeProps) => {
+                        scheduleId,
+                        initialTab,
+                        onAddMarker,
+                      }: ScheduleMakeProps) => {
   const [tab, setTab] = useState(initialTab);
   const [currentPage, setCurrentPage] = useState(1);
   const [scheduleDetail, setScheduleDetail] = useState<ScheduleType | null>(
@@ -26,7 +26,7 @@ const ScheduleMake = ({
   );
   const [addedPlaces, setAddedPlaces] = useState<Place[]>([]);
   const [showModal, setShowModal] = useState(false);
-
+  
   useEffect(() => {
     const loadScheduleDetail = async () => {
       const result = await fetchScheduleDetail(scheduleId, currentPage);
@@ -36,22 +36,22 @@ const ScheduleMake = ({
         console.error('Failed to load schedule detail:', result.message);
       }
     };
-
+    
     loadScheduleDetail();
   }, [scheduleId, currentPage]);
-
+  
   const handleTabChange = (newTab: string) => {
     setTab(newTab);
     setCurrentPage(1);
   };
-
+  
   const handleScheduleDetailChange = (field: string, value: string) => {
     setScheduleDetail((prevState) => ({
       ...(prevState || { scheduleName: '', startDate: '', endDate: '' }),
       [field]: value ?? '',
     }));
   };
-
+  
   const handleAddMarker = (place: Place) => {
     const marker = { lat: place.latitude, lng: place.longitude };
     onAddMarker(marker);
@@ -61,7 +61,7 @@ const ScheduleMake = ({
         : [...prevPlaces, place]
     );
   };
-
+  
   const handleModalSubmit = (
     name: string,
     startDate: string,
@@ -74,16 +74,16 @@ const ScheduleMake = ({
     }));
     setShowModal(false);
   };
-
+  
   const ScheduleRouteWrapper = () => {
     const processedPlaces = addedPlaces.map((place) => ({
       ...place,
       thumbnailUrl: place.thumbnailUrl || '',
     }));
-
+    
     return <ScheduleRoute places={processedPlaces} />;
   };
-
+  
   return (
     <div className={styles.pageContainer}>
       <h1 className={styles.detailTitle}>일정 만들기</h1>
