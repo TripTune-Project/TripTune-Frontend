@@ -102,7 +102,6 @@ const ScheduleTravelSearch = ({ onAddMarker }: ScheduleTravelSearchProps) => {
                     &nbsp;{place.address} {place.detailAddress}
                   </p>
                 </div>
-                {/* TODO : +의 역할 그리고 -의 역할 */}
                 <button
                   className={styles.addButton}
                   onClick={() => onAddMarker(place)}
