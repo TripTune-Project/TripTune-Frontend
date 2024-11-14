@@ -16,7 +16,7 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
     if (response.success && response.data) {
       setMessages((prevMessages) => [
         ...prevMessages,
-        ...response.data.content,
+        ...response.data?.content as any,
       ]);
       setPage((prevPage) => prevPage + 1);
       setHasMore(response.data.currentPage < response.data.totalPages);

@@ -31,7 +31,7 @@ const ScheduleMake = ({
     const loadScheduleDetail = async () => {
       const result = await fetchScheduleDetail(scheduleId, currentPage);
       if (result.success) {
-        setScheduleDetail(result.data);
+        setScheduleDetail(result.data as any);
       } else {
         console.error('Failed to load schedule detail:', result.message);
       }

@@ -56,7 +56,16 @@ export default function ScheduleDetail({ params }: PageProps) {
         const data = await response.json();
         setScheduleData(data);
         setMarkers(data.travelRoute || []);
-        setSelectedUsers(data.attendeeList || []);
+        
+        const formattedAttendeeList = (data.attendeeList || []).map((user: any) => ({
+          attendeeId: user.attendeeId || 0,
+          userId: user.userId || 0,
+          role: user.role || 'guest',
+          permission: user.permission || 'read',
+          name: user.name || 'Unknown User',
+        }));
+        
+        setSelectedUsers(formattedAttendeeList);
       } catch (error) {
         console.error('일정 데이터를 가져오는 중 오류 발생:', error);
       }
@@ -82,7 +91,7 @@ export default function ScheduleDetail({ params }: PageProps) {
     const updatedScheduleData: ScheduleDetailType = {
       ...scheduleData,
       travelRoute: markers,
-      attendeeList: selectedUsers,
+      // attendeeList: selectedUsers,
       createdAt: scheduleData.createdAt || '',
       placeList: scheduleData.placeList || [],
       totalPages: scheduleData.totalPages || 0,
@@ -158,7 +167,7 @@ export default function ScheduleDetail({ params }: PageProps) {
           <PlacesScheduleMap markers={markers} />
         </div>
         <div className={styles.rightSection}>
-          <Chatting />
+          <Chatting  scheduleId={scheduleId}/>
         </div>
       </div>
     </>
