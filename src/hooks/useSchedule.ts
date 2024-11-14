@@ -1,6 +1,6 @@
 import {
   useInfiniteQuery,
-  useQuery
+  useQuery,
 } from '@tanstack/react-query';
 import {
   fetchScheduleList,
@@ -56,7 +56,7 @@ export const useScheduleListSearch = (
   keyword: string,
   type: 'all' | 'share' = 'all',
   enabled = true,
-  page = 1
+  page = 1,
 ) => {
   return useInfiniteQuery({
     queryKey: ['scheduleListSearch', keyword, type],
@@ -80,7 +80,7 @@ export const useScheduleListSearch = (
 export const useScheduleTravelList = (
   scheduleId: number,
   page = 1,
-  enabled = true
+  enabled = true,
 ) => {
   return useQuery({
     queryKey: ['scheduleTravelList', scheduleId, page],
@@ -94,7 +94,7 @@ export const useTravelListByLocation = (
   scheduleId: number,
   keyword: string,
   page = 1,
-  enabled = true
+  enabled = true,
 ) => {
   return useQuery({
     queryKey: ['travelListByLocation', scheduleId, keyword, page],
@@ -107,11 +107,22 @@ export const useTravelListByLocation = (
 export const useScheduleTravelRoute = (
   scheduleId: number,
   page = 1,
-  enabled = true
+  enabled = true,
 ) => {
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: ['scheduleTravelRouteList', scheduleId, page],
     queryFn: () => fetchTravelRoute(scheduleId, page),
     enabled,
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      const currentPage = lastPage?.data?.currentPage ?? 0;
+      const totalPages = lastPage?.data?.totalPages ?? 0;
+      
+      if (currentPage < totalPages) {
+        return currentPage + 1;
+      }
+      return undefined;
+    },
   });
 };
+

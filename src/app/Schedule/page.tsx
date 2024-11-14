@@ -169,7 +169,7 @@ export default function Schedule() {
 
   const handleDetailClick = (e: React.MouseEvent, scheduleId: number) => {
     if (!activeDeleteMenu) {
-      router.push(`/Travel/${scheduleId}`);
+      router.push(`/Schedule/${scheduleId}`);
     }
   };
 

@@ -124,7 +124,7 @@ body::-webkit-scrollbar {
 
 .react-datepicker__day--in-range {
   background-color: #edf9f7 !important;
-  color: black !important;
+  color: #000000 !important;
   border-radius: 0 !important;
   border-left: none !important;
   border-right: none !important;

@@ -51,7 +51,7 @@
   width: 722px;
   height: fit-content;
   border: none;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid #000000;
   font-size: 16px;
   margin-left: 10px;
 }
@@ -182,7 +182,7 @@
   font-style: normal;
   font-weight: 600;
   line-height: normal;
-  background-color: black;
+  background-color: #000000;
   border-radius: 50px;
   padding: 8px 20px 12px 120px;
   margin-left: 38%;
@@ -337,7 +337,7 @@
   top: 0;
   right: 10px;
   padding: 5px;
-  color: black;
+  color: #000000;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -357,7 +357,7 @@
 
 .deleteButton {
   background-color: #f44336;
-  color: white;
+  color: #ffffff;
   padding: 8px 16px;
   border: none;
   border-radius: 4px;
@@ -410,21 +410,20 @@
 .scheduleUpdateBtn,
 .scheduleShareBtn {
   background-color: #76adac;
-  color: white;
+  color: #ffffff;
   padding: 12px 24px;
   border: none;
   cursor: pointer;
   font-size: 18px;
   font-family: 'Noto Sans KR', sans-serif;
   transition: background-color 0.3s ease;
-  margin: 20px 0;
-  float: right;
-  margin-left: 10px;
+  margin-left:-500px;
 }
 
 .scheduleShareBtn {
+  margin-left:-300px;
   background-color: #f5f5f5;
-  color: black;
+  color: #000000;
 }
 
 .pageContainer {
@@ -711,18 +710,17 @@
 .addButton {
   width: 34px;
   height: 80px;
-  background-color: #74a5da;
-  color: white;
+  color: #74a5da;
+  background-color: #F5F5F5;
   font-size: 24px;
   font-weight: bold;
   text-align: center;
   border: none;
-  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   position: absolute;
-  right: 10px;
+  right: 20px;
 }
 
 .bookmarkButton {
@@ -829,6 +827,30 @@
   background-color: #ffffff;
   border-bottom: 1px solid #e0e0e0;
   border-radius: 12px 12px 0 0;
+}
+
+.headerMenu {
+  width: 100%;
+  max-width: 100vw;
+  height: 5.69rem;
+  flex-shrink: 0;
+  color: #757575;
+  font-size: 0.83vw;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: -0.32px;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  margin: 1vh 5.68vw;
+  width: 183px;
+  height: 57px;
+  flex-shrink: 0;
 }
 
 .chatTitle {
@@ -962,7 +984,7 @@
 
 .copyButton {
   background-color: #007bff;
-  color: white;
+  color: #ffffff;
   padding: 8px 16px;
   border: none;
   border-radius: 8px;
@@ -972,7 +994,7 @@
 
 .confirmButton {
   background-color: #007bff;
-  color: white;
+  color: #ffffff;
   padding: 12px 24px;
   border: none;
   border-radius: 8px;
@@ -1012,7 +1034,7 @@
 
 .chattingModalContainer {
   position: relative;
-  background-color: white;
+  background-color: #ffffff;
   padding: 32px;
   border-radius: 16px;
   width: 600px;
@@ -1152,7 +1174,7 @@
   top: 0;
   right: 10px;
   padding: 5px;
-  color: black;
+  color: #000000;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1173,7 +1195,7 @@
 .deleteButton,
 .leaveButton {
   background-color: #f44336;
-  color: white;
+  color: #ffffff;
   padding: 8px 16px;
   border: none;
   border-radius: 4px;
@@ -1371,7 +1393,7 @@
 
 .confirmButton {
   background-color: #007bff;
-  color: white;
+  color: #ffffff;
   padding: 10px 20px;
   border: none;
   border-radius: 8px;

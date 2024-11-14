@@ -65,24 +65,6 @@ const Layout = ({ children }: LayoutProps) => {
     <QueryClientProvider client={queryClient}>
       {isFindPage || isSchedulePage ? (
         <>
-          {isSchedulePage && (
-            <header className={styles.header}>
-              <ul className={styles.headerMenu}>
-                <li>
-                  <Link href="/">
-                    <Image
-                      src={MainLogoImage}
-                      alt="로고"
-                      className={styles.logo}
-                      width={183}
-                      height={57}
-                      priority
-                    />
-                  </Link>
-                </li>
-              </ul>
-            </header>
-          )}
           {children}
         </>
       ) : (

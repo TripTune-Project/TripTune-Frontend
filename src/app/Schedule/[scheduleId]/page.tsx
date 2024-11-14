@@ -1,187 +1,175 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
+import PlacesScheduleMap from '@/components/Schedule/PlacesScheduleMap';
+import ScheduleMake from '@/components/Schedule/ScheduleMake';
+import InviteModal from '@/components/Schedule/InviteModal';
+import styles from '../../../styles/Schedule.module.css';
+import Chatting from '@/components/Schedule/Chatting';
+import useAuth from '@/hooks/useAuth';
+import { useRouter } from 'next/navigation';
+import { updateExistingSchedule } from '@/api/scheduleApi';
+import { Attendee, ScheduleDetailType } from '@/types/scheduleType';
+import Link from 'next/link';
 import Image from 'next/image';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import { Navigation, Pagination } from 'swiper/modules';
-import DataLoading from '@/components/Common/DataLoading';
-import DetailPlaceMap from '@/components/Travel/DetailPlaceMap';
-import styled from 'styled-components';
-import { fetchTravelDetail } from '@/api/travelApi';
+import MainLogoImage from '../../../../public/assets/images/로고/triptuneLogo.png';
 
-import detailBookMarkNo from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_bookmarkIcon.png';
-import detailBookMark from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_bookmarkIconFill.png';
-import scheduleIcon from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_scheduleIcon.png';
-import triptuneIcon from '../../../../public/assets/images/로고/triptuneIcon-removebg.png';
-import locationIcon from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_mapIcon.png';
-import timeIcon from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_timeIcon.png';
-import homePageIcon from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_homepageIcon.png';
-import phoneIcon from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_phoneIcon.png';
+interface PageProps {
+  params: {
+    scheduleId: string;
+  };
+}
 
-const StyledSwiperContainer = styled.div`
-  position: relative;
-  width: 749px;
-  height: 512px;
-`;
-
-type ImageInfo = {
-  imageUrl: string;
-  imageName: string;
-};
-
-type TravelDetailData = {
-  placeName?: string;
-  country?: string;
-  city?: string;
-  district?: string;
-  address?: string;
-  description?: string;
-  imageList?: ImageInfo[];
-  latitude?: number;
-  longitude?: number;
-  phoneNumber?: string;
-  homepage?: string;
-  useTime?: string;
-  isBookmarked?: boolean;
-};
-
-type TravelDetailProps = {
-  params: { scheduleId: string };
-};
-
-const TravelDetailPage = async ({ params }: TravelDetailProps) => {
-  const { scheduleId } = params;
-  const response = await fetchTravelDetail(Number(scheduleId));
-
-  if (!response.success) {
-    return <p>Error: 데이터 로딩 실패</p>;
-  }
-
-  const data = response.data;
-
+export default function ScheduleDetail({ params }: PageProps) {
+  const [scheduleData, setScheduleData] = useState<ScheduleDetailType | null>(null);
+  const [markers, setMarkers] = useState<{ lat: number; lng: number }[]>([]);
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+  const [selectedUsers, setSelectedUsers] = useState<Attendee[]>([]);
+  const [allUsers, setAllUsers] = useState<Attendee[]>([]);
+  const [permission, setPermission] = useState('edit');
+  const { checkAuthStatus } = useAuth();
+  const router = useRouter();
+  const scheduleId = parseInt(params.scheduleId, 10);
+  
+  useEffect(() => {
+    checkAuthStatus();
+  }, [checkAuthStatus]);
+  
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch(`/api/users?scheduleId=${scheduleId}`);
+        const data = await response.json();
+        setAllUsers(data);
+      } catch (error) {
+        console.error('사용자 목록을 가져오는 중 오류 발생:', error);
+      }
+    };
+    fetchUsers();
+  }, [scheduleId]);
+  
+  useEffect(() => {
+    const fetchScheduleDetail = async () => {
+      try {
+        const response = await fetch(`/api/schedules/${scheduleId}`);
+        const data = await response.json();
+        setScheduleData(data);
+        setMarkers(data.travelRoute || []);
+        
+        const formattedAttendeeList = (data.attendeeList || []).map((user: any) => ({
+          attendeeId: user.attendeeId || 0,
+          userId: user.userId || 0,
+          role: user.role || 'guest',
+          permission: user.permission || 'read',
+          name: user.name || 'Unknown User',
+        }));
+        
+        setSelectedUsers(formattedAttendeeList);
+      } catch (error) {
+        console.error('일정 데이터를 가져오는 중 오류 발생:', error);
+      }
+    };
+    fetchScheduleDetail();
+  }, [scheduleId]);
+  
+  const handleAddMarker = (marker: { lat: number; lng: number }) => {
+    setMarkers((prevMarkers) => [...prevMarkers, marker]);
+  };
+  
+  const handleShareClick = () => {
+    setIsInviteModalOpen(true);
+  };
+  
+  const handleCloseModal = () => {
+    setIsInviteModalOpen(false);
+  };
+  
+  const handleSaveSchedule = async () => {
+    if (!scheduleData) return;
+    
+    const updatedScheduleData: ScheduleDetailType = {
+      ...scheduleData,
+      travelRoute: markers,
+      // attendeeList: selectedUsers,
+      createdAt: scheduleData.createdAt || '',
+      placeList: scheduleData.placeList || [],
+      totalPages: scheduleData.totalPages || 0,
+      currentPage: scheduleData.currentPage || 0,
+    };
+    
+    const response = await updateExistingSchedule(updatedScheduleData);
+    if (response.success) {
+      router.push('/Schedule');
+    } else {
+      console.error('일정 저장에 실패했습니다:', response.message);
+    }
+  };
+  
   return (
     <>
       <Head>
-        <title>{data?.placeName} - 여행지 상세 정보</title>
+        <title>일정 상세 페이지 - 지도와 함께 만드는 나만의 일정</title>
+        <meta
+          name="description"
+          content="지도를 활용하여 여행지와 일정을 관리하고 저장할 수 있는 페이지입니다. 원하는 위치를 추가하고 일정을 계획해 보세요."
+        />
+        <meta
+          name="keywords"
+          content="일정 만들기, 지도 일정 관리, 여행 계획, 일정 저장"
+        />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+          property="og:title"
+          content="일정 상세 페이지 - 지도와 함께 만드는 나만의 일정"
+        />
+        <meta
+          property="og:description"
+          content="지도를 활용해 위치를 추가하며 나만의 일정을 만들어보세요. 여행을 보다 체계적으로 계획할 수 있습니다."
+        />
+        <meta property="og:type" content="website" />
+        <meta name="robots" content="noindex, nofollow" />
       </Head>
-      <ClientContent {...data} />
+      <header className={styles.header}>
+        <ul className={styles.headerMenu}>
+          <li>
+            <Link href="/">
+              <Image
+                src={MainLogoImage}
+                alt="로고"
+                className={styles.logo}
+                width={183}
+                height={57}
+                priority
+              />
+            </Link>
+          </li>
+        </ul>
+        <button className={styles.scheduleUpdateBtn} onClick={handleSaveSchedule}>저장</button>
+        <button className={styles.scheduleShareBtn} onClick={handleShareClick}>공유</button>
+      </header>
+      <InviteModal
+        isOpen={isInviteModalOpen}
+        scheduleId={scheduleId}
+        permission={permission}
+        allUsers={allUsers}
+        onClose={handleCloseModal}
+      />
+      <div className={styles.layoutContainer}>
+        <div className={styles.leftSection}>
+          <ScheduleMake
+            scheduleId={scheduleId}
+            initialTab="scheduleTravel"
+            onAddMarker={handleAddMarker}
+          />
+        </div>
+        <div className={styles.centerSection}>
+          <PlacesScheduleMap markers={markers} />
+        </div>
+        <div className={styles.rightSection}>
+          <Chatting  scheduleId={scheduleId}/>
+        </div>
+      </div>
     </>
   );
-};
-
-type ClientContentProps = TravelDetailData;
-
-const ClientContent = ({
-  placeName,
-  country,
-  city,
-  district,
-  address,
-  description,
-  imageList,
-  latitude,
-  longitude,
-  phoneNumber,
-  homepage,
-  useTime,
-  isBookmarked: initialBookmarkState,
-}: ClientContentProps) => {
-  const [isBookmarked, setIsBookmarked] = useState(initialBookmarkState);
-  const nextRef = useRef<HTMLButtonElement | null>(null);
-  const prevRef = useRef<HTMLButtonElement | null>(null);
-
-  const toggleBookmark = () => setIsBookmarked((prev) => !prev);
-
-  return (
-    <div>
-      <StyledSwiperContainer>
-        {imageList && imageList.length > 0 ? (
-          <Swiper
-            modules={[Navigation, Pagination]}
-            slidesPerView={1}
-            navigation={{
-              nextEl: nextRef.current,
-              prevEl: prevRef.current,
-            }}
-            loop
-          >
-            {imageList.map((image, index) => (
-              <SwiperSlide key={index}>
-                <Image
-                  src={image.imageUrl}
-                  alt={image.imageName}
-                  width={749}
-                  height={512}
-                />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        ) : (
-          <DataLoading />
-        )}
-      </StyledSwiperContainer>
-      <div>
-        <p>
-          <Image
-            src={locationIcon}
-            alt='Location icon'
-            width={14}
-            height={21}
-          />
-          {country} &gt; {city} &gt; {district}
-        </p>
-        <h1>{placeName}</h1>
-        <p>{address}</p>
-        <p>
-          <Image src={timeIcon} alt='Time icon' width={18} height={18} />
-          {useTime}
-        </p>
-        <p>
-          <Image src={phoneIcon} alt='Phone icon' width={18} height={18} />
-          {phoneNumber}
-        </p>
-        <p>
-          <Image
-            src={homePageIcon}
-            alt='Homepage icon'
-            width={18}
-            height={18}
-          />
-          <a href={homepage} target='_blank' rel='noopener noreferrer'>
-            {homepage}
-          </a>
-        </p>
-        <button onClick={toggleBookmark}>
-          <Image
-            src={isBookmarked ? detailBookMark : detailBookMarkNo}
-            alt='Bookmark icon'
-            width={13}
-            height={17}
-          />
-          {isBookmarked ? '북마크 해제' : '북마크'}
-        </button>
-        <button>
-          <Image
-            src={scheduleIcon}
-            alt='Schedule icon'
-            width={25}
-            height={21}
-          />
-          내 일정 담기
-        </button>
-      </div>
-      <h2>
-        <Image src={triptuneIcon} alt='Triptune icon' />
-        상세 설명
-      </h2>
-      <p>{description}</p>
-      <DetailPlaceMap latitude={latitude ?? 0} longitude={longitude ?? 0} />
-    </div>
-  );
-};
-
-export default TravelDetailPage;
+}
