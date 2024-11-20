@@ -7,6 +7,7 @@ import ScheduleRoute from '@/components/Schedule/ScheduleRoute';
 import CalendarModal from '@/components/Common/CalendarModal';
 import { fetchScheduleDetail } from '@/api/scheduleApi';
 import { ScheduleType, Place } from '@/types/scheduleType';
+import { useTravelStore } from '@/store/scheduleStore';
 
 interface ScheduleMakeProps {
   scheduleId: number;
@@ -24,8 +25,9 @@ const ScheduleMake = ({
   const [scheduleDetail, setScheduleDetail] = useState<ScheduleType | null>(
     null
   );
-  const [addedPlaces, setAddedPlaces] = useState<Place[]>([]);
   const [showModal, setShowModal] = useState(false);
+  
+  const { addedPlaces, addPlace, removePlace, movePlace } = useTravelStore();
   
   useEffect(() => {
     const loadScheduleDetail = async () => {
@@ -55,11 +57,7 @@ const ScheduleMake = ({
   const handleAddMarker = (place: Place) => {
     const marker = { lat: place.latitude, lng: place.longitude };
     onAddMarker(marker);
-    setAddedPlaces((prevPlaces) =>
-      prevPlaces.some((p) => p.placeId === place.placeId)
-        ? prevPlaces
-        : [...prevPlaces, place]
-    );
+    addPlace(place);
   };
   
   const handleModalSubmit = (
@@ -76,12 +74,13 @@ const ScheduleMake = ({
   };
   
   const ScheduleRouteWrapper = () => {
-    const processedPlaces = addedPlaces.map((place) => ({
-      ...place,
-      thumbnailUrl: place.thumbnailUrl || '',
-    }));
-    
-    return <ScheduleRoute places={processedPlaces} />;
+    return (
+      <ScheduleRoute
+        places={addedPlaces}
+        onMovePlace={movePlace}
+        onDeletePlace={removePlace}
+      />
+    );
   };
   
   return (
@@ -90,7 +89,7 @@ const ScheduleMake = ({
       <div className={styles.inputGroup}>
         <label>여행 이름</label>
         <input
-          type='text'
+          type="text"
           className={styles.inputField}
           value={scheduleDetail?.scheduleName || ''}
           placeholder={'여행 이름을 입력해주세요.'}
@@ -102,9 +101,11 @@ const ScheduleMake = ({
       <div className={styles.inputGroup}>
         <label>여행 날짜</label>
         <input
-          type='text'
+          type="text"
           className={styles.inputField}
-          value={`${scheduleDetail?.startDate || ''} ~ ${scheduleDetail?.endDate || ''}`}
+          value={`${scheduleDetail?.startDate || ''} ~ ${
+            scheduleDetail?.endDate || ''
+          }`}
           placeholder={'시작일 ~ 종료일'}
           onChange={(e) => {
             const [startDate, endDate] = e.target.value.split(' ~ ');
@@ -116,13 +117,17 @@ const ScheduleMake = ({
       </div>
       <div className={styles.tabContainer}>
         <button
-          className={`${styles.tabButton} ${tab === 'scheduleTravel' ? styles.activeTab : ''}`}
+          className={`${styles.tabButton} ${
+            tab === 'scheduleTravel' ? styles.activeTab : ''
+          }`}
           onClick={() => handleTabChange('scheduleTravel')}
         >
           여행지
         </button>
         <button
-          className={`${styles.tabButton} ${tab === 'travelRoot' ? styles.activeTab : ''}`}
+          className={`${styles.tabButton} ${
+            tab === 'travelRoot' ? styles.activeTab : ''
+          }`}
           onClick={() => handleTabChange('travelRoot')}
         >
           여행 루트
