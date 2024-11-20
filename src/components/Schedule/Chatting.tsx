@@ -60,7 +60,8 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
 
     const token = Cookies.get('trip-tune_at');
     const stompClient = new Client({
-      brokerURL: process.env.NEXT_PUBLIC_BROKER_URL,
+      brokerURL: process.env.NEXT_PUBLIC_BROKER_LOCAL_URL, // TODO : url 주의
+      // brokerURL: process.env.NEXT_PUBLIC_BROKER_URL,
       connectHeaders: {
         Authorization: `Bearer ${token}`,
       },
@@ -95,7 +96,8 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
   const handleSendMessage = async () => {
     if (message.trim() && client) {
       try {
-        const nickname = '1'; // todo : 어디에서 받지?
+        // const nickname = Cookies.get("userId")
+        const nickname =  Cookies.get("nickName") ?? "nickName03"; // todo : 어디에서 받지?
         const response = await sendScheduleChat(scheduleId, nickname, message);
         if (response.success) {
           console.log(response.message);

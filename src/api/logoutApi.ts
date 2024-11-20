@@ -20,6 +20,7 @@ export const logoutApi = async (): Promise<void> => {
       Cookies.remove('trip-tune_at');
       Cookies.remove('trip-tune_rt');
       Cookies.remove('userId');
+      // Cookies.remove('nickName');
     } catch (error) {
       throw new Error('Logout failed');
     }
