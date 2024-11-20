@@ -63,6 +63,7 @@ export const sendScheduleChat = async (
   nickname: string,
   chatMessage: string
 ): Promise<ApiResponse<any>> => {
+  // TODO : CORS 에러 발생
   const url = `/pub/chats`;
   try {
     const data = await post<ApiResponse<any>>(

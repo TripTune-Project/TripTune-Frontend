@@ -36,21 +36,7 @@ export default function ScheduleDetail({ params }: PageProps) {
   useEffect(() => {
     checkAuthStatus();
   }, [checkAuthStatus]);
-
-  useEffect(() => {
-    const fetchScheduleDetail = async () => {
-      try {
-        const response = await fetch(`/schedules/${scheduleId}`);
-        const data = await response.json();
-        setScheduleData(data);
-        setMarkers(data.travelRoute || []);
-      } catch (error) {
-        console.error('일정 데이터를 가져오는 중 오류 발생:', error);
-      }
-    };
-    fetchScheduleDetail();
-  }, [scheduleId]);
-
+  
   const handleAddMarker = (marker: { lat: number; lng: number }) => {
     setMarkers((prevMarkers) => [...prevMarkers, marker]);
   };

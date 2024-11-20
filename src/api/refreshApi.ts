@@ -10,6 +10,7 @@ export const refreshApi = async (): Promise<string | null> => {
     Cookies.remove('trip-tune_at');
     Cookies.remove('trip-tune_rt');
     Cookies.remove('userId');
+    // Cookies.remove('nickName');
     window.location.href = '/Login';
     return Promise.reject(
       '리프레시 토큰이 없습니다. 로그인 페이지로 이동합니다.'
@@ -36,6 +37,7 @@ export const refreshApi = async (): Promise<string | null> => {
         Cookies.remove('trip-tune_at');
         Cookies.remove('trip-tune_rt');
         Cookies.remove('userId');
+        // Cookies.remove('nickName');
         window.location.href = '/Login';
         return Promise.reject(
           `토큰 갱신 실패: ${error.status}, 로그인 페이지로 이동합니다.`
