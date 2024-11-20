@@ -1413,10 +1413,9 @@
   flex-direction: column;
   gap: 12px;
   overflow-y: auto;
-  background-color: #ffffff;
+  background-color: #e0e0e0;
   border-bottom: 1px solid #e0e0e0;
-  border-radius: 12px 12px 0 0;
-  max-height: 500px;
+  border-radius: 12px 12px 0 0
 }
 
 .message.sent {
