@@ -12,10 +12,14 @@ interface ScheduleRouteProps {
   onDeletePlace: (placeId: number) => void;
 }
 
-const ScheduleRoute = ({ places, onMovePlace, onDeletePlace }: ScheduleRouteProps) => {
+const ScheduleRoute = ({
+  places,
+  onMovePlace,
+  onDeletePlace,
+}: ScheduleRouteProps) => {
   const PlaceItem = ({ place, index }: { place: Place; index: number }) => {
     const ref = useRef<HTMLLIElement>(null);
-    
+
     const [, drop] = useDrop({
       accept: 'PLACE',
       hover(item: any) {
@@ -27,7 +31,7 @@ const ScheduleRoute = ({ places, onMovePlace, onDeletePlace }: ScheduleRouteProp
         item.index = hoverIndex;
       },
     });
-    
+
     const [{ isDragging }, drag] = useDrag({
       type: 'PLACE',
       item: { index },
@@ -39,9 +43,9 @@ const ScheduleRoute = ({ places, onMovePlace, onDeletePlace }: ScheduleRouteProp
         }
       },
     });
-    
+
     drag(drop(ref));
-    
+
     return (
       <li
         ref={ref}
@@ -68,38 +72,38 @@ const ScheduleRoute = ({ places, onMovePlace, onDeletePlace }: ScheduleRouteProp
             {`${place.country} / ${place.city} / ${place.district}`}
           </p>
           <p className={styles.placeDetailAddress}>
-            <Image src={locationIcon} alt="장소" width={15} height={21} />
+            <Image src={locationIcon} alt='장소' width={15} height={21} />
             &nbsp;{place.address} {place.detailAddress ?? ''}
           </p>
         </div>
       </li>
     );
   };
-  
+
   const DeleteDropZone = () => {
     const [, drop] = useDrop({
       accept: 'PLACE',
       drop: () => ({ isDelete: true }),
     });
-    
+
     const setRef = useCallback(
       (node: HTMLDivElement | null) => {
         if (node) drop(node);
       },
       [drop]
     );
-    
+
     return (
       <div ref={setRef} className={styles.deleteZone}>
         ❌ 삭제 하기 ❌
       </div>
     );
   };
-  
+
   if (!places || places.length === 0) {
     return <p className={styles.noPlaces}>등록된 장소가 없습니다.</p>;
   }
-  
+
   return (
     <DndProvider backend={HTML5Backend}>
       <ul className={styles.routeList}>

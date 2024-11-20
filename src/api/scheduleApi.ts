@@ -23,7 +23,7 @@ export const fetchScheduleList = async (
   page: number = 1
 ): Promise<ApiResponse<ScheduleAllListType>> => {
   const url = `/schedules?page=${page}`;
-  
+
   try {
     const data = await get<ApiResponse<ScheduleAllListType>>(url, {
       requiresAuth: true,
@@ -43,7 +43,7 @@ export const fetchSharedScheduleList = async (
   page: number = 1
 ): Promise<ApiResponse<ScheduleAllListType>> => {
   const url = `/schedules/shared?page=${page}`;
-  
+
   try {
     const data = await get<ApiResponse<ScheduleAllListType>>(url, {
       requiresAuth: true,
@@ -65,7 +65,7 @@ export const fetchScheduleListSearch = async (
   type: 'all' | 'share' = 'all'
 ): Promise<ApiResponse<ScheduleTravelResultType>> => {
   const url = `/schedules/search?page=${page}&keyword=${keyword}&type=${type}`;
-  
+
   try {
     const data = await get<ApiResponse<ScheduleTravelResultType>>(url, {
       requiresAuth: true,
@@ -86,7 +86,7 @@ export const fetchScheduleDetail = async (
   page: number = 1
 ): Promise<ApiResponse<ScheduleDetailType>> => {
   const url = `/schedules/${scheduleId}?page=${page}`;
-  
+
   try {
     const data = await get<ApiResponse<ScheduleDetailType>>(url, {
       requiresAuth: true,
@@ -106,7 +106,7 @@ export const createNewSchedule = async (
   scheduleData: ScheduleType
 ): Promise<ApiResponse<ScheduleType>> => {
   const url = '/schedules';
-  
+
   try {
     const data = await post<ApiResponse<ScheduleType>>(url, scheduleData, {
       requiresAuth: true,
@@ -126,20 +126,24 @@ export const updateExistingSchedule = async (
   schedule: ScheduleDetailType
 ): Promise<ApiResponse<ScheduleDetailType>> => {
   const url = `/schedules/${schedule.scheduleId}`;
-  
+
   const requestBody: Partial<ScheduleDetailType> = {
     scheduleName: schedule.scheduleName,
     startDate: schedule.startDate,
     endDate: schedule.endDate,
   };
-  
+
   if (schedule.travelRoute) requestBody.travelRoute = schedule.travelRoute;
   if (schedule.attendeeList) requestBody.attendeeList = schedule.attendeeList;
-  
+
   try {
-    const data = await patch<ApiResponse<ScheduleDetailType>>(url, requestBody, {
-      requiresAuth: true,
-    });
+    const data = await patch<ApiResponse<ScheduleDetailType>>(
+      url,
+      requestBody,
+      {
+        requiresAuth: true,
+      }
+    );
     console.log(
       data.success ? '일정 수정 성공:' : '일정 수정 실패:',
       data.message
@@ -155,7 +159,7 @@ export const deleteSchedule = async (
   scheduleId: number
 ): Promise<ApiResponse<null>> => {
   const url = `/schedules/${scheduleId}`;
-  
+
   try {
     const data = await remove<ApiResponse<null>>(url, {
       requiresAuth: true,

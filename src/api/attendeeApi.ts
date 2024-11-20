@@ -23,7 +23,7 @@ export const fetchScheduleAttendees = async (
   permission: 'ALL' | 'EDIT' | 'CHAT' | 'READ'
 ): Promise<ApiResponse<null>> => {
   const url = `/schedules/${scheduleId}/attendees?userId=${userId}&permission=${permission}`;
-  
+
   try {
     const data = await get<ApiResponse<null>>(url, { requiresAuth: true });
     console.log(
@@ -55,7 +55,7 @@ export const shareSchedule = async (
   permission: 'ALL' | 'EDIT' | 'CHAT' | 'READ'
 ): Promise<ApiResponse<null>> => {
   const url = `/schedules/${scheduleId}/attendees`;
-  
+
   try {
     const data = await post<ApiResponse<null>>(
       url,
@@ -82,11 +82,7 @@ export const shareSchedule = async (
     }
     // 409 Conflict - 이미 공유된 사용자
     if ((error as any).status === 409) {
-      return handleApiError(
-        error,
-        '이미 공유되어 있는 사용자입니다.',
-        409
-      );
+      return handleApiError(error, '이미 공유되어 있는 사용자입니다.', 409);
     }
     return handleApiError(error, '서버 내부 오류가 발생하였습니다.');
   }
@@ -97,7 +93,7 @@ export const leaveSchedule = async (
   scheduleId: number
 ): Promise<ApiResponse<null>> => {
   const url = `/schedules/${scheduleId}/attendees`;
-  
+
   try {
     const data = await remove<ApiResponse<null>>(url, { requiresAuth: true });
     console.log(

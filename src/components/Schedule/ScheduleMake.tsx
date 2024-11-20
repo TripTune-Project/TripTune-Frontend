@@ -16,19 +16,19 @@ interface ScheduleMakeProps {
 }
 
 const ScheduleMake = ({
-                        scheduleId,
-                        initialTab,
-                        onAddMarker,
-                      }: ScheduleMakeProps) => {
+  scheduleId,
+  initialTab,
+  onAddMarker,
+}: ScheduleMakeProps) => {
   const [tab, setTab] = useState(initialTab);
   const [currentPage, setCurrentPage] = useState(1);
   const [scheduleDetail, setScheduleDetail] = useState<ScheduleType | null>(
     null
   );
   const [showModal, setShowModal] = useState(false);
-  
+
   const { addedPlaces, addPlace, removePlace, movePlace } = useTravelStore();
-  
+
   useEffect(() => {
     const loadScheduleDetail = async () => {
       const result = await fetchScheduleDetail(scheduleId, currentPage);
@@ -38,28 +38,28 @@ const ScheduleMake = ({
         console.error('Failed to load schedule detail:', result.message);
       }
     };
-    
+
     loadScheduleDetail();
   }, [scheduleId, currentPage]);
-  
+
   const handleTabChange = (newTab: string) => {
     setTab(newTab);
     setCurrentPage(1);
   };
-  
+
   const handleScheduleDetailChange = (field: string, value: string) => {
     setScheduleDetail((prevState) => ({
       ...(prevState || { scheduleName: '', startDate: '', endDate: '' }),
       [field]: value ?? '',
     }));
   };
-  
+
   const handleAddMarker = (place: Place) => {
     const marker = { lat: place.latitude, lng: place.longitude };
     onAddMarker(marker);
     addPlace(place);
   };
-  
+
   const handleModalSubmit = (
     name: string,
     startDate: string,
@@ -72,7 +72,7 @@ const ScheduleMake = ({
     }));
     setShowModal(false);
   };
-  
+
   const ScheduleRouteWrapper = () => {
     return (
       <ScheduleRoute
@@ -82,14 +82,14 @@ const ScheduleMake = ({
       />
     );
   };
-  
+
   return (
     <div className={styles.pageContainer}>
       <h1 className={styles.detailTitle}>일정 만들기</h1>
       <div className={styles.inputGroup}>
         <label>여행 이름</label>
         <input
-          type="text"
+          type='text'
           className={styles.inputField}
           value={scheduleDetail?.scheduleName || ''}
           placeholder={'여행 이름을 입력해주세요.'}
@@ -101,7 +101,7 @@ const ScheduleMake = ({
       <div className={styles.inputGroup}>
         <label>여행 날짜</label>
         <input
-          type="text"
+          type='text'
           className={styles.inputField}
           value={`${scheduleDetail?.startDate || ''} ~ ${
             scheduleDetail?.endDate || ''
