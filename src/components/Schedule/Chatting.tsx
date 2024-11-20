@@ -29,7 +29,7 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
     loadMessages();
     
     const stompClient = new Client({
-      brokerURL: `ws://13.209.177.247:8080/ws`,
+      brokerURL: `wss://localhost:8080/ws`,
       reconnectDelay: 5000,
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
