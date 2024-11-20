@@ -12,17 +12,18 @@ interface InviteModalProps {
 }
 
 const InviteModal = ({
-                       isOpen,
-                       scheduleId,
-                       permission,
-                       allUsers,
-                       onClose,
-                     }: InviteModalProps) => {
+  isOpen,
+  scheduleId,
+  permission,
+  allUsers,
+  onClose,
+}: InviteModalProps) => {
   const [email, setEmail] = useState<string>('');
-  const [selectedPermission, setSelectedPermission] = useState<string>(permission);
-  
+  const [selectedPermission, setSelectedPermission] =
+    useState<string>(permission);
+
   if (!isOpen) return null;
-  
+
   const handleShareClick = async () => {
     try {
       const response = await shareSchedule(
@@ -40,7 +41,7 @@ const InviteModal = ({
       console.error('공유 중 오류 발생:', error);
     }
   };
-  
+
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContainer}>
@@ -50,11 +51,11 @@ const InviteModal = ({
             X
           </button>
         </div>
-        
+
         <div className={styles.emailInputContainer}>
           <input
-            type="text"
-            placeholder="공유할 사용자의 이메일을 입력하세요."
+            type='text'
+            placeholder='공유할 사용자의 이메일을 입력하세요.'
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className={styles.emailInput}
@@ -64,15 +65,15 @@ const InviteModal = ({
             onChange={(e) => setSelectedPermission(e.target.value)}
             className={styles.permissionSelect}
           >
-            <option value="ALL">편집 허용</option>
-            <option value="EDIT">채팅 허용</option>
-            <option value="CHAT">읽기 허용</option>
+            <option value='ALL'>편집 허용</option>
+            <option value='EDIT'>채팅 허용</option>
+            <option value='CHAT'>읽기 허용</option>
           </select>
           <button className={styles.shareButton} onClick={handleShareClick}>
             공유
           </button>
         </div>
-        
+
         <h3>공유중인 사용자</h3>
         <ul className={styles.userList}>
           {allUsers &&

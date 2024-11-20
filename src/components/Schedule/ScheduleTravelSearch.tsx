@@ -10,6 +10,7 @@ import locationIcon from '../../../public/assets/images/일정 만들기/일정 
 import Pagination from '../Travel/Pagination';
 import { Place } from '@/types/scheduleType';
 import { useDebounce } from '@/hooks/useDebounce';
+import DataLoading from '@/components/Common/DataLoading';
 
 interface ScheduleTravelSearchProps {
   onAddMarker: (place: Place) => void;
@@ -20,9 +21,9 @@ const ScheduleTravelSearch = ({ onAddMarker }: ScheduleTravelSearchProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [isSearching, setIsSearching] = useState(false);
-  
+
   const debouncedSearchKeyword = useDebounce(searchKeyword, 800);
-  
+
   const travelListQuery = useScheduleTravelList(
     Number(scheduleId),
     currentPage,
@@ -34,7 +35,7 @@ const ScheduleTravelSearch = ({ onAddMarker }: ScheduleTravelSearchProps) => {
     currentPage,
     isSearching
   );
-  
+
   useEffect(() => {
     if (debouncedSearchKeyword.trim()) {
       setCurrentPage(1);
@@ -43,25 +44,25 @@ const ScheduleTravelSearch = ({ onAddMarker }: ScheduleTravelSearchProps) => {
       setIsSearching(false);
     }
   }, [debouncedSearchKeyword]);
-  
+
   const travels = isSearching
     ? searchTravelQuery?.data?.data?.content || []
     : travelListQuery?.data?.data?.content || [];
   const totalPages = isSearching
     ? searchTravelQuery?.data?.data?.totalPages || 0
     : travelListQuery?.data?.data?.totalPages || 0;
-  
+
   if (travelListQuery.isLoading || searchTravelQuery.isLoading)
-    return <p>로딩 중...</p>;
+    return <DataLoading />;
   if (travelListQuery.error || searchTravelQuery.error)
     return <p>데이터를 불러오는데 오류가 발생했습니다.</p>;
-  
+
   return (
     <>
       <div className={styles.travelSearchContainerSearch}>
         <input
-          type="text"
-          placeholder="원하는 여행지를 검색하세요"
+          type='text'
+          placeholder='원하는 여행지를 검색하세요'
           value={searchKeyword}
           onChange={(e) => setSearchKeyword(e.target.value)}
         />
@@ -94,7 +95,7 @@ const ScheduleTravelSearch = ({ onAddMarker }: ScheduleTravelSearchProps) => {
                   <p className={styles.placeDetailAddress}>
                     <Image
                       src={locationIcon}
-                      alt="장소"
+                      alt='장소'
                       width={15}
                       height={21}
                     />

@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie';
 import { refreshApi } from './refreshApi';
 
-const BASE_URL = `${process.env.NEXT_PUBLIC_BACKEND_PROXY}`;
+const BASE_URL = `/api/`;
 const DEFAULT_HEADERS = {
   'Content-Type': 'application/json',
 };

@@ -1,7 +1,4 @@
-import {
-  useInfiniteQuery,
-  useQuery,
-} from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import {
   fetchScheduleList,
   fetchScheduleListSearch,
@@ -23,7 +20,7 @@ export const useScheduleList = (enabled = true) => {
     getNextPageParam: (lastPage) => {
       const currentPage = lastPage?.data?.currentPage ?? 0;
       const totalPages = lastPage?.data?.totalPages ?? 0;
-      
+
       if (currentPage < totalPages) {
         return currentPage + 1;
       }
@@ -42,7 +39,7 @@ export const useSharedScheduleList = (enabled = true) => {
     getNextPageParam: (lastPage) => {
       const currentPage = lastPage?.data?.currentPage ?? 0;
       const totalPages = lastPage?.data?.totalPages ?? 0;
-      
+
       if (currentPage < totalPages) {
         return currentPage + 1;
       }
@@ -56,7 +53,7 @@ export const useScheduleListSearch = (
   keyword: string,
   type: 'all' | 'share' = 'all',
   enabled = true,
-  page = 1,
+  page = 1
 ) => {
   return useInfiniteQuery({
     queryKey: ['scheduleListSearch', keyword, type],
@@ -67,7 +64,7 @@ export const useScheduleListSearch = (
     getNextPageParam: (lastPage) => {
       const currentPage = lastPage?.data?.currentPage ?? 0;
       const totalPages = lastPage?.data?.totalPages ?? 0;
-      
+
       if (currentPage < totalPages) {
         return currentPage + 1;
       }
@@ -80,7 +77,7 @@ export const useScheduleListSearch = (
 export const useScheduleTravelList = (
   scheduleId: number,
   page = 1,
-  enabled = true,
+  enabled = true
 ) => {
   return useQuery({
     queryKey: ['scheduleTravelList', scheduleId, page],
@@ -94,7 +91,7 @@ export const useTravelListByLocation = (
   scheduleId: number,
   keyword: string,
   page = 1,
-  enabled = true,
+  enabled = true
 ) => {
   return useQuery({
     queryKey: ['travelListByLocation', scheduleId, keyword, page],
@@ -107,7 +104,7 @@ export const useTravelListByLocation = (
 export const useScheduleTravelRoute = (
   scheduleId: number,
   page = 1,
-  enabled = true,
+  enabled = true
 ) => {
   return useInfiniteQuery({
     queryKey: ['scheduleTravelRouteList', scheduleId, page],
@@ -117,7 +114,7 @@ export const useScheduleTravelRoute = (
     getNextPageParam: (lastPage) => {
       const currentPage = lastPage?.data?.currentPage ?? 0;
       const totalPages = lastPage?.data?.totalPages ?? 0;
-      
+
       if (currentPage < totalPages) {
         return currentPage + 1;
       }
@@ -125,4 +122,3 @@ export const useScheduleTravelRoute = (
     },
   });
 };
-

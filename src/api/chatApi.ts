@@ -1,18 +1,5 @@
 import { get, post } from './api';
-import { ApiResponse } from '@/types/scheduleType';
-
-// 채팅 타입 정의
-interface ChatMessageType {
-  messageId: string;
-  timestamp: string;
-  message: string;
-}
-
-interface ChatUserType {
-  nickname: string;
-  profileImage: string;
-  messages: ChatMessageType[];
-}
+import { ApiResponse, ChatUserType } from '@/types/scheduleType';
 
 interface ChatListType {
   totalPages: number;
@@ -44,22 +31,21 @@ export const fetchScheduleChats = async (
   page: number = 1
 ): Promise<ApiResponse<ChatListType>> => {
   const url = `/schedules/${scheduleId}/chats?page=${page}`;
-  
+
   try {
     const data = await get<ApiResponse<ChatListType>>(url, {
       requiresAuth: true,
     });
+
     console.log(
       data.success ? '채팅 목록 조회 성공:' : '채팅 목록 조회 실패:',
       data.message
     );
     return data;
   } catch (error) {
-    // 404 Not Found
     if ((error as any).status === 404) {
       return handleApiError(error, '일정 데이터가 존재하지 않습니다.', 404);
     }
-    // 403 Forbidden - 접근 권한 없음
     if ((error as any).status === 403) {
       return handleApiError(
         error,
@@ -67,21 +53,25 @@ export const fetchScheduleChats = async (
         403
       );
     }
-    return handleApiError(error, '서버 내부 오류가 발생하였습니다.');
+    return handleApiError(error, '서버 내부 오류가 발생하였습니다.', 500);
   }
 };
 
 // 채팅 보내기 (POST)
 export const sendScheduleChat = async (
   scheduleId: number,
+  nickname: string,
   chatMessage: string
-): Promise<ApiResponse<ChatMessageType>> => {
-  const url = `/schedules/${scheduleId}/chats`;
-  
+): Promise<ApiResponse<any>> => {
+  const url = `/pub/chats`;
   try {
-    const data = await post<ApiResponse<ChatMessageType>>(
+    const data = await post<ApiResponse<any>>(
       url,
-      { message: chatMessage },
+      {
+        scheduleId,
+        nickname,
+        message: chatMessage,
+      },
       { requiresAuth: true }
     );
     console.log(
@@ -90,15 +80,9 @@ export const sendScheduleChat = async (
     );
     return data;
   } catch (error) {
-    // 400 Bad Request - 잘못된 요청 형식 (예: 채팅 메시지 누락)
-    if ((error as any).status === 400) {
-      return handleApiError(error, '잘못된 요청입니다. 채팅 메시지를 확인하세요.', 400);
-    }
-    // 404 Not Found
     if ((error as any).status === 404) {
       return handleApiError(error, '일정 데이터가 존재하지 않습니다.', 404);
     }
-    // 403 Forbidden - 접근 권한 없음
     if ((error as any).status === 403) {
       return handleApiError(
         error,

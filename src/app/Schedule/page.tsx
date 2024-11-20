@@ -375,7 +375,7 @@ export default function Schedule() {
         </div>
         <div ref={observerRef} className={styles.loadingArea}>
           {isFetchingNextPage ? (
-            <p>로딩 중...</p>
+            <DataLoading />
           ) : !hasNextPage ? (
             <p>더 이상 일정이 없습니다.</p>
           ) : null}
