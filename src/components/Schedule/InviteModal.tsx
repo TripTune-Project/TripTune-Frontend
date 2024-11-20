@@ -77,7 +77,7 @@ const InviteModal = ({
         <ul className={styles.userList}>
           {allUsers &&
             allUsers.map((user) => (
-              <li key={user.userId} className={styles.userListItem}>
+              <li key={user.nickname} className={styles.userListItem}>
                 <img
                   src={user.ImageSrc}
                   alt={`${user.name}'s profile`}

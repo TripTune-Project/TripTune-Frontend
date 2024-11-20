@@ -59,7 +59,7 @@ export default function ScheduleDetail({ params }: PageProps) {
         
         const formattedAttendeeList = (data.attendeeList || []).map((user: any) => ({
           attendeeId: user.attendeeId || 0,
-          userId: user.userId || 0,
+          nickname: user.nickname || 0,
           role: user.role || 'guest',
           permission: user.permission || 'read',
           name: user.name || 'Unknown User',

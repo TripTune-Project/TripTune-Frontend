@@ -8,7 +8,6 @@ import {
 import Image from 'next/image';
 import locationIcon from '../../../public/assets/images/일정 만들기/일정 생성/scheduleDate_mapIcon.png';
 import Pagination from '../Travel/Pagination';
-import DataLoading from '@/components/Common/DataLoading';
 import { Place } from '@/types/scheduleType';
 import { useDebounce } from '@/hooks/useDebounce';
 
@@ -53,7 +52,7 @@ const ScheduleTravelSearch = ({ onAddMarker }: ScheduleTravelSearchProps) => {
     : travelListQuery?.data?.data?.totalPages || 0;
   
   if (travelListQuery.isLoading || searchTravelQuery.isLoading)
-    return <DataLoading />;
+    return <p>로딩 중...</p>;
   if (travelListQuery.error || searchTravelQuery.error)
     return <p>데이터를 불러오는데 오류가 발생했습니다.</p>;
   
@@ -61,8 +60,8 @@ const ScheduleTravelSearch = ({ onAddMarker }: ScheduleTravelSearchProps) => {
     <>
       <div className={styles.travelSearchContainerSearch}>
         <input
-          type='text'
-          placeholder='원하는 여행지를 검색하세요'
+          type="text"
+          placeholder="원하는 여행지를 검색하세요"
           value={searchKeyword}
           onChange={(e) => setSearchKeyword(e.target.value)}
         />
@@ -95,11 +94,11 @@ const ScheduleTravelSearch = ({ onAddMarker }: ScheduleTravelSearchProps) => {
                   <p className={styles.placeDetailAddress}>
                     <Image
                       src={locationIcon}
-                      alt='장소'
+                      alt="장소"
                       width={15}
                       height={21}
                     />
-                    &nbsp;{place.address} {place.detailAddress}
+                    &nbsp;{place.address} {place.detailAddress ?? ''}
                   </p>
                 </div>
                 <button

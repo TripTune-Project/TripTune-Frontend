@@ -17,7 +17,8 @@ export interface ScheduleType {
 // 참여자 정보
 export interface Attendee {
   attendeeId: number;
-  userId: string;
+  userId?: string;
+  nickname: string;
   role: string;
   permission: string;
   name: string;
