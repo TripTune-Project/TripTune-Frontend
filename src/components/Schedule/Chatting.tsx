@@ -94,7 +94,7 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
   }, [scheduleId]);
 
   const handleSendMessage = async () => {
-    const nickname =  Cookies.get("nickName") as string;
+    const nickname =  Cookies.get("nickname") as string;
     if (message.trim() && client) {
       try {
         const response = await sendScheduleChat(scheduleId, nickname, message);

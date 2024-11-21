@@ -37,7 +37,7 @@ const handleRedirectToLogin = (message: string) => {
     alert(message);
     Cookies.remove('trip-tune_at');
     Cookies.remove('trip-tune_rt');
-    Cookies.remove('nickName');
+    Cookies.remove('nickname');
     window.location.href = '/Login';
   }
 };

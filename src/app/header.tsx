@@ -26,10 +26,10 @@ const Header = () => {
 
   useEffect(() => {
     const checkLoginStatus = async () => {
-      const storedUserNickName = Cookies.get('nickName');
-      if (storedUserNickName) {
+      const storedUserNickname = Cookies.get('nickname');
+      if (storedUserNickname) {
         setIsLoggedIn(true);
-        setUserId(storedUserNickName as string);
+        setUserId(storedUserNickname as string);
       } else {
         setIsLoggedIn(false);
         setUserId('');

@@ -3,13 +3,13 @@ import Cookies from 'js-cookie';
 
 export const logoutApi = async (): Promise<void> => {
   const accessToken = Cookies.get('trip-tune_at');
-  const nickName = Cookies.get('nickName');
+  const nickname = Cookies.get('nickname');
 
   if (accessToken) {
     try {
       await patch(
         '/members/logout',
-        { nickName },
+        { nickname },
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -19,7 +19,7 @@ export const logoutApi = async (): Promise<void> => {
 
       Cookies.remove('trip-tune_at');
       Cookies.remove('trip-tune_rt');
-      Cookies.remove('nickName');
+      Cookies.remove('nickname');
     } catch (error) {
       throw new Error('Logout failed');
     }
