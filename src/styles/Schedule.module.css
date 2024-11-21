@@ -810,7 +810,7 @@
 .chatContainer {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-end;
   width: 100%;
   height: 100%;
   background-color: #f0f2f5;
@@ -894,19 +894,25 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  overflow-y: auto;
-  background-color: #ffffff;
+  overflow-y: scroll;
+  background-color: #e0e0e0;
   border-bottom: 1px solid #e0e0e0;
+  max-height:max-content;
 }
 
-.message {
+.sentMessage, .receiveMessage {
   background-color: #e9f7fe;
   border-radius: 16px;
   padding: 12px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   font-size: 14px;
-  max-width: 70%;
   align-self: flex-start;
+}
+
+.receiveMessage {
+  align-self: flex-end;
+  background-color: #636363;
+  color:#ffffff;
 }
 
 .inputContainer {
@@ -1406,40 +1412,6 @@
   background-color: #0056b3;
 }
 
-.messageContainer {
-  flex-grow: 1;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  overflow-y: auto;
-  background-color: #e0e0e0;
-  border-bottom: 1px solid #e0e0e0;
-  border-radius: 12px 12px 0 0;
-}
-
-.message.sent {
-  background-color: #e9f7fe;
-  align-self: flex-end;
-  border-radius: 16px 16px 0 16px;
-  padding: 10px;
-  max-width: 60%;
-  color: #333;
-  font-size: 14px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-}
-
-.message.received {
-  background-color: #f1f0f0;
-  align-self: flex-start;
-  border-radius: 16px 16px 16px 0;
-  padding: 10px;
-  max-width: 60%;
-  color: #333;
-  font-size: 14px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-}
-
 .loadingArea {
   display: flex;
   justify-content: center;
@@ -1500,8 +1472,6 @@
 }
 
 .profileImage {
-  width: 40px;
-  height: 40px;
   border-radius: 50%;
   object-fit: cover;
 }

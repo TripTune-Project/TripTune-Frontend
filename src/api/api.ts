@@ -64,7 +64,7 @@ const fetchData = async <T>(
 
   if (response.status === 401 || response.status === 400) {
     if (!isRetrying) {
-      isRetrying = true; // 중복 요청 방지
+      isRetrying = true;
       const newAccessToken = await handleTokenRefresh();
       if (newAccessToken) {
         headers = { ...headers, Authorization: `Bearer ${newAccessToken}` };
