@@ -8,7 +8,7 @@ interface BookMarkData {
 export const BookMarkApi = async (data: BookMarkData) => {
   try {
     const response = await post<{ data: { placeId: number } }>(
-      '/bookmarks',
+      '/api/bookmarks',
       data,
       {
         headers: {
@@ -37,7 +37,7 @@ export const BookMarkApi = async (data: BookMarkData) => {
 export const BookMarkDeleteApi = async (data: BookMarkData) => {
   try {
     const response = await remove<{ data: { placeId: number } }>(
-      '/bookmarks',
+      '/api/bookmarks',
       data,
       {
         headers: {

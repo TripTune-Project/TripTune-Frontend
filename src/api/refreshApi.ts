@@ -18,7 +18,7 @@ export const refreshApi = async (): Promise<string | null> => {
 
   try {
     const response = await post<{ data: { accessToken: string } }>(
-      '/members/refresh',
+      '/api/members/refresh',
       { refreshToken }
     );
     const newAccessToken = response.data.accessToken;

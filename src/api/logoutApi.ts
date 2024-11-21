@@ -8,7 +8,7 @@ export const logoutApi = async (): Promise<void> => {
   if (accessToken) {
     try {
       await patch(
-        '/members/logout',
+        '/api/members/logout',
         { nickname },
         {
           headers: {

@@ -238,7 +238,7 @@ export const changePassword = async (
       success: boolean;
       message: string;
     }>(
-      '/mypage/change-password',
+      '/api/mypage/change-password',
       {
         nowPassword,
         newPassword,

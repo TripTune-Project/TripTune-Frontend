@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Client } from '@stomp/stompjs';
+import { Client, StompSubscription } from '@stomp/stompjs';
 import Cookies from 'js-cookie';
-import { fetchScheduleChats, sendScheduleChat } from '@/api/chatApi';
+import { fetchScheduleChats } from '@/api/chatApi';
 import styles from '../../styles/Schedule.module.css';
 import DataLoading from '@/components/Common/DataLoading';
 import { ChatUserType } from '@/types/scheduleType';
 
 const Chatting = ({ scheduleId }: { scheduleId: number }) => {
+  const token = Cookies.get('trip-tune_at');
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<ChatUserType[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
   const [client, setClient] = useState<Client | null>(null);
+  const [subscription, setSubscription] = useState<StompSubscription | null>(
+    null
+  );
 
   const loadMessages = async (page: number) => {
     setLoading(true);
@@ -46,7 +50,7 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
           );
           if (latestPageResponse.success && latestPageResponse.data) {
             const initialMessages = latestPageResponse.data.content;
-            setMessages(initialMessages.reverse());
+            setMessages(initialMessages);
             setTotalPages(totalPages);
             setCurrentPage(totalPages);
           }
@@ -58,11 +62,8 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
 
     loadInitialMessages();
 
-    const token = Cookies.get('trip-tune_at');
     const stompClient = new Client({
-      // TODO : url 주의
-      // brokerURL: process.env.NEXT_PUBLIC_BROKER_LOCAL_URL,
-      brokerURL: process.env.NEXT_PUBLIC_BROKER_URL,
+      brokerURL: process.env.NEXT_PUBLIC_BROKER_LOCAL_URL,
       connectHeaders: {
         Authorization: `Bearer ${token}`,
       },
@@ -72,40 +73,63 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
     });
 
     stompClient.onConnect = () => {
-      stompClient.subscribe(`/sub/schedules/${scheduleId}/chats`, (message) => {
-        const newMessage: ChatUserType = JSON.parse(message.body);
-        setMessages((prevMessages) => {
-          const isDuplicate = prevMessages.some(
-            (msg) => msg.messageId === newMessage.messageId
-          );
-          if (!isDuplicate) {
-            return [...prevMessages, newMessage];
-          }
-          return prevMessages;
-        });
-      });
+      const sub = stompClient.subscribe(
+        `/sub/schedules/${scheduleId}/chats`,
+        (message) => {
+          const newMessage: ChatUserType = JSON.parse(message.body);
+          setMessages((prevMessages) => {
+            const isDuplicate = prevMessages.some(
+              (msg) => msg.messageId === newMessage.messageId
+            );
+            if (!isDuplicate) {
+              return [...prevMessages, newMessage];
+            }
+            return prevMessages;
+          });
+        }
+      );
+      setSubscription(sub);
     };
 
     stompClient.activate();
     setClient(stompClient);
 
     return () => {
-      stompClient.deactivate();
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+      if (stompClient.connected) {
+        stompClient.deactivate();
+      }
     };
   }, [scheduleId]);
 
   const handleSendMessage = async () => {
-    const nickname =  Cookies.get("nickname") as string;
+    const nickname = Cookies.get('nickname') as string;
     if (message.trim() && client) {
       try {
-        const response = await sendScheduleChat(scheduleId, nickname, message);
-        if (response.success) {
-          console.log(response.message);
-        }
-      } catch (error) {
-        console.error(error);
-      } finally {
+        // TODO : 메시지 형식 고민
+        const newMessage: ChatUserType = {
+          nickname,
+          message,
+          messageId: '',
+          profileUrl: '',
+          timestamp: '',
+        };
+
+        client.publish({
+          destination: '/pub/chats',
+          body: JSON.stringify({
+            scheduleId,
+            nickname,
+            message,
+          }),
+        });
+
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
         setMessage('');
+      } catch (error) {
+        console.error('메시지 전송 실패:', error);
       }
     }
   };
@@ -117,7 +141,7 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
       </div>
       <div className={styles.messageContainer}>
         {messages.map((user) => (
-          <div key={user.nickname} className={styles.userMessages}>
+          <div key={user.messageId} className={styles.userMessages}>
             <div className={styles.userInfo}>
               <img
                 src={user.profileUrl}

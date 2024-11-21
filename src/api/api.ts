@@ -1,7 +1,6 @@
 import Cookies from 'js-cookie';
 import { refreshApi } from './refreshApi';
 
-const BASE_URL = `/api/`;
 const DEFAULT_HEADERS = {
   'Content-Type': 'application/json',
 };
@@ -46,7 +45,7 @@ const fetchData = async <T>(
   endpoint: string,
   options: FetchOptions = {}
 ): Promise<T> => {
-  const url = `${BASE_URL}${endpoint}`;
+  const url = `${endpoint}`;
   let headers: HeadersInit = {
     ...DEFAULT_HEADERS,
     ...options.headers,

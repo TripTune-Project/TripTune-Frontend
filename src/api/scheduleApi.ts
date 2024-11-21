@@ -22,7 +22,7 @@ const handleApiError = (error: unknown, defaultMessage: string) => {
 export const fetchScheduleList = async (
   page: number = 1
 ): Promise<ApiResponse<ScheduleAllListType>> => {
-  const url = `/schedules?page=${page}`;
+  const url = `/api/schedules?page=${page}`;
 
   try {
     const data = await get<ApiResponse<ScheduleAllListType>>(url, {
@@ -42,7 +42,7 @@ export const fetchScheduleList = async (
 export const fetchSharedScheduleList = async (
   page: number = 1
 ): Promise<ApiResponse<ScheduleAllListType>> => {
-  const url = `/schedules/shared?page=${page}`;
+  const url = `/api/schedules/shared?page=${page}`;
 
   try {
     const data = await get<ApiResponse<ScheduleAllListType>>(url, {
@@ -64,7 +64,7 @@ export const fetchScheduleListSearch = async (
   keyword: string,
   type: 'all' | 'share' = 'all'
 ): Promise<ApiResponse<ScheduleTravelResultType>> => {
-  const url = `/schedules/search?page=${page}&keyword=${keyword}&type=${type}`;
+  const url = `/api/schedules/search?page=${page}&keyword=${keyword}&type=${type}`;
 
   try {
     const data = await get<ApiResponse<ScheduleTravelResultType>>(url, {
@@ -85,7 +85,7 @@ export const fetchScheduleDetail = async (
   scheduleId: number,
   page: number = 1
 ): Promise<ApiResponse<ScheduleDetailType>> => {
-  const url = `/schedules/${scheduleId}?page=${page}`;
+  const url = `/api/schedules/${scheduleId}?page=${page}`;
 
   try {
     const data = await get<ApiResponse<ScheduleDetailType>>(url, {
@@ -105,7 +105,7 @@ export const fetchScheduleDetail = async (
 export const createNewSchedule = async (
   scheduleData: ScheduleType
 ): Promise<ApiResponse<ScheduleType>> => {
-  const url = '/schedules';
+  const url = '/api/schedules';
 
   try {
     const data = await post<ApiResponse<ScheduleType>>(url, scheduleData, {
@@ -125,7 +125,7 @@ export const createNewSchedule = async (
 export const updateExistingSchedule = async (
   schedule: ScheduleDetailType
 ): Promise<ApiResponse<ScheduleDetailType>> => {
-  const url = `/schedules/${schedule.scheduleId}`;
+  const url = `/api/schedules/${schedule.scheduleId}`;
 
   const requestBody: Partial<ScheduleDetailType> = {
     scheduleName: schedule.scheduleName,
@@ -158,7 +158,7 @@ export const updateExistingSchedule = async (
 export const deleteSchedule = async (
   scheduleId: number
 ): Promise<ApiResponse<null>> => {
-  const url = `/schedules/${scheduleId}`;
+  const url = `/api/schedules/${scheduleId}`;
 
   try {
     const data = await remove<ApiResponse<null>>(url, {

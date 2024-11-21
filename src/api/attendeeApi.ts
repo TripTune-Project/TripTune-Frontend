@@ -31,15 +31,20 @@ const getErrorMessage = (status: number): { message: string; code: number } => {
       code: 409,
     },
   };
-  return messages[status] || { message: '서버 내부 오류가 발생하였습니다.', code: 500 };
+  return (
+    messages[status] || {
+      message: '서버 내부 오류가 발생하였습니다.',
+      code: 500,
+    }
+  );
 };
 
 // 일정 참석자 조회
 export const fetchScheduleAttendees = async (
   scheduleId: number
 ): Promise<ApiResponse<null>> => {
-  const url = `/schedules/${scheduleId}/attendees`;
-  
+  const url = `/api/schedules/${scheduleId}/attendees`;
+
   try {
     const data = await get<ApiResponse<null>>(url, { requiresAuth: true });
     console.log(
@@ -59,8 +64,8 @@ export const shareSchedule = async (
   email: string,
   permission: 'ALL' | 'EDIT' | 'CHAT' | 'READ'
 ): Promise<ApiResponse<null>> => {
-  const url = `/schedules/${scheduleId}/attendees`;
-  
+  const url = `/api/schedules/${scheduleId}/attendees`;
+
   try {
     const data = await post<ApiResponse<null>>(
       url,
@@ -83,7 +88,7 @@ export const leaveSchedule = async (
   scheduleId: number
 ): Promise<ApiResponse<null>> => {
   const url = `/schedules/${scheduleId}/attendees`;
-  
+
   try {
     const data = await remove<ApiResponse<null>>(url, { requiresAuth: true });
     console.log(
@@ -93,11 +98,7 @@ export const leaveSchedule = async (
     return data;
   } catch (error: any) {
     if (error?.status === 403 && error?.message === '작성자 나가기 금지') {
-      return handleApiError(
-        error,
-        '작성자는 일정에서 나갈 수 없습니다.',
-        403
-      );
+      return handleApiError(error, '작성자는 일정에서 나갈 수 없습니다.', 403);
     }
     const { message, code } = getErrorMessage(error?.status);
     return handleApiError(error, message, code);

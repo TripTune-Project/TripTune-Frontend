@@ -17,7 +17,7 @@ export const joinMember = async (
   data: JoinMemberData
 ): Promise<JoinMemberResponse> => {
   try {
-    return await post<JoinMemberResponse>('/members/join', data);
+    return await post<JoinMemberResponse>('/api/members/join', data);
   } catch (error) {
     throw new Error(
       error instanceof Error

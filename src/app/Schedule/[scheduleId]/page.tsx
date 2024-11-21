@@ -36,7 +36,7 @@ export default function ScheduleDetail({ params }: PageProps) {
   useEffect(() => {
     checkAuthStatus();
   }, [checkAuthStatus]);
-  
+
   const handleAddMarker = (marker: { lat: number; lng: number }) => {
     setMarkers((prevMarkers) => [...prevMarkers, marker]);
   };

@@ -17,7 +17,7 @@ export const fetchTravelList = async (
   scheduleId: number,
   page = 1
 ): Promise<ApiResponse<ScheduleTravelResultType>> => {
-  const url = `/schedules/${scheduleId}/travels?page=${page}`;
+  const url = `/api/schedules/${scheduleId}/travels?page=${page}`;
 
   try {
     const data = await get<ApiResponse<ScheduleTravelResultType>>(url, {
@@ -39,7 +39,7 @@ export const searchTravelDestinations = async (
   page = 1,
   keyword: string
 ): Promise<ApiResponse<ScheduleTravelResultType>> => {
-  const url = `/schedules/${scheduleId}/travels/search?page=${page}&keyword=${keyword}`;
+  const url = `/api/schedules/${scheduleId}/travels/search?page=${page}&keyword=${keyword}`;
 
   try {
     const data = await get<ApiResponse<ScheduleTravelResultType>>(url, {
@@ -60,7 +60,7 @@ export const fetchTravelRoute = async (
   scheduleId: number,
   page = 1
 ): Promise<ApiResponse<ScheduleTravelResultType>> => {
-  const url = `/schedules/${scheduleId}/routes?page=${page}`;
+  const url = `/api/schedules/${scheduleId}/routes?page=${page}`;
 
   try {
     const data = await get<ApiResponse<ScheduleTravelResultType>>(url, {

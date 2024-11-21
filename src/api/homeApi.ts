@@ -38,7 +38,7 @@ export const searchHomePlaces = async (
   try {
     const queryParams = new URLSearchParams(convertToRecord(params)).toString();
     return await get<SearchSuccessResponse | EmptyResultResponse>(
-      `/home/search?${queryParams}`
+      `/api/home/search?${queryParams}`
     );
   } catch (error) {
     console.error('예기치 않은 오류:', error);

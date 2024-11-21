@@ -11,7 +11,9 @@ interface FindPasswordResponse {
 
 export const requestFindId = async (email: string): Promise<FindIdResponse> => {
   try {
-    const response = await post<FindIdResponse>('/members/find-id', { email });
+    const response = await post<FindIdResponse>('/api/members/find-id', {
+      email,
+    });
     return response;
   } catch (error) {
     throw new Error(
@@ -25,7 +27,7 @@ export const requestFindPassword = async (
   userId: string
 ): Promise<FindPasswordResponse> => {
   try {
-    return await post<FindPasswordResponse>('/emails/verify', {
+    return await post<FindPasswordResponse>('/api/emails/verify', {
       email,
       userId,
     });
