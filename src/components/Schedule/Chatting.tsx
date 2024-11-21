@@ -63,8 +63,7 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
     loadInitialMessages();
 
     const stompClient = new Client({
-      // TODO : URL 고민 중
-      brokerURL: 'ws://13.209.177.247:8080/ws',
+      brokerURL: 'wss://13.209.177.247:8080/ws',
       connectHeaders: {
         Authorization: `Bearer ${token}`,
       },
