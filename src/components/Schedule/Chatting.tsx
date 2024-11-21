@@ -10,7 +10,8 @@ import { ChatUserType } from '@/types/scheduleType';
 const Chatting = ({ scheduleId }: { scheduleId: number }) => {
   const token = Cookies.get('trip-tune_at');
   const userNickname = Cookies.get('nickname');
-
+  const isLocal = process.env.NODE_ENV === 'development';
+  
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<ChatUserType[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -66,7 +67,7 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
     loadInitialMessages();
 
     const stompClient = new Client({
-      brokerURL: 'wss://13.209.177.247:8080/ws',
+      brokerURL: isLocal ? process.env.NEXT_PUBLIC_BROKER_LOCAL_URL  : process.env.NEXT_PUBLIC_BROKER_URL,
       connectHeaders: {
         Authorization: `Bearer ${token}`,
       },
