@@ -10,7 +10,7 @@ import { ChatUserType } from '@/types/scheduleType';
 const Chatting = ({ scheduleId }: { scheduleId: number }) => {
   const token = Cookies.get('trip-tune_at');
   const userNickname = Cookies.get('nickname');
-  
+
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<ChatUserType[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -18,9 +18,9 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
   const [loading, setLoading] = useState(false);
   const [client, setClient] = useState<Client | null>(null);
   const [subscription, setSubscription] = useState<StompSubscription | null>(
-    null,
+    null
   );
-  
+
   const loadMessages = async (page: number) => {
     setLoading(true);
     try {
@@ -40,7 +40,7 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
       setLoading(false);
     }
   };
-  
+
   useEffect(() => {
     const loadInitialMessages = async () => {
       try {
@@ -49,7 +49,7 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
           const { totalPages } = response.data;
           const latestPageResponse = await fetchScheduleChats(
             scheduleId,
-            totalPages,
+            totalPages
           );
           if (latestPageResponse.success && latestPageResponse.data) {
             const initialMessages = latestPageResponse.data.content;
@@ -62,9 +62,9 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
         console.error(error);
       }
     };
-    
+
     loadInitialMessages();
-    
+
     const stompClient = new Client({
       brokerURL: 'wss://13.209.177.247:8080/ws',
       connectHeaders: {
@@ -74,7 +74,7 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
     });
-    
+
     stompClient.onConnect = () => {
       const sub = stompClient.subscribe(
         `/sub/schedules/${scheduleId}/chats`,
@@ -82,21 +82,21 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
           const newMessage: ChatUserType = JSON.parse(message.body);
           setMessages((prevMessages) => {
             const isDuplicate = prevMessages.some(
-              (msg) => msg.messageId === newMessage.messageId,
+              (msg) => msg.messageId === newMessage.messageId
             );
             if (!isDuplicate) {
               return [...prevMessages, newMessage];
             }
             return prevMessages;
           });
-        },
+        }
       );
       setSubscription(sub);
     };
-    
+
     stompClient.activate();
     setClient(stompClient);
-    
+
     return () => {
       if (subscription) {
         subscription.unsubscribe();
@@ -106,7 +106,7 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
       }
     };
   }, [scheduleId]);
-  
+
   const handleSendMessage = async () => {
     if (message.trim() && client) {
       try {
@@ -118,7 +118,7 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
           profileUrl: '',
           timestamp: new Date().toLocaleString(),
         };
-        
+
         client.publish({
           destination: '/pub/chats',
           body: JSON.stringify({
@@ -127,7 +127,7 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
             message,
           }),
         });
-        
+
         setMessages((prevMessages) => [...prevMessages, newMessage]);
         setMessage('');
       } catch (error) {
@@ -135,7 +135,7 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
       }
     }
   };
-  
+
   return (
     <>
       <div className={styles.chatContainer}>
@@ -145,20 +145,30 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
         <div className={styles.messageContainer}>
           {messages.map((user) => (
             <div key={user.messageId} className={styles.userMessages}>
-              {user.nickname !== userNickname && <div className={styles.userInfo}>
-                <Image
-                  src={user.profileUrl}
-                  alt={`${user.nickname} 프로필`}
-                  className={styles.profileImage}
-                  width={40}
-                  height={40}
-                />
-                <span className={styles.nickname}>{user.nickname}</span>
-              </div>}
-              <div key={user.messageId}
-                   className={user.nickname !== userNickname ? styles.sentMessage : styles.receiveMessage}>
+              {user.nickname !== userNickname && (
+                <div className={styles.userInfo}>
+                  <Image
+                    src={user.profileUrl}
+                    alt={`${user.nickname} 프로필`}
+                    className={styles.profileImage}
+                    width={40}
+                    height={40}
+                  />
+                  <span className={styles.nickname}>{user.nickname}</span>
+                </div>
+              )}
+              <div
+                key={user.messageId}
+                className={
+                  user.nickname !== userNickname
+                    ? styles.sentMessage
+                    : styles.receiveMessage
+                }
+              >
                 <span>{user.message}</span>
-                <span className={styles.timestamp}>{new Date(user.timestamp).toLocaleTimeString()}</span>
+                <span className={styles.timestamp}>
+                  {new Date(user.timestamp).toLocaleTimeString()}
+                </span>
               </div>
             </div>
           ))}
@@ -174,11 +184,11 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
         </div>
         <div className={styles.inputContainer}>
           <input
-            type="text"
+            type='text'
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             className={styles.messageInput}
-            placeholder="메시지를 입력하세요."
+            placeholder='메시지를 입력하세요.'
           />
           <button onClick={handleSendMessage} className={styles.sendButton}>
             전송

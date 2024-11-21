@@ -85,7 +85,6 @@ const ScheduleMake = ({
 
   return (
     <div className={styles.pageContainer}>
-      <h1 className={styles.detailTitle}>일정 만들기</h1>
       <div className={styles.inputGroup}>
         <label>여행 이름</label>
         <input

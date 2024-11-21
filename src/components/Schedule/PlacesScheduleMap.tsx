@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 
 const containerStyle = {
-  width: '100%',
-  height: '1330px',
+  width: '844px',
+  height: '100%',
 };
 
 const defaultCenter = {

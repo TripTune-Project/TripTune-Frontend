@@ -95,7 +95,7 @@ const ScheduleRoute = ({
 
     return (
       <div ref={setRef} className={styles.deleteZone}>
-        ❌ 삭제 하기 ❌
+        휴지통 ❌
       </div>
     );
   };
@@ -106,7 +106,7 @@ const ScheduleRoute = ({
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <ul className={styles.routeList}>
+      <ul>
         {places.map((place, index) => (
           <PlaceItem key={place.placeId} place={place} index={index} />
         ))}

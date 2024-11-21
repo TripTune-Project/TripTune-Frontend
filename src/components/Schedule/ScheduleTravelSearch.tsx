@@ -104,7 +104,7 @@ const ScheduleTravelSearch = ({ onAddMarker }: ScheduleTravelSearchProps) => {
                 </div>
                 <button
                   className={styles.addButton}
-                  onClick={() => onAddMarker(place)}
+                  onClick={() => onAddMarker(place)} // TODO : 이미 등록 된 상태 라면 ?
                 >
                   +
                 </button>
