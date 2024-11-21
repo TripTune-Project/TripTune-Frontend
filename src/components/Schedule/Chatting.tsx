@@ -60,8 +60,9 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
 
     const token = Cookies.get('trip-tune_at');
     const stompClient = new Client({
-      brokerURL: process.env.NEXT_PUBLIC_BROKER_LOCAL_URL, // TODO : url 주의
-      // brokerURL: process.env.NEXT_PUBLIC_BROKER_URL,
+      // TODO : url 주의
+      // brokerURL: process.env.NEXT_PUBLIC_BROKER_LOCAL_URL,
+      brokerURL: process.env.NEXT_PUBLIC_BROKER_URL,
       connectHeaders: {
         Authorization: `Bearer ${token}`,
       },
