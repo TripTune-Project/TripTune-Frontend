@@ -64,7 +64,7 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
 
     const stompClient = new Client({
       // TODO : URL 고민 중
-      brokerURL: 'wss://13.209.177.247:8080/ws',
+      brokerURL: 'ws://13.209.177.247:8080/ws',
       connectHeaders: {
         Authorization: `Bearer ${token}`,
       },
