@@ -63,9 +63,8 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
     loadInitialMessages();
 
     const stompClient = new Client({
-      // TODO : URL 주의 하기
-      brokerURL: process.env.NEXT_PUBLIC_BROKER_URL,
-      // brokerURL: process.env.NEXT_PUBLIC_BROKER_LOCAL_URL,
+      // TODO : URL 고민 중
+      brokerURL: 'wss://13.209.177.247:8080/ws',
       connectHeaders: {
         Authorization: `Bearer ${token}`,
       },
