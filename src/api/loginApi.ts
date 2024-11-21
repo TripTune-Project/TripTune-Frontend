@@ -11,27 +11,21 @@ const { setEncryptedCookie } = saveLocalContent();
 const saveTokens = (
   accessToken: string,
   refreshToken: string,
-  userId: string,
-  // nickName?:string
+  nickName:string
 ) => {
   setEncryptedCookie('trip-tune_at', accessToken, 5 / (24 * 60));
   setEncryptedCookie('trip-tune_rt', refreshToken, 7);
-  setEncryptedCookie('userId', userId, 7);
-  // setEncryptedCookie('nickName', nickName, 7);
+  setEncryptedCookie('nickName', nickName, 7);
 };
 
 export const loginUser = async (data: LoginData) => {
   try {
     const responseData = await post<{
-      data: { accessToken: string; refreshToken: string; userId: string };
-      // data: { accessToken: string; refreshToken: string; nickName: string };
+      data: { accessToken: string; refreshToken: string; nickName: string };
     }>('/members/login', data);
-
-    const { accessToken, refreshToken, userId } = responseData.data;
-    saveTokens(accessToken, refreshToken, userId);
     
-    // const { accessToken, refreshToken, nickName } = responseData.data;
-    // saveTokens(accessToken, refreshToken, nickName);
+    const { accessToken, refreshToken, nickName } = responseData.data;
+    saveTokens(accessToken, refreshToken, nickName);
     
     return responseData;
   } catch (error) {

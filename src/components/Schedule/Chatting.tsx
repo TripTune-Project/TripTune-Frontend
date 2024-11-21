@@ -94,10 +94,9 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
   }, [scheduleId]);
 
   const handleSendMessage = async () => {
+    const nickname =  Cookies.get("nickName") as string;
     if (message.trim() && client) {
       try {
-        // const nickname = Cookies.get("userId")
-        const nickname =  Cookies.get("nickName") ?? "nickName03"; // todo : 어디에서 받지?
         const response = await sendScheduleChat(scheduleId, nickname, message);
         if (response.success) {
           console.log(response.message);
