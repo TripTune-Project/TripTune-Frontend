@@ -5,11 +5,13 @@ const nextConfig = {
   compiler: {
     styledComponents: true,
   },
-  webpack(config) {
-    config.module.rules.push({
-      test: /\.svg$/,
-      use: ['@svgr/webpack'],
-    });
+  webpack(config, { isServer }) {
+    if (!isServer) {
+      config.module.rules.push({
+        test: /\.svg$/,
+        use: ['@svgr/webpack'],
+      });
+    }
     return config;
   },
   images: {
@@ -40,6 +42,23 @@ const nextConfig = {
         ],
       },
     ];
+  },
+  webpackDevMiddleware: (config) => {
+    config.watchOptions = {
+      poll: 1000,
+      aggregateTimeout: 300,
+    };
+    return config;
+  },
+  devServer: {
+    client: {
+      webSocketURL: {
+        hostname: process.env.NEXT_PUBLIC_BROKER_URL?.replace(/^wss?:\/\//, '') || 'localhost',
+        port: '8080',
+        pathname: '/ws',
+        protocol: process.env.NEXT_PUBLIC_BROKER_URL?.startsWith('wss') ? 'wss' : 'ws',
+      },
+    },
   },
 };
 
