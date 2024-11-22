@@ -1,5 +1,0 @@
-[[redirects]]
-from = "/wss"
-to = "ws://13.209.177.247:8080/ws"
-status = 200
-force = true
