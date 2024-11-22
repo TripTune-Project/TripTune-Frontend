@@ -67,7 +67,7 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
     loadInitialMessages();
 
     const stompClient = new Client({
-      brokerURL: isLocal ? process.env.NEXT_PUBLIC_BROKER_LOCAL_URL  : process.env.NEXT_PUBLIC_BROKER_URL,
+      brokerURL: `${window.location.origin}/ws`,
       connectHeaders: {
         Authorization: `Bearer ${token}`,
       },
