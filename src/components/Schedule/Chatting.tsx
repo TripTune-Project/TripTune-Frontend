@@ -6,10 +6,10 @@ import styles from '../../styles/Schedule.module.css';
 import Image from 'next/image';
 import DataLoading from '@/components/Common/DataLoading';
 import { ChatMessage } from '@/types/scheduleType';
-import { useRouter } from 'next/router';
+import { usePathname } from 'next/navigation';
 
 const Chatting = ({ scheduleId }: { scheduleId: number }) => {
-  const router = useRouter();
+  const pathname = usePathname();
   const token = Cookies.get('trip-tune_at');
   const userNickname = Cookies.get('nickname');
   const brokerUrl =
@@ -43,6 +43,9 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
   };
   
   useEffect(() => {
+    // 현재 경로가 /Schedule/${scheduleId}인지 확인
+    if (pathname !== `/Schedule/${scheduleId}`) return;
+    
     const loadInitialMessages = async () => {
       try {
         const response = await fetchScheduleChats(scheduleId, 1);
@@ -72,21 +75,6 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
       heartbeatOutgoing: 4000,
       debug: (msg) => console.log(`[STOMP Debug]: ${msg}`),
     });
-    
-    const handleRouteChange = (url: string) => {
-      if (!url.startsWith(`/Schedule/${scheduleId}`)) {
-        if (subscription) {
-          subscription.unsubscribe();
-          console.log('[Unsubscribed on route change]');
-        }
-        if (stompClient.connected) {
-          stompClient.deactivate();
-          console.log('[WebSocket Deactivated on route change]');
-        }
-      }
-    };
-    
-    router.events.on('routeChangeStart', handleRouteChange);
     
     stompClient.onConnect = () => {
       console.log('[STOMP Connected]');
@@ -123,11 +111,10 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
     setClient(stompClient);
     
     return () => {
-      router.events.off('routeChangeStart', handleRouteChange);
       if (subscription) subscription.unsubscribe();
       if (stompClient.connected) stompClient.deactivate();
     };
-  }, [scheduleId, brokerUrl, token]);
+  }, [scheduleId, brokerUrl, token, pathname]);
   
   const handleSendMessage = () => {
     if (message.trim() && client) {
