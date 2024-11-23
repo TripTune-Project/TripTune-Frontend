@@ -16,18 +16,21 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
     process.env.NODE_ENV === 'production'
       ? process.env.NEXT_PUBLIC_BROKER_URL
       : process.env.NEXT_PUBLIC_BROKER_LOCAL_URL;
-  console.log(brokerUrl, 'brokerUrl:');
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
   const [client, setClient] = useState<Client | null>(null);
-  const [subscription, setSubscription] = useState<StompSubscription | null>(
-    null,
-  );
+  const [chatSubscription, setChatSubscription] = useState<StompSubscription | null>(null);
+  const [errorSubscription, setErrorSubscription] = useState<StompSubscription | null>(null);
   
   const loadMessages = async (page: number) => {
+    if (page < 1 || page > totalPages) {
+      console.warn('더 이상 로드할 메시지가 없습니다.');
+      return;
+    }
+    
     setLoading(true);
     try {
       const response = await fetchScheduleChats(scheduleId, page);
@@ -38,7 +41,7 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
         setCurrentPage(page);
       }
     } catch (error) {
-      console.error('Error loading messages:', error);
+      console.error('메시지를 불러오는 중 오류가 발생했습니다:', error);
     } finally {
       setLoading(false);
     }
@@ -47,16 +50,16 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
   useEffect(() => {
     const currentHost = window.location.host;
     const expectedPath = `/Schedule/${scheduleId}`;
-    
     const isLocalOrNetlifyHost =
       currentHost === 'localhost:3000' || currentHost === 'triptune.netlify.app';
     
     if (!isLocalOrNetlifyHost || !pathname.includes(expectedPath)) {
-      console.log('호스트나 경로가 일치하지 않습니다:', { pathname, currentHost });
+      if (client && client.connected) {
+        client.deactivate();
+        console.log('URL 또는 호스트가 유효하지 않아 STOMP 연결이 해제되었습니다.');
+      }
       return;
     }
-    
-    console.log('호스트와 경로가 일치합니다.', { pathname, currentHost });
     
     const loadInitialMessages = async () => {
       try {
@@ -73,7 +76,7 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
           }
         }
       } catch (error) {
-        console.error('Error loading messages:', error);
+        console.error('초기 메시지를 불러오는 중 오류가 발생했습니다:', error);
       }
     };
     
@@ -85,45 +88,49 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
       reconnectDelay: 5000,
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
-      debug: (msg) => console.log(`[STOMP Debug]: ${msg}`),
+      debug: (msg) => console.log(`[STOMP 디버그]: ${msg}`),
     });
     
     stompClient.onConnect = () => {
-      console.log('[STOMP Connected]');
-      const sub = stompClient.subscribe(
+      const chatSub = stompClient.subscribe(
         `/sub/schedules/${scheduleId}/chats`,
         (message) => {
           const newMessage: ChatMessage = JSON.parse(message.body);
-          console.log('[Message Received]:', newMessage);
           setMessages((prevMessages) => {
-            if (
-              !prevMessages.some(
-                (msg) => msg.messageId === newMessage.messageId,
-              )
-            ) {
+            if (!prevMessages.some((msg) => msg.messageId === newMessage.messageId)) {
               return [...prevMessages, newMessage];
             }
             return prevMessages;
           });
         },
       );
-      setSubscription(sub);
+      setChatSubscription(chatSub);
+      
+      const errorSub = stompClient.subscribe(
+        `/user/queue/errors`,
+        (error) => {
+          const errorMessage = JSON.parse(error.body);
+          console.error('에러 메시지 수신:', errorMessage.message);
+        },
+      );
+      setErrorSubscription(errorSub);
     };
     
     stompClient.onStompError = (frame) => {
-      console.error('[STOMP Error]:', frame.headers['message']);
-      console.error('[Details]:', frame.body);
+      console.error('STOMP 오류가 발생했습니다:', frame.headers['message']);
+      console.error('상세 내용:', frame.body);
     };
     
     stompClient.onWebSocketError = (error) => {
-      console.error('[WebSocket Error]:', error);
+      console.error('웹소켓 오류가 발생했습니다:', error);
     };
     
     stompClient.activate();
     setClient(stompClient);
     
     return () => {
-      if (subscription) subscription.unsubscribe();
+      if (chatSubscription) chatSubscription.unsubscribe();
+      if (errorSubscription) errorSubscription.unsubscribe();
       if (stompClient.connected) stompClient.deactivate();
     };
   }, [scheduleId, brokerUrl, token, pathname]);
@@ -135,14 +142,9 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
           destination: '/pub/chats',
           body: JSON.stringify({ scheduleId, nickname: userNickname, message }),
         });
-        console.log('[Message Sent]:', {
-          scheduleId,
-          nickname: userNickname,
-          message,
-        });
         setMessage('');
       } catch (error) {
-        console.error('[Message Send Error]:', error);
+        console.error('메시지 전송 중 오류가 발생했습니다:', error);
       }
     }
   };
@@ -181,7 +183,7 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
             </div>
           </div>
         ))}
-        {currentPage > 1 && (
+        {currentPage > 1 && currentPage <= totalPages && (
           <button
             onClick={() => loadMessages(currentPage - 1)}
             className={styles.loadMoreButton}
