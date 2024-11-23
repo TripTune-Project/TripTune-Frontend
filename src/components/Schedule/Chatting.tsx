@@ -10,8 +10,9 @@ import { ChatMessage } from '@/types/scheduleType';
 const Chatting = ({ scheduleId }: { scheduleId: number }) => {
   const token = Cookies.get('trip-tune_at');
   const userNickname = Cookies.get('nickname');
+  // TODO : 페이지 WS WSS 변경 시점
   const brokerUrl =
-    process.env.NODE_ENV === 'development'
+    process.env.NODE_ENV !== 'development'
       ? process.env.NEXT_PUBLIC_BROKER_LOCAL_URL
       : process.env.NEXT_PUBLIC_BROKER_URL;
 
