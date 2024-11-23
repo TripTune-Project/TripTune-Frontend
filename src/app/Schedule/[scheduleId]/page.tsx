@@ -10,7 +10,7 @@ import Chatting from '@/components/Schedule/Chatting';
 import useAuth from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
 import { updateExistingSchedule } from '@/api/scheduleApi';
-import { Attendee, ScheduleDetailType } from '@/types/scheduleType';
+import { Attendee, ScheduleDetail } from '@/types/scheduleType';
 import Link from 'next/link';
 import Image from 'next/image';
 import MainLogoImage from '../../../../public/assets/images/로고/triptuneLogo.png';
@@ -21,10 +21,8 @@ interface PageProps {
   };
 }
 
-export default function ScheduleDetail({ params }: PageProps) {
-  const [scheduleData, setScheduleData] = useState<ScheduleDetailType | null>(
-    null
-  );
+export default function ScheduleDetailPage({ params }: PageProps) {
+  const [scheduleData, setScheduleData] = useState<ScheduleDetail | null>(null);
   const [markers, setMarkers] = useState<{ lat: number; lng: number }[]>([]);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   const [allUsers, setAllUsers] = useState<Attendee[]>([]);
@@ -52,14 +50,18 @@ export default function ScheduleDetail({ params }: PageProps) {
   const handleSaveSchedule = async () => {
     if (!scheduleData) return;
 
-    const updatedScheduleData: ScheduleDetailType = {
+    // TODO : 스케줄 저장
+    // TODO : 이미 저장된 루트와 결합도 고민
+    const travelRoute = markers.map((marker, index) => ({
+      routeOrder: index + 1,
+      placeId: index + 1,
+    }));
+
+    const updatedScheduleData: ScheduleDetail = {
       ...scheduleData,
-      travelRoute: markers,
-      // attendeeList: selectedUsers,
+      travelRoute: travelRoute,
       createdAt: scheduleData.createdAt || '',
       placeList: scheduleData.placeList || [],
-      totalPages: scheduleData.totalPages || 0,
-      currentPage: scheduleData.currentPage || 0,
     };
 
     const response = await updateExistingSchedule(updatedScheduleData);
