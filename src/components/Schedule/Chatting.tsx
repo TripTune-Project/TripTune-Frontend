@@ -13,17 +13,19 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
   const token = Cookies.get('trip-tune_at');
   const userNickname = Cookies.get('nickname');
   const brokerUrl =
-    process.env.NODE_ENV === 'development'
-      ? process.env.NEXT_PUBLIC_BROKER_LOCAL_URL
-      : process.env.NEXT_PUBLIC_BROKER_URL;
-  
+    process.env.NODE_ENV === 'production'
+      ? process.env.NEXT_PUBLIC_BROKER_URL
+      : process.env.NEXT_PUBLIC_BROKER_LOCAL_URL;
+  console.log(brokerUrl, 'brokerUrl:');
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
   const [client, setClient] = useState<Client | null>(null);
-  const [subscription, setSubscription] = useState<StompSubscription | null>(null);
+  const [subscription, setSubscription] = useState<StompSubscription | null>(
+    null,
+  );
   
   const loadMessages = async (page: number) => {
     setLoading(true);
@@ -43,8 +45,18 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
   };
   
   useEffect(() => {
-    // 현재 경로가 /Schedule/${scheduleId}인지 확인
-    if (pathname !== `/Schedule/${scheduleId}`) return;
+    const currentHost = window.location.host;
+    const expectedPath = `/Schedule/${scheduleId}`;
+    
+    const isLocalOrNetlifyHost =
+      currentHost === 'localhost:3000' || currentHost === 'triptune.netlify.app';
+    
+    if (!isLocalOrNetlifyHost || !pathname.includes(expectedPath)) {
+      console.log('호스트나 경로가 일치하지 않습니다:', { pathname, currentHost });
+      return;
+    }
+    
+    console.log('호스트와 경로가 일치합니다.', { pathname, currentHost });
     
     const loadInitialMessages = async () => {
       try {
@@ -52,7 +64,7 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
         if (response.success && response.data) {
           const latestPageResponse = await fetchScheduleChats(
             scheduleId,
-            response.data.totalPages
+            response.data.totalPages,
           );
           if (latestPageResponse.success && latestPageResponse.data) {
             setMessages(latestPageResponse.data.content);
@@ -86,14 +98,14 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
           setMessages((prevMessages) => {
             if (
               !prevMessages.some(
-                (msg) => msg.messageId === newMessage.messageId
+                (msg) => msg.messageId === newMessage.messageId,
               )
             ) {
               return [...prevMessages, newMessage];
             }
             return prevMessages;
           });
-        }
+        },
       );
       setSubscription(sub);
     };
