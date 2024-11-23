@@ -83,6 +83,8 @@ export default function SchedulePage() {
     );
   };
 
+  // TODO : 1. 일정 나가기 2. 일정 삭제
+  // TODO : 3. 일정 삭제는 작성자만 삭제 할 수 있도록 한다.
   const handleDeleteConfirmation = async () => {
     if (selectedScheduleId) {
       try {

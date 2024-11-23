@@ -68,7 +68,7 @@ export const fetchScheduleAttendees = async (
     return data;
   } catch (err: any) {
     const { message, code } = getErrorMessage(err?.status);
-    return handleApiError<AttendeeList>(err, message, code); // 타입을 명시적으로 지정
+    return handleApiError<AttendeeList>(err, message, code);
   }
 };
 

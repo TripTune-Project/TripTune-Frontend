@@ -6,6 +6,7 @@ import Image from 'next/image';
 import locationIcon from '../../../public/assets/images/일정 만들기/일정 생성/scheduleDate_mapIcon.png';
 import { Place } from '@/types/scheduleType';
 
+// TODO : 일정 상세 > 여행 루트 무한 스크롤 동작 할 수 있도록
 interface ScheduleRouteProps {
   places: Place[];
   onMovePlace: (dragIndex: number, hoverIndex: number) => void;

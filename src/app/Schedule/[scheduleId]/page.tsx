@@ -72,6 +72,7 @@ export default function ScheduleDetailPage({ params }: PageProps) {
     }
   };
 
+  // TODO : 실제 공유 와 실제 저장이 되는지 처리
   return (
     <>
       <Head>
