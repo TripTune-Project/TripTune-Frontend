@@ -7,7 +7,7 @@ import ScheduleModal from '@/components/Schedule/ScheduleModal';
 import DataLoading from '@/components/Common/DataLoading';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Place, ApiResponse, ScheduleAllListType } from '@/types/scheduleType';
+import { ScheduleList, ApiResponse, Schedule } from '@/types/scheduleType';
 import { MODAL_MESSAGES } from '@/components/Common/ConfirmationModalMessage';
 import { useDebounce } from '@/hooks/useDebounce';
 import ScheduleImage from '../../../public/assets/images/일정 만들기/일정 목록 조회/computer.jpg';
@@ -22,7 +22,7 @@ import {
 import { deleteSchedule } from '@/api/scheduleApi';
 import { leaveSchedule } from '@/api/attendeeApi';
 
-export default function Schedule() {
+export default function SchedulePage() {
   const router = useRouter();
   const { checkAuthStatus } = useAuth();
 
@@ -125,11 +125,13 @@ export default function Schedule() {
     : selectedTab === 'all'
       ? fetchNextAllPage
       : fetchNextSharedPage;
+
   const hasNextPage = isSearching
     ? hasNextSearchPage
     : selectedTab === 'all'
       ? hasNextAllPage
       : hasNextSharedPage;
+
   const isFetchingNextPage = isSearching
     ? isFetchingNextSearchPage
     : selectedTab === 'all'
@@ -174,7 +176,7 @@ export default function Schedule() {
   };
 
   const renderSchedules = (
-    scheduleListData: ApiResponse<ScheduleAllListType> | undefined
+    scheduleListData: ApiResponse<ScheduleList> | undefined
   ) => {
     if (!scheduleListData?.data || scheduleListData.data.content.length === 0) {
       return (
@@ -188,38 +190,30 @@ export default function Schedule() {
       );
     }
 
-    return scheduleListData.data.content.map((place: Place) => (
+    return scheduleListData.data.content.map((schedule: Schedule) => (
       <div
-        key={place.scheduleId}
+        key={schedule.scheduleId}
         className={styles.scheduleItem}
-        onClick={(e) => {
-          if (place.scheduleId !== undefined) {
-            handleDetailClick(e, place.scheduleId);
-          }
-        }}
+        onClick={(e) => handleDetailClick(e, schedule.scheduleId as number)}
       >
         <div>
           <div className={styles.hoverMenu}>
             <div
               className={styles.threeDots}
-              onClick={(e) => {
-                if (place.scheduleId !== undefined) {
-                  handleToggleDeleteMenu(place.scheduleId, e);
-                }
-              }}
+              onClick={(e) =>
+                handleToggleDeleteMenu(schedule.scheduleId as number, e)
+              }
             >
               ...
             </div>
-            {activeDeleteMenu === place.scheduleId && (
+            {activeDeleteMenu === schedule.scheduleId && (
               <div className={styles.deleteMenu}>
-                {place.role === 'AUTHOR' ? (
+                {schedule.role === 'AUTHOR' ? (
                   <button
                     className={styles.deleteButton}
                     onClick={(e) => {
-                      if (place.scheduleId !== undefined) {
-                        setSelectedScheduleId(place.scheduleId);
-                        handleDeleteSchedule(e);
-                      }
+                      setSelectedScheduleId(schedule.scheduleId as number);
+                      handleDeleteSchedule(e);
                     }}
                   >
                     일정 삭제
@@ -227,12 +221,9 @@ export default function Schedule() {
                 ) : (
                   <button
                     className={styles.leaveButton}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (place.scheduleId !== undefined) {
-                        handleLeaveSchedule(place.scheduleId);
-                      }
-                    }}
+                    onClick={() =>
+                      handleLeaveSchedule(schedule.scheduleId as number)
+                    }
                   >
                     일정 나가기
                   </button>
@@ -240,11 +231,11 @@ export default function Schedule() {
               </div>
             )}
           </div>
-          <div className={styles.scheduleName}>{place.scheduleName}</div>
+          <div className={styles.scheduleName}>{schedule.scheduleName}</div>
         </div>
-        {place.thumbnailUrl ? (
+        {schedule.thumbnailUrl ? (
           <Image
-            src={place.thumbnailUrl}
+            src={schedule.thumbnailUrl}
             alt='여행 루트 이미지'
             className={styles.scheduleImage}
             width={256}
@@ -255,13 +246,13 @@ export default function Schedule() {
         )}
         <div className={styles.scheduleContent}>
           <div className={styles.scheduleDates}>
-            일정 : {place.startDate} ~ {place.endDate}
+            일정 : {schedule.startDate} ~ {schedule.endDate}
           </div>
           <div className={styles.scheduleDates}>
-            수정일 : {place.sinceUpdate}
+            수정일 : {schedule.sinceUpdate}
           </div>
           <Image
-            src={place.author?.profileUrl ?? ''}
+            src={schedule.author?.profileUrl ?? ''}
             alt='프로필 이미지'
             className={styles.scheduleImageProfile}
             width={26}
@@ -288,22 +279,7 @@ export default function Schedule() {
           name='description'
           content='여행 일정 관리 페이지에서 최근 계획을 확인하고 수정해보세요. 여행 계획을 관리하고 원하는 일정을 검색할 수 있습니다.'
         />
-        <meta
-          name='keywords'
-          content='여행 일정, 여행 계획, 일정 관리, 최근 여행, 여행 검색'
-        />
         <meta name='viewport' content='width=device-width, initial-scale=1' />
-        <meta property='og:title' content='최근 일정 - 나만의 여행 계획 보기' />
-        <meta
-          property='og:description'
-          content='최근 일정에서 원하는 여행 계획을 쉽게 관리하고 검색할 수 있습니다.'
-        />
-        <meta property='og:type' content='website' />
-        <meta
-          property='og:url'
-          content='https://triptune.netlify.app/Schedule'
-        />
-        <meta name='robots' content='noindex, nofollow' />
       </Head>
       <div className={styles.scheduleTop}>
         <div className={styles.scheduleView}>
@@ -349,7 +325,7 @@ export default function Schedule() {
         >
           공유된 일정
           <span className={styles.counterNumber}>
-            {allScheduleData?.pages[0]?.data?.totalSharedElements ?? 0}
+            {sharedScheduleData?.pages[0]?.data?.totalSharedElements ?? 0}
           </span>
         </button>
 
@@ -367,7 +343,7 @@ export default function Schedule() {
         <div className={styles.scheduleList}>
           {renderSchedules(
             isSearching
-              ? (searchData?.pages[0] as ApiResponse<ScheduleAllListType>)
+              ? (searchData?.pages[0] as ApiResponse<ScheduleList>)
               : selectedTab === 'all'
                 ? allScheduleData?.pages[0]
                 : sharedScheduleData?.pages[0]

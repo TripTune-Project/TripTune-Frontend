@@ -6,7 +6,7 @@ import ScheduleTravelSearch from '@/components/Schedule/ScheduleTravelSearch';
 import ScheduleRoute from '@/components/Schedule/ScheduleRoute';
 import CalendarModal from '@/components/Common/CalendarModal';
 import { fetchScheduleDetail } from '@/api/scheduleApi';
-import { ScheduleType, Place } from '@/types/scheduleType';
+import { Schedule, Place } from '@/types/scheduleType';
 import { useTravelStore } from '@/store/scheduleStore';
 
 interface ScheduleMakeProps {
@@ -22,9 +22,7 @@ const ScheduleMake = ({
 }: ScheduleMakeProps) => {
   const [tab, setTab] = useState(initialTab);
   const [currentPage, setCurrentPage] = useState(1);
-  const [scheduleDetail, setScheduleDetail] = useState<ScheduleType | null>(
-    null
-  );
+  const [scheduleDetail, setScheduleDetail] = useState<Schedule | null>(null);
   const [showModal, setShowModal] = useState(false);
 
   const { addedPlaces, addPlace, removePlace, movePlace } = useTravelStore();
