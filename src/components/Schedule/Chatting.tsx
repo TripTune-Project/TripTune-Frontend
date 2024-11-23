@@ -6,26 +6,25 @@ import styles from '../../styles/Schedule.module.css';
 import Image from 'next/image';
 import DataLoading from '@/components/Common/DataLoading';
 import { ChatMessage } from '@/types/scheduleType';
+import { useRouter } from 'next/router';
 
 const Chatting = ({ scheduleId }: { scheduleId: number }) => {
+  const router = useRouter();
   const token = Cookies.get('trip-tune_at');
   const userNickname = Cookies.get('nickname');
-  // TODO : 페이지 WS WSS 변경 시점
   const brokerUrl =
-    process.env.NODE_ENV !== 'development'
+    process.env.NODE_ENV === 'development'
       ? process.env.NEXT_PUBLIC_BROKER_LOCAL_URL
       : process.env.NEXT_PUBLIC_BROKER_URL;
-
+  
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
   const [client, setClient] = useState<Client | null>(null);
-  const [subscription, setSubscription] = useState<StompSubscription | null>(
-    null
-  );
-
+  const [subscription, setSubscription] = useState<StompSubscription | null>(null);
+  
   const loadMessages = async (page: number) => {
     setLoading(true);
     try {
@@ -42,7 +41,7 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
       setLoading(false);
     }
   };
-
+  
   useEffect(() => {
     const loadInitialMessages = async () => {
       try {
@@ -62,9 +61,9 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
         console.error('Error loading messages:', error);
       }
     };
-
+    
     loadInitialMessages();
-
+    
     const stompClient = new Client({
       brokerURL: brokerUrl,
       connectHeaders: { Authorization: `Bearer ${token}` },
@@ -73,7 +72,22 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
       heartbeatOutgoing: 4000,
       debug: (msg) => console.log(`[STOMP Debug]: ${msg}`),
     });
-
+    
+    const handleRouteChange = (url: string) => {
+      if (!url.startsWith(`/Schedule/${scheduleId}`)) {
+        if (subscription) {
+          subscription.unsubscribe();
+          console.log('[Unsubscribed on route change]');
+        }
+        if (stompClient.connected) {
+          stompClient.deactivate();
+          console.log('[WebSocket Deactivated on route change]');
+        }
+      }
+    };
+    
+    router.events.on('routeChangeStart', handleRouteChange);
+    
     stompClient.onConnect = () => {
       console.log('[STOMP Connected]');
       const sub = stompClient.subscribe(
@@ -95,25 +109,26 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
       );
       setSubscription(sub);
     };
-
+    
     stompClient.onStompError = (frame) => {
       console.error('[STOMP Error]:', frame.headers['message']);
       console.error('[Details]:', frame.body);
     };
-
+    
     stompClient.onWebSocketError = (error) => {
       console.error('[WebSocket Error]:', error);
     };
-
+    
     stompClient.activate();
     setClient(stompClient);
-
+    
     return () => {
+      router.events.off('routeChangeStart', handleRouteChange);
       if (subscription) subscription.unsubscribe();
       if (stompClient.connected) stompClient.deactivate();
     };
   }, [scheduleId, brokerUrl, token]);
-
+  
   const handleSendMessage = () => {
     if (message.trim() && client) {
       try {
@@ -132,7 +147,7 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
       }
     }
   };
-
+  
   return (
     <div className={styles.chatContainer}>
       <div className={styles.header}>
@@ -179,11 +194,11 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
       </div>
       <div className={styles.inputContainer}>
         <input
-          type='text'
+          type="text"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           className={styles.messageInput}
-          placeholder='메시지를 입력하세요.'
+          placeholder="메시지를 입력하세요."
         />
         <button onClick={handleSendMessage} className={styles.sendButton}>
           전송
