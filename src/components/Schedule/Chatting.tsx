@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Client, StompSubscription } from '@stomp/stompjs';
+import { Client } from '@stomp/stompjs';
 import Cookies from 'js-cookie';
 import { fetchScheduleChats } from '@/api/chatApi';
 import styles from '../../styles/Schedule.module.css';
@@ -84,7 +84,9 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
     
     return () => {
       if (clientRef.current) {
-        clientRef.current.deactivate();
+        if (clientRef.current instanceof Client) {
+          clientRef.current.deactivate();
+        }
         clientRef.current = null;
       }
     };
@@ -103,7 +105,60 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
   
   return (
     <div className={styles.chatContainer}>
-      {/* Remaining JSX */}
+      <div className={styles.header}>
+        <h1 className={styles.chatTitle}>그룹 채팅</h1>
+      </div>
+      <div className={styles.messageContainer}>
+        {messages.map((msg) => (
+          <div key={msg.messageId} className={styles.userMessages}>
+            {msg.nickname !== userNickname && (
+              <div className={styles.userInfo}>
+                <Image
+                  src={msg.profileUrl}
+                  alt={`${msg.nickname} 프로필`}
+                  width={40}
+                  height={40}
+                  className={styles.profileImage}
+                />
+                <span className={styles.nickname}>{msg.nickname}</span>
+              </div>
+            )}
+            <div
+              className={
+                msg.nickname === userNickname
+                  ? styles.receiveMessage
+                  : styles.sentMessage
+              }
+            >
+              <span>{msg.message}</span>
+              <span className={styles.timestamp}>
+                {new Date(msg.timestamp).toLocaleTimeString()}
+              </span>
+            </div>
+          </div>
+        ))}
+        {currentPage > 1 && currentPage <= totalPages && (
+          <button
+            onClick={() => loadMessages(currentPage - 1)}
+            className={styles.loadMoreButton}
+          >
+            더 불러오기
+          </button>
+        )}
+        {loading && <DataLoading />}
+      </div>
+      <div className={styles.inputContainer}>
+        <input
+          type="text"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          className={styles.messageInput}
+          placeholder="메시지를 입력하세요."
+        />
+        <button onClick={handleSendMessage} className={styles.sendButton}>
+          전송
+        </button>
+      </div>
     </div>
   );
 };
