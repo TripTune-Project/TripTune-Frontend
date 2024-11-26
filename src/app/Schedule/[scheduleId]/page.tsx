@@ -25,7 +25,6 @@ export default function ScheduleDetailPage({ params }: PageProps) {
   const [scheduleData, setScheduleData] = useState<ScheduleDetail | null>(null);
   const [markers, setMarkers] = useState<{ lat: number; lng: number }[]>([]);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
-  const [allUsers, setAllUsers] = useState<Attendee[]>([]);
   const [permission, setPermission] = useState('edit');
   const { checkAuthStatus } = useAuth();
   const router = useRouter();
@@ -50,8 +49,7 @@ export default function ScheduleDetailPage({ params }: PageProps) {
   const handleSaveSchedule = async () => {
     if (!scheduleData) return;
 
-    // TODO : 스케줄 저장
-    // TODO : 이미 저장된 루트와 결합도 고민
+    // TODO : 스케줄 저장 > 이미 저장된 루트와 결합도 고민
     const travelRoute = markers.map((marker, index) => ({
       routeOrder: index + 1,
       placeId: index + 1,
@@ -126,7 +124,6 @@ export default function ScheduleDetailPage({ params }: PageProps) {
         isOpen={isInviteModalOpen}
         scheduleId={scheduleId}
         permission={permission}
-        allUsers={allUsers}
         onClose={handleCloseModal}
       />
       <div className={styles.layoutContainer}>

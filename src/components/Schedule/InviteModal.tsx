@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Attendee } from '@/types/scheduleType';
+import { fetchScheduleAttendees, shareSchedule } from '@/api/attendeeApi';
 
 interface InviteModalProps {
   isOpen: boolean;
   scheduleId: number;
   permission: string;
-  allUsers: Attendee[];
   onClose: () => void;
 }
 
@@ -19,28 +19,60 @@ const permissions = [
 
 const InviteModal = ({
   isOpen,
+  scheduleId,
   permission,
-  allUsers,
   onClose,
 }: InviteModalProps) => {
   const [email, setEmail] = useState<string>('');
   const [selectedPermission, setSelectedPermission] =
     useState<string>(permission);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [allUsers, setAllUsers] = useState<Attendee[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    const loadAttendees = async () => {
+      if (isOpen) {
+        setIsLoading(true);
+        try {
+          const response = await fetchScheduleAttendees(scheduleId);
+          if (response.success) {
+            setAllUsers(response.data?.content || []);
+          } else {
+            console.error('참석자 조회 실패:', response.message);
+          }
+        } catch (err) {
+          console.error('참석자 조회 중 오류 발생:', err);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    loadAttendees();
+  }, [isOpen, scheduleId]);
 
   const handleShareClick = async () => {
     try {
-      // 공유 API 호출
-      console.log('공유할 이메일:', email);
-      console.log('선택된 권한:', selectedPermission);
-      alert('공유가 완료되었습니다.');
-      onClose();
+      const response = await shareSchedule(
+        scheduleId,
+        email,
+        selectedPermission as 'ALL' | 'EDIT' | 'CHAT' | 'READ'
+      );
+      if (response.success) {
+        alert('공유가 완료되었습니다.');
+        setEmail('');
+        setSelectedPermission(permission);
+        onClose();
+      } else {
+        alert(`공유 실패: ${response.message}`);
+      }
     } catch (error) {
       console.error('공유 중 오류 발생:', error);
     }
   };
+
+  if (!isOpen) return null;
 
   return (
     <div style={styles.modalOverlay}>
@@ -94,24 +126,28 @@ const InviteModal = ({
 
         <h3>공유중인 사용자</h3>
         <hr />
-        <ul style={styles.userList}>
-          {allUsers.map((user) => (
-            <li key={user.nickname} style={styles.userListItem}>
-              <Image
-                src={user.profileUrl}
-                alt={`${user.nickname}'s profile`}
-                width={38}
-                height={38}
-                style={styles.userIcon}
-              />
-              <div style={styles.userName}>
-                <p>{user.nickname}</p>
-                <p>{user.email}</p>
-              </div>
-              <span style={styles.userPermission}>{user.permission}</span>
-            </li>
-          ))}
-        </ul>
+        {isLoading ? (
+          <p>로딩 중...</p>
+        ) : (
+          <ul style={styles.userList}>
+            {allUsers.map((user) => (
+              <li key={user.nickname} style={styles.userListItem}>
+                <Image
+                  src={user.profileUrl}
+                  alt={`${user.nickname}'s profile`}
+                  width={38}
+                  height={38}
+                  style={styles.userIcon}
+                />
+                <div style={styles.userName}>
+                  <p>{user.nickname}</p>
+                  <p>{user.email}</p>
+                </div>
+                <span style={styles.userPermission}>{user.permission}</span>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );
