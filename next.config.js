@@ -26,7 +26,7 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'http://13.209.177.247:8080/api/:path*',
+        destination: 'https://triptune.site/api/:path*',
       },
       {
         source: '/api/:path*',
