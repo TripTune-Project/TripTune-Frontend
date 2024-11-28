@@ -21,22 +21,7 @@ const nextConfig = {
         pathname: '/**',
       },
     ],
-  },
-  async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: '/404',
-        has: [
-          {
-            type: 'query',
-            key: 'path',
-            value: '^(?!.*\\/api\\/).*$',
-          },
-        ],
-      },
-    ];
-  },
+  }
 };
 
 module.exports = nextConfig;
