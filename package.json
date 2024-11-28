@@ -44,6 +44,7 @@
     "zustand": "^4.5.5"
   },
   "devDependencies": {
+    "@netlify/plugin-nextjs": "^5.8.1",
     "@types/js-cookie": "^3.0.6",
     "@types/react": "^18.3.4",
     "@types/swiper": "^6.0.0",
