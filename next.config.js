@@ -26,7 +26,7 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'https://triptune.site/api/:path*',
+        destination: 'https://www.triptune.site/api/:path*',
       },
       {
         source: '/api/:path*',
