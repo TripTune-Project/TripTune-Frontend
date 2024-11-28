@@ -21,7 +21,26 @@ const nextConfig = {
         pathname: '/**',
       },
     ],
-  }
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'https://www.triptune.site/api/:path*',
+      },
+      {
+        source: '/api/:path*',
+        destination: '/404',
+        has: [
+          {
+            type: 'query',
+            key: 'path',
+            value: '^(?!.*\\/api\\/).*$',
+          },
+        ],
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
