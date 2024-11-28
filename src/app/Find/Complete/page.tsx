@@ -49,7 +49,7 @@ const FindIdComplete = () => {
         <meta property='og:image' content='/assets/Logo.png' />
         <meta
           property='og:url'
-          content='https://triptune.netlify.app/Find/Complete'
+          content='https://www.triptune.site/Find/Complete'
         />
         <link rel='icon' href='/favicon.ico' />
       </Head>

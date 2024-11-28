@@ -145,7 +145,7 @@ const FindPage = () => {
           content='아이디와 비밀번호를 찾는 페이지입니다.'
         />
         <meta property='og:type' content='website' />
-        <meta property='og:url' content='https://triptune.netlify.app/Find' />
+        <meta property='og:url' content='https://www.triptune.site/Find' />
         <meta name='robots' content='noindex, nofollow' />
       </Head>
 

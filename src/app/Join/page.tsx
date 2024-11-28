@@ -43,7 +43,7 @@ export default function JoinPage() {
           content='Sign up for TripTune to start planning your trips and exploring new destinations. Join now to create your personalized travel experience.'
         />
         <meta property='og:image' content='/assets/Logo.png' />
-        <meta property='og:url' content='https://triptune.netlify.app/Join' />
+        <meta property='og:url' content='https://www.triptune.site/Join' />
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.ico' />
       </Head>

@@ -95,7 +95,7 @@ const ChangePassword = () => {
         <meta property='og:image' content='/assets/Logo.png' />
         <meta
           property='og:url'
-          content='https://triptune.netlify.app/Find/ChangePassword'
+          content='https://www.triptune.site/Find/ChangePassword'
         />
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/public/assets/favicon.ico' />

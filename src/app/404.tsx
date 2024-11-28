@@ -45,7 +45,7 @@ export default function Custom404() {
           content='The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.'
         />
         <meta property='og:image' content='/assets/Logo.png' />
-        <meta property='og:url' content='https://triptune.netlify.app/404' />
+        <meta property='og:url' content='https://www.triptune.site/404' />
         <meta name='viewport' content='width=device-width, initial-scale=1' />
       </Head>
       <ErrorCode>404</ErrorCode>

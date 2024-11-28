@@ -41,7 +41,7 @@ export default function LoginPage() {
           content='Log in to TripTune to manage your travel plans and explore top destinations.'
         />
         <meta property='og:image' content='/assets/Logo.png' />
-        <meta property='og:url' content='https://triptune.netlify.app/Login' />
+        <meta property='og:url' content='https://www.triptune.site/Login' />
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.ico' />
       </Head>

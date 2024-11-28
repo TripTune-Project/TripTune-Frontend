@@ -143,7 +143,7 @@ const Home = () => {
           content='Discover top travel destinations and plan your trips with TripTune. Start your journey with personalized travel plans and recommendations.'
         />
         <meta property='og:image' content='/assets/Logo.png' />
-        <meta property='og:url' content='https://triptune.netlify.app' />
+        <meta property='og:url' content='https://www.triptune.site' />
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.ico' />
       </Head>

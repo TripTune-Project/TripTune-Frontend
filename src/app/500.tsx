@@ -47,7 +47,7 @@ export default function Custom500() {
           content='An internal server error occurred. Please try again later or contact support.'
         />
         <meta property='og:image' content='/assets/Logo.png' />
-        <meta property='og:url' content='https://triptune.netlify.app/500' />
+        <meta property='og:url' content='https://www.triptune.site/500' />
         <meta name='viewport' content='width=device-width, initial-scale=1' />
       </Head>
       <ErrorCode>500</ErrorCode>
