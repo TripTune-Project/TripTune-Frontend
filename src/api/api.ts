@@ -45,7 +45,8 @@ const fetchData = async <T>(
   endpoint: string,
   options: FetchOptions = {}
 ): Promise<T> => {
-  const url = `${endpoint}`;
+  const url = `https://www.triptune.site/${endpoint}`;
+  // const url = `${endpoint}`;
   let headers: HeadersInit = {
     ...DEFAULT_HEADERS,
     ...options.headers,
