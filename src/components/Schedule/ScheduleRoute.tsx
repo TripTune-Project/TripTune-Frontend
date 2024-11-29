@@ -1,34 +1,58 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useEffect } from 'react';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { useInView } from 'react-intersection-observer';
+import { useScheduleTravelRoute } from '@/hooks/useSchedule';
 import styles from '@/styles/Schedule.module.css';
 import Image from 'next/image';
 import locationIcon from '../../../public/assets/images/일정 만들기/일정 생성/scheduleDate_mapIcon.png';
+import { useTravelStore } from '@/store/scheduleStore';
+import { useParams } from 'next/navigation';
 import { Place } from '@/types/scheduleType';
 
-// TODO : 일정 상세 > 여행 루트 무한 스크롤 동작 할 수 있도록
-interface ScheduleRouteProps {
-  places: Place[];
-  onMovePlace: (dragIndex: number, hoverIndex: number) => void;
-  onDeletePlace: (placeId: number) => void;
-}
+const ScheduleRoute = () => {
+  const { scheduleId } = useParams();
+  const { ref, inView } = useInView();
+  const { addedPlaces, removePlace, movePlace } = useTravelStore();
 
-const ScheduleRoute = ({
-  places,
-  onMovePlace,
-  onDeletePlace,
-}: ScheduleRouteProps) => {
-  const PlaceItem = ({ place, index }: { place: Place; index: number }) => {
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useScheduleTravelRoute(Number(scheduleId));
+
+  const fetchedPlaces: Place[] =
+    data?.pages.flatMap((page) =>
+      page.data.content.map((route) => ({
+        ...route,
+        thumbnailUrl: route.thumbnailUrl ?? null,
+      }))
+    ) ?? [];
+  const places = [
+    ...fetchedPlaces.map((place) => place.placeId),
+    ...Array.from(addedPlaces).map((placeId) => +placeId),
+  ];
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  const PlaceItem = ({
+    placeId,
+    index,
+  }: {
+    placeId: number;
+    index: number;
+  }) => {
     const ref = useRef<HTMLLIElement>(null);
 
     const [, drop] = useDrop({
       accept: 'PLACE',
-      hover(item: any) {
+      hover(item: { index: number }) {
         if (!ref.current) return;
         const dragIndex = item.index;
         const hoverIndex = index;
         if (dragIndex === hoverIndex) return;
-        onMovePlace(dragIndex, hoverIndex);
+        movePlace(dragIndex, hoverIndex);
         item.index = hoverIndex;
       },
     });
@@ -38,14 +62,18 @@ const ScheduleRoute = ({
       item: { index },
       collect: (monitor) => ({ isDragging: monitor.isDragging() }),
       end: (item, monitor) => {
-        const dropResult = monitor.getDropResult() as any;
+        const dropResult = monitor.getDropResult<{ isDelete: boolean }>();
         if (monitor.didDrop() && dropResult?.isDelete) {
-          onDeletePlace(places[item.index].placeId);
+          const placeId = places[item.index];
+          removePlace(placeId);
         }
       },
     });
 
     drag(drop(ref));
+
+    const place = fetchedPlaces.find((p) => p.placeId === placeId);
+    if (!place) return null;
 
     return (
       <li
@@ -108,9 +136,14 @@ const ScheduleRoute = ({
   return (
     <DndProvider backend={HTML5Backend}>
       <ul>
-        {places.map((place, index) => (
-          <PlaceItem key={place.placeId} place={place} index={index} />
+        {places.map((placeId, index) => (
+          <PlaceItem key={placeId} placeId={placeId} index={index} />
         ))}
+        {hasNextPage && (
+          <li ref={ref} className={styles.loading}>
+            {isFetchingNextPage ? '로딩 중...' : '더 불러오기...'}
+          </li>
+        )}
       </ul>
       <DeleteDropZone />
     </DndProvider>

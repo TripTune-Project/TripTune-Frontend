@@ -100,7 +100,6 @@ export const useTravelListByLocation = (
   });
 };
 
-// TODO : 여행 루트 조회 무한스크롤 진행 예정
 // 여행 루트 조회 (GET)
 export const useScheduleTravelRoute = (
   scheduleId: number,

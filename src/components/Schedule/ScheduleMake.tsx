@@ -6,26 +6,18 @@ import ScheduleTravelSearch from '@/components/Schedule/ScheduleTravelSearch';
 import ScheduleRoute from '@/components/Schedule/ScheduleRoute';
 import CalendarModal from '@/components/Common/CalendarModal';
 import { fetchScheduleDetail } from '@/api/scheduleApi';
-import { Schedule, Place } from '@/types/scheduleType';
-import { useTravelStore } from '@/store/scheduleStore';
+import { Schedule } from '@/types/scheduleType';
 
 interface ScheduleMakeProps {
   scheduleId: number;
   initialTab: string;
-  onAddMarker: (marker: { lat: number; lng: number }) => void;
 }
 
-const ScheduleMake = ({
-  scheduleId,
-  initialTab,
-  onAddMarker,
-}: ScheduleMakeProps) => {
+const ScheduleMake = ({ scheduleId, initialTab }: ScheduleMakeProps) => {
   const [tab, setTab] = useState(initialTab);
   const [currentPage, setCurrentPage] = useState(1);
   const [scheduleDetail, setScheduleDetail] = useState<Schedule | null>(null);
   const [showModal, setShowModal] = useState(false);
-
-  const { addedPlaces, addPlace, removePlace, movePlace } = useTravelStore();
 
   useEffect(() => {
     const loadScheduleDetail = async () => {
@@ -52,12 +44,6 @@ const ScheduleMake = ({
     }));
   };
 
-  const handleAddMarker = (place: Place) => {
-    const marker = { lat: place.latitude, lng: place.longitude };
-    onAddMarker(marker);
-    addPlace(place);
-  };
-
   const handleModalSubmit = (
     name: string,
     startDate: string,
@@ -69,16 +55,6 @@ const ScheduleMake = ({
       endDate,
     }));
     setShowModal(false);
-  };
-
-  const ScheduleRouteWrapper = () => {
-    return (
-      <ScheduleRoute
-        places={addedPlaces}
-        onMovePlace={movePlace}
-        onDeletePlace={removePlace}
-      />
-    );
   };
 
   return (
@@ -130,11 +106,7 @@ const ScheduleMake = ({
           여행 루트
         </button>
       </div>
-      {tab === 'scheduleTravel' ? (
-        <ScheduleTravelSearch onAddMarker={handleAddMarker} />
-      ) : (
-        <ScheduleRouteWrapper />
-      )}
+      {tab === 'scheduleTravel' ? <ScheduleTravelSearch /> : <ScheduleRoute />}
       {showModal && (
         <CalendarModal
           initialStartDate={scheduleDetail?.startDate || ''}

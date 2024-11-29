@@ -76,7 +76,7 @@ export interface Place {
   longitude: number;
   latitude: number;
   placeName: string;
-  thumbnailUrl: string | null;
+  thumbnailUrl: string | null | undefined;
 }
 
 // 일정 생성 요청
