@@ -8,19 +8,19 @@ import {
 import Image from 'next/image';
 import locationIcon from '../../../public/assets/images/일정 만들기/일정 생성/scheduleDate_mapIcon.png';
 import Pagination from '../Travel/Pagination';
-import { Place } from '@/types/scheduleType';
 import { useDebounce } from '@/hooks/useDebounce';
 import DataLoading from '@/components/Common/DataLoading';
+import { truncateText } from '@/utils';
+import { useTravelStore } from '@/store/scheduleStore';
+import { Place } from '@/types/scheduleType';
 
-interface ScheduleTravelSearchProps {
-  onAddMarker: (place: Place) => void;
-}
-
-const ScheduleTravelSearch = ({ onAddMarker }: ScheduleTravelSearchProps) => {
+const ScheduleTravelSearch = () => {
   const { scheduleId } = useParams();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [isSearching, setIsSearching] = useState(false);
+
+  const { addedPlaces, addPlace, removePlace } = useTravelStore();
 
   const debouncedSearchKeyword = useDebounce(searchKeyword, 800);
 
@@ -57,6 +57,15 @@ const ScheduleTravelSearch = ({ onAddMarker }: ScheduleTravelSearchProps) => {
   if (travelListQuery.error || searchTravelQuery.error)
     return <p>데이터를 불러오는데 오류가 발생했습니다.</p>;
 
+  const handleAddOrRemovePlace = (place: Place) => {
+    const placeId = place.placeId;
+    if (addedPlaces.has(placeId)) {
+      removePlace(placeId);
+    } else {
+      addPlace(placeId);
+    }
+  };
+
   return (
     <>
       <div className={styles.travelSearchContainerSearch}>
@@ -71,7 +80,7 @@ const ScheduleTravelSearch = ({ onAddMarker }: ScheduleTravelSearchProps) => {
       <div className={styles.travelList}>
         {travels.length > 0 ? (
           <ul>
-            {travels.map((place: Place) => (
+            {travels.map((place: any) => (
               <li key={place.placeId} className={styles.placeItem}>
                 <div className={styles.placeThumbnail}>
                   {place.thumbnailUrl ? (
@@ -88,9 +97,14 @@ const ScheduleTravelSearch = ({ onAddMarker }: ScheduleTravelSearchProps) => {
                   )}
                 </div>
                 <div className={styles.placeInfo}>
-                  <div className={styles.placeName}>{place.placeName}</div>
+                  <div className={styles.placeName}>
+                    {truncateText(place.placeName, 20)}
+                  </div>
                   <p className={styles.placeAddress}>
-                    {`${place.country} / ${place.city} / ${place.district}`}
+                    {truncateText(
+                      `${place.country} / ${place.city} / ${place.district}`,
+                      20
+                    )}
                   </p>
                   <p className={styles.placeDetailAddress}>
                     <Image
@@ -104,9 +118,9 @@ const ScheduleTravelSearch = ({ onAddMarker }: ScheduleTravelSearchProps) => {
                 </div>
                 <button
                   className={styles.addButton}
-                  onClick={() => onAddMarker(place)} // TODO : 이미 등록 된 상태 라면 ?
+                  onClick={() => handleAddOrRemovePlace(place)}
                 >
-                  +
+                  {addedPlaces.has(place.placeId) ? '–' : '+'}
                 </button>
               </li>
             ))}

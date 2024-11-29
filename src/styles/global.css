@@ -23,7 +23,7 @@ body {
 
 body.no_scroll {
   height: 100vh;
-  overflow: hidden;
+  /*overflow: hidden;*/
 }
 
 a {
