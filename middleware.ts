@@ -3,14 +3,14 @@ import type { NextRequest } from 'next/server';
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
-
-  if (pathname.startsWith('/api') && !/\/api\//.test(pathname)) {
-    return NextResponse.rewrite('/404');
+  
+  if (pathname.startsWith('/api')) {
+    return NextResponse.next();
   }
-
-  return NextResponse.next();
+  
+  return NextResponse.rewrite('/404');
 }
 
 export const config = {
-  matcher: ['/api/:path*'],
+  matcher: ['/((?!api).*)'],
 };
