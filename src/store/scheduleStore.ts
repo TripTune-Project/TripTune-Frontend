@@ -9,25 +9,30 @@ interface Makers {
 }
 
 interface TravelStore {
+  // 지도 상태
   addedPlaces: Makers[];
   travelRoute: Place[];
   scheduleDetail: Schedule | null;
   
+  // 여행 장소 관리 여행 루트 메서드
   addPlace: (place: Makers) => void;
   removePlace: (placeId: number) => void;
   onMovePlace: (dragIndex: number, hoverIndex: number) => void;
   addPlaceToRoute: (place: Place) => void;
   removePlaceFromRoute: (placeId: number) => void;
   
+  // 일정 상세 정보 관리 메서드
   setScheduleDetail: (schedule: Schedule) => void;
   fetchScheduleDetailById: (scheduleId: string, page: number) => Promise<void>;
 }
 
 export const useTravelStore = create<TravelStore>((set) => ({
+  // 초기 상태
   addedPlaces: [],
   travelRoute: [],
   scheduleDetail: null,
   
+  // 여행 장소 관리 메서드
   addPlace: (place: Makers) =>
     set((state) => {
       if (state.addedPlaces.some((p) => p.placeId === place.placeId)) {
@@ -58,6 +63,7 @@ export const useTravelStore = create<TravelStore>((set) => ({
       return { travelRoute: updatedRoute };
     }),
   
+  // 일정 상세 정보 관리 메서드
   setScheduleDetail: (schedule: Schedule) => set({ scheduleDetail: schedule }),
   fetchScheduleDetailById: async (scheduleId: string, page: number) => {
     try {

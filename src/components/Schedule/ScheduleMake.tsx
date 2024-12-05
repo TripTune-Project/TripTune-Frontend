@@ -1,60 +1,41 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import styles from '@/styles/Schedule.module.css';
 import ScheduleTravelSearch from '@/components/Schedule/ScheduleTravelSearch';
 import ScheduleRoute from '@/components/Schedule/ScheduleRoute';
 import CalendarModal from '@/components/Common/CalendarModal';
-import { fetchScheduleDetail } from '@/api/scheduleApi';
-import { Schedule } from '@/types/scheduleType';
 import { useParams } from 'next/navigation';
+import { useTravelStore } from '@/store/scheduleStore';
 
 interface ScheduleMakeProps {
   initialTab: string;
 }
 
 const ScheduleMake = ({ initialTab }: ScheduleMakeProps) => {
-  const {scheduleId} = useParams();
-  const [tab, setTab] = useState(initialTab);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [scheduleDetail, setScheduleDetail] = useState<Schedule | null>(null);
-  const [showModal, setShowModal] = useState(false);
+  const { scheduleId } = useParams();
+  const {
+    scheduleDetail,
+    fetchScheduleDetailById,
+    updateScheduleDetail,
+  } = useTravelStore();
+  
+  const [tab, setTab] = React.useState(initialTab);
+  const [showModal, setShowModal] = React.useState(false);
   
   useEffect(() => {
-    const loadScheduleDetail = async () => {
-      const result = await fetchScheduleDetail(scheduleId, currentPage);
-      if (result.success) {
-        setScheduleDetail(result.data as any);
-      } else {
-        console.error('Failed to load schedule detail:', result.message);
-      }
-    };
-    
-    loadScheduleDetail();
-  }, [scheduleId, currentPage]);
+    if (scheduleId) {
+      fetchScheduleDetailById(scheduleId, 1);
+    }
+  }, [scheduleId, fetchScheduleDetailById]);
   
   const handleTabChange = (newTab: string) => {
     setTab(newTab);
-    setCurrentPage(1);
   };
   
-  const handleScheduleDetailChange = (field: string, value: string) => {
-    setScheduleDetail((prevState) => ({
-      ...(prevState || { scheduleName: '', startDate: '', endDate: '' }),
-      [field]: value ?? '',
-    }));
-  };
-  
-  const handleModalSubmit = (
-    name: string,
-    startDate: string,
-    endDate: string,
-  ) => {
-    setScheduleDetail((prev) => ({
-      ...prev!,
-      startDate,
-      endDate,
-    }));
+  const handleModalSubmit = (startDate: string, endDate: string) => {
+    updateScheduleDetail('startDate', startDate);
+    updateScheduleDetail('endDate', endDate);
     setShowModal(false);
   };
   
@@ -66,9 +47,9 @@ const ScheduleMake = ({ initialTab }: ScheduleMakeProps) => {
           type="text"
           className={styles.inputField}
           value={scheduleDetail?.scheduleName || ''}
-          placeholder={'여행 이름을 입력해주세요.'}
+          placeholder="여행 이름을 입력해주세요."
           onChange={(e) =>
-            handleScheduleDetailChange('scheduleName', e.target.value)
+            updateScheduleDetail('scheduleName', e.target.value)
           }
         />
       </div>
@@ -80,12 +61,7 @@ const ScheduleMake = ({ initialTab }: ScheduleMakeProps) => {
           value={`${scheduleDetail?.startDate || ''} ~ ${
             scheduleDetail?.endDate || ''
           }`}
-          placeholder={'시작일 ~ 종료일'}
-          onChange={(e) => {
-            const [startDate, endDate] = e.target.value.split(' ~ ');
-            handleScheduleDetailChange('startDate', startDate);
-            handleScheduleDetailChange('endDate', endDate);
-          }}
+          placeholder="시작일 ~ 종료일"
           onClick={() => setShowModal(true)}
         />
       </div>
@@ -113,7 +89,7 @@ const ScheduleMake = ({ initialTab }: ScheduleMakeProps) => {
           initialStartDate={scheduleDetail?.startDate || ''}
           initialEndDate={scheduleDetail?.endDate || ''}
           onClose={() => setShowModal(false)}
-          onSubmit={handleModalSubmit}
+          onSubmit={(startDate, endDate) => handleModalSubmit(startDate, endDate)}
         />
       )}
     </div>

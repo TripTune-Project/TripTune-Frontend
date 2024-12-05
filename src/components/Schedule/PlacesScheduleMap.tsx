@@ -12,7 +12,7 @@ const defaultCenter = {
 };
 
 function PlacesScheduleMap() {
-  const { addedPlaces } = useTravelStore(); // Zustand 상태 사용
+  const { addedPlaces } = useTravelStore();
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<google.maps.Map | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
@@ -48,20 +48,18 @@ function PlacesScheduleMap() {
   
   const updateMarkers = useCallback(() => {
     if (mapRef.current && isMapLoaded) {
-      // 기존 마커 제거
-      markersRef.current.forEach((marker) => marker.map = null);
-      markersRef.current = [];
+      // TODO : 기존 마커 제거 필요 없을 것 같음
+      // markersRef.current.forEach((marker) => marker.map = null);
+      // markersRef.current = [];
       
-      // 새 마커 추가
       addedPlaces.forEach((place) => {
         const advancedMarker = new google.maps.marker.AdvancedMarkerElement({
           map: mapRef.current,
-          position: { lat: place.lat, lng: place.lng }, // LatLng 객체 올바르게 생성
+          position: { lat: place.lat, lng: place.lng },
         });
         markersRef.current.push(advancedMarker);
       });
       
-      // 마지막 마커로 지도 중심 이동
       const lastPlace = Array.from(addedPlaces).pop();
       if (lastPlace) {
         mapRef.current.setCenter({
