@@ -1,4 +1,4 @@
-import create from 'zustand';
+import { create } from 'zustand';
 
 interface TravelStore {
   addedPlaces: Set<number>;
@@ -18,7 +18,7 @@ export const useTravelStore = create<TravelStore>((set) => ({
   removePlace: (placeId: number) =>
     set((state) => {
       const updatedPlaces = new Set(
-        Array.from(state.addedPlaces).filter((id) => id !== placeId)
+        Array.from(state.addedPlaces).filter((id) => id !== placeId),
       );
       return { addedPlaces: updatedPlaces };
     }),
