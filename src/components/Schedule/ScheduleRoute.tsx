@@ -13,7 +13,7 @@ import travelRootEmptyIcon from '../../../public/assets/images/일정 만들기/
 
 const ScheduleRoute = () => {
   const { scheduleId } = useParams();
-  const { removePlace, travelRoute, removePlaceFromRoute } = useTravelStore();
+  const { removePlace, travelRoute, removePlaceFromRoute, onMovePlace } = useTravelStore();
   
   const { ref, inView } = useInView();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useScheduleTravelRoute(Number(scheduleId));
@@ -53,7 +53,12 @@ const ScheduleRoute = () => {
       hover(item: { index: number }) {
         if (!ref.current) return;
         const dragIndex = item.index;
-        if (dragIndex === index) return;
+        const hoverIndex = index;
+        
+        if (dragIndex !== hoverIndex) {
+          onMovePlace(dragIndex, hoverIndex);
+          item.index = hoverIndex;
+        }
       },
     });
     
@@ -100,9 +105,6 @@ const ScheduleRoute = () => {
         removePlaceFromRoute(item.place.placeId);
         removePlace(item.place.placeId);
       },
-      collect: (monitor) => ({
-        isOver: monitor.isOver(),
-      }),
     });
     
     return (

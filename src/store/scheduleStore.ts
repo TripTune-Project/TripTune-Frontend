@@ -13,6 +13,7 @@ interface TravelStore {
   removePlace: (placeId: number) => void;
   
   travelRoute: Place[];
+  onMovePlace: (dragIndex: number, hoverIndex: number) => void;
   addPlaceToRoute: (place: Place) => void;
   removePlaceFromRoute: (placeId: number) => void;
 }
@@ -32,7 +33,6 @@ export const useTravelStore = create<TravelStore>((set) => ({
     set((state) => ({
       addedPlaces: state.addedPlaces.filter((place) => place.placeId !== placeId),
     })),
-  
   addPlaceToRoute: (place: Place) =>
     set((state) => {
       console.log(place, 'place: ');
@@ -42,9 +42,15 @@ export const useTravelStore = create<TravelStore>((set) => ({
       console.log(updatedRoute, 'updatedRoute: ');
       return { travelRoute: updatedRoute };
     }),
-  
   removePlaceFromRoute: (placeId: number) =>
     set((state) => ({
       travelRoute: state.travelRoute.filter((place) => place.placeId !== placeId),
     })),
+  onMovePlace: (dragIndex: number, hoverIndex: number) =>
+    set((state) => {
+      const updatedRoute = [...state.travelRoute];
+      const [movedItem] = updatedRoute.splice(dragIndex, 1);
+      updatedRoute.splice(hoverIndex, 0, movedItem);
+      return { travelRoute: updatedRoute };
+    }),
 }));
