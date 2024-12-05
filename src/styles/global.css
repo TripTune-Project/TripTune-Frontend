@@ -26,6 +26,11 @@ body.no_scroll {
   /*overflow: hidden;*/
 }
 
+body.no_scroll {
+  height: 100vh;
+  overflow: hidden;
+}
+
 a {
   color: inherit;
   text-decoration: none;
