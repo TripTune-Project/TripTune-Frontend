@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import { Place } from '@/types/scheduleType';
+import { Place, Schedule } from '@/types/scheduleType';
+import { fetchScheduleDetail } from '@/api/scheduleApi';
 
 interface Makers {
   placeId: number;
@@ -9,18 +10,23 @@ interface Makers {
 
 interface TravelStore {
   addedPlaces: Makers[];
+  travelRoute: Place[];
+  scheduleDetail: Schedule | null;
+  
   addPlace: (place: Makers) => void;
   removePlace: (placeId: number) => void;
-  
-  travelRoute: Place[];
   onMovePlace: (dragIndex: number, hoverIndex: number) => void;
   addPlaceToRoute: (place: Place) => void;
   removePlaceFromRoute: (placeId: number) => void;
+  
+  setScheduleDetail: (schedule: Schedule) => void;
+  fetchScheduleDetailById: (scheduleId: string, page: number) => Promise<void>;
 }
 
 export const useTravelStore = create<TravelStore>((set) => ({
   addedPlaces: [],
   travelRoute: [],
+  scheduleDetail: null,
   
   addPlace: (place: Makers) =>
     set((state) => {
@@ -35,11 +41,9 @@ export const useTravelStore = create<TravelStore>((set) => ({
     })),
   addPlaceToRoute: (place: Place) =>
     set((state) => {
-      console.log(place, 'place: ');
       const updatedRoute = state.travelRoute.some((p) => p.placeId === place.placeId)
         ? state.travelRoute
         : [...state.travelRoute, place];
-      console.log(updatedRoute, 'updatedRoute: ');
       return { travelRoute: updatedRoute };
     }),
   removePlaceFromRoute: (placeId: number) =>
@@ -53,4 +57,18 @@ export const useTravelStore = create<TravelStore>((set) => ({
       updatedRoute.splice(hoverIndex, 0, movedItem);
       return { travelRoute: updatedRoute };
     }),
+  
+  setScheduleDetail: (schedule: Schedule) => set({ scheduleDetail: schedule }),
+  fetchScheduleDetailById: async (scheduleId: string, page: number) => {
+    try {
+      const result = await fetchScheduleDetail(scheduleId, page);
+      if (result.success) {
+        set({ scheduleDetail: result.data });
+      } else {
+        console.error('Failed to fetch schedule detail:', result.message);
+      }
+    } catch (error) {
+      console.error('Error fetching schedule detail:', error);
+    }
+  },
 }));

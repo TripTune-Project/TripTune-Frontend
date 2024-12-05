@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Attendee } from '@/types/scheduleType';
 import { fetchScheduleAttendees, shareSchedule } from '@/api/attendeeApi';
+import { useParams } from 'next/navigation';
 
 interface InviteModalProps {
   isOpen: boolean;
-  scheduleId: number;
-  permission: string;
   onClose: () => void;
 }
 
@@ -19,13 +18,12 @@ const permissions = [
 
 const InviteModal = ({
                        isOpen,
-                       scheduleId,
-                       permission,
                        onClose,
                      }: InviteModalProps) => {
+  const { scheduleId } = useParams();
   const [email, setEmail] = useState<string>('');
   const [selectedPermission, setSelectedPermission] =
-    useState<string>(permission);
+    useState<string>('EDIT');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [allUsers, setAllUsers] = useState<Attendee[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -57,13 +55,13 @@ const InviteModal = ({
       const response = await shareSchedule(
         scheduleId,
         email,
-        selectedPermission as 'ALL' | 'EDIT' | 'CHAT' | 'READ'
+        selectedPermission as 'ALL' | 'EDIT' | 'CHAT' | 'READ',
       );
-      console.log(response,"response: ")
+      console.log(response, 'response: ');
       if (response.success) {
         alert('공유가 완료되었습니다.');
         setEmail('');
-        setSelectedPermission(permission);
+        setSelectedPermission('EDIT');
         onClose();
       } else {
         alert(response.message);
@@ -142,7 +140,7 @@ const InviteModal = ({
               <li key={user.nickname} style={styles.userListItem}>
                 <Image
                   src={user.profileUrl}
-                  alt={`${user.nickname}'s profile`}
+                  alt={`${user.nickname}님의 사진`}
                   width={38}
                   height={38}
                   style={styles.userIcon}
@@ -211,7 +209,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     paddingRight: '80px',
     borderRadius: '4px',
     border: '1px solid #ccc',
-    width:'400px'
+    width: '400px',
   },
   dropdownButtonInside: {
     position: 'absolute',
@@ -272,9 +270,9 @@ const styles: { [key: string]: React.CSSProperties } = {
     border: 'none',
     borderRadius: '4px',
     cursor: 'pointer',
-    width:'80px',
-    height:'40px'
-},
+    width: '80px',
+    height: '40px',
+  },
 };
 
 export default InviteModal;

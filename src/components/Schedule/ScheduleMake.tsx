@@ -6,14 +6,15 @@ import ScheduleTravelSearch from '@/components/Schedule/ScheduleTravelSearch';
 import ScheduleRoute from '@/components/Schedule/ScheduleRoute';
 import CalendarModal from '@/components/Common/CalendarModal';
 import { fetchScheduleDetail } from '@/api/scheduleApi';
-import { Schedule, Place } from '@/types/scheduleType';
+import { Schedule } from '@/types/scheduleType';
+import { useParams } from 'next/navigation';
 
 interface ScheduleMakeProps {
-  scheduleId: number;
   initialTab: string;
 }
 
-const ScheduleMake = ({ scheduleId, initialTab }: ScheduleMakeProps) => {
+const ScheduleMake = ({ initialTab }: ScheduleMakeProps) => {
+  const {scheduleId} = useParams();
   const [tab, setTab] = useState(initialTab);
   const [currentPage, setCurrentPage] = useState(1);
   const [scheduleDetail, setScheduleDetail] = useState<Schedule | null>(null);

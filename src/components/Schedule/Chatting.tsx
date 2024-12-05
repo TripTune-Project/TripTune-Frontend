@@ -6,10 +6,10 @@ import styles from '../../styles/Schedule.module.css';
 import Image from 'next/image';
 import DataLoading from '@/components/Common/DataLoading';
 import { ChatMessage } from '@/types/scheduleType';
-import { usePathname } from 'next/navigation';
+import { useParams } from 'next/navigation';
 
-const Chatting = ({ scheduleId }: { scheduleId: number }) => {
-  const pathname = usePathname();
+const Chatting = () => {
+  const {scheduleId} = useParams();
   const token = Cookies.get('trip-tune_at');
   const userNickname = Cookies.get('nickname');
   const brokerUrl =
@@ -126,7 +126,7 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
         clientRef.current = null;
       }
     };
-  }, [scheduleId, brokerUrl, token, pathname]);
+  }, [scheduleId, brokerUrl, token]);
 
   const handleSendMessage = () => {
     const stompClient = clientRef.current;

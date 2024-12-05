@@ -26,7 +26,6 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        // TODO : 배포 환경이랑 같은지 확인 바람!
         destination: 'https://www.triptune.site/api/:path*',
         // destination: 'http://13.209.177.247:8080/api/:path*',
       },
