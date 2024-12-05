@@ -1,32 +1,50 @@
 import { create } from 'zustand';
+import { Place } from '@/types/scheduleType';
+
+interface Makers {
+  placeId: number;
+  lat: number;
+  lng: number;
+}
 
 interface TravelStore {
-  addedPlaces: Set<number>;
-  addPlace: (placeId: number) => void;
+  addedPlaces: Makers[];
+  addPlace: (place: Makers) => void;
   removePlace: (placeId: number) => void;
-  movePlace: (fromIndex: number, toIndex: number) => void;
+  
+  travelRoute: Place[];
+  addPlaceToRoute: (place: Place) => void;
+  removePlaceFromRoute: (placeId: number) => void;
 }
 
 export const useTravelStore = create<TravelStore>((set) => ({
-  addedPlaces: new Set<number>(),
-  addPlace: (placeId: number) =>
+  addedPlaces: [],
+  travelRoute: [],
+  
+  addPlace: (place: Makers) =>
     set((state) => {
-      const updatedPlaces = new Set(state.addedPlaces);
-      updatedPlaces.add(placeId);
-      return { addedPlaces: updatedPlaces };
+      if (state.addedPlaces.some((p) => p.placeId === place.placeId)) {
+        return state;
+      }
+      return { addedPlaces: [...state.addedPlaces, place] };
     }),
   removePlace: (placeId: number) =>
+    set((state) => ({
+      addedPlaces: state.addedPlaces.filter((place) => place.placeId !== placeId),
+    })),
+  
+  addPlaceToRoute: (place: Place) =>
     set((state) => {
-      const updatedPlaces = new Set(
-        Array.from(state.addedPlaces).filter((id) => id !== placeId),
-      );
-      return { addedPlaces: updatedPlaces };
+      console.log(place, 'place: ');
+      const updatedRoute = state.travelRoute.some((p) => p.placeId === place.placeId)
+        ? state.travelRoute
+        : [...state.travelRoute, place];
+      console.log(updatedRoute, 'updatedRoute: ');
+      return { travelRoute: updatedRoute };
     }),
-  movePlace: (fromIndex: number, toIndex: number) =>
-    set((state) => {
-      const updatedPlaces = Array.from(state.addedPlaces);
-      const [movedPlace] = updatedPlaces.splice(fromIndex, 1);
-      updatedPlaces.splice(toIndex, 0, movedPlace);
-      return { addedPlaces: new Set(updatedPlaces) };
-    }),
+  
+  removePlaceFromRoute: (placeId: number) =>
+    set((state) => ({
+      travelRoute: state.travelRoute.filter((place) => place.placeId !== placeId),
+    })),
 }));

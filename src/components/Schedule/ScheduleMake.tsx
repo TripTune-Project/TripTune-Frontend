@@ -6,7 +6,7 @@ import ScheduleTravelSearch from '@/components/Schedule/ScheduleTravelSearch';
 import ScheduleRoute from '@/components/Schedule/ScheduleRoute';
 import CalendarModal from '@/components/Common/CalendarModal';
 import { fetchScheduleDetail } from '@/api/scheduleApi';
-import { Schedule } from '@/types/scheduleType';
+import { Schedule, Place } from '@/types/scheduleType';
 
 interface ScheduleMakeProps {
   scheduleId: number;
@@ -18,7 +18,7 @@ const ScheduleMake = ({ scheduleId, initialTab }: ScheduleMakeProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [scheduleDetail, setScheduleDetail] = useState<Schedule | null>(null);
   const [showModal, setShowModal] = useState(false);
-
+  
   useEffect(() => {
     const loadScheduleDetail = async () => {
       const result = await fetchScheduleDetail(scheduleId, currentPage);
@@ -28,26 +28,26 @@ const ScheduleMake = ({ scheduleId, initialTab }: ScheduleMakeProps) => {
         console.error('Failed to load schedule detail:', result.message);
       }
     };
-
+    
     loadScheduleDetail();
   }, [scheduleId, currentPage]);
-
+  
   const handleTabChange = (newTab: string) => {
     setTab(newTab);
     setCurrentPage(1);
   };
-
+  
   const handleScheduleDetailChange = (field: string, value: string) => {
     setScheduleDetail((prevState) => ({
       ...(prevState || { scheduleName: '', startDate: '', endDate: '' }),
       [field]: value ?? '',
     }));
   };
-
+  
   const handleModalSubmit = (
     name: string,
     startDate: string,
-    endDate: string
+    endDate: string,
   ) => {
     setScheduleDetail((prev) => ({
       ...prev!,
@@ -56,13 +56,13 @@ const ScheduleMake = ({ scheduleId, initialTab }: ScheduleMakeProps) => {
     }));
     setShowModal(false);
   };
-
+  
   return (
     <div className={styles.pageContainer}>
       <div className={styles.inputGroup}>
         <label>여행 이름</label>
         <input
-          type='text'
+          type="text"
           className={styles.inputField}
           value={scheduleDetail?.scheduleName || ''}
           placeholder={'여행 이름을 입력해주세요.'}
@@ -74,7 +74,7 @@ const ScheduleMake = ({ scheduleId, initialTab }: ScheduleMakeProps) => {
       <div className={styles.inputGroup}>
         <label>여행 날짜</label>
         <input
-          type='text'
+          type="text"
           className={styles.inputField}
           value={`${scheduleDetail?.startDate || ''} ~ ${
             scheduleDetail?.endDate || ''
