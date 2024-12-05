@@ -9,6 +9,7 @@ import locationIcon from '../../../public/assets/images/일정 만들기/일정 
 import { useTravelStore } from '@/store/scheduleStore';
 import { useParams } from 'next/navigation';
 import { Place } from '@/types/scheduleType';
+import travelRootEmptyIcon from '../../../public/assets/images/일정 만들기/일정 저장 및 수정/travelRootEmptyIcon.png';
 
 const ScheduleRoute = () => {
   const { scheduleId } = useParams();
@@ -130,9 +131,16 @@ const ScheduleRoute = () => {
   };
 
   if (!places || places.length === 0) {
-    return <p className={styles.noPlaces}>등록된 장소가 없습니다.</p>;
+    return (
+      <p className={styles.noResults}>
+        <Image src={travelRootEmptyIcon} alt={'no-schedule-root'} />
+        <div className={styles.noText}>여행 루트가 비어 있습니다.</div>
+        <br />
+        <p>여행지 검색을 통해 여행 루트에 장소를 추가해주세요.</p>
+      </p>
+    )
   }
-
+  
   return (
     <DndProvider backend={HTML5Backend}>
       <ul>

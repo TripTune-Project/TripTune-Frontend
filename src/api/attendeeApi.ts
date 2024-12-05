@@ -21,7 +21,7 @@ const handleApiError = <T>(
     success: false,
     errorCode,
     message: defaultMessage,
-    data: null as unknown as T, // 동적 타입 반환을 위한 처리
+    data: null as unknown as T
   };
 };
 
@@ -93,7 +93,7 @@ export const shareSchedule = async (
     return data;
   } catch (err: any) {
     const { message, code } = getErrorMessage(err?.status);
-    return handleApiError<ShareSchedule>(err, message, code); // 타입을 명시적으로 지정
+    return handleApiError<ShareSchedule>(err, message, code);
   }
 };
 
@@ -101,7 +101,7 @@ export const shareSchedule = async (
 export const leaveSchedule = async (
   scheduleId: number
 ): Promise<ApiResponse<LeaveSchedule>> => {
-  const url = `/schedules/${scheduleId}/attendees`;
+  const url = `/api/schedules/${scheduleId}/attendees`;
 
   try {
     const data = await remove<ApiResponse<LeaveSchedule>>(url, {
@@ -121,6 +121,6 @@ export const leaveSchedule = async (
       );
     }
     const { message, code } = getErrorMessage(err?.status);
-    return handleApiError<LeaveSchedule>(err, message, code); // 타입을 명시적으로 지정
+    return handleApiError<LeaveSchedule>(err, message, code);
   }
 };

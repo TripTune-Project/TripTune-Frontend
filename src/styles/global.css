@@ -92,16 +92,16 @@ button:focus {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #ccc;
+  background-color: #cccccc;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #aaa;
+  background-color: #aaaaaa;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background-color: #f1f1f1;
 }
 
 body::-webkit-scrollbar {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Fragment } from 'react';
 import { Client } from '@stomp/stompjs';
 import Cookies from 'js-cookie';
 import { fetchScheduleChats } from '@/api/chatApi';
@@ -188,7 +188,8 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
             >
               <span>{msg.message}</span>
               <span className={styles.timestamp}>
-                {new Date(msg.timestamp).toLocaleTimeString()}
+                {/* TODO : 시간 ISO 방식 처럼 보임 */}
+                {msg.timestamp}
               </span>
             </div>
           </div>

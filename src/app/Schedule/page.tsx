@@ -21,6 +21,8 @@ import {
 } from '@/hooks/useSchedule';
 import { deleteSchedule } from '@/api/scheduleApi';
 import { leaveSchedule } from '@/api/attendeeApi';
+import DeleteModal from '@/components/Schedule/DeleteModal';
+import AlertIcon from '../../../public/assets/images/여행지 탐색/홈화면/alertIcon.png';
 
 export default function SchedulePage() {
   const router = useRouter();
@@ -174,14 +176,28 @@ export default function SchedulePage() {
       router.push(`/Schedule/${scheduleId}`);
     }
   };
-
+  
   const renderSchedules = (
-    scheduleListData: ApiResponse<ScheduleList> | undefined
+    scheduleListData: ApiResponse<ScheduleList> | undefined,
+    isSearching: boolean
   ) => {
     if (!scheduleListData?.data || scheduleListData.data.content.length === 0) {
+      if (isSearching) {
+        return (
+          <div className={styles.noScheduleContainer}>
+            <p className={styles.noResults}>
+              <Image src={AlertIcon} alt={'no-schedule-root'} width={80} height={80} style={{ marginLeft: '120px' }} />
+              <div className={styles.noText}>검색 결과가 없습니다.</div>
+              <br />
+              <p>검색어의 철자와 띄어쓰기가 정확한지 확인해주세요.</p>
+            </p>
+          </div>
+        );
+      }
+      
       return (
         <div className={styles.noScheduleContainer}>
-          <Image src={NoscheduleIcon} alt='일정 없음 아이콘' />
+          <Image src={NoscheduleIcon} alt="일정 없음 아이콘" />
           <p className={styles.noScheduleMessage}>생성된 일정이 없습니다.</p>
           <p className={styles.noScheduleSubMessage}>
             일정을 만들어 멋진 여행을 준비해보세요!
@@ -189,7 +205,7 @@ export default function SchedulePage() {
         </div>
       );
     }
-
+    
     return scheduleListData.data.content.map((schedule: Schedule) => (
       <div
         key={schedule.scheduleId}
@@ -236,10 +252,10 @@ export default function SchedulePage() {
         {schedule.thumbnailUrl ? (
           <Image
             src={schedule.thumbnailUrl}
-            alt='여행 루트 이미지'
+            alt="여행 루트 이미지"
             className={styles.scheduleImage}
-            width={256}
-            height={158}
+            width={414}
+            height={174}
           />
         ) : (
           <div className={styles.noImage}>이미지 없음</div>
@@ -253,16 +269,16 @@ export default function SchedulePage() {
           </div>
           <Image
             src={schedule.author?.profileUrl ?? ''}
-            alt='프로필 이미지'
+            alt="프로필 이미지"
             className={styles.scheduleImageProfile}
-            width={26}
-            height={26}
+            width={38}
+            height={38}
           />
         </div>
       </div>
     ));
   };
-
+  
   if (isAllScheduleLoading || isSharedScheduleLoading) {
     return <DataLoading />;
   }
@@ -318,7 +334,7 @@ export default function SchedulePage() {
             {allScheduleData?.pages[0]?.data?.totalElements ?? 0}
           </span>
         </button>
-
+        
         <button
           className={`${styles.scheduleCounterShare} ${selectedTab === 'share' ? styles.activeTab : ''}`}
           onClick={() => setSelectedTab('share')}
@@ -328,11 +344,11 @@ export default function SchedulePage() {
             {sharedScheduleData?.pages[0]?.data?.totalSharedElements ?? 0}
           </span>
         </button>
-
+        
         <div className={styles.travelSearchContainer}>
           <input
             type='text'
-            placeholder='원하는 여행지를 검색하세요'
+            placeholder='일정를 검색하세요.'
             value={searchKeyword}
             onChange={handleSearchChange}
           />
@@ -346,7 +362,8 @@ export default function SchedulePage() {
               ? (searchData?.pages[0] as ApiResponse<ScheduleList>)
               : selectedTab === 'all'
                 ? allScheduleData?.pages[0]
-                : sharedScheduleData?.pages[0]
+                : sharedScheduleData?.pages[0],
+            isSearching
           )}
         </div>
         <div ref={observerRef} className={styles.loadingArea}>
@@ -357,17 +374,11 @@ export default function SchedulePage() {
           ) : null}
         </div>
         {isDeleteModalOpen && (
-          <div className={styles.modalOverlay}>
-            <div className={styles.deleteModal}>
-              <p>{MODAL_MESSAGES.confirmDeleteSchedule.title}</p>
-              <button onClick={handleDeleteConfirmation}>
-                {MODAL_MESSAGES.confirmDeleteSchedule.confirmButton}
-              </button>
-              <button onClick={() => setIsDeleteModalOpen(false)}>
-                {MODAL_MESSAGES.confirmDeleteSchedule.cancelButton}
-              </button>
-            </div>
-          </div>
+          <DeleteModal
+            isOpen={isDeleteModalOpen}
+            onClose={() => setIsDeleteModalOpen(false)}
+            onConfirm={handleDeleteConfirmation}
+          />
         )}
         {isModalOpen && <ScheduleModal onClose={() => setIsModalOpen(false)} />}
       </div>

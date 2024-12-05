@@ -13,29 +13,30 @@ import DataLoading from '@/components/Common/DataLoading';
 import { truncateText } from '@/utils';
 import { useTravelStore } from '@/store/scheduleStore';
 import { Place } from '@/types/scheduleType';
+import AlertIcon from '../../../public/assets/images/여행지 탐색/홈화면/alertIcon.png';
 
 const ScheduleTravelSearch = () => {
   const { scheduleId } = useParams();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [isSearching, setIsSearching] = useState(false);
-
+  
   const { addedPlaces, addPlace, removePlace } = useTravelStore();
-
+  
   const debouncedSearchKeyword = useDebounce(searchKeyword, 800);
-
+  
   const travelListQuery = useScheduleTravelList(
     Number(scheduleId),
     currentPage,
-    !isSearching
+    !isSearching,
   );
   const searchTravelQuery = useTravelListByLocation(
     Number(scheduleId),
     debouncedSearchKeyword,
     currentPage,
-    isSearching
+    isSearching,
   );
-
+  
   useEffect(() => {
     if (debouncedSearchKeyword.trim()) {
       setCurrentPage(1);
@@ -44,19 +45,19 @@ const ScheduleTravelSearch = () => {
       setIsSearching(false);
     }
   }, [debouncedSearchKeyword]);
-
+  
   const travels = isSearching
     ? searchTravelQuery?.data?.data?.content || []
     : travelListQuery?.data?.data?.content || [];
   const totalPages = isSearching
     ? searchTravelQuery?.data?.data?.totalPages || 0
     : travelListQuery?.data?.data?.totalPages || 0;
-
+  
   if (travelListQuery.isLoading || searchTravelQuery.isLoading)
     return <DataLoading />;
   if (travelListQuery.error || searchTravelQuery.error)
     return <p>데이터를 불러오는데 오류가 발생했습니다.</p>;
-
+  
   const handleAddOrRemovePlace = (place: Place) => {
     const placeId = place.placeId;
     if (addedPlaces.has(placeId)) {
@@ -65,13 +66,13 @@ const ScheduleTravelSearch = () => {
       addPlace(placeId);
     }
   };
-
+  
   return (
     <>
       <div className={styles.travelSearchContainerSearch}>
         <input
-          type='text'
-          placeholder='원하는 여행지를 검색하세요'
+          type="text"
+          placeholder="원하는 여행지를 검색하세요"
           value={searchKeyword}
           onChange={(e) => setSearchKeyword(e.target.value)}
         />
@@ -103,13 +104,13 @@ const ScheduleTravelSearch = () => {
                   <p className={styles.placeAddress}>
                     {truncateText(
                       `${place.country} / ${place.city} / ${place.district}`,
-                      20
+                      20,
                     )}
                   </p>
                   <p className={styles.placeDetailAddress}>
                     <Image
                       src={locationIcon}
-                      alt='장소'
+                      alt="장소"
                       width={15}
                       height={21}
                     />
@@ -126,15 +127,22 @@ const ScheduleTravelSearch = () => {
             ))}
           </ul>
         ) : (
-          <p className={styles.noResults}>검색 결과가 없습니다.</p>
+          <p className={styles.noResults}>
+            <Image src={AlertIcon} alt={'no-schedule-root'} width={80} height={80} style={{marginLeft: '220px'}} />
+            <div className={styles.noText}>검색 결과가 없습니다.</div>
+            <br />
+            <p>검색어의 철자와 띄어쓰기가 정확한지 확인해주세요.</p>
+          </p>
         )}
       </div>
-      <Pagination
-        total={totalPages * 5}
-        currentPage={currentPage}
-        pageSize={5}
-        onPageChange={setCurrentPage}
-      />
+      {totalPages > 0 &&
+        <Pagination
+          total={totalPages * 5}
+          currentPage={currentPage}
+          pageSize={5}
+          onPageChange={setCurrentPage}
+        />
+      }
     </>
   );
 };
