@@ -13,14 +13,14 @@ interface TravelStore {
   addedPlaces: Makers[];
   travelRoute: Place[];
   scheduleDetail: Schedule;
-
+  
   // 여행 장소 관리 여행 루트 메서드
   addPlace: (place: Makers) => void;
   removePlace: (placeId: number) => void;
   onMovePlace: (dragIndex: number, hoverIndex: number) => void;
   addPlaceToRoute: (place: Place) => void;
   removePlaceFromRoute: (placeId: number) => void;
-
+  
   // 일정 상세 정보 관리 메서드
   setScheduleDetail: (schedule: Schedule) => void;
   fetchScheduleDetailById: (scheduleId: string, page: number) => Promise<void>;
@@ -32,7 +32,7 @@ export const useTravelStore = create<TravelStore>((set) => ({
   addedPlaces: [],
   travelRoute: [],
   scheduleDetail: {},
-
+  
   // 여행 장소 관리 메서드
   addPlace: (place: Makers) =>
     set((state) => {
@@ -44,13 +44,13 @@ export const useTravelStore = create<TravelStore>((set) => ({
   removePlace: (placeId: number) =>
     set((state) => ({
       addedPlaces: state.addedPlaces.filter(
-        (place) => place.placeId !== placeId
+        (place) => place.placeId !== placeId,
       ),
     })),
   addPlaceToRoute: (place: Place) =>
     set((state) => {
       const updatedRoute = state.travelRoute.some(
-        (p) => p.placeId === place.placeId
+        (p) => p.placeId === place.placeId,
       )
         ? state.travelRoute
         : [...state.travelRoute, place];
@@ -59,7 +59,7 @@ export const useTravelStore = create<TravelStore>((set) => ({
   removePlaceFromRoute: (placeId: number) =>
     set((state) => ({
       travelRoute: state.travelRoute.filter(
-        (place) => place.placeId !== placeId
+        (place) => place.placeId !== placeId,
       ),
     })),
   onMovePlace: (dragIndex: number, hoverIndex: number) =>
@@ -69,7 +69,7 @@ export const useTravelStore = create<TravelStore>((set) => ({
       updatedRoute.splice(hoverIndex, 0, movedItem);
       return { travelRoute: updatedRoute };
     }),
-
+  
   // 일정 상세 정보 관리 메서드 (전체)
   setScheduleDetail: (schedule: Schedule) => set({ scheduleDetail: schedule }),
   fetchScheduleDetailById: async (scheduleId: string, page: number) => {
@@ -84,16 +84,13 @@ export const useTravelStore = create<TravelStore>((set) => ({
       console.error('Error fetching schedule detail:', error);
     }
   },
-
+  
   // 일정 상세 정보 관리 메서드 (일부)
   updateScheduleDetail: (updates: Partial<Schedule>) =>
     set((state) => ({
       scheduleDetail: {
+        ...state.scheduleDetail,
         ...updates,
-        scheduleName:
-          updates.scheduleName || state.scheduleDetail?.scheduleName || '',
-        startDate: updates.startDate || state.scheduleDetail?.startDate || '',
-        endDate: updates.endDate || state.scheduleDetail?.endDate || '',
       },
     })),
 }));
