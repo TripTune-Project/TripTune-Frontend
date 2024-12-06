@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -19,12 +19,18 @@ export default function ScheduleDetailPage() {
   const router = useRouter();
   const { travelRoute, scheduleDetail, fetchScheduleDetailById } =
     useTravelStore();
-  const [isInviteModalOpen, setIsInviteModalOpen] = React.useState(false);
-
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+  
   useEffect(() => {
     if (scheduleId) {
       fetchScheduleDetailById(scheduleId as string, 1);
     }
+    
+    document.body.classList.add('no_scroll');
+    
+    return () => {
+      document.body.classList.remove('no_scroll');
+    };
   }, [scheduleId, fetchScheduleDetailById]);
 
   const handleShareClick = () => setIsInviteModalOpen(true);
