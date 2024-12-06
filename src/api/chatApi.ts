@@ -16,7 +16,7 @@ const handleApiError = <T>(
     success: false,
     errorCode,
     message: defaultMessage,
-    data: null as unknown as T, // 동적 타입 반환을 위한 처리
+    data: null as unknown as T,
   };
 };
 

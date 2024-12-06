@@ -7,6 +7,7 @@ export const MODAL_MESSAGES = {
   },
   confirmDeleteSchedule: {
     title: '정말로 일정을 삭제하시겠습니까?',
+    description: '',
     confirmButton: '삭제',
     cancelButton: '취소',
   },

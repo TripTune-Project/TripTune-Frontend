@@ -16,24 +16,20 @@ const permissions = [
   { value: 'READ', label: '읽기 허용', description: '편집 및 채팅 불가' },
 ];
 
-const InviteModal = ({
-                       isOpen,
-                       onClose,
-                     }: InviteModalProps) => {
+const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
   const { scheduleId } = useParams();
   const [email, setEmail] = useState<string>('');
-  const [selectedPermission, setSelectedPermission] =
-    useState<string>('EDIT');
+  const [selectedPermission, setSelectedPermission] = useState<string>('EDIT');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [allUsers, setAllUsers] = useState<Attendee[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  
+
   useEffect(() => {
     const loadAttendees = async () => {
       if (isOpen) {
         setIsLoading(true);
         try {
-          const response = await fetchScheduleAttendees(scheduleId);
+          const response = await fetchScheduleAttendees(Number(scheduleId));
           if (response.success) {
             setAllUsers(response.data?.content || []);
           } else {
@@ -46,16 +42,16 @@ const InviteModal = ({
         }
       }
     };
-    
+
     loadAttendees();
   }, [isOpen, scheduleId]);
-  
+
   const handleShareClick = async () => {
     try {
       const response = await shareSchedule(
-        scheduleId,
+        Number(scheduleId),
         email,
-        selectedPermission as 'ALL' | 'EDIT' | 'CHAT' | 'READ',
+        selectedPermission as 'ALL' | 'EDIT' | 'CHAT' | 'READ'
       );
       console.log(response, 'response: ');
       if (response.success) {
@@ -70,9 +66,9 @@ const InviteModal = ({
       console.error('공유 중 오류 발생:', error);
     }
   };
-  
+
   if (!isOpen) return null;
-  
+
   return (
     <div style={styles.modalOverlay}>
       <div style={styles.modalContainer}>
@@ -82,12 +78,12 @@ const InviteModal = ({
             X
           </button>
         </div>
-        
+
         <div style={styles.emailInputContainer}>
           <div style={styles.inputWithDropdown}>
             <input
-              type="text"
-              placeholder="공유할 사용자의 이메일을 입력하세요."
+              type='text'
+              placeholder='공유할 사용자의 이메일을 입력하세요.'
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               style={styles.emailInputWithDropdown}
@@ -96,7 +92,8 @@ const InviteModal = ({
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               style={styles.dropdownButtonInside}
             >
-              {permissions.find((p) => p.value === selectedPermission)?.label || '모두 허용'}
+              {permissions.find((p) => p.value === selectedPermission)?.label ||
+                '모두 허용'}
               <span style={styles.vIcon}>▼</span>
             </button>
             {isDropdownOpen && (
@@ -110,7 +107,8 @@ const InviteModal = ({
                     }}
                     style={{
                       ...styles.dropdownItem,
-                      ...(selectedPermission === permission.value && styles.selectedDropdownItem),
+                      ...(selectedPermission === permission.value &&
+                        styles.selectedDropdownItem),
                     }}
                   >
                     <span>{permission.label}</span>
@@ -129,7 +127,7 @@ const InviteModal = ({
             공유
           </button>
         </div>
-        
+
         <h3>공유중인 사용자</h3>
         <hr />
         {isLoading ? (

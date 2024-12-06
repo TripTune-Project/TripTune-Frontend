@@ -9,7 +9,7 @@ import { ChatMessage } from '@/types/scheduleType';
 import { useParams } from 'next/navigation';
 
 const Chatting = () => {
-  const {scheduleId} = useParams();
+  const { scheduleId } = useParams();
   const token = Cookies.get('trip-tune_at');
   const userNickname = Cookies.get('nickname');
   const brokerUrl =
@@ -29,7 +29,7 @@ const Chatting = () => {
 
     setLoading(true);
     try {
-      const response = await fetchScheduleChats(scheduleId, page);
+      const response = await fetchScheduleChats(Number(scheduleId), page);
       if (response.success && response.data) {
         const newMessages = response.data.content;
         setMessages((prevMessages) => [...newMessages, ...prevMessages]);
@@ -46,7 +46,7 @@ const Chatting = () => {
   useEffect(() => {
     const loadInitialMessages = async () => {
       try {
-        const response = await fetchScheduleChats(scheduleId, 1);
+        const response = await fetchScheduleChats(Number(scheduleId), 1);
         if (response.success && response.data) {
           setMessages(response.data.content);
           setTotalPages(response.data.totalPages);

@@ -17,34 +17,35 @@ import { useTravelStore } from '@/store/scheduleStore';
 export default function ScheduleDetailPage() {
   const { scheduleId } = useParams();
   const router = useRouter();
-  const { travelRoute, scheduleDetail, fetchScheduleDetailById } = useTravelStore();
+  const { travelRoute, scheduleDetail, fetchScheduleDetailById } =
+    useTravelStore();
   const [isInviteModalOpen, setIsInviteModalOpen] = React.useState(false);
-  
+
   useEffect(() => {
     if (scheduleId) {
-      fetchScheduleDetailById(scheduleId, 1);
+      fetchScheduleDetailById(scheduleId as string, 1);
     }
   }, [scheduleId, fetchScheduleDetailById]);
-  
+
   const handleShareClick = () => setIsInviteModalOpen(true);
   const handleCloseModal = () => setIsInviteModalOpen(false);
-  
+
   const handleSaveSchedule = async () => {
     if (!scheduleDetail || travelRoute.length === 0) return;
-    
+
     const transformedRoute = travelRoute.map((place, index) => ({
       routeOrder: index + 1,
       placeId: place.placeId,
     }));
-    
+
     const data = {
-      scheduleName: scheduleDetail?.scheduleName,
-      startDate: scheduleDetail?.startDate,
-      endDate: scheduleDetail?.endDate,
-      scheduleId: scheduleId,
-      travelRoute:transformedRoute
-    }
-    
+      scheduleName: scheduleDetail.scheduleName || '',
+      startDate: scheduleDetail.startDate || '',
+      endDate: scheduleDetail.endDate || '',
+      scheduleId: Number(scheduleId),
+      travelRoute: transformedRoute,
+    };
+
     const response = await updateExistingSchedule(data);
     if (response.success) {
       router.push('/Schedule');
@@ -52,24 +53,24 @@ export default function ScheduleDetailPage() {
       console.error('일정 저장에 실패했습니다:', response.message);
     }
   };
-  
+
   return (
     <>
       <Head>
         <title>일정 상세 페이지 - 지도와 함께 만드는 나만의 일정</title>
         <meta
-          name="description"
-          content="지도를 활용하여 여행지와 일정을 관리하고 저장할 수 있는 페이지입니다. 원하는 위치를 추가하고 일정을 계획해 보세요."
+          name='description'
+          content='지도를 활용하여 여행지와 일정을 관리하고 저장할 수 있는 페이지입니다. 원하는 위치를 추가하고 일정을 계획해 보세요.'
         />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name='viewport' content='width=device-width, initial-scale=1' />
       </Head>
       <header className={styles.header}>
         <ul className={styles.headerMenu}>
           <li>
-            <Link href="/">
+            <Link href='/'>
               <Image
                 src={MainLogoImage}
-                alt="로고"
+                alt='로고'
                 className={styles.logo}
                 width={183}
                 height={57}
@@ -90,7 +91,7 @@ export default function ScheduleDetailPage() {
       <InviteModal isOpen={isInviteModalOpen} onClose={handleCloseModal} />
       <div className={styles.layoutContainer}>
         <div className={styles.leftSection}>
-          <ScheduleMake initialTab="scheduleTravel" />
+          <ScheduleMake initialTab='scheduleTravel' />
         </div>
         <div className={styles.centerSection}>
           <PlacesScheduleMap />

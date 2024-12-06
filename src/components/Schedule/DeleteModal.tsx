@@ -34,31 +34,31 @@ const DeleteModal = ({ isOpen, onClose, onConfirm }: DeleteModalProps) => {
           outline: 'none',
         }}
       >
-        <Stack direction="row" justifyContent="flex-end">
+        <Stack direction='row' justifyContent='flex-end'>
           <IconButton onClick={onClose}>
             <CloseIcon />
           </IconButton>
         </Stack>
-        <Typography variant="h6" component="h2" gutterBottom>
+        <Typography variant='h6' component='h2' gutterBottom>
           {MODAL_MESSAGES.confirmDeleteSchedule.title}
         </Typography>
-        <Typography variant="body2" color="text.secondary" mb={3}>
+        <Typography variant='body2' color='text.secondary' mb={3}>
           {MODAL_MESSAGES.confirmDeleteSchedule.description}
         </Typography>
-        <Stack direction="row" spacing={2} justifyContent="center">
+        <Stack direction='row' spacing={2} justifyContent='center'>
           <Button
             onClick={onConfirm}
-            variant="contained"
-            color="error"
-            size="large"
+            variant='contained'
+            color='error'
+            size='large'
           >
             {MODAL_MESSAGES.confirmDeleteSchedule.confirmButton}
           </Button>
           <Button
             onClick={onClose}
-            variant="outlined"
-            color="primary"
-            size="large"
+            variant='outlined'
+            color='primary'
+            size='large'
           >
             {MODAL_MESSAGES.confirmDeleteSchedule.cancelButton}
           </Button>

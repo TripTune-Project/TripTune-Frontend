@@ -17,9 +17,9 @@ function PlacesScheduleMap() {
   const mapRef = useRef<google.maps.Map | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
   const markersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
-  
+
   const mapId = process.env.NEXT_PUBLIC_GOOGLE_MAPS_STYLE_ID;
-  
+
   const loadGoogleMapsScript = useCallback(() => {
     const existingScript = document.getElementById('google-maps-script');
     if (!existingScript) {
@@ -35,7 +35,7 @@ function PlacesScheduleMap() {
       setIsMapLoaded(true);
     }
   }, []);
-  
+
   const initializeMap = useCallback(() => {
     if (mapContainerRef.current && !mapRef.current && window.google) {
       mapRef.current = new google.maps.Map(mapContainerRef.current, {
@@ -45,13 +45,13 @@ function PlacesScheduleMap() {
       });
     }
   }, [mapId]);
-  
+
   const updateMarkers = useCallback(() => {
     if (mapRef.current && isMapLoaded) {
-      // TODO : 기존 마커 제거 필요 없을 것 같음
+      // 기존 마커 제거 필요 없을 것으로 예상
       // markersRef.current.forEach((marker) => marker.map = null);
       // markersRef.current = [];
-      
+
       addedPlaces.forEach((place) => {
         const advancedMarker = new google.maps.marker.AdvancedMarkerElement({
           map: mapRef.current,
@@ -59,7 +59,7 @@ function PlacesScheduleMap() {
         });
         markersRef.current.push(advancedMarker);
       });
-      
+
       const lastPlace = Array.from(addedPlaces).pop();
       if (lastPlace) {
         mapRef.current.setCenter({
@@ -69,10 +69,10 @@ function PlacesScheduleMap() {
       }
     }
   }, [addedPlaces, isMapLoaded]);
-  
+
   useEffect(() => {
     loadGoogleMapsScript();
-    
+
     return () => {
       if (mapRef.current) {
         google.maps.event.clearInstanceListeners(mapRef.current);
@@ -82,17 +82,17 @@ function PlacesScheduleMap() {
       markersRef.current = [];
     };
   }, [loadGoogleMapsScript]);
-  
+
   useEffect(() => {
     if (isMapLoaded) {
       initializeMap();
     }
   }, [isMapLoaded, initializeMap]);
-  
+
   useEffect(() => {
     updateMarkers();
   }, [addedPlaces, updateMarkers]);
-  
+
   return <div ref={mapContainerRef} style={containerStyle} />;
 }
 

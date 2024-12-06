@@ -21,7 +21,7 @@ const handleApiError = <T>(
     success: false,
     errorCode,
     message: defaultMessage,
-    data: null as unknown as T
+    data: null as unknown as T,
   };
 };
 

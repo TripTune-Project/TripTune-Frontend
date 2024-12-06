@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import styles from '@/styles/Schedule.module.css';
-import ScheduleModal from '@/components/Schedule/ScheduleModal';
+import NewScheduleModal from '@/components/Schedule/NewScheduleModal';
 import DataLoading from '@/components/Common/DataLoading';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -166,16 +166,12 @@ export default function SchedulePage() {
     setIsSearching(!!debouncedSearchKeyword);
   }, [debouncedSearchKeyword]);
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchKeyword(e.target.value);
-  };
-
   const handleDetailClick = (e: React.MouseEvent, scheduleId: number) => {
     if (!activeDeleteMenu) {
       router.push(`/Schedule/${scheduleId}`);
     }
   };
-  
+
   const renderSchedules = (
     scheduleListData: ApiResponse<ScheduleList> | undefined,
     isSearching: boolean
@@ -185,7 +181,13 @@ export default function SchedulePage() {
         return (
           <div className={styles.noScheduleContainer}>
             <p className={styles.noResults}>
-              <Image src={AlertIcon} alt={'no-schedule-root'} width={80} height={80} style={{ marginLeft: '120px' }} />
+              <Image
+                src={AlertIcon}
+                alt={'no-schedule-root'}
+                width={80}
+                height={80}
+                style={{ marginLeft: '120px' }}
+              />
               <div className={styles.noText}>검색 결과가 없습니다.</div>
               <br />
               <p>검색어의 철자와 띄어쓰기가 정확한지 확인해주세요.</p>
@@ -193,10 +195,10 @@ export default function SchedulePage() {
           </div>
         );
       }
-      
+
       return (
         <div className={styles.noScheduleContainer}>
-          <Image src={NoscheduleIcon} alt="일정 없음 아이콘" />
+          <Image src={NoscheduleIcon} alt='일정 없음 아이콘' />
           <p className={styles.noScheduleMessage}>생성된 일정이 없습니다.</p>
           <p className={styles.noScheduleSubMessage}>
             일정을 만들어 멋진 여행을 준비해보세요!
@@ -204,7 +206,7 @@ export default function SchedulePage() {
         </div>
       );
     }
-    
+
     return scheduleListData.data.content.map((schedule: Schedule) => (
       <div
         key={schedule.scheduleId}
@@ -251,7 +253,7 @@ export default function SchedulePage() {
         {schedule.thumbnailUrl ? (
           <Image
             src={schedule.thumbnailUrl}
-            alt="여행 루트 이미지"
+            alt='여행 루트 이미지'
             className={styles.scheduleImage}
             width={414}
             height={174}
@@ -268,7 +270,7 @@ export default function SchedulePage() {
           </div>
           <Image
             src={schedule.author?.profileUrl ?? ''}
-            alt="프로필 이미지"
+            alt='프로필 이미지'
             className={styles.scheduleImageProfile}
             width={38}
             height={38}
@@ -277,7 +279,7 @@ export default function SchedulePage() {
       </div>
     ));
   };
-  
+
   if (isAllScheduleLoading || isSharedScheduleLoading) {
     return <DataLoading />;
   }
@@ -333,7 +335,7 @@ export default function SchedulePage() {
             {allScheduleData?.pages[0]?.data?.totalElements ?? 0}
           </span>
         </button>
-        
+
         <button
           className={`${styles.scheduleCounterShare} ${selectedTab === 'share' ? styles.activeTab : ''}`}
           onClick={() => setSelectedTab('share')}
@@ -343,13 +345,13 @@ export default function SchedulePage() {
             {sharedScheduleData?.pages[0]?.data?.totalSharedElements ?? 0}
           </span>
         </button>
-        
+
         <div className={styles.travelSearchContainer}>
           <input
             type='text'
             placeholder='일정를 검색하세요.'
             value={searchKeyword}
-            onChange={handleSearchChange}
+            onChange={(e) => setSearchKeyword(e.target.value)}
           />
           <button onClick={() => setIsSearching(!!debouncedSearchKeyword)}>
             <Image src={searchIcon} alt='돋보기' width={21} height={21} />
@@ -379,7 +381,9 @@ export default function SchedulePage() {
             onConfirm={handleDeleteConfirmation}
           />
         )}
-        {isModalOpen && <ScheduleModal onClose={() => setIsModalOpen(false)} />}
+        {isModalOpen && (
+          <NewScheduleModal onClose={() => setIsModalOpen(false)} />
+        )}
       </div>
     </div>
   );

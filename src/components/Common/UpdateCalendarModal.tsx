@@ -3,6 +3,7 @@ import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import styles from '@/styles/Schedule.module.css';
 import { ko } from 'date-fns/locale';
+import { useTravelStore } from '@/store/scheduleStore';
 
 registerLocale('ko', ko);
 
@@ -10,15 +11,15 @@ interface CalendarModalProps {
   initialStartDate: string;
   initialEndDate: string;
   onClose: () => void;
-  onSubmit: (name: string, startDate: string, endDate: string) => void;
 }
 
-const CalendarModal = ({
+const UpdateCalendarModal = ({
   initialStartDate,
   initialEndDate,
   onClose,
-  onSubmit,
 }: CalendarModalProps) => {
+  const { updateScheduleDetail } = useTravelStore();
+
   const today = new Date();
   const [startDate, setStartDate] = useState<Date | null>(
     initialStartDate ? new Date(initialStartDate) : null
@@ -26,28 +27,32 @@ const CalendarModal = ({
   const [endDate, setEndDate] = useState<Date | null>(
     initialEndDate ? new Date(initialEndDate) : today
   );
-  const [travelName, setTravelName] = useState<string>('');
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
 
   useEffect(() => {
     today.setHours(0, 0, 0, 0);
+    setIsFormValid(endDate !== null && endDate > today);
+  }, [startDate, endDate]);
 
-    setIsFormValid(
-      travelName.trim() !== '' && endDate !== null && endDate > today
-    );
-  }, [travelName, startDate, endDate]);
-
-  const formatDateToString = (date: Date): string => {
-    return date.toISOString().split('T')[0];
+  const formatDateToKoreanWithDay = (date: Date | null): string => {
+    if (!date) return '';
+    return new Intl.DateTimeFormat('ko-KR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      weekday: 'short',
+    })
+      .format(date)
+      .replace(/\./g, '.')
+      .replace(' ', '');
   };
 
   const handleConfirm = () => {
     if (isFormValid) {
-      onSubmit(
-        travelName,
-        startDate ? formatDateToString(startDate) : '',
-        formatDateToString(endDate!)
-      );
+      updateScheduleDetail({
+        startDate: startDate ? startDate.toISOString() : '',
+        endDate: endDate ? endDate.toISOString() : '',
+      });
       onClose();
     } else {
       console.error('모든 필드를 올바르게 입력해야 합니다.');
@@ -60,6 +65,12 @@ const CalendarModal = ({
         <button className={styles.closeButton} onClick={onClose}>
           &times;
         </button>
+        <div className={styles.dateDisplay}>
+          <p>
+            선택한 날짜: {formatDateToKoreanWithDay(startDate)} ~{' '}
+            {formatDateToKoreanWithDay(endDate)}
+          </p>
+        </div>
         <div className={styles.datePickerContainer}>
           <DatePicker
             locale='ko'
@@ -92,7 +103,6 @@ const CalendarModal = ({
         <button
           className={styles.confirmButton}
           onClick={handleConfirm}
-          // TODO : 날짜 변경 안되고 있음
           disabled={!isFormValid}
         >
           수정
@@ -102,4 +112,4 @@ const CalendarModal = ({
   );
 };
 
-export default CalendarModal;
+export default UpdateCalendarModal;

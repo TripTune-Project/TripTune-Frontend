@@ -18,9 +18,9 @@ export interface Pagination {
 export interface Schedule {
   scheduleId?: number;
   role?: Role;
-  scheduleName: string;
-  startDate: string;
-  endDate: string;
+  scheduleName?: string;
+  startDate?: string;
+  endDate?: string;
   sinceUpdate?: string;
   thumbnailUrl?: string | null;
   author?: Author;

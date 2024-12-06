@@ -45,7 +45,6 @@ const fetchData = async <T>(
   endpoint: string,
   options: FetchOptions = {}
 ): Promise<T> => {
-  // TODO : 예전 URL 과 달라요!
   const url = `${endpoint}`;
   let headers: HeadersInit = {
     ...DEFAULT_HEADERS,
