@@ -5,14 +5,15 @@ import {
   useScheduleTravelList,
   useTravelListByLocation,
 } from '@/hooks/useSchedule';
+import { useTravelStore } from '@/store/scheduleStore';
 import Image from 'next/image';
 import locationIcon from '../../../public/assets/images/일정 만들기/일정 생성/scheduleDate_mapIcon.png';
 import Pagination from '../Travel/Pagination';
 import { useDebounce } from '@/hooks/useDebounce';
 import DataLoading from '@/components/Common/DataLoading';
 import { truncateText } from '@/utils';
-import { useTravelStore } from '@/store/scheduleStore';
 import { Place } from '@/types/scheduleType';
+import AlertIcon from '../../../public/assets/images/여행지 탐색/홈화면/alertIcon.png';
 
 const ScheduleTravelSearch = () => {
   const { scheduleId } = useParams();
@@ -20,7 +21,8 @@ const ScheduleTravelSearch = () => {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [isSearching, setIsSearching] = useState(false);
 
-  const { addedPlaces, addPlace, removePlace } = useTravelStore();
+  const { addPlaceToRoute, addedPlaces, addPlace, removePlace } =
+    useTravelStore();
 
   const debouncedSearchKeyword = useDebounce(searchKeyword, 800);
 
@@ -58,11 +60,19 @@ const ScheduleTravelSearch = () => {
     return <p>데이터를 불러오는데 오류가 발생했습니다.</p>;
 
   const handleAddOrRemovePlace = (place: Place) => {
-    const placeId = place.placeId;
-    if (addedPlaces.has(placeId)) {
-      removePlace(placeId);
+    const placeExists = Array.from(addedPlaces).some(
+      (addedPlace) => addedPlace.placeId === place.placeId
+    );
+
+    if (placeExists) {
+      removePlace(place.placeId);
     } else {
-      addPlace(placeId);
+      addPlace({
+        placeId: place.placeId,
+        lat: place.latitude,
+        lng: place.longitude,
+      });
+      addPlaceToRoute(place);
     }
   };
 
@@ -80,7 +90,7 @@ const ScheduleTravelSearch = () => {
       <div className={styles.travelList}>
         {travels.length > 0 ? (
           <ul>
-            {travels.map((place: any) => (
+            {travels.map((place: Place) => (
               <li key={place.placeId} className={styles.placeItem}>
                 <div className={styles.placeThumbnail}>
                   {place.thumbnailUrl ? (
@@ -120,21 +130,38 @@ const ScheduleTravelSearch = () => {
                   className={styles.addButton}
                   onClick={() => handleAddOrRemovePlace(place)}
                 >
-                  {addedPlaces.has(place.placeId) ? '–' : '+'}
+                  {Array.from(addedPlaces).some(
+                    (addedPlace) => addedPlace.placeId === place.placeId
+                  )
+                    ? '–'
+                    : '+'}
                 </button>
               </li>
             ))}
           </ul>
         ) : (
-          <p className={styles.noResults}>검색 결과가 없습니다.</p>
+          <p className={styles.noResults}>
+            <Image
+              src={AlertIcon}
+              alt={'no-schedule-root'}
+              width={80}
+              height={80}
+              style={{ marginLeft: '220px' }}
+            />
+            <div className={styles.noText}>검색 결과가 없습니다.</div>
+            <br />
+            <p>검색어의 철자와 띄어쓰기가 정확한지 확인해주세요.</p>
+          </p>
         )}
       </div>
-      <Pagination
-        total={totalPages * 5}
-        currentPage={currentPage}
-        pageSize={5}
-        onPageChange={setCurrentPage}
-      />
+      {totalPages > 0 && (
+        <Pagination
+          total={totalPages * 5}
+          currentPage={currentPage}
+          pageSize={5}
+          onPageChange={setCurrentPage}
+        />
+      )}
     </>
   );
 };

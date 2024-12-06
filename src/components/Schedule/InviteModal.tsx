@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Attendee } from '@/types/scheduleType';
 import { fetchScheduleAttendees, shareSchedule } from '@/api/attendeeApi';
+import { useParams } from 'next/navigation';
 
 interface InviteModalProps {
   isOpen: boolean;
-  scheduleId: number;
-  permission: string;
   onClose: () => void;
 }
 
@@ -17,15 +16,10 @@ const permissions = [
   { value: 'READ', label: '읽기 허용', description: '편집 및 채팅 불가' },
 ];
 
-const InviteModal = ({
-  isOpen,
-  scheduleId,
-  permission,
-  onClose,
-}: InviteModalProps) => {
+const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
+  const { scheduleId } = useParams();
   const [email, setEmail] = useState<string>('');
-  const [selectedPermission, setSelectedPermission] =
-    useState<string>(permission);
+  const [selectedPermission, setSelectedPermission] = useState<string>('EDIT');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [allUsers, setAllUsers] = useState<Attendee[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -35,7 +29,7 @@ const InviteModal = ({
       if (isOpen) {
         setIsLoading(true);
         try {
-          const response = await fetchScheduleAttendees(scheduleId);
+          const response = await fetchScheduleAttendees(Number(scheduleId));
           if (response.success) {
             setAllUsers(response.data?.content || []);
           } else {
@@ -55,17 +49,18 @@ const InviteModal = ({
   const handleShareClick = async () => {
     try {
       const response = await shareSchedule(
-        scheduleId,
+        Number(scheduleId),
         email,
         selectedPermission as 'ALL' | 'EDIT' | 'CHAT' | 'READ'
       );
+      console.log(response, 'response: ');
       if (response.success) {
         alert('공유가 완료되었습니다.');
         setEmail('');
-        setSelectedPermission(permission);
+        setSelectedPermission('EDIT');
         onClose();
       } else {
-        alert(`공유 실패: ${response.message}`);
+        alert(response.message);
       }
     } catch (error) {
       console.error('공유 중 오류 발생:', error);
@@ -85,19 +80,21 @@ const InviteModal = ({
         </div>
 
         <div style={styles.emailInputContainer}>
-          <input
-            type='text'
-            placeholder='공유할 사용자의 이메일을 입력하세요.'
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            style={styles.emailInput}
-          />
-          <div style={styles.dropdown}>
+          <div style={styles.inputWithDropdown}>
+            <input
+              type='text'
+              placeholder='공유할 사용자의 이메일을 입력하세요.'
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              style={styles.emailInputWithDropdown}
+            />
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              style={styles.dropdownButton}
+              style={styles.dropdownButtonInside}
             >
-              {permissions.find((p) => p.value === selectedPermission)?.label}
+              {permissions.find((p) => p.value === selectedPermission)?.label ||
+                '모두 허용'}
+              <span style={styles.vIcon}>▼</span>
             </button>
             {isDropdownOpen && (
               <ul style={styles.dropdownMenu}>
@@ -108,12 +105,19 @@ const InviteModal = ({
                       setSelectedPermission(permission.value);
                       setIsDropdownOpen(false);
                     }}
-                    style={styles.dropdownItem}
+                    style={{
+                      ...styles.dropdownItem,
+                      ...(selectedPermission === permission.value &&
+                        styles.selectedDropdownItem),
+                    }}
                   >
-                    <span style={styles.dropdownLabel}>{permission.label}</span>
+                    <span>{permission.label}</span>
                     <span style={styles.dropdownDescription}>
                       {permission.description}
                     </span>
+                    {selectedPermission === permission.value && (
+                      <span style={styles.checkIcon}>✔</span>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -134,7 +138,7 @@ const InviteModal = ({
               <li key={user.nickname} style={styles.userListItem}>
                 <Image
                   src={user.profileUrl}
-                  alt={`${user.nickname}'s profile`}
+                  alt={`${user.nickname}님의 사진`}
                   width={38}
                   height={38}
                   style={styles.userIcon}
@@ -152,7 +156,6 @@ const InviteModal = ({
     </div>
   );
 };
-
 const styles: { [key: string]: React.CSSProperties } = {
   modalOverlay: {
     position: 'fixed',
@@ -168,10 +171,11 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
   modalContainer: {
     background: '#fff',
-    borderRadius: '8px',
-    width: '500px',
+    width: '591px',
+    height: '447px',
+    borderRadius: '30px 0px',
     padding: '20px',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+    boxShadow: '0px 8px 24px 0px rgba(0, 0, 0, 0.30)',
   },
   modalHeader: {
     display: 'flex',
@@ -186,26 +190,38 @@ const styles: { [key: string]: React.CSSProperties } = {
     cursor: 'pointer',
   },
   emailInputContainer: {
-    display: 'flex',
+    display: 'inline-flex',
     alignItems: 'center',
     gap: '10px',
     marginBottom: '20px',
   },
-  emailInput: {
+  inputWithDropdown: {
+    display: 'flex',
+    alignItems: 'center',
+    position: 'relative',
+    width: '100%',
+  },
+  emailInputWithDropdown: {
     flex: 1,
     padding: '10px',
+    paddingRight: '80px',
     borderRadius: '4px',
     border: '1px solid #ccc',
+    width: '400px',
   },
-  dropdown: {
-    position: 'relative',
-  },
-  dropdownButton: {
+  dropdownButtonInside: {
+    position: 'absolute',
+    right: '10px',
     padding: '10px 15px',
-    borderRadius: '4px',
-    border: '1px solid #ccc',
-    backgroundColor: '#f4f4f4',
+    backgroundColor: '#EDF9F7',
+    border: 'none',
     cursor: 'pointer',
+    borderRadius: '4px',
+    fontSize: '14px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: '5px',
   },
   dropdownMenu: {
     position: 'absolute',
@@ -217,57 +233,43 @@ const styles: { [key: string]: React.CSSProperties } = {
     boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
     listStyle: 'none',
     padding: '5px 0',
-    margin: 0,
+    width: '230px',
+    marginLeft: '350px',
     zIndex: 10,
   },
   dropdownItem: {
     padding: '10px 15px',
     cursor: 'pointer',
     display: 'flex',
-    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    background: '#fff',
   },
-  dropdownItemHover: {
-    backgroundColor: '#f0f0f0',
+  selectedDropdownItem: {
+    backgroundColor: '#f0f8ff',
   },
-  dropdownLabel: {
-    fontWeight: 'bold',
+  checkIcon: {
+    color: '#76ADAC',
+    marginLeft: '10px',
   },
   dropdownDescription: {
+    fontSize: '12px',
+    color: '#888',
+    marginLeft: '10px',
+  },
+  vIcon: {
     fontSize: '12px',
     color: '#888',
   },
   shareButton: {
     padding: '10px 20px',
-    backgroundColor: '#4caf50',
+    backgroundColor: '#76ADAC',
     color: '#fff',
     border: 'none',
     borderRadius: '4px',
     cursor: 'pointer',
-  },
-  userList: {
-    listStyle: 'none',
-    padding: 0,
-    marginTop: '20px',
-  },
-  userListItem: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: '10px 0',
-    borderBottom: '1px solid #ddd',
-  },
-  userIcon: {
-    borderRadius: '50%',
-    marginRight: '10px',
-  },
-  userName: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  userPermission: {
-    fontSize: '12px',
-    color: '#888',
+    width: '80px',
+    height: '40px',
   },
 };
 

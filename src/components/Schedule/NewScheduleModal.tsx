@@ -14,7 +14,7 @@ interface ScheduleModalProps {
   onClose: () => void;
 }
 
-const ScheduleModal = ({ onClose }: ScheduleModalProps) => {
+const NewScheduleModal = ({ onClose }: ScheduleModalProps) => {
   const today = new Date();
   const [startDate, setStartDate] = useState<Date | null>(today);
   const [endDate, setEndDate] = useState<Date | null>(today);
@@ -145,4 +145,4 @@ const ScheduleModal = ({ onClose }: ScheduleModalProps) => {
   );
 };
 
-export default ScheduleModal;
+export default NewScheduleModal;

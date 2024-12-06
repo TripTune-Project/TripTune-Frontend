@@ -138,9 +138,7 @@
   height: 290px;
   flex-shrink: 0;
   background: rgba(0, 0, 0, 0.2);
-  display: inline-block;
   object-fit: cover;
-  margin: 0;
 }
 
 .scheduleExplainDiv,
@@ -155,7 +153,7 @@
 }
 
 .scheduleExplainDiv {
-  top: 18%;
+  top: 20%;
   font-weight: 800;
   color: #fff;
   text-align: center;
@@ -167,7 +165,7 @@
 }
 
 .scheduleExplainP {
-  top: 25%;
+  top: 35%;
   font-size: 20px;
   font-weight: 500;
   text-align: center;
@@ -291,18 +289,16 @@
 }
 
 .deleteModal {
+  width: 400px;
+  height: 200px;
+  border-radius: 10px;
   position: fixed;
   top: 25%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: #ffffff;
-  padding: 20px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-}
-
-.deleteModal button {
-  margin: 0 10px;
 }
 
 .scheduleList {
@@ -317,8 +313,9 @@
   width: 416px;
   height: 308px;
   flex-shrink: 0;
+  border-radius: 10px 0;
   border: 1px solid #d9d9d9;
-  background: #fff;
+  background-color: #ffffff;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -371,21 +368,15 @@
   font-size: 14px;
 }
 
-.deleteButton:hover {
-  background-color: #d32f2f;
-}
-
 .scheduleImage {
   object-fit: cover;
-  width: 417px;
-  height: 212px;
+  width: 414px;
+  height: 174px;
 }
 
 .scheduleImageProfile {
   margin-top: -40px;
   margin-right: 15px;
-  width: 26px;
-  height: 26px;
   float: right;
 }
 
@@ -396,12 +387,15 @@
 .scheduleName {
   font-weight: bold;
   font-size: 20px;
-  margin-bottom: 10px;
+  margin-left: 23px;
+  margin-top: 18px;
+  margin-bottom: 15px;
 }
 
 .scheduleDates {
   color: #555;
   font-size: 16px;
+  margin-left: 23px;
 }
 
 .emptyMessage {
@@ -628,9 +622,17 @@
   text-align: center;
   margin: 20px 0;
   padding: 10px;
-  background-color: #f9f9f9;
   border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.noText {
+  margin-top: 60px;
+  color: #666;
+  text-align: center;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
 }
 
 .noPlaces {
@@ -652,10 +654,6 @@
   width: 460px;
 }
 
-.placeItem:hover {
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
 .placeThumbnail {
   width: 100px;
   height: 100px;
@@ -675,8 +673,8 @@
 }
 
 .noImage {
-  width: 417px;
-  height: 308px;
+  width: 414px;
+  height: 174px;
   position: relative;
   display: flex;
   align-items: center;
@@ -770,7 +768,7 @@
   margin-top: -57px;
   margin-bottom: 17px;
   margin-right: -340px;
-  gap: 10px;
+  gap: 20px;
 }
 
 .travelSearchContainerSearch {
@@ -801,8 +799,7 @@
   outline: none;
 }
 
-.travelSearchContainerSearch button,
-.travelSearchContainer button {
+.travelSearchContainerSearch button {
   width: 67px;
   height: 47px;
   background-color: #74a5da;
@@ -1037,6 +1034,7 @@
   color: #333333;
   border-radius: 50%;
   transition: background-color 0.3s ease;
+  margin-right: 20px;
 }
 
 .chattingModalOverlay {
@@ -1093,15 +1091,17 @@
 }
 
 .noScheduleContainer {
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   margin-top: 30px;
-  margin-left: 600px;
   color: #555;
+  width: 1730px;
+  height: 559px;
+  flex-shrink: 0;
+  border: 1px solid #d9d9d9;
+  background: #fff;
 }
 
 .noScheduleMessage {
@@ -1126,31 +1126,15 @@
 }
 
 .travelSearchContainer input {
-  width: 350px;
-  padding: 10px 15px;
+  width: 471px;
+  height: 30px;
   font-size: 16px;
-  border-radius: 25px;
-  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
-}
-
-.travelSearchContainer input:focus {
-  border-color: #74a5da;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  outline: none;
-}
-
-.travelSearchContainer button {
-  padding: 10px 20px;
-  background-color: #74a5da;
-  color: #fff;
-  border: none;
-  border-radius: 25px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-right: -40px;
 }
 
 .scheduleList {
@@ -1171,10 +1155,6 @@
   flex-direction: column;
   margin-bottom: 20px;
   transition: box-shadow 0.3s ease;
-}
-
-.scheduleItem:hover {
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .hoverMenu {
@@ -1225,11 +1205,6 @@
 
 .leaveButton {
   background-color: #ff9800;
-}
-
-.deleteButton:hover,
-.leaveButton:hover {
-  opacity: 0.8;
 }
 
 .loadingArea {
@@ -1293,23 +1268,6 @@
   margin-bottom: 20px;
 }
 
-.closeButton {
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-  color: #333333;
-  padding: 8px;
-  transition: background-color 0.3s ease;
-  width: 20px;
-  height: 20px;
-}
-
-.closeButton:hover {
-  background-color: #f0f0f0;
-  border-radius: 50%;
-}
-
 .emailInputContainer {
   display: flex;
   align-items: center;
@@ -1342,10 +1300,6 @@
   cursor: pointer;
   font-size: 14px;
   transition: background-color 0.3s ease;
-}
-
-.shareButton:hover {
-  background-color: #0056b3;
 }
 
 .userList {
@@ -1409,10 +1363,6 @@
   transition: background-color 0.3s ease;
 }
 
-.copyButton:hover {
-  background-color: #0056b3;
-}
-
 .confirmButton {
   background-color: #007bff;
   color: #ffffff;
@@ -1422,10 +1372,6 @@
   cursor: pointer;
   font-size: 14px;
   transition: background-color 0.3s ease;
-}
-
-.confirmButton:hover {
-  background-color: #0056b3;
 }
 
 .loadingArea {
@@ -1452,10 +1398,6 @@
   font-size: 14px;
   transition: background-color 0.3s ease;
   margin-top: 10px;
-}
-
-.loadMoreButton:hover {
-  background-color: #cccccc;
 }
 
 .alertMessage {

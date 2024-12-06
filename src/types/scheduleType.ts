@@ -18,9 +18,9 @@ export interface Pagination {
 export interface Schedule {
   scheduleId?: number;
   role?: Role;
-  scheduleName: string;
-  startDate: string;
-  endDate: string;
+  scheduleName?: string;
+  startDate?: string;
+  endDate?: string;
   sinceUpdate?: string;
   thumbnailUrl?: string | null;
   author?: Author;
@@ -47,17 +47,17 @@ export interface ScheduleList extends Pagination {
 // 일정 상세 조회 응답
 export interface ScheduleDetail {
   scheduleId: number;
-  role: Role;
+  role?: Role;
   scheduleName: string;
   startDate: string;
   endDate: string;
-  sinceUpdate: string;
-  createdAt: string;
+  sinceUpdate?: string;
+  createdAt?: string;
   updatedAt?: string;
-  placeList: PlaceList;
+  placeList?: PlaceList;
   travelRoute?: ScheduleTravelRoute[];
-  thumbnailUrl: string | null;
-  author: Author;
+  thumbnailUrl?: string | null;
+  author?: Author;
 }
 
 // 장소 목록

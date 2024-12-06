@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Fragment } from 'react';
 import { Client } from '@stomp/stompjs';
 import Cookies from 'js-cookie';
 import { fetchScheduleChats } from '@/api/chatApi';
@@ -6,10 +6,10 @@ import styles from '../../styles/Schedule.module.css';
 import Image from 'next/image';
 import DataLoading from '@/components/Common/DataLoading';
 import { ChatMessage } from '@/types/scheduleType';
-import { usePathname } from 'next/navigation';
+import { useParams } from 'next/navigation';
 
-const Chatting = ({ scheduleId }: { scheduleId: number }) => {
-  const pathname = usePathname();
+const Chatting = () => {
+  const { scheduleId } = useParams();
   const token = Cookies.get('trip-tune_at');
   const userNickname = Cookies.get('nickname');
   const brokerUrl =
@@ -29,7 +29,7 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
 
     setLoading(true);
     try {
-      const response = await fetchScheduleChats(scheduleId, page);
+      const response = await fetchScheduleChats(Number(scheduleId), page);
       if (response.success && response.data) {
         const newMessages = response.data.content;
         setMessages((prevMessages) => [...newMessages, ...prevMessages]);
@@ -46,7 +46,7 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
   useEffect(() => {
     const loadInitialMessages = async () => {
       try {
-        const response = await fetchScheduleChats(scheduleId, 1);
+        const response = await fetchScheduleChats(Number(scheduleId), 1);
         if (response.success && response.data) {
           setMessages(response.data.content);
           setTotalPages(response.data.totalPages);
@@ -126,7 +126,7 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
         clientRef.current = null;
       }
     };
-  }, [scheduleId, brokerUrl, token, pathname]);
+  }, [scheduleId, brokerUrl, token]);
 
   const handleSendMessage = () => {
     const stompClient = clientRef.current;
@@ -188,7 +188,8 @@ const Chatting = ({ scheduleId }: { scheduleId: number }) => {
             >
               <span>{msg.message}</span>
               <span className={styles.timestamp}>
-                {new Date(msg.timestamp).toLocaleTimeString()}
+                {/* TODO : 시간 ISO 방식 처럼 보임 */}
+                {msg.timestamp}
               </span>
             </div>
           </div>

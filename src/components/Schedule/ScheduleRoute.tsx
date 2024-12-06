@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useInView } from 'react-intersection-observer';
@@ -9,26 +9,29 @@ import locationIcon from '../../../public/assets/images/일정 만들기/일정 
 import { useTravelStore } from '@/store/scheduleStore';
 import { useParams } from 'next/navigation';
 import { Place } from '@/types/scheduleType';
+import travelRootEmptyIcon from '../../../public/assets/images/일정 만들기/일정 저장 및 수정/travelRootEmptyIcon.png';
 
 const ScheduleRoute = () => {
   const { scheduleId } = useParams();
-  const { ref, inView } = useInView();
-  const { addedPlaces, removePlace, movePlace } = useTravelStore();
+  const { removePlace, travelRoute, removePlaceFromRoute, onMovePlace } =
+    useTravelStore();
 
+  const { ref, inView } = useInView();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useScheduleTravelRoute(Number(scheduleId));
 
   const fetchedPlaces: Place[] =
-    data?.pages.flatMap((page) =>
-      page.data.content.map((route) => ({
+    data?.pages?.flatMap((page) =>
+      page?.data?.content?.map((route) => ({
         ...route,
         thumbnailUrl: route.thumbnailUrl ?? null,
       }))
     ) ?? [];
-  const places = [
-    ...fetchedPlaces.map((place) => place.placeId),
-    ...Array.from(addedPlaces).map((placeId) => +placeId),
-  ];
+
+  const places = travelRoute.map((route) => {
+    const matchedPlace = fetchedPlaces.find((p) => p.placeId === route.placeId);
+    return matchedPlace ? { ...matchedPlace, ...route } : route;
+  });
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
@@ -36,14 +39,16 @@ const ScheduleRoute = () => {
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  const PlaceItem = ({
-    placeId,
-    index,
-  }: {
-    placeId: number;
-    index: number;
-  }) => {
+  const PlaceItem = ({ place, index }: { place: Place; index: number }) => {
     const ref = useRef<HTMLLIElement>(null);
+
+    const [{ isDragging }, drag] = useDrag({
+      type: 'PLACE',
+      item: { place, index },
+      collect: (monitor) => ({
+        isDragging: monitor.isDragging(),
+      }),
+    });
 
     const [, drop] = useDrop({
       accept: 'PLACE',
@@ -51,29 +56,15 @@ const ScheduleRoute = () => {
         if (!ref.current) return;
         const dragIndex = item.index;
         const hoverIndex = index;
-        if (dragIndex === hoverIndex) return;
-        movePlace(dragIndex, hoverIndex);
-        item.index = hoverIndex;
-      },
-    });
 
-    const [{ isDragging }, drag] = useDrag({
-      type: 'PLACE',
-      item: { index },
-      collect: (monitor) => ({ isDragging: monitor.isDragging() }),
-      end: (item, monitor) => {
-        const dropResult = monitor.getDropResult<{ isDelete: boolean }>();
-        if (monitor.didDrop() && dropResult?.isDelete) {
-          const placeId = places[item.index];
-          removePlace(placeId);
+        if (dragIndex !== hoverIndex) {
+          onMovePlace(dragIndex, hoverIndex);
+          item.index = hoverIndex;
         }
       },
     });
 
     drag(drop(ref));
-
-    const place = fetchedPlaces.find((p) => p.placeId === placeId);
-    if (!place) return null;
 
     return (
       <li
@@ -110,34 +101,46 @@ const ScheduleRoute = () => {
   };
 
   const DeleteDropZone = () => {
+    const dropRef = useRef<HTMLDivElement>(null); // useRef로 div 참조 생성
     const [, drop] = useDrop({
       accept: 'PLACE',
-      drop: () => ({ isDelete: true }),
+      drop: (item: { place: Place }) => {
+        removePlaceFromRoute(item.place.placeId);
+        removePlace(item.place.placeId);
+      },
     });
 
-    const setRef = useCallback(
-      (node: HTMLDivElement | null) => {
-        if (node) drop(node);
-      },
-      [drop]
-    );
+    useEffect(() => {
+      if (dropRef.current) {
+        drop(dropRef.current);
+      }
+    }, [drop]);
 
     return (
-      <div ref={setRef} className={styles.deleteZone}>
-        휴지통 ❌
+      <div className={styles.deleteZone}>
+        <div ref={dropRef} className={styles.deleteZoneContent}>
+          휴지통 ❌
+        </div>
       </div>
     );
   };
 
   if (!places || places.length === 0) {
-    return <p className={styles.noPlaces}>등록된 장소가 없습니다.</p>;
+    return (
+      <p className={styles.noResults}>
+        <Image src={travelRootEmptyIcon} alt={'no-schedule-root'} />
+        <div className={styles.noText}>여행 루트가 비어 있습니다.</div>
+        <br />
+        <p>여행지 검색을 통해 여행 루트에 장소를 추가해주세요.</p>
+      </p>
+    );
   }
 
   return (
     <DndProvider backend={HTML5Backend}>
       <ul>
-        {places.map((placeId, index) => (
-          <PlaceItem key={placeId} placeId={placeId} index={index} />
+        {places.map((place, index) => (
+          <PlaceItem key={place.placeId} place={place} index={index} />
         ))}
         {hasNextPage && (
           <li ref={ref} className={styles.loading}>

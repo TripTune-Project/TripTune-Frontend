@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { useTravelStore } from '@/store/scheduleStore';
 
 const containerStyle = {
   width: '844px',
@@ -10,16 +11,8 @@ const defaultCenter = {
   lng: 126.9976,
 };
 
-interface Marker {
-  lat: number;
-  lng: number;
-}
-
-interface PlacesScheduleMapProps {
-  markers: Marker[];
-}
-
-function PlacesScheduleMap({ markers }: PlacesScheduleMapProps) {
+function PlacesScheduleMap() {
+  const { addedPlaces } = useTravelStore();
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<google.maps.Map | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
@@ -53,6 +46,30 @@ function PlacesScheduleMap({ markers }: PlacesScheduleMapProps) {
     }
   }, [mapId]);
 
+  const updateMarkers = useCallback(() => {
+    if (mapRef.current && isMapLoaded) {
+      // 기존 마커 제거 필요 없을 것으로 예상
+      // markersRef.current.forEach((marker) => marker.map = null);
+      // markersRef.current = [];
+
+      addedPlaces.forEach((place) => {
+        const advancedMarker = new google.maps.marker.AdvancedMarkerElement({
+          map: mapRef.current,
+          position: { lat: place.lat, lng: place.lng },
+        });
+        markersRef.current.push(advancedMarker);
+      });
+
+      const lastPlace = Array.from(addedPlaces).pop();
+      if (lastPlace) {
+        mapRef.current.setCenter({
+          lat: lastPlace.lat,
+          lng: lastPlace.lng,
+        });
+      }
+    }
+  }, [addedPlaces, isMapLoaded]);
+
   useEffect(() => {
     loadGoogleMapsScript();
 
@@ -73,21 +90,8 @@ function PlacesScheduleMap({ markers }: PlacesScheduleMapProps) {
   }, [isMapLoaded, initializeMap]);
 
   useEffect(() => {
-    if (mapRef.current && isMapLoaded && markers.length > 0) {
-      markers.forEach((marker, index) => {
-        if (!markersRef.current[index]) {
-          const advancedMarker = new google.maps.marker.AdvancedMarkerElement({
-            map: mapRef.current,
-            position: { lat: marker.lat, lng: marker.lng },
-          });
-          markersRef.current.push(advancedMarker);
-        }
-      });
-
-      const lastMarker = markers[markers.length - 1];
-      mapRef.current.setCenter({ lat: lastMarker.lat, lng: lastMarker.lng });
-    }
-  }, [markers, isMapLoaded]);
+    updateMarkers();
+  }, [addedPlaces, updateMarkers]);
 
   return <div ref={mapContainerRef} style={containerStyle} />;
 }

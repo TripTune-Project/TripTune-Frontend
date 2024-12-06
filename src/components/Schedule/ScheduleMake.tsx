@@ -4,57 +4,49 @@ import React, { useEffect, useState } from 'react';
 import styles from '@/styles/Schedule.module.css';
 import ScheduleTravelSearch from '@/components/Schedule/ScheduleTravelSearch';
 import ScheduleRoute from '@/components/Schedule/ScheduleRoute';
-import CalendarModal from '@/components/Common/CalendarModal';
-import { fetchScheduleDetail } from '@/api/scheduleApi';
-import { Schedule } from '@/types/scheduleType';
+import UpdateCalendarModal from '@/components/Common/UpdateCalendarModal';
+import { useParams } from 'next/navigation';
+import { useTravelStore } from '@/store/scheduleStore';
 
 interface ScheduleMakeProps {
-  scheduleId: number;
   initialTab: string;
 }
 
-const ScheduleMake = ({ scheduleId, initialTab }: ScheduleMakeProps) => {
+const ScheduleMake = ({ initialTab }: ScheduleMakeProps) => {
+  const { scheduleId } = useParams() as { scheduleId: string };
+  const { scheduleDetail, fetchScheduleDetailById, updateScheduleDetail } =
+    useTravelStore();
+
   const [tab, setTab] = useState(initialTab);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [scheduleDetail, setScheduleDetail] = useState<Schedule | null>(null);
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    const loadScheduleDetail = async () => {
-      const result = await fetchScheduleDetail(scheduleId, currentPage);
-      if (result.success) {
-        setScheduleDetail(result.data as any);
-      } else {
-        console.error('Failed to load schedule detail:', result.message);
-      }
-    };
-
-    loadScheduleDetail();
-  }, [scheduleId, currentPage]);
+    if (scheduleId) {
+      fetchScheduleDetailById(scheduleId as string, 1);
+    }
+  }, [scheduleId, fetchScheduleDetailById]);
 
   const handleTabChange = (newTab: string) => {
     setTab(newTab);
-    setCurrentPage(1);
   };
 
-  const handleScheduleDetailChange = (field: string, value: string) => {
-    setScheduleDetail((prevState) => ({
-      ...(prevState || { scheduleName: '', startDate: '', endDate: '' }),
-      [field]: value ?? '',
-    }));
-  };
-
-  const handleModalSubmit = (
-    name: string,
-    startDate: string,
-    endDate: string
-  ) => {
-    setScheduleDetail((prev) => ({
-      ...prev!,
-      startDate,
-      endDate,
-    }));
+  const handleModalSubmit = (startDate: string, endDate: string) => {
+    updateScheduleDetail({ startDate: startDate, endDate: endDate });
     setShowModal(false);
+  };
+
+  const formatDateToKoreanWithDay = (date: string): string => {
+    if (!date) return '';
+    const parsedDate = new Date(date);
+    return new Intl.DateTimeFormat('ko-KR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      weekday: 'short',
+    })
+      .format(parsedDate)
+      .replace(/\./g, '.')
+      .replace(' ', '');
   };
 
   return (
@@ -65,9 +57,9 @@ const ScheduleMake = ({ scheduleId, initialTab }: ScheduleMakeProps) => {
           type='text'
           className={styles.inputField}
           value={scheduleDetail?.scheduleName || ''}
-          placeholder={'여행 이름을 입력해주세요.'}
+          placeholder='여행 이름을 입력해주세요.'
           onChange={(e) =>
-            handleScheduleDetailChange('scheduleName', e.target.value)
+            updateScheduleDetail({ scheduleName: e.target.value })
           }
         />
       </div>
@@ -76,15 +68,10 @@ const ScheduleMake = ({ scheduleId, initialTab }: ScheduleMakeProps) => {
         <input
           type='text'
           className={styles.inputField}
-          value={`${scheduleDetail?.startDate || ''} ~ ${
+          value={`${formatDateToKoreanWithDay(scheduleDetail?.startDate || '')} ~ ${formatDateToKoreanWithDay(
             scheduleDetail?.endDate || ''
-          }`}
-          placeholder={'시작일 ~ 종료일'}
-          onChange={(e) => {
-            const [startDate, endDate] = e.target.value.split(' ~ ');
-            handleScheduleDetailChange('startDate', startDate);
-            handleScheduleDetailChange('endDate', endDate);
-          }}
+          )}`}
+          placeholder='시작일 ~ 종료일'
           onClick={() => setShowModal(true)}
         />
       </div>
@@ -108,11 +95,10 @@ const ScheduleMake = ({ scheduleId, initialTab }: ScheduleMakeProps) => {
       </div>
       {tab === 'scheduleTravel' ? <ScheduleTravelSearch /> : <ScheduleRoute />}
       {showModal && (
-        <CalendarModal
+        <UpdateCalendarModal
           initialStartDate={scheduleDetail?.startDate || ''}
           initialEndDate={scheduleDetail?.endDate || ''}
           onClose={() => setShowModal(false)}
-          onSubmit={handleModalSubmit}
         />
       )}
     </div>
