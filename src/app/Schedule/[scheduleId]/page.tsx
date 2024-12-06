@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -19,20 +19,28 @@ export default function ScheduleDetailPage() {
   const router = useRouter();
   const { travelRoute, scheduleDetail, fetchScheduleDetailById } =
     useTravelStore();
-  const [isInviteModalOpen, setIsInviteModalOpen] = React.useState(false);
-
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+  
   useEffect(() => {
     if (scheduleId) {
       fetchScheduleDetailById(scheduleId as string, 1);
     }
+    
+    document.body.classList.add('no_scroll');
+    
+    return () => {
+      document.body.classList.remove('no_scroll');
+    };
   }, [scheduleId, fetchScheduleDetailById]);
 
   const handleShareClick = () => setIsInviteModalOpen(true);
   const handleCloseModal = () => setIsInviteModalOpen(false);
 
   const handleSaveSchedule = async () => {
-    if (!scheduleDetail || travelRoute.length === 0) return;
-
+    // TODO : 여행 루트의 값이 없을때도 수정을 해야하는지 ?
+    if (!scheduleDetail) return;
+    // if (!scheduleDetail || travelRoute.length === 0) return;
+    
     const transformedRoute = travelRoute.map((place, index) => ({
       routeOrder: index + 1,
       placeId: place.placeId,

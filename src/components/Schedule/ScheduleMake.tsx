@@ -59,7 +59,10 @@ const ScheduleMake = ({ initialTab }: ScheduleMakeProps) => {
           value={scheduleDetail?.scheduleName || ''}
           placeholder='여행 이름을 입력해주세요.'
           onChange={(e) =>
-            updateScheduleDetail({ scheduleName: e.target.value })
+            updateScheduleDetail({
+              ...scheduleDetail,
+              scheduleName: e.target.value,
+            })
           }
         />
       </div>
