@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import styles from '@/styles/Schedule.module.css';
 import {
@@ -20,7 +20,8 @@ const ScheduleTravelSearch = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [isSearching, setIsSearching] = useState(false);
-  
+  const markersRef = useRef<any[]>([]); // 마커들을 관리하기 위한 useRef
+
   const {
     addPlaceToRoute,
     addedPlaces,
@@ -28,9 +29,9 @@ const ScheduleTravelSearch = () => {
     removePlace,
     removePlaceFromRoute,
   } = useTravelStore();
-  
+
   const debouncedSearchKeyword = useDebounce(searchKeyword, 800);
-  
+
   const travelListQuery = useScheduleTravelList(
     Number(scheduleId),
     currentPage,
@@ -42,20 +43,20 @@ const ScheduleTravelSearch = () => {
     currentPage,
     isSearching
   );
-  
-  const removeMarker = useCallback((placeId: number) => {
+
+  const removeMarker = useCallback((latitude: number, longitude: number) => {
     const markerIndex = markersRef.current.findIndex(
       (marker) =>
-        marker.position.lat() === placeId.lat &&
-        marker.position.lng() === placeId.lng
+        marker.position.lat() === latitude &&
+        marker.position.lng() === longitude
     );
-    
+
     if (markerIndex > -1) {
       const [removedMarker] = markersRef.current.splice(markerIndex, 1);
-      removedMarker.map = null;
+      removedMarker.setMap(null); // setMap을 통해 지도에서 제거
     }
   }, []);
-  
+
   useEffect(() => {
     if (debouncedSearchKeyword.trim()) {
       setCurrentPage(1);
@@ -64,28 +65,28 @@ const ScheduleTravelSearch = () => {
       setIsSearching(false);
     }
   }, [debouncedSearchKeyword]);
-  
+
   const travels = isSearching
     ? searchTravelQuery?.data?.data?.content || []
     : travelListQuery?.data?.data?.content || [];
   const totalPages = isSearching
     ? searchTravelQuery?.data?.data?.totalPages || 0
     : travelListQuery?.data?.data?.totalPages || 0;
-  
+
   if (travelListQuery.isLoading || searchTravelQuery.isLoading)
     return <DataLoading />;
   if (travelListQuery.error || searchTravelQuery.error)
     return <p>데이터를 불러오는데 오류가 발생했습니다.</p>;
-  
+
   const handleAddOrRemovePlace = (place: Place) => {
     const placeExists = Array.from(addedPlaces).some(
       (addedPlace) => addedPlace.placeId === place.placeId
     );
-    
+
     if (placeExists) {
       removePlace(place.placeId);
       removePlaceFromRoute(place.placeId);
-      removeMarker(place.latitude, place.longitude);
+      removeMarker(place.latitude, place.longitude); // 수정된 호출
     } else {
       addPlace({
         placeId: place.placeId,
@@ -95,13 +96,13 @@ const ScheduleTravelSearch = () => {
       addPlaceToRoute(place);
     }
   };
-  
+
   return (
     <>
       <div className={styles.travelSearchContainerSearch}>
         <input
-          type="text"
-          placeholder="원하는 여행지를 검색하세요"
+          type='text'
+          placeholder='원하는 여행지를 검색하세요'
           value={searchKeyword}
           onChange={(e) => setSearchKeyword(e.target.value)}
         />
@@ -139,7 +140,7 @@ const ScheduleTravelSearch = () => {
                   <p className={styles.placeDetailAddress}>
                     <Image
                       src={locationIcon}
-                      alt="장소"
+                      alt='장소'
                       width={15}
                       height={21}
                     />
