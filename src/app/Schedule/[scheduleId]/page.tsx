@@ -26,11 +26,6 @@ export default function ScheduleDetailPage() {
       fetchScheduleDetailById(scheduleId as string, 1);
     }
     
-    document.body.classList.add('no_scroll');
-    
-    return () => {
-      document.body.classList.remove('no_scroll');
-    };
   }, [scheduleId, fetchScheduleDetailById]);
 
   const handleShareClick = () => setIsInviteModalOpen(true);
@@ -79,7 +74,6 @@ export default function ScheduleDetailPage() {
               <Image
                 src={MainLogoImage}
                 alt='로고'
-                className={styles.logo}
                 width={183}
                 height={57}
               />
