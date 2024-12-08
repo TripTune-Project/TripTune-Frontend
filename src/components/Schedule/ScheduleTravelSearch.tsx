@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import styles from '@/styles/Schedule.module.css';
 import {
@@ -20,9 +20,15 @@ const ScheduleTravelSearch = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [isSearching, setIsSearching] = useState(false);
+  const markersRef = useRef<any[]>([]); // 마커들을 관리하기 위한 useRef
 
-  const { addPlaceToRoute, addedPlaces, addPlace, removePlace } =
-    useTravelStore();
+  const {
+    addPlaceToRoute,
+    addedPlaces,
+    addPlace,
+    removePlace,
+    removePlaceFromRoute,
+  } = useTravelStore();
 
   const debouncedSearchKeyword = useDebounce(searchKeyword, 800);
 
@@ -37,6 +43,19 @@ const ScheduleTravelSearch = () => {
     currentPage,
     isSearching
   );
+
+  const removeMarker = useCallback((latitude: number, longitude: number) => {
+    const markerIndex = markersRef.current.findIndex(
+      (marker) =>
+        marker.position.lat() === latitude &&
+        marker.position.lng() === longitude
+    );
+
+    if (markerIndex > -1) {
+      const [removedMarker] = markersRef.current.splice(markerIndex, 1);
+      removedMarker.setMap(null); // setMap을 통해 지도에서 제거
+    }
+  }, []);
 
   useEffect(() => {
     if (debouncedSearchKeyword.trim()) {
@@ -66,6 +85,8 @@ const ScheduleTravelSearch = () => {
 
     if (placeExists) {
       removePlace(place.placeId);
+      removePlaceFromRoute(place.placeId);
+      removeMarker(place.latitude, place.longitude); // 수정된 호출
     } else {
       addPlace({
         placeId: place.placeId,
@@ -143,7 +164,7 @@ const ScheduleTravelSearch = () => {
           <p className={styles.noResults}>
             <Image
               src={AlertIcon}
-              alt={'no-schedule-root'}
+              alt={'no-schedule'}
               width={80}
               height={80}
               style={{ marginLeft: '220px' }}

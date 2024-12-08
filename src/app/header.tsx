@@ -107,7 +107,6 @@ const Header = () => {
             <Image
               src={MainLogoImage}
               alt='로고'
-              className={styles.logo}
               width={183}
               height={57}
               priority

@@ -11,8 +11,6 @@ import FooterLogoImage from '../../public/assets/images/로고/triptuneLogoWhite
 import '../styles/global.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Noto_Sans_KR } from 'next/font/google';
-import Link from 'next/link';
-import MainLogoImage from '../../public/assets/images/로고/triptuneLogo.png';
 
 const notoSansKR = Noto_Sans_KR({
   subsets: ['latin'],

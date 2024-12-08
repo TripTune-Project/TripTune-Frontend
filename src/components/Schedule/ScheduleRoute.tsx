@@ -33,11 +33,26 @@ const ScheduleRoute = () => {
     return matchedPlace ? { ...matchedPlace, ...route } : route;
   });
 
+  const markersRef = useRef<
+    { latitude: number; longitude: number; map: any }[]
+  >([]);
+
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  const removeMarker = (latitude: number, longitude: number) => {
+    const markerIndex = markersRef.current.findIndex(
+      (marker) => marker.latitude === latitude && marker.longitude === longitude
+    );
+
+    if (markerIndex > -1) {
+      const [removedMarker] = markersRef.current.splice(markerIndex, 1);
+      removedMarker.map = null;
+    }
+  };
 
   const PlaceItem = ({ place, index }: { place: Place; index: number }) => {
     const ref = useRef<HTMLLIElement>(null);
@@ -101,12 +116,13 @@ const ScheduleRoute = () => {
   };
 
   const DeleteDropZone = () => {
-    const dropRef = useRef<HTMLDivElement>(null); // useRef로 div 참조 생성
+    const dropRef = useRef<HTMLDivElement>(null);
     const [, drop] = useDrop({
       accept: 'PLACE',
       drop: (item: { place: Place }) => {
         removePlaceFromRoute(item.place.placeId);
         removePlace(item.place.placeId);
+        removeMarker(item.place.latitude, item.place.longitude);
       },
     });
 

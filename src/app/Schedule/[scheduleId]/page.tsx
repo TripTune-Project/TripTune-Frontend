@@ -20,17 +20,11 @@ export default function ScheduleDetailPage() {
   const { travelRoute, scheduleDetail, fetchScheduleDetailById } =
     useTravelStore();
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
-  
+
   useEffect(() => {
     if (scheduleId) {
       fetchScheduleDetailById(scheduleId as string, 1);
     }
-    
-    document.body.classList.add('no_scroll');
-    
-    return () => {
-      document.body.classList.remove('no_scroll');
-    };
   }, [scheduleId, fetchScheduleDetailById]);
 
   const handleShareClick = () => setIsInviteModalOpen(true);
@@ -40,7 +34,7 @@ export default function ScheduleDetailPage() {
     // TODO : 여행 루트의 값이 없을때도 수정을 해야하는지 ?
     if (!scheduleDetail) return;
     // if (!scheduleDetail || travelRoute.length === 0) return;
-    
+
     const transformedRoute = travelRoute.map((place, index) => ({
       routeOrder: index + 1,
       placeId: place.placeId,
@@ -76,24 +70,18 @@ export default function ScheduleDetailPage() {
         <ul className={styles.headerMenu}>
           <li>
             <Link href='/'>
-              <Image
-                src={MainLogoImage}
-                alt='로고'
-                className={styles.logo}
-                width={183}
-                height={57}
-              />
+              <Image src={MainLogoImage} alt='로고' width={183} height={57} />
             </Link>
           </li>
         </ul>
+        <button className={styles.scheduleUpdateBtn} onClick={handleShareClick}>
+          공유
+        </button>
         <button
-          className={styles.scheduleUpdateBtn}
+          className={styles.scheduleShareBtn}
           onClick={handleSaveSchedule}
         >
           저장
-        </button>
-        <button className={styles.scheduleShareBtn} onClick={handleShareClick}>
-          공유
         </button>
       </header>
       <InviteModal isOpen={isInviteModalOpen} onClose={handleCloseModal} />
