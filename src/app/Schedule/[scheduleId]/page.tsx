@@ -88,12 +88,12 @@ export default function ScheduleDetailPage() {
         </ul>
         <button
           className={styles.scheduleUpdateBtn}
-          onClick={handleSaveSchedule}
+          onClick={handleShareClick}
         >
-          저장
-        </button>
-        <button className={styles.scheduleShareBtn} onClick={handleShareClick}>
           공유
+        </button>
+        <button className={styles.scheduleShareBtn} onClick={handleSaveSchedule}>
+          저장
         </button>
       </header>
       <InviteModal isOpen={isInviteModalOpen} onClose={handleCloseModal} />

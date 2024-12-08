@@ -45,7 +45,7 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
 
     loadAttendees();
   }, [isOpen, scheduleId]);
-
+  
   const handleShareClick = async () => {
     try {
       const response = await shareSchedule(
@@ -53,17 +53,27 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
         email,
         selectedPermission as 'ALL' | 'EDIT' | 'CHAT' | 'READ'
       );
-      console.log(response, 'response: ');
+      
       if (response.success) {
         alert('공유가 완료되었습니다.');
         setEmail('');
         setSelectedPermission('EDIT');
         onClose();
       } else {
-        alert(response.message);
+        // 백엔드에서 오는 에러 메시지를 처리
+        if (response.errorCode === 400 && response.message.includes('최대 참석자 초과')) {
+          alert('참석자 초과: 최대 5명까지만 초대할 수 있습니다.');
+        } else {
+          alert(response.message);
+        }
       }
     } catch (error) {
       console.error('공유 중 오류 발생:', error);
+      
+      // 추가 에러 처리 (예: 네트워크 오류 등)
+      if (error instanceof Error) {
+        alert(`공유 중 알 수 없는 오류가 발생했습니다: ${error.message}`);
+      }
     }
   };
 
@@ -266,7 +276,6 @@ const styles: { [key: string]: React.CSSProperties } = {
     backgroundColor: '#76ADAC',
     color: '#fff',
     border: 'none',
-    borderRadius: '4px',
     cursor: 'pointer',
     width: '80px',
     height: '40px',

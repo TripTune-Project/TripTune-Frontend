@@ -98,7 +98,6 @@
   color: #ffffff;
   font-size: 18px;
   border: none;
-  border-radius: 5px;
   cursor: pointer;
   margin-top: 20px;
   font-weight: 700;
@@ -151,7 +150,6 @@
   color: #ffffff;
   font-size: 16px;
   border: none;
-  border-radius: 5px;
   cursor: pointer;
   margin-left: 10px;
   font-weight: 700;
@@ -190,7 +188,6 @@
   color: #fff;
   font-size: 16px;
   border: none;
-  border-radius: 5px;
   cursor: pointer;
   margin-left: 10px;
 }
