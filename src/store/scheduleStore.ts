@@ -9,31 +9,26 @@ interface Makers {
 }
 
 interface TravelStore {
-  // 각각의 상태
   addedPlaces: Makers[];
   travelRoute: Place[];
   scheduleDetail: Schedule;
   
-  // 여행 장소 관리 여행 루트 메서드
   addPlace: (place: Makers) => void;
   removePlace: (placeId: number) => void;
   onMovePlace: (dragIndex: number, hoverIndex: number) => void;
   addPlaceToRoute: (place: Place) => void;
   removePlaceFromRoute: (placeId: number) => void;
   
-  // 일정 상세 정보 관리 메서드
   setScheduleDetail: (schedule: Schedule) => void;
   fetchScheduleDetailById: (scheduleId: string, page: number) => Promise<void>;
   updateScheduleDetail: (schedule: Schedule) => void;
 }
 
 export const useTravelStore = create<TravelStore>((set) => ({
-  // 초기 상태
   addedPlaces: [],
   travelRoute: [],
   scheduleDetail: {},
   
-  // 여행 장소 관리 메서드
   addPlace: (place: Makers) =>
     set((state) => {
       if (state.addedPlaces.some((p) => p.placeId === place.placeId)) {
@@ -41,12 +36,14 @@ export const useTravelStore = create<TravelStore>((set) => ({
       }
       return { addedPlaces: [...state.addedPlaces, place] };
     }),
+  
   removePlace: (placeId: number) =>
     set((state) => ({
       addedPlaces: state.addedPlaces.filter(
         (place) => place.placeId !== placeId,
       ),
     })),
+  
   addPlaceToRoute: (place: Place) =>
     set((state) => {
       const updatedRoute = state.travelRoute.some(
@@ -56,12 +53,14 @@ export const useTravelStore = create<TravelStore>((set) => ({
         : [...state.travelRoute, place];
       return { travelRoute: updatedRoute };
     }),
+  
   removePlaceFromRoute: (placeId: number) =>
     set((state) => ({
       travelRoute: state.travelRoute.filter(
         (place) => place.placeId !== placeId,
       ),
     })),
+  
   onMovePlace: (dragIndex: number, hoverIndex: number) =>
     set((state) => {
       const updatedRoute = [...state.travelRoute];
@@ -70,8 +69,8 @@ export const useTravelStore = create<TravelStore>((set) => ({
       return { travelRoute: updatedRoute };
     }),
   
-  // 일정 상세 정보 관리 메서드 (전체)
   setScheduleDetail: (schedule: Schedule) => set({ scheduleDetail: schedule }),
+  
   fetchScheduleDetailById: async (scheduleId: string, page: number) => {
     try {
       const result = await fetchScheduleDetail(Number(scheduleId), page);
@@ -85,7 +84,6 @@ export const useTravelStore = create<TravelStore>((set) => ({
     }
   },
   
-  // 일정 상세 정보 관리 메서드 (일부)
   updateScheduleDetail: (updates: Partial<Schedule>) =>
     set((state) => ({
       scheduleDetail: {

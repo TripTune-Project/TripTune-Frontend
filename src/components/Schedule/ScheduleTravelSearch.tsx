@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import styles from '@/styles/Schedule.module.css';
 import {
@@ -20,12 +20,17 @@ const ScheduleTravelSearch = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [isSearching, setIsSearching] = useState(false);
-
-  const { addPlaceToRoute, addedPlaces, addPlace, removePlace } =
-    useTravelStore();
-
+  
+  const {
+    addPlaceToRoute,
+    addedPlaces,
+    addPlace,
+    removePlace,
+    removePlaceFromRoute,
+  } = useTravelStore();
+  
   const debouncedSearchKeyword = useDebounce(searchKeyword, 800);
-
+  
   const travelListQuery = useScheduleTravelList(
     Number(scheduleId),
     currentPage,
@@ -37,7 +42,20 @@ const ScheduleTravelSearch = () => {
     currentPage,
     isSearching
   );
-
+  
+  const removeMarker = useCallback((placeId: number) => {
+    const markerIndex = markersRef.current.findIndex(
+      (marker) =>
+        marker.position.lat() === placeId.lat &&
+        marker.position.lng() === placeId.lng
+    );
+    
+    if (markerIndex > -1) {
+      const [removedMarker] = markersRef.current.splice(markerIndex, 1);
+      removedMarker.map = null;
+    }
+  }, []);
+  
   useEffect(() => {
     if (debouncedSearchKeyword.trim()) {
       setCurrentPage(1);
@@ -46,26 +64,28 @@ const ScheduleTravelSearch = () => {
       setIsSearching(false);
     }
   }, [debouncedSearchKeyword]);
-
+  
   const travels = isSearching
     ? searchTravelQuery?.data?.data?.content || []
     : travelListQuery?.data?.data?.content || [];
   const totalPages = isSearching
     ? searchTravelQuery?.data?.data?.totalPages || 0
     : travelListQuery?.data?.data?.totalPages || 0;
-
+  
   if (travelListQuery.isLoading || searchTravelQuery.isLoading)
     return <DataLoading />;
   if (travelListQuery.error || searchTravelQuery.error)
     return <p>데이터를 불러오는데 오류가 발생했습니다.</p>;
-
+  
   const handleAddOrRemovePlace = (place: Place) => {
     const placeExists = Array.from(addedPlaces).some(
       (addedPlace) => addedPlace.placeId === place.placeId
     );
-
+    
     if (placeExists) {
       removePlace(place.placeId);
+      removePlaceFromRoute(place.placeId);
+      removeMarker(place.latitude, place.longitude);
     } else {
       addPlace({
         placeId: place.placeId,
@@ -75,13 +95,13 @@ const ScheduleTravelSearch = () => {
       addPlaceToRoute(place);
     }
   };
-
+  
   return (
     <>
       <div className={styles.travelSearchContainerSearch}>
         <input
-          type='text'
-          placeholder='원하는 여행지를 검색하세요'
+          type="text"
+          placeholder="원하는 여행지를 검색하세요"
           value={searchKeyword}
           onChange={(e) => setSearchKeyword(e.target.value)}
         />
@@ -119,7 +139,7 @@ const ScheduleTravelSearch = () => {
                   <p className={styles.placeDetailAddress}>
                     <Image
                       src={locationIcon}
-                      alt='장소'
+                      alt="장소"
                       width={15}
                       height={21}
                     />
@@ -143,7 +163,7 @@ const ScheduleTravelSearch = () => {
           <p className={styles.noResults}>
             <Image
               src={AlertIcon}
-              alt={'no-schedule-root'}
+              alt={'no-schedule'}
               width={80}
               height={80}
               style={{ marginLeft: '220px' }}

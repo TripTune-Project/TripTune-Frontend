@@ -13,13 +13,17 @@ import travelRootEmptyIcon from '../../../public/assets/images/일정 만들기/
 
 const ScheduleRoute = () => {
   const { scheduleId } = useParams();
-  const { removePlace, travelRoute, removePlaceFromRoute, onMovePlace } =
-    useTravelStore();
-
+  const {
+    removePlace,
+    travelRoute,
+    removePlaceFromRoute,
+    onMovePlace,
+  } = useTravelStore();
+  
   const { ref, inView } = useInView();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useScheduleTravelRoute(Number(scheduleId));
-
+  
   const fetchedPlaces: Place[] =
     data?.pages?.flatMap((page) =>
       page?.data?.content?.map((route) => ({
@@ -27,21 +31,38 @@ const ScheduleRoute = () => {
         thumbnailUrl: route.thumbnailUrl ?? null,
       }))
     ) ?? [];
-
+  
   const places = travelRoute.map((route) => {
-    const matchedPlace = fetchedPlaces.find((p) => p.placeId === route.placeId);
+    const matchedPlace = fetchedPlaces.find(
+      (p) => p.placeId === route.placeId
+    );
     return matchedPlace ? { ...matchedPlace, ...route } : route;
   });
-
+  
+  const markersRef = useRef<{ position: { lat: () => number; lng: () => number }; map: any }[]>([]);
+  
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
-
+  
+  const removeMarker = (placeId: number) => {
+    const markerIndex = markersRef.current.findIndex(
+      (marker) =>
+        marker.position.lat() === placeId.lat &&
+        marker.position.lng() === placeId.lng
+    );
+    
+    if (markerIndex > -1) {
+      const [removedMarker] = markersRef.current.splice(markerIndex, 1);
+      removedMarker.map = null;
+    }
+  };
+  
   const PlaceItem = ({ place, index }: { place: Place; index: number }) => {
     const ref = useRef<HTMLLIElement>(null);
-
+    
     const [{ isDragging }, drag] = useDrag({
       type: 'PLACE',
       item: { place, index },
@@ -49,23 +70,23 @@ const ScheduleRoute = () => {
         isDragging: monitor.isDragging(),
       }),
     });
-
+    
     const [, drop] = useDrop({
       accept: 'PLACE',
       hover(item: { index: number }) {
         if (!ref.current) return;
         const dragIndex = item.index;
         const hoverIndex = index;
-
+        
         if (dragIndex !== hoverIndex) {
           onMovePlace(dragIndex, hoverIndex);
           item.index = hoverIndex;
         }
       },
     });
-
+    
     drag(drop(ref));
-
+    
     return (
       <li
         ref={ref}
@@ -92,30 +113,31 @@ const ScheduleRoute = () => {
             {`${place.country} / ${place.city} / ${place.district}`}
           </p>
           <p className={styles.placeDetailAddress}>
-            <Image src={locationIcon} alt='장소' width={15} height={21} />
+            <Image src={locationIcon} alt="장소" width={15} height={21} />
             &nbsp;{place.address} {place.detailAddress ?? ''}
           </p>
         </div>
       </li>
     );
   };
-
+  
   const DeleteDropZone = () => {
-    const dropRef = useRef<HTMLDivElement>(null); // useRef로 div 참조 생성
+    const dropRef = useRef<HTMLDivElement>(null);
     const [, drop] = useDrop({
       accept: 'PLACE',
       drop: (item: { place: Place }) => {
         removePlaceFromRoute(item.place.placeId);
         removePlace(item.place.placeId);
+        removeMarker(item.place.placeId);
       },
     });
-
+    
     useEffect(() => {
       if (dropRef.current) {
         drop(dropRef.current);
       }
     }, [drop]);
-
+    
     return (
       <div className={styles.deleteZone}>
         <div ref={dropRef} className={styles.deleteZoneContent}>
@@ -124,7 +146,7 @@ const ScheduleRoute = () => {
       </div>
     );
   };
-
+  
   if (!places || places.length === 0) {
     return (
       <p className={styles.noResults}>
@@ -135,7 +157,7 @@ const ScheduleRoute = () => {
       </p>
     );
   }
-
+  
   return (
     <DndProvider backend={HTML5Backend}>
       <ul>
