@@ -5,7 +5,7 @@ import { useInView } from 'react-intersection-observer';
 import { useScheduleTravelRoute } from '@/hooks/useSchedule';
 import styles from '@/styles/Schedule.module.css';
 import Image from 'next/image';
-import locationIcon from '../../../public/assets/images/일정 만들기/일정 생성/scheduleDate_mapIcon.png';
+import locationIcon from '../../../public/assets/images/일정 만들기/일정 저장 및 수정/mapIcon.png';
 import { useTravelStore } from '@/store/scheduleStore';
 import { useParams } from 'next/navigation';
 import { Place } from '@/types/scheduleType';

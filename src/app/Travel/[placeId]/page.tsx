@@ -305,7 +305,7 @@ const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
                 <p> 문의 및 안내 </p> {phoneNumber}
               </div>
             )}
-            <div className={styles.buttonContainer} ㅁ>
+            <div className={styles.buttonContainer}>
               <button
                 onClick={toggleBookmark}
                 className={styles.bookmarkBtn}

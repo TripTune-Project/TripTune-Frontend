@@ -121,7 +121,9 @@ const Chatting = () => {
     // 컴포넌트 언마운트 시 STOMP 클라이언트 비활성화
     return () => {
       if (clientRef.current) {
-        clientRef.current.deactivate();
+        if (clientRef.current instanceof Client) {
+          clientRef.current.deactivate();
+        }
       }
     };
   }, [scheduleId, brokerUrl, token]);

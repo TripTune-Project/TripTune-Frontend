@@ -29,12 +29,7 @@ const ScheduleMake = ({ initialTab }: ScheduleMakeProps) => {
   const handleTabChange = (newTab: string) => {
     setTab(newTab);
   };
-
-  const handleModalSubmit = (startDate: string, endDate: string) => {
-    updateScheduleDetail({ startDate: startDate, endDate: endDate });
-    setShowModal(false);
-  };
-
+  
   const formatDateToKoreanWithDay = (date: string): string => {
     if (!date) return '';
     const parsedDate = new Date(date);
