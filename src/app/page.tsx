@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -121,6 +121,13 @@ const Home = () => {
       description: '서울',
     },
   ];
+
+  useEffect(() => {
+    document.body.style.overflow = 'auto';
+    return () => {
+      document.body.style.overflow = 'hidden';
+    };
+  }, []);
 
   return (
     <div className={styles.onBoard}>

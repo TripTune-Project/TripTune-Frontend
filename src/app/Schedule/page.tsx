@@ -9,7 +9,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { ScheduleList, ApiResponse, Schedule } from '@/types/scheduleType';
 import { useDebounce } from '@/hooks/useDebounce';
-import ScheduleImage from '../../../public/assets/images/일정 만들기/일정 목록 조회/computer.jpg';
+import ScheduleImage from '../../../public/assets/images/일정 만들기/일정 목록 조회/computer.png';
 import NoscheduleIcon from '../../../public/assets/images/일정 만들기/일정 목록 조회/scheduleIcon.png';
 import searchIcon from '../../../public/assets/images/일정 만들기/일정 목록 조회/searchIcon.png';
 import useAuth from '@/hooks/useAuth';
@@ -22,13 +22,18 @@ import { deleteSchedule } from '@/api/scheduleApi';
 import { leaveSchedule } from '@/api/attendeeApi';
 import DeleteModal from '@/components/Schedule/DeleteModal';
 import AlertIcon from '../../../public/assets/images/여행지 탐색/홈화면/alertIcon.png';
+import moreBtn from '../../../public/assets/images/일정 만들기/일정 목록 조회/moreBtn.png';
 
 export default function SchedulePage() {
   const router = useRouter();
   const { checkAuthStatus } = useAuth();
 
   useEffect(() => {
+    document.body.style.overflow = 'auto';
     checkAuthStatus();
+    return () => {
+      document.body.style.overflow = 'hidden';
+    };
   }, [checkAuthStatus]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -221,7 +226,7 @@ export default function SchedulePage() {
                 handleToggleDeleteMenu(schedule.scheduleId as number, e)
               }
             >
-              ...
+              <Image src={moreBtn} alt={'moreBtn'} width={14} height={2} />
             </div>
             {activeDeleteMenu === schedule.scheduleId && (
               <div className={styles.deleteMenu}>
@@ -306,6 +311,7 @@ export default function SchedulePage() {
             alt='일정 목록 이미지'
             priority
           />
+          <div className={styles.overlay} />
           <div className={styles.scheduleContent}>
             <div className={styles.scheduleText}>
               <div className={styles.scheduleExplainDiv}>
@@ -342,19 +348,27 @@ export default function SchedulePage() {
         >
           공유된 일정
           <span className={styles.counterNumber}>
-            {sharedScheduleData?.pages[0]?.data?.totalSharedElements ?? 0}
+            {sharedScheduleData
+              ? (sharedScheduleData.pages[0]?.data?.totalSharedElements ?? 0)
+              : (allScheduleData?.pages[0]?.data?.totalSharedElements ?? 0)}
           </span>
         </button>
 
         <div className={styles.travelSearchContainer}>
           <input
             type='text'
-            placeholder='일정를 검색하세요.'
+            placeholder='일정을 검색하세요.'
             value={searchKeyword}
             onChange={(e) => setSearchKeyword(e.target.value)}
           />
           <button onClick={() => setIsSearching(!!debouncedSearchKeyword)}>
-            <Image src={searchIcon} alt='돋보기' width={21} height={21} />
+            <Image
+              style={{ marginLeft: '-5px' }}
+              src={searchIcon}
+              alt='돋보기'
+              width={21}
+              height={21}
+            />
           </button>
         </div>
         <div className={styles.scheduleList}>

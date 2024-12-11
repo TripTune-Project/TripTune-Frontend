@@ -1,16 +1,13 @@
 .headerMenu {
   width: 100%;
-  max-width: 100vw;
-  height: 5.69rem;
   flex-shrink: 0;
   color: #757575;
-  font-size: 0.83vw;
   font-style: normal;
   font-weight: 500;
   letter-spacing: -0.32px;
   padding: 0;
   list-style: none;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: space-between;
 }

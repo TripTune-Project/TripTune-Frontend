@@ -70,7 +70,14 @@ export default function ScheduleDetailPage() {
         <ul className={styles.headerMenu}>
           <li>
             <Link href='/'>
-              <Image src={MainLogoImage} alt='로고' width={183} height={57} />
+              <Image
+                src={MainLogoImage}
+                alt='로고'
+                width={184}
+                height={58}
+                style={{ marginLeft: '118px' }}
+                priority
+              />
             </Link>
           </li>
         </ul>
