@@ -107,8 +107,9 @@ const Header = () => {
             <Image
               src={MainLogoImage}
               alt='로고'
-              width={183}
-              height={57}
+              width={184}
+              height={58}
+              style={{ marginLeft: '118px' }}
               priority
             />
           </Link>

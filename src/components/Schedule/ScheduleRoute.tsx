@@ -144,7 +144,13 @@ const ScheduleRoute = () => {
   if (!places || places.length === 0) {
     return (
       <p className={styles.noResults}>
-        <Image src={travelRootEmptyIcon} alt={'no-schedule-root'} />
+        <Image
+          src={travelRootEmptyIcon}
+          alt={'no-schedule-root'}
+          width={293}
+          height={158}
+          style={{ marginLeft: '130px' }}
+        />
         <div className={styles.noText}>여행 루트가 비어 있습니다.</div>
         <br />
         <p>여행지 검색을 통해 여행 루트에 장소를 추가해주세요.</p>
@@ -154,7 +160,7 @@ const ScheduleRoute = () => {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <ul>
+      <ul style={{ height: '430px', overflowY: 'auto' }}>
         {places.map((place, index) => (
           <PlaceItem key={place.placeId} place={place} index={index} />
         ))}

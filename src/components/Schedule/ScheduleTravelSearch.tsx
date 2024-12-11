@@ -14,13 +14,15 @@ import DataLoading from '@/components/Common/DataLoading';
 import { truncateText } from '@/utils';
 import { Place } from '@/types/scheduleType';
 import AlertIcon from '../../../public/assets/images/여행지 탐색/홈화면/alertIcon.png';
+import plusTravelSearch from '../../../public/assets/images/일정 만들기/일정 생성/plusBtn.png';
+import minusTravelSearch from '../../../public/assets/images/일정 만들기/일정 생성/minusBtn.png';
 
 const ScheduleTravelSearch = () => {
   const { scheduleId } = useParams();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [isSearching, setIsSearching] = useState(false);
-  const markersRef = useRef<any[]>([]); // 마커들을 관리하기 위한 useRef
+  const markersRef = useRef<any[]>([]);
 
   const {
     addPlaceToRoute,
@@ -153,9 +155,11 @@ const ScheduleTravelSearch = () => {
                 >
                   {Array.from(addedPlaces).some(
                     (addedPlace) => addedPlace.placeId === place.placeId
-                  )
-                    ? '–'
-                    : '+'}
+                  ) ? (
+                    <Image src={minusTravelSearch} alt={'minusTravelSearch'} />
+                  ) : (
+                    <Image src={plusTravelSearch} alt={'plusTravelSearch'} />
+                  )}
                 </button>
               </li>
             ))}

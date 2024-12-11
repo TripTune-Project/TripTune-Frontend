@@ -33,7 +33,7 @@ const StyledSwiperContainer = styled.div`
 const StyledSwiperButtonPrev = styled.button`
   position: absolute;
   top: 50%;
-  left: 10px;
+  left: 0;
   transform: translateY(-50%);
   border: none;
   cursor: pointer;
@@ -50,7 +50,7 @@ const StyledSwiperButtonPrev = styled.button`
 const StyledSwiperButtonNext = styled.button`
   position: absolute;
   top: 50%;
-  right: 10px;
+  right: 0;
   transform: translateY(-50%);
   border: none;
   cursor: pointer;
@@ -69,6 +69,13 @@ interface TravelDetailPageProps {
 }
 
 const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
+  useEffect(() => {
+    document.body.style.overflow = 'auto';
+    return () => {
+      document.body.style.overflow = 'hidden';
+    };
+  }, []);
+
   const placeIdNumber = parseInt(params.placeId, 10);
   const [data, setData] = useState<TravelPlaceDetail | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -281,6 +288,7 @@ const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
                   src={homePageIcon}
                   alt='홈페이지'
                 />
+                <p> 홈페이지 </p>
                 <a href={homepageUrl} target='_blank' rel='noopener noreferrer'>
                   {homepageUrl}
                 </a>
@@ -297,7 +305,7 @@ const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
                 <p> 문의 및 안내 </p> {phoneNumber}
               </div>
             )}
-            <div className={styles.buttonContainer}>
+            <div className={styles.buttonContainer} ㅁ>
               <button
                 onClick={toggleBookmark}
                 className={styles.bookmarkBtn}
@@ -305,7 +313,7 @@ const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
               >
                 <Image
                   width={13}
-                  height={17}
+                  height={16}
                   src={isBookmarked ? detailBookMark : detailBookMarkNo}
                   alt='북마크'
                 />
@@ -313,7 +321,7 @@ const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
               </button>
               <button onClick={handleScheduleAdd} className={styles.chooseBtn}>
                 <Image
-                  width={25}
+                  width={24}
                   height={21}
                   src={scheduleIcon}
                   alt='일정 등록'
