@@ -114,7 +114,7 @@ const ScheduleTravelSearch = () => {
         {travels.length > 0 ? (
           <ul>
             {travels.map((place: Place) => (
-              <li key={place.placeId} className={styles.placeItem}>
+              <li key={place.placeId} className={styles.placeItemSearch}>
                 <div className={styles.placeThumbnail}>
                   {place.thumbnailUrl ? (
                     <Image

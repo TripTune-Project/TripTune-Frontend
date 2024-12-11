@@ -7,6 +7,8 @@ import ScheduleRoute from '@/components/Schedule/ScheduleRoute';
 import UpdateCalendarModal from '@/components/Common/UpdateCalendarModal';
 import { useParams } from 'next/navigation';
 import { useTravelStore } from '@/store/scheduleStore';
+import dateIcon from '../../../public/assets/images/일정 만들기/일정 저장 및 수정/dateIcon.png';
+import Image from 'next/image';
 
 interface ScheduleMakeProps {
   initialTab: string;
@@ -72,6 +74,7 @@ const ScheduleMake = ({ initialTab }: ScheduleMakeProps) => {
           placeholder='시작일 ~ 종료일'
           onClick={() => setShowModal(true)}
         />
+        <Image src={dateIcon} width={19} height={22} alt="dateIcon"/>
       </div>
       <div className={styles.tabContainer}>
         <button

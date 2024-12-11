@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useInView } from 'react-intersection-observer';
@@ -10,6 +10,9 @@ import { useTravelStore } from '@/store/scheduleStore';
 import { useParams } from 'next/navigation';
 import { Place } from '@/types/scheduleType';
 import travelRootEmptyIcon from '../../../public/assets/images/일정 만들기/일정 저장 및 수정/travelRootEmptyIcon.png';
+import trashIconGray from '../../../public/assets/images/일정 만들기/일정 저장 및 수정/trashIconGray.png';
+import trashIconRed from '../../../public/assets/images/일정 만들기/일정 저장 및 수정/trashIconRed.png';
+import routeVector from '../../../public/assets/images/일정 만들기/일정 저장 및 수정/routeVector.png';
 
 const ScheduleRoute = () => {
   const { scheduleId } = useParams();
@@ -53,40 +56,44 @@ const ScheduleRoute = () => {
       removedMarker.map = null;
     }
   };
-
+  
   const PlaceItem = ({ place, index }: { place: Place; index: number }) => {
     const ref = useRef<HTMLLIElement>(null);
-
+    
     const [{ isDragging }, drag] = useDrag({
-      type: 'PLACE',
+      type: "PLACE",
       item: { place, index },
       collect: (monitor) => ({
         isDragging: monitor.isDragging(),
       }),
     });
-
+    
     const [, drop] = useDrop({
-      accept: 'PLACE',
+      accept: "PLACE",
       hover(item: { index: number }) {
         if (!ref.current) return;
         const dragIndex = item.index;
         const hoverIndex = index;
-
+        
         if (dragIndex !== hoverIndex) {
           onMovePlace(dragIndex, hoverIndex);
           item.index = hoverIndex;
         }
       },
     });
-
+    
     drag(drop(ref));
-
+    
     return (
       <li
         ref={ref}
         className={styles.placeItem}
         style={{ opacity: isDragging ? 0.5 : 1 }}
       >
+        <div className={styles.placeIndexContainer}>
+          <div className={styles.indexCircle}>{index + 1}</div>
+        </div>
+        {index < places.length - 1 && <Image className={styles.routeVector} src={routeVector} alt={'routeVector'} width={0} height={66} />}
         <div className={styles.placeThumbnail}>
           {place.thumbnailUrl ? (
             <Image
@@ -103,44 +110,64 @@ const ScheduleRoute = () => {
         </div>
         <div className={styles.placeInfo}>
           <div className={styles.placeName}>{place.placeName}</div>
-          <p className={styles.placeAddress}>
-            {`${place.country} / ${place.city} / ${place.district}`}
-          </p>
           <p className={styles.placeDetailAddress}>
-            <Image src={locationIcon} alt='장소' width={15} height={21} />
+            <Image src={locationIcon} alt="장소" width={15} height={21} />
             &nbsp;{place.address} {place.detailAddress ?? ''}
           </p>
         </div>
       </li>
     );
   };
-
+  
   const DeleteDropZone = () => {
     const dropRef = useRef<HTMLDivElement>(null);
-    const [, drop] = useDrop({
+    const [isOver, setIsOver] = useState(false);
+    
+    const [{ isOverCurrent }, drop] = useDrop({
       accept: 'PLACE',
+      collect: (monitor) => ({
+        isOverCurrent: monitor.isOver(),
+      }),
+      hover: () => {
+        setIsOver(true);
+      },
+      leave: () => {
+        setIsOver(false);
+      },
       drop: (item: { place: Place }) => {
+        setIsOver(false);
         removePlaceFromRoute(item.place.placeId);
         removePlace(item.place.placeId);
         removeMarker(item.place.latitude, item.place.longitude);
       },
     });
-
+    
     useEffect(() => {
       if (dropRef.current) {
         drop(dropRef.current);
       }
     }, [drop]);
-
+    
     return (
-      <div className={styles.deleteZone}>
-        <div ref={dropRef} className={styles.deleteZoneContent}>
-          휴지통 ❌
+      <div
+        className={`${styles.deleteZone} ${
+          isOver || isOverCurrent ? styles.trashRed : ''
+        }`}
+        ref={dropRef}
+      >
+        <div className={styles.deleteZoneContent}>
+          <Image
+            src={isOver || isOverCurrent ? trashIconRed : trashIconGray}
+            alt="trash"
+            width={13}
+            height={17}
+          />
+          삭제
         </div>
       </div>
     );
   };
-
+  
   if (!places || places.length === 0) {
     return (
       <p className={styles.noResults}>
@@ -160,7 +187,7 @@ const ScheduleRoute = () => {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <ul style={{ height: '430px', overflowY: 'auto' }}>
+      <ul style={{ height: '500px', overflowY: 'auto' }}>
         {places.map((place, index) => (
           <PlaceItem key={place.placeId} place={place} index={index} />
         ))}

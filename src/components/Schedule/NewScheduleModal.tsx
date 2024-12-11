@@ -7,6 +7,7 @@ import triptuneIcon from '../../../public/assets/images/로고/triptuneIcon-remo
 import { ko } from 'date-fns/locale';
 import { createNewSchedule } from '@/api/scheduleApi';
 import { useRouter } from 'next/navigation';
+import dateIcon from '../../../public/assets/images/일정 만들기/일정 저장 및 수정/dateIcon.png';
 
 registerLocale('ko', ko);
 
@@ -103,6 +104,7 @@ const NewScheduleModal = ({ onClose }: ScheduleModalProps) => {
             value={`${getFormattedDate(startDate)} ~ ${getFormattedDate(endDate)}`}
             readOnly
           />
+          <Image src={dateIcon} width={19} height={22} alt="dateIcon"/>
         </div>
         <div className={styles.datePickerContainer}>
           <DatePicker
