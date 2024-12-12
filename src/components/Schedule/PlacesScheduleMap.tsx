@@ -4,7 +4,8 @@ import { useTravelStore } from '@/store/scheduleStore';
 // 맵 컨테이너의 스타일
 const containerStyle = {
   width: '844px',
-  height: '100%',
+  height: '850px',
+  alignSelf: 'flex-start',
 };
 
 // 맵의 기본 중심 좌표 (서울 중심부)

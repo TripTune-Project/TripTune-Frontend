@@ -31,7 +31,7 @@ const ScheduleMake = ({ initialTab }: ScheduleMakeProps) => {
   const handleTabChange = (newTab: string) => {
     setTab(newTab);
   };
-  
+
   const formatDateToKoreanWithDay = (date: string): string => {
     if (!date) return '';
     const parsedDate = new Date(date);
@@ -74,7 +74,13 @@ const ScheduleMake = ({ initialTab }: ScheduleMakeProps) => {
           placeholder='시작일 ~ 종료일'
           onClick={() => setShowModal(true)}
         />
-        <Image src={dateIcon} width={19} height={22} alt="dateIcon"/>
+        <Image
+          src={dateIcon}
+          width={19}
+          height={22}
+          alt='dateIcon'
+          onClick={() => setShowModal(true)}
+        />
       </div>
       <div className={styles.tabContainer}>
         <button

@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Client } from '@stomp/stompjs'; // STOMP 프로토콜 클라이언트
-import Cookies from 'js-cookie'; // 쿠키 관리 라이브러리
-import { fetchScheduleChats } from '@/api/chatApi'; // 채팅 데이터 API 호출 함수
-import styles from '../../styles/Schedule.module.css'; // CSS 모듈
-import Image from 'next/image'; // Next.js의 이미지 컴포넌트
-import DataLoading from '@/components/Common/DataLoading'; // 로딩 표시 컴포넌트
-import { ChatMessage } from '@/types/scheduleType'; // 채팅 메시지 타입
-import { useParams } from 'next/navigation'; // URL 매개변수 접근 훅
+import { Client } from '@stomp/stompjs';
+import Cookies from 'js-cookie';
+import { fetchScheduleChats } from '@/api/chatApi';
+import styles from '../../styles/Schedule.module.css';
+import Image from 'next/image';
+import DataLoading from '@/components/Common/DataLoading';
+import { ChatMessage } from '@/types/scheduleType';
+import { useParams } from 'next/navigation';
 
 const Chatting = () => {
   const { scheduleId } = useParams(); // URL에서 scheduleId 가져오기
@@ -164,12 +164,9 @@ const Chatting = () => {
   // UI 렌더링
   return (
     <div className={styles.chatContainer}>
-      {/* 헤더 */}
       <div className={styles.header}>
         <h1 className={styles.chatTitle}>그룹 채팅</h1>
       </div>
-
-      {/* 메시지 리스트 */}
       <div className={styles.messageContainer}>
         {messages.map((msg, index) => {
           // 메시지 날짜 표시
@@ -182,7 +179,11 @@ const Chatting = () => {
             <div key={msg.messageId} className={styles.userMessages}>
               {showDate && (
                 <div className={styles.dateSeparator}>
-                  {formatDate(msg.timestamp)}
+                  <hr className={styles.dateHr} />
+                  <span className={styles.dateText}>
+                    {formatDate(msg.timestamp)}
+                  </span>
+                  <hr className={styles.dateHr} />
                 </div>
               )}
               {/* 다른 사용자의 메시지 정보 */}
@@ -228,8 +229,6 @@ const Chatting = () => {
         {/* 로딩 상태 표시 */}
         {loading && <DataLoading />}
       </div>
-
-      {/* 메시지 입력 필드 */}
       <div className={styles.inputContainer}>
         <input
           type='text'
