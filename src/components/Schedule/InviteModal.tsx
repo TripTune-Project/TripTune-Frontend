@@ -31,7 +31,7 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
         try {
           const response = await fetchScheduleAttendees(Number(scheduleId));
           if (response.success) {
-            setAllUsers(response.data?.content || []);
+            setAllUsers(response.data || []);
           } else {
             console.error('참석자 조회 실패:', response.message);
           }
@@ -81,7 +81,7 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
   };
 
   if (!isOpen) return null;
-
+  
   return (
     <div style={styles.modalOverlay}>
       <div style={styles.modalContainer}>
@@ -149,18 +149,18 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
           <ul style={styles.userList}>
             {allUsers.map((user) => (
               <li key={user.nickname} style={styles.userListItem}>
-                <Image
-                  src={user.profileUrl}
-                  alt={`${user.nickname}님의 사진`}
-                  width={38}
-                  height={38}
-                  style={styles.userIcon}
-                />
-                <div style={styles.userName}>
-                  <p>{user.nickname}</p>
-                  <p>{user.email}</p>
+                <div>
+                  <Image
+                    src={user.profileUrl}
+                    alt={`${user.nickname}님의 사진`}
+                    width={38}
+                    height={38}
+                    style={styles.userIcon}
+                  />
+                  <span>{user.nickname}</span>
+                  <span>{user.role}</span>
+                  <span style={styles.userPermission}>{user.permission}</span>
                 </div>
-                <span style={styles.userPermission}>{user.permission}</span>
               </li>
             ))}
           </ul>

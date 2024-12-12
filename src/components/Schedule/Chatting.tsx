@@ -182,7 +182,7 @@ const Chatting = () => {
             <div key={msg.messageId} className={styles.userMessages}>
               {showDate && (
                 <div className={styles.dateSeparator}>
-                  {formatDate(msg.timestamp)}
+                  <hr/><span>{formatDate(msg.timestamp)}</span><hr/>
                 </div>
               )}
               {/* 다른 사용자의 메시지 정보 */}
