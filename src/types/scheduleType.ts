@@ -136,11 +136,6 @@ export interface Attendee {
   permission: Permission;
 }
 
-// 일정 참석자 조회 응답
-export interface AttendeeList extends Pagination {
-  content: Attendee[];
-}
-
 // 일정 공유 요청 파라미터
 export interface ShareSchedule {
   email: string;

@@ -1,7 +1,7 @@
 import { get, post, remove } from './api';
 import {
   ApiResponse,
-  AttendeeList,
+  Attendee,
   LeaveSchedule,
   ShareSchedule,
 } from '@/types/scheduleType';
@@ -10,11 +10,11 @@ import { handleApiError } from '@/api/errorHandler';
 // 일정 참석자 조회
 export const fetchScheduleAttendees = async (
   scheduleId: number
-): Promise<ApiResponse<AttendeeList>> => {
+): Promise<ApiResponse<Attendee[]>> => {
   const url = `/api/schedules/${scheduleId}/attendees`;
 
   try {
-    const data = await get<ApiResponse<AttendeeList>>(url, {
+    const data = await get<ApiResponse<Attendee[]>>(url, {
       requiresAuth: true,
     });
     console.log(

@@ -17,16 +17,16 @@ import routeVector from '../../../public/assets/images/일정 만들기/일정 �
 const ScheduleRoute = () => {
   // URL 파라미터에서 scheduleId 가져오기
   const { scheduleId } = useParams();
-  
+
   // 여행 경로와 장소 데이터를 관리하는 상태 및 액션 가져오기
   const { removePlace, travelRoute, removePlaceFromRoute, onMovePlace } =
     useTravelStore();
-  
+
   // 무한 스크롤을 위한 Intersection Observer 설정
   const { ref, inView } = useInView();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useScheduleTravelRoute(Number(scheduleId));
-  
+
   // API에서 가져온 장소 데이터를 가공하여 fetchedPlaces에 저장
   const fetchedPlaces: Place[] =
     data?.pages?.flatMap((page) =>
@@ -35,41 +35,41 @@ const ScheduleRoute = () => {
         thumbnailUrl: route.thumbnailUrl ?? null,
       }))
     ) ?? [];
-  
+
   // travelRoute와 API 데이터를 병합하여 실제 사용할 장소 리스트 생성
   const places = travelRoute.map((route) => {
     const matchedPlace = fetchedPlaces.find((p) => p.placeId === route.placeId);
     return matchedPlace ? { ...matchedPlace, ...route } : route;
   });
-  
+
   // 지도 마커를 관리하는 참조
   const markersRef = useRef<
     { latitude: number; longitude: number; map: any }[]
   >([]);
-  
+
   // 무한 스크롤 감지 시 다음 페이지 데이터를 가져옴
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
-  
+
   // 지도 마커를 제거하는 함수
   const removeMarker = (latitude: number, longitude: number) => {
     const markerIndex = markersRef.current.findIndex(
       (marker) => marker.latitude === latitude && marker.longitude === longitude
     );
-    
+
     if (markerIndex > -1) {
       const [removedMarker] = markersRef.current.splice(markerIndex, 1);
       removedMarker.map = null;
     }
   };
-  
+
   // 개별 장소 항목 컴포넌트
   const PlaceItem = ({ place, index }: { place: Place; index: number }) => {
     const ref = useRef<HTMLLIElement>(null);
-    
+
     // 드래그를 설정
     const [{ isDragging }, drag] = useDrag({
       type: 'PLACE',
@@ -78,7 +78,7 @@ const ScheduleRoute = () => {
         isDragging: monitor.isDragging(),
       }),
     });
-    
+
     // 드롭을 설정
     const [, drop] = useDrop({
       accept: 'PLACE',
@@ -86,7 +86,7 @@ const ScheduleRoute = () => {
         if (!ref.current) return;
         const dragIndex = item.index ?? -1;
         const hoverIndex = index;
-        
+
         if (dragIndex !== hoverIndex && dragIndex !== -1) {
           onMovePlace(dragIndex, hoverIndex);
           item.index = hoverIndex;
@@ -99,10 +99,10 @@ const ScheduleRoute = () => {
       //   removeMarker(item.place.latitude, item.place.longitude);
       // },
     });
-    
+
     // 드래그와 드롭을 참조에 연결
     drag(drop(ref));
-    
+
     return (
       <li
         ref={ref}
@@ -138,19 +138,19 @@ const ScheduleRoute = () => {
         <div className={styles.placeInfo}>
           <div className={styles.placeName}>{place.placeName}</div>
           <p className={styles.placeDetailAddress}>
-            <Image src={locationIcon} alt="장소" width={15} height={21} />
+            <Image src={locationIcon} alt='장소' width={15} height={21} />
             &nbsp;{place.address} {place.detailAddress ?? ''}
           </p>
         </div>
       </li>
     );
   };
-  
+
   // 삭제 드롭존 컴포넌트
   const DeleteDropZone = () => {
     const dropRef = useRef<HTMLDivElement>(null);
     const [isOver, setIsOver] = useState(false);
-    
+
     // 드롭 영역 설정
     const [, drop] = useDrop({
       accept: 'PLACE',
@@ -167,25 +167,23 @@ const ScheduleRoute = () => {
         removeMarker(item.place.latitude, item.place.longitude);
       },
     });
-    
+
     // 드롭 참조 연결
     useEffect(() => {
       if (dropRef.current) {
         drop(dropRef.current);
       }
     }, [drop]);
-    
+
     return (
       <div
-        className={`${styles.deleteZone} ${
-          isOver ? styles.trashRed : ''
-        }`}
+        className={`${styles.deleteZone} ${isOver ? styles.trashRed : ''}`}
         ref={dropRef}
       >
         <div className={styles.deleteZoneContent}>
           <Image
             src={isOver ? trashIconRed : trashIconGray}
-            alt="trash"
+            alt='trash'
             width={13}
             height={17}
           />
@@ -194,7 +192,7 @@ const ScheduleRoute = () => {
       </div>
     );
   };
-  
+
   // 여행 경로가 없는 경우 안내 메시지 표시
   if (!places || places.length === 0) {
     return (
@@ -212,7 +210,7 @@ const ScheduleRoute = () => {
       </p>
     );
   }
-  
+
   // 여행 경로와 삭제 드롭존 렌더링
   return (
     <DndProvider backend={HTML5Backend}>

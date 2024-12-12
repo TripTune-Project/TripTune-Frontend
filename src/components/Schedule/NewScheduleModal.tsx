@@ -104,7 +104,7 @@ const NewScheduleModal = ({ onClose }: ScheduleModalProps) => {
             value={`${getFormattedDate(startDate)} ~ ${getFormattedDate(endDate)}`}
             readOnly
           />
-          <Image src={dateIcon} width={19} height={22} alt="dateIcon"/>
+          <Image src={dateIcon} width={19} height={22} alt='dateIcon' />
         </div>
         <div className={styles.datePickerContainer}>
           <DatePicker
