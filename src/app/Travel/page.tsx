@@ -23,6 +23,7 @@ import BookMark from '../../../public/assets/images/여행지 탐색/홈화면/p
 import locationIcon from '../../../public/assets/images/여행지 탐색/홈화면/placeHome_mapIcon.png';
 
 const TravelPage = () => {
+  
   const router = useRouter();
 
   const {
@@ -269,8 +270,8 @@ const TravelPage = () => {
                             <Image
                               src={place.thumbnailUrl}
                               alt={place.placeName}
-                              width={150}
-                              height={150}
+                              width={100}
+                              height={100}
                               className={styles.thumbnailImage}
                               priority
                             />
