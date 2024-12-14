@@ -23,7 +23,6 @@ import BookMark from '../../../public/assets/images/여행지 탐색/홈화면/p
 import locationIcon from '../../../public/assets/images/여행지 탐색/홈화면/placeHome_mapIcon.png';
 
 const TravelPage = () => {
-  
   const router = useRouter();
 
   const {

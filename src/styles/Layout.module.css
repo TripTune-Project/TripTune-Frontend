@@ -53,7 +53,7 @@
 .github,
 .copyright {
   margin-left: 135px;
-  color: #fff;
+  color: #ffffff;
   font-family: 'Noto Sans KR', serif;
   font-size: 17px;
   font-style: normal;
@@ -74,6 +74,6 @@
   font-family: 'Noto Sans KR', serif;
   font-weight: 500;
   flex-shrink: 0;
-  color: #fff;
+  color: #ffffff;
   margin-top: 0;
 }

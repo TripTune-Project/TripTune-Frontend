@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Attendee } from '@/types/scheduleType';
-import { fetchScheduleAttendees, shareSchedule } from '@/api/attendeeApi';
+import {
+  fetchScheduleAttendees,
+  shareSchedule,
+  updatePermission,
+} from '@/api/attendeeApi';
 import { useParams } from 'next/navigation';
 
 interface InviteModalProps {
@@ -86,19 +90,19 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
   };
 
   const handlePermissionChange = async (
-    email: string,
+    attendeeId: number,
     newPermission: string
   ) => {
     try {
-      const response = await shareSchedule(
+      const response = await updatePermission(
         Number(scheduleId),
-        email,
+        attendeeId,
         newPermission as 'ALL' | 'EDIT' | 'CHAT' | 'READ'
       );
       if (response.success) {
         setAllUsers((prevUsers) =>
           prevUsers.map((user) =>
-            user.email === email
+            user.attendeeId === attendeeId
               ? {
                   ...user,
                   permission: newPermission as 'ALL' | 'EDIT' | 'CHAT' | 'READ',
@@ -108,7 +112,7 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
         );
         setDropdownStates((prev) => ({
           ...prev,
-          [email]: false,
+          [attendeeId]: false,
         }));
       } else {
         alert('권한 변경에 실패했습니다.');
@@ -200,7 +204,7 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
                       ...styles.dropdownButton,
                       background: dropdownStates[user.email]
                         ? '#EDF9F7'
-                        : '#fff',
+                        : '#FFFFFF',
                     }}
                     onClick={() => toggleDropdown(user.email)}
                   >
@@ -215,7 +219,10 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
                           key={permission.value}
                           style={styles.dropdownItem}
                           onClick={() =>
-                            handlePermissionChange(user.email, permission.value)
+                            handlePermissionChange(
+                              user.attendeeId,
+                              permission.value
+                            )
                           }
                         >
                           <strong>{permission.label}</strong>

@@ -1,4 +1,4 @@
-import { get, post, remove } from './api';
+import { get, patch, post, remove } from './api';
 import {
   ApiResponse,
   Attendee,
@@ -43,6 +43,28 @@ export const shareSchedule = async (
     );
     console.log(
       data.success ? '일정 공유 성공:' : '일정 공유 실패:',
+      data.message
+    );
+    return data;
+  } catch (error: any) {
+    return handleApiError(error, '서버 내부 오류가 발생하였습니다.');
+  }
+};
+
+// 일정 접근 권한 수정하기 (PATCH)
+export const updatePermission = async (
+  scheduleId: number,
+  attendeeId: number,
+  permission: 'ALL' | 'EDIT' | 'CHAT' | 'READ'
+): Promise<ApiResponse<{ success: boolean; message: string }>> => {
+  const url = `/api/schedules/${scheduleId}/attendees/${attendeeId}`;
+
+  try {
+    const data = await patch<
+      ApiResponse<{ success: boolean; message: string }>
+    >(url, { permission }, { requiresAuth: true });
+    console.log(
+      data.success ? '접근 권한 수정 성공:' : '접근 권한 수정 실패:',
       data.message
     );
     return data;

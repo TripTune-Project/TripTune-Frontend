@@ -35,7 +35,7 @@
 
 .onBoardingExplainDiv,
 .onBoardingExplainP {
-  color: #fff;
+  color: #ffffff;
   font-family: 'Noto Sans KR', sans-serif;
   position: absolute;
   left: 7%;
@@ -70,7 +70,7 @@
   flex-shrink: 0;
   border-radius: 20px;
   border: none;
-  background: #fff;
+  background: #ffffff;
   display: flex;
   align-items: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -313,7 +313,7 @@
 .onBoardingText {
   flex: 1;
   text-align: left;
-  color: #fff;
+  color: #ffffff;
   padding-right: 40px;
   display: flex;
   flex-direction: column;

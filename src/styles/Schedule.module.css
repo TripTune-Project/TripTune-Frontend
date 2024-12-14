@@ -31,7 +31,7 @@
 }
 
 .modalContainer {
-  background-color: #fff;
+  background-color: #ffffff;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
@@ -157,7 +157,7 @@
 .scheduleExplainDiv {
   top: 20%;
   font-weight: 800;
-  color: #fff;
+  color: #ffffff;
   text-align: center;
   justify-content: center;
   font-size: 30px;
@@ -183,7 +183,7 @@
   flex-direction: column;
   text-align: center;
   flex-shrink: 0;
-  color: #fff;
+  color: #ffffff;
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
@@ -267,7 +267,7 @@
 .scheduleText {
   flex: 1;
   text-align: center;
-  color: #fff;
+  color: #ffffff;
   padding-right: 40px;
   display: flex;
   flex-direction: column;
@@ -348,8 +348,8 @@
   position: absolute;
   top: 40px;
   right: 10px;
-  background-color: #fff;
-  border: 1px solid #ddd;
+  background-color: #ffffff;
+  border: 1px solid #dddddd;
   padding: 10px;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -508,7 +508,7 @@
   text-align: center;
   align-items: center;
   flex-shrink: 0;
-  color: #fff;
+  color: #ffffff;
   font-family:
     Noto Sans KR,
     sans-serif;
@@ -670,9 +670,9 @@
   display: inline-flex;
   align-items: center;
   padding: 10px 15px;
-  border: 1px solid #ddd;
+  border: 1px solid #dddddd;
   border-radius: 8px;
-  background-color: #fff;
+  background-color: #ffffff;
   margin-bottom: 10px;
   position: relative;
   transition: box-shadow 0.3s ease;
@@ -686,7 +686,7 @@
   align-items: center;
   border-radius: 8px;
   padding: 10px;
-  background-color: #fff;
+  background-color: #ffffff;
   margin-bottom: 20px;
   position: relative;
   transition: box-shadow 0.3s ease;
@@ -872,7 +872,7 @@
 .deleteZone.trashRed {
   width: 461px;
   border: 2px dashed #f86c6c;
-  background: #fff;
+  background: #ffffff;
   margin: auto;
 }
 
@@ -1306,7 +1306,7 @@
   width: 416px;
   height: 308px;
   border: 1px solid #d9d9d9;
-  background: #fff;
+  background: #ffffff;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -1411,14 +1411,14 @@
 .emailInput {
   flex: 1;
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid #dddddd;
   border-radius: 8px;
   font-size: 14px;
 }
 
 .permissionSelect {
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid #dddddd;
   border-radius: 8px;
   font-size: 14px;
   background-color: #ffffff;
@@ -1452,7 +1452,7 @@
 .userIcon {
   width: 30px;
   height: 30px;
-  background-color: #ddd;
+  background-color: #dddddd;
   border-radius: 50%;
   margin-right: 10px;
 }
@@ -1478,7 +1478,7 @@
 .linkInput {
   flex: 1;
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid #dddddd;
   border-radius: 8px;
   font-size: 14px;
   background-color: #f9f9f9;

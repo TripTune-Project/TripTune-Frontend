@@ -129,11 +129,12 @@ export interface RouteList extends Pagination {
 
 // 참석자 정보
 export interface Attendee {
+  attendeeId: number;
   nickname: string;
-  email: string;
+  permission: Permission;
   profileUrl: string;
   role: Role;
-  permission: Permission;
+  email: string;
 }
 
 // 일정 공유 요청 파라미터
