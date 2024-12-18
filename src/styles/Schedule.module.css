@@ -997,7 +997,6 @@
   flex-direction: column;
   width: 538px;
   height: 850px;
-  overflow-y: auto;
 }
 
 .header {
@@ -1058,15 +1057,13 @@
 }
 
 .messageContainer {
-  flex-grow: 1;
-  padding: 16px;
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
-  gap: 12px;
-  overflow-y: scroll;
+  overflow-y: auto;
+  flex-grow: 1;
+  padding: 10px;
   background-color: #e0e0e0;
   border-bottom: 1px solid #e0e0e0;
-  max-height: max-content;
 }
 
 .sentMessage,

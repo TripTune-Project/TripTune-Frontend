@@ -8,185 +8,188 @@ import DataLoading from '@/components/Common/DataLoading';
 import { ChatMessage } from '@/types/scheduleType';
 import { useParams } from 'next/navigation';
 
+// 날짜 포맷팅
+const formatDate = (timestamp: string) => {
+  const date = new Date(timestamp);
+  return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date
+    .getDate()
+    .toString()
+    .padStart(2, '0')}`;
+};
+
+// 시간 포맷팅
+const formatTimestamp = (timestamp: string) => {
+  const date = new Date(timestamp);
+  const hours = date.getHours();
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const ampm = hours >= 12 ? '오후' : '오전';
+  const formattedHours = hours % 12 || 12;
+  return `${ampm} ${formattedHours}시 ${minutes}분`;
+};
+
 const Chatting = () => {
-  const { scheduleId } = useParams(); // URL에서 scheduleId 가져오기
-  const token = Cookies.get('trip-tune_at'); // 사용자 인증 토큰 가져오기
-  const userNickname = Cookies.get('nickname'); // 사용자 닉네임 가져오기
-
-  // 브로커 URL 설정 (환경별로 다르게 설정)
-  const brokerUrl =
-    process.env.NODE_ENV === 'production'
-      ? process.env.NEXT_PUBLIC_BROKER_URL
-      : process.env.NEXT_PUBLIC_BROKER_LOCAL_URL;
-
-  const clientRef = useRef<Client | null>(null); // STOMP 클라이언트 참조
-  const [message, setMessage] = useState(''); // 입력된 메시지
-  const [messages, setMessages] = useState<ChatMessage[]>([]); // 수신된 메시지들
-  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 번호
+  const { scheduleId } = useParams();
+  const token = Cookies.get('trip-tune_at');
+  const userNickname = Cookies.get('nickname');
+  
+  const clientRef = useRef<Client | null>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+  
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [message, setMessage] = useState('');
+  const [currentPage, setCurrentPage] = useState<number | null>(null); // 현재 페이지
   const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수
-  const [loading, setLoading] = useState(false); // 로딩 상태
-
-  // 한국 표준시(KST)로 타임스탬프를 포맷팅
-  const formatTimestamp = (timestamp: string) => {
-    const date = new Date(timestamp);
-    const hours = date.getHours();
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    const ampm = hours >= 12 ? '오후' : '오전';
-    const formattedHours = hours % 12 || 12; // 0시는 12시로 표시
-    return `${ampm} ${formattedHours}시 ${minutes}분`;
+  const [loading, setLoading] = useState(false);
+  
+  // STOMP 브로커 URL 설정
+  const brokerUrl = process.env.NEXT_PUBLIC_BROKER_URL;
+  
+  // 스크롤 최하단 이동 함수
+  const scrollToBottom = (force = false) => {
+    if (chatContainerRef.current) {
+      const container = chatContainerRef.current;
+      const isAtBottom =
+        container.scrollHeight - container.scrollTop === container.clientHeight;
+      
+      if (force || isAtBottom) {
+        container.scrollTop = container.scrollHeight;
+      }
+    }
   };
-
-  // 날짜만 포맷팅
-  const formatDate = (timestamp: string) => {
-    const date = new Date(timestamp);
-    return `${date.getFullYear()}-${(date.getMonth() + 1)
-      .toString()
-      .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
-  };
-
-  // 메시지를 서버에서 가져오는 함수
-  const loadMessages = async (page: number) => {
-    if (page < 1 || page > totalPages) return; // 페이지 범위 검사
-
+  
+  // 초기 메시지 로드: 최신 페이지 데이터 가져오기
+  useEffect(() => {
+    const loadLatestMessages = async () => {
+      try {
+        const response = await fetchScheduleChats(Number(scheduleId), 1);
+        if (response.success) {
+          const { totalPages: pages } = response.data;
+          
+          // 최신 페이지 데이터 가져오기
+          const latestPageResponse = await fetchScheduleChats(Number(scheduleId), pages);
+          if (latestPageResponse.success) {
+            setMessages(latestPageResponse.data.content); // 최신 메시지 저장
+            setTotalPages(pages); // 전체 페이지 수 설정
+            setCurrentPage(pages); // 최신 페이지 설정
+            
+            // 강제로 스크롤 이동
+            setTimeout(() => scrollToBottom(true), 100);
+          }
+        }
+      } catch (error) {
+        console.error('최신 메시지 로드 실패:', error);
+      }
+    };
+    
+    loadLatestMessages();
+    
+    // STOMP 클라이언트 설정
+    const stompClient = new Client({
+      brokerURL: brokerUrl,
+      connectHeaders: { Authorization: `Bearer ${token}` },
+      reconnectDelay: 5000,
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
+      onConnect: () => {
+        console.log('[STOMP] 연결 성공');
+        stompClient.subscribe(`/sub/schedules/${scheduleId}/chats`, (message) => {
+          const newMessage: ChatMessage = JSON.parse(message.body);
+          setMessages((prev) => [...prev, newMessage]);
+          scrollToBottom(); // 새 메시지가 올 때 스크롤 이동
+        });
+      },
+      onDisconnect: () => {
+        console.log('[STOMP] 연결 해제');
+      },
+      onStompError: (frame) => {
+        console.error('[STOMP] 오류 발생:', frame.headers['message']);
+      },
+    });
+    
+    stompClient.activate();
+    clientRef.current = stompClient;
+    
+    return () => {
+      console.log('[STOMP] 클라이언트 비활성화');
+      clientRef.current?.deactivate();
+    };
+  }, [scheduleId]);
+  
+  // 과거 메시지 로드
+  const loadPreviousMessages = async () => {
+    if (loading || currentPage === null || currentPage <= 1) return; // 더 이상 페이지가 없으면 중단
     setLoading(true);
+    
+    const previousScrollHeight = chatContainerRef.current?.scrollHeight || 0;
+    
     try {
-      const response = await fetchScheduleChats(Number(scheduleId), page);
-      if (response.success && response.data) {
-        const newMessages = response.data.content;
-        setMessages((prevMessages) => [...newMessages, ...prevMessages]); // 기존 메시지에 새 메시지를 추가
-        setTotalPages(response.data.totalPages);
-        setCurrentPage(page);
+      const prevPage = currentPage - 1; // 이전 페이지 계산
+      const response = await fetchScheduleChats(Number(scheduleId), prevPage);
+      
+      if (response.success) {
+        setMessages((prev) => [...response.data.content, ...prev]); // 과거 메시지를 앞에 추가
+        setCurrentPage(prevPage); // 현재 페이지 업데이트
+        
+        // 이전 스크롤 위치 유지
+        setTimeout(() => {
+          if (chatContainerRef.current) {
+            chatContainerRef.current.scrollTop =
+              chatContainerRef.current.scrollHeight - previousScrollHeight;
+          }
+        }, 100);
       }
     } catch (error) {
-      console.error('메시지를 불러오는 중 오류가 발생했습니다:', error);
+      console.error('이전 메시지 로드 실패:', error);
     } finally {
       setLoading(false);
     }
   };
-
-  // 초기 메시지를 로드
-  useEffect(() => {
-    const loadInitialMessages = async () => {
-      try {
-        const response = await fetchScheduleChats(Number(scheduleId), 1);
-        if (response.success && response.data) {
-          setMessages(response.data.content); // 초기 메시지 설정
-          setTotalPages(response.data.totalPages);
-          setCurrentPage(response.data.totalPages);
-        }
-      } catch (error) {
-        console.error('초기 메시지를 불러오는 중 오류가 발생했습니다:', error);
-      }
-    };
-
-    loadInitialMessages();
-
-    // STOMP 클라이언트를 초기화
-    const stompClient = new Client({
-      brokerURL: brokerUrl,
-      connectHeaders: { Authorization: `Bearer ${token}` },
-      reconnectDelay: 5000, // 재연결 딜레이
-      heartbeatIncoming: 4000, // 수신 하트비트 간격
-      heartbeatOutgoing: 4000, // 송신 하트비트 간격
-      onConnect: () => {
-        console.log('[STOMP] 성공적으로 연결되었습니다.');
-
-        // 메시지를 수신하는 구독
-        stompClient.subscribe(
-          `/sub/schedules/${scheduleId}/chats`,
-          (message) => {
-            const newMessage: ChatMessage = JSON.parse(message.body);
-            setMessages((prevMessages) => {
-              // 중복 메시지 방지
-              const isDuplicate = prevMessages.some(
-                (msg) => msg.messageId === newMessage.messageId
-              );
-              return isDuplicate ? prevMessages : [...prevMessages, newMessage];
-            });
-          }
-        );
-      },
-      onStompError: (frame) => {
-        console.error(
-          '[STOMP]에서 에러가 발생했습니다:',
-          frame.headers['message']
-        );
-        console.error('[STOMP] 추가 정보:', frame.body);
-      },
-    });
-
-    stompClient.activate(); // 클라이언트 활성화
-    clientRef.current = stompClient;
-
-    // 컴포넌트 언마운트 시 STOMP 클라이언트 비활성화
-    return () => {
-      if (clientRef.current) {
-        if (clientRef.current instanceof Client) {
-          clientRef.current.deactivate();
-        }
-      }
-    };
-  }, [scheduleId, brokerUrl, token]);
-
-  // 메시지를 전송하는 함수
+  
+  // 스크롤 이벤트: 상단에 도달하면 과거 메시지 로드
+  const handleScroll = () => {
+    if (chatContainerRef.current?.scrollTop === 0) {
+      loadPreviousMessages();
+    }
+  };
+  
+  // 메시지 전송
   const handleSendMessage = () => {
-    const stompClient = clientRef.current;
-    if (message.trim() && stompClient && stompClient.connected) {
-      stompClient.publish({
-        destination: '/pub/chats', // 메시지 전송 경로
-        body: JSON.stringify({ scheduleId, nickname: userNickname, message }),
+    if (message.trim() && clientRef.current?.connected) {
+      clientRef.current?.publish({
+        destination: '/pub/chats',
+        body: JSON.stringify({
+          scheduleId,
+          nickname: userNickname,
+          message,
+        }),
       });
-      setMessage(''); // 메시지 입력 필드 초기화
+      setMessage('');
     }
   };
-
-  // Enter 키로 메시지 전송
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleSendMessage();
-    }
-  };
-
-  // 메시지 입력 핸들러
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputText = e.target.value;
-
-    const lineCount = inputText.split('\n').length;
-
-    // 메시지 길이 및 줄 수 제한 (1000자, 3줄 이하)
-    if (lineCount <= 3 && inputText.length <= 1000) {
-      setMessage(inputText);
-    } else {
-      console.warn('입력 제한 초과: 3줄 또는 1000자를 초과할 수 없습니다.');
-    }
-  };
-
-  // UI 렌더링
+  
   return (
     <div className={styles.chatContainer}>
-      <div className={styles.header}>
-        <h1 className={styles.chatTitle}>그룹 채팅</h1>
-      </div>
-      <div className={styles.messageContainer}>
+      <div className={styles.header}>그룹 채팅</div>
+      <div
+        className={styles.messageContainer}
+        ref={chatContainerRef}
+        onScroll={handleScroll}
+        style={{ paddingTop: messages.length < 10 ? '700px' : '0' }} // 데이터가 적을 때 패딩 추가
+      >
         {messages.map((msg, index) => {
-          // 메시지 날짜 표시
           const showDate =
             index === 0 ||
-            formatDate(messages[index - 1].timestamp) !==
-              formatDate(msg.timestamp);
-
+            formatDate(messages[index - 1].timestamp) !== formatDate(msg.timestamp);
+          
           return (
             <div key={msg.messageId} className={styles.userMessages}>
               {showDate && (
                 <div className={styles.dateSeparator}>
                   <hr className={styles.dateHr} />
-                  <span className={styles.dateText}>
-                    {formatDate(msg.timestamp)}
-                  </span>
+                  <span className={styles.dateText}>{formatDate(msg.timestamp)}</span>
                   <hr className={styles.dateHr} />
                 </div>
               )}
-              {/* 다른 사용자의 메시지 정보 */}
               {msg.nickname !== userNickname && (
                 <div className={styles.userInfo}>
                   <Image
@@ -199,44 +202,29 @@ const Chatting = () => {
                   <span className={styles.nickname}>{msg.nickname}</span>
                 </div>
               )}
-              {/* 메시지 내용 */}
               <div
                 className={
                   msg.nickname === userNickname
-                    ? styles.receiveMessage // 사용자의 메시지 스타일
-                    : styles.sentMessage // 다른 사용자의 메시지 스타일
+                    ? styles.receiveMessage
+                    : styles.sentMessage
                 }
               >
                 <span>{msg.message}</span>
-                <span className={styles.timestamp}>
-                  {formatTimestamp(msg.timestamp)}
-                </span>
+                <span className={styles.timestamp}>{formatTimestamp(msg.timestamp)}</span>
               </div>
             </div>
           );
         })}
-
-        {/* 더 불러오기 버튼 */}
-        {currentPage > 1 && currentPage <= totalPages && (
-          <button
-            onClick={() => loadMessages(currentPage - 1)}
-            className={styles.loadMoreButton}
-          >
-            더 불러오기
-          </button>
-        )}
-
-        {/* 로딩 상태 표시 */}
         {loading && <DataLoading />}
       </div>
       <div className={styles.inputContainer}>
         <input
-          type='text'
+          type="text"
           value={message}
-          onChange={handleInputChange}
           className={styles.messageInput}
-          onKeyPress={handleKeyPress}
-          placeholder='메시지를 입력하세요.'
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder="메시지를 입력하세요."
+          onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
         />
         <button onClick={handleSendMessage} className={styles.sendButton}>
           전송
