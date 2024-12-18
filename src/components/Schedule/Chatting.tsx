@@ -37,53 +37,39 @@ const Chatting = () => {
   
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [message, setMessage] = useState('');
-  const [currentPage, setCurrentPage] = useState<number | null>(null); // 현재 페이지
-  const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수
+  const [currentPage, setCurrentPage] = useState<number | null>(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
   
-  // STOMP 브로커 URL 설정
   const brokerUrl = process.env.NEXT_PUBLIC_BROKER_URL;
   
-  // 스크롤 최하단 이동 함수
-  const scrollToBottom = (force = false) => {
+  // 스크롤 맨 위로 이동
+  const scrollToTop = () => {
     if (chatContainerRef.current) {
-      const container = chatContainerRef.current;
-      const isAtBottom =
-        container.scrollHeight - container.scrollTop === container.clientHeight;
-      
-      if (force || isAtBottom) {
-        container.scrollTop = container.scrollHeight;
-      }
+      chatContainerRef.current.scrollTop = 0;
     }
   };
   
-  // 초기 메시지 로드: 최신 페이지 데이터 가져오기
+  // 초기 메시지 로드
   useEffect(() => {
-    const loadLatestMessages = async () => {
+    const loadInitialMessages = async () => {
       try {
         const response = await fetchScheduleChats(Number(scheduleId), 1);
         if (response.success) {
-          const { totalPages: pages } = response.data;
+          setMessages(response.data.content);
+          setTotalPages(response.data.totalPages);
+          setCurrentPage(1);
           
-          // 최신 페이지 데이터 가져오기
-          const latestPageResponse = await fetchScheduleChats(Number(scheduleId), pages);
-          if (latestPageResponse.success) {
-            setMessages(latestPageResponse.data.content); // 최신 메시지 저장
-            setTotalPages(pages); // 전체 페이지 수 설정
-            setCurrentPage(pages); // 최신 페이지 설정
-            
-            // 강제로 스크롤 이동
-            setTimeout(() => scrollToBottom(true), 100);
-          }
+          // 스크롤 맨 위로 강제 이동
+          setTimeout(scrollToTop, 0);
         }
       } catch (error) {
-        console.error('최신 메시지 로드 실패:', error);
+        console.error('메시지 로드 실패:', error);
       }
     };
     
-    loadLatestMessages();
+    loadInitialMessages();
     
-    // STOMP 클라이언트 설정
     const stompClient = new Client({
       brokerURL: brokerUrl,
       connectHeaders: { Authorization: `Bearer ${token}` },
@@ -91,18 +77,16 @@ const Chatting = () => {
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
       onConnect: () => {
-        console.log('[STOMP] 연결 성공');
         stompClient.subscribe(`/sub/schedules/${scheduleId}/chats`, (message) => {
           const newMessage: ChatMessage = JSON.parse(message.body);
-          setMessages((prev) => [...prev, newMessage]);
-          scrollToBottom(); // 새 메시지가 올 때 스크롤 이동
+          
+          setMessages((prev) => {
+            const combinedMessages = [...prev, newMessage];
+            return combinedMessages.sort(
+              (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+            );
+          });
         });
-      },
-      onDisconnect: () => {
-        console.log('[STOMP] 연결 해제');
-      },
-      onStompError: (frame) => {
-        console.error('[STOMP] 오류 발생:', frame.headers['message']);
       },
     });
     
@@ -110,49 +94,52 @@ const Chatting = () => {
     clientRef.current = stompClient;
     
     return () => {
-      console.log('[STOMP] 클라이언트 비활성화');
       clientRef.current?.deactivate();
     };
   }, [scheduleId]);
   
-  // 과거 메시지 로드
-  const loadPreviousMessages = async () => {
-    if (loading || currentPage === null || currentPage <= 1) return; // 더 이상 페이지가 없으면 중단
+  // 추가 메시지 로드
+  const loadNextMessages = async () => {
+    if (loading || currentPage === null || currentPage >= totalPages) return;
     setLoading(true);
     
     const previousScrollHeight = chatContainerRef.current?.scrollHeight || 0;
     
     try {
-      const prevPage = currentPage - 1; // 이전 페이지 계산
-      const response = await fetchScheduleChats(Number(scheduleId), prevPage);
+      const nextPage = currentPage + 1;
+      const response = await fetchScheduleChats(Number(scheduleId), nextPage);
       
       if (response.success) {
-        setMessages((prev) => [...response.data.content, ...prev]); // 과거 메시지를 앞에 추가
-        setCurrentPage(prevPage); // 현재 페이지 업데이트
+        setMessages((prev) => {
+          const combinedMessages = [...response.data.content, ...prev];
+          return combinedMessages.sort(
+            (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+          );
+        });
+        setCurrentPage(nextPage);
         
-        // 이전 스크롤 위치 유지
         setTimeout(() => {
           if (chatContainerRef.current) {
             chatContainerRef.current.scrollTop =
               chatContainerRef.current.scrollHeight - previousScrollHeight;
           }
-        }, 100);
+        }, 0);
       }
     } catch (error) {
-      console.error('이전 메시지 로드 실패:', error);
+      console.error('다음 메시지 로드 실패:', error);
     } finally {
       setLoading(false);
     }
   };
   
-  // 스크롤 이벤트: 상단에 도달하면 과거 메시지 로드
+  // 스크롤 이벤트
   const handleScroll = () => {
-    if (chatContainerRef.current?.scrollTop === 0) {
-      loadPreviousMessages();
+    const container = chatContainerRef.current;
+    if (container && typeof container.scrollTop === 'number' && container.scrollTop <= 10) {
+      loadNextMessages();
     }
   };
   
-  // 메시지 전송
   const handleSendMessage = () => {
     if (message.trim() && clientRef.current?.connected) {
       clientRef.current?.publish({
@@ -174,7 +161,7 @@ const Chatting = () => {
         className={styles.messageContainer}
         ref={chatContainerRef}
         onScroll={handleScroll}
-        style={{ paddingTop: messages.length < 10 ? '700px' : '0' }} // 데이터가 적을 때 패딩 추가
+        style={{ paddingTop: messages.length < 10 ? '700px' : '0' }}
       >
         {messages.map((msg, index) => {
           const showDate =
