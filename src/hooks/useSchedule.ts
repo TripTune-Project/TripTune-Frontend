@@ -1,7 +1,7 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import {
   fetchScheduleList,
-  fetchScheduleListSearch,
+  fetchScheduleListSearch, fetchSchedulesPreview,
   fetchSharedScheduleList,
 } from '@/api/scheduleApi';
 import {
@@ -115,6 +115,26 @@ export const useScheduleTravelRoute = (
       const currentPage = lastPage?.data?.currentPage ?? 0;
       const totalPages = lastPage?.data?.totalPages ?? 0;
 
+      if (currentPage < totalPages) {
+        return currentPage + 1;
+      }
+      return undefined;
+    },
+  });
+};
+
+// 내 일정 목록 조회 (모달창)
+export const useMyScheduleList = (enabled = true) => {
+  return useInfiniteQuery({
+    queryKey: ['myScheduleList'],
+    queryFn: ({ pageParam }) => fetchSchedulesPreview(pageParam || 1),
+    enabled,
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      const currentPage = lastPage?.data?.currentPage ?? 0;
+      const totalPages = lastPage?.data?.totalPages ?? 0;
+      
+      // 다음 페이지가 있으면 페이지 번호를 반환, 없으면 undefined 반환
       if (currentPage < totalPages) {
         return currentPage + 1;
       }

@@ -169,3 +169,19 @@ export interface SendMessage {
   nickname: string;
   message: string;
 }
+
+export interface SchedulePreviewResponse {
+  totalPages: number;
+  currentPage: number;
+  totalElements: number;
+  pageSize: number;
+  content: SchedulePreviewItem[];
+}
+
+export interface SchedulePreviewItem {
+  scheduleId: number;
+  scheduleName: string;
+  startDate: string;
+  endDate: string;
+  author: string;
+}

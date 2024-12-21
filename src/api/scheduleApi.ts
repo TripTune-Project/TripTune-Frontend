@@ -4,7 +4,7 @@ import {
   ScheduleList,
   ScheduleDetail,
   CreateSchedule,
-  UpdateSchedule,
+  UpdateSchedule, SchedulePreviewResponse,
 } from '@/types/scheduleType';
 import { handleApiError } from '@/api/errorHandler';
 
@@ -151,6 +151,49 @@ export const deleteSchedule = async (
     });
     console.log(
       data.success ? '일정 삭제 성공:' : '일정 삭제 실패:',
+      data.message
+    );
+    return data;
+  } catch (error: unknown) {
+    return handleApiError(error, '서버 내부 오류가 발생하였습니다.');
+  }
+};
+
+// 8. 내 일정 목록 조회 (모달창)
+export const fetchSchedulesPreview = async (
+  page: number
+): Promise<ApiResponse<SchedulePreviewResponse>> => {
+  const url = `/api/schedules/preview?page=${page}`;
+  
+  try {
+    const data = await get<ApiResponse<SchedulePreviewResponse>>(url, {
+      requiresAuth: true,
+    });
+    console.log(
+      data.success
+        ? `일정 목록 조회 성공 (현재 페이지: ${data.data?.currentPage})`
+        : '일정 목록 조회 실패:',
+      data.message
+    );
+    return data;
+  } catch (error: unknown) {
+    return handleApiError(error, '서버 내부 오류가 발생하였습니다.');
+  }
+};
+
+// 9. 내 일정 담기
+export const addPlaceToSchedule = async (
+  scheduleId: number,
+  placeId: number
+): Promise<ApiResponse<null>> => {
+  const url = `/api/schedules/${scheduleId}/routes`;
+  
+  try {
+    const data = await post<ApiResponse<null>>(url, { placeId }, {
+      requiresAuth: true,
+    });
+    console.log(
+      data.success ? '여행지 추가 성공:' : '여행지 추가 실패:',
       data.message
     );
     return data;
