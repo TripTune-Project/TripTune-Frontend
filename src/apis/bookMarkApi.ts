@@ -37,7 +37,7 @@ export const BookMarkApi = async (data: BookMarkData) => {
 export const BookMarkDeleteApi = async (data: BookMarkData) => {
   try {
     const response = await remove<{ data: { placeId: number } }>(
-      '/api/bookmarks',
+      '/apis/bookmarks',
       data,
       {
         headers: {

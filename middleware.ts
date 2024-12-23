@@ -4,7 +4,7 @@ import type { NextRequest } from 'next/server';
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  if (pathname.startsWith('/api')) {
+  if (pathname.startsWith('/apis')) {
     return NextResponse.next();
   }
 
@@ -12,5 +12,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!api).*)'],
+  matcher: ['/((?!apis).*)'],
 };

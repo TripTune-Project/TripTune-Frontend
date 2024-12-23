@@ -18,8 +18,8 @@ import {
   useSharedScheduleList,
   useScheduleListSearch,
 } from '@/hooks/useSchedule';
-import { deleteSchedule } from '@/api/scheduleApi';
-import { leaveSchedule } from '@/api/attendeeApi';
+import { deleteSchedule } from '@/apis/scheduleApi';
+import { leaveSchedule } from '@/apis/attendeeApi';
 import DeleteModal from '@/components/Schedule/DeleteModal';
 import AlertIcon from '../../../public/assets/images/여행지 탐색/홈화면/alertIcon.png';
 import moreBtn from '../../../public/assets/images/일정 만들기/일정 목록 조회/moreBtn.png';

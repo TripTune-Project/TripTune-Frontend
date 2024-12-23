@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { Place, Schedule } from '@/types/scheduleType';
-import { fetchScheduleDetail } from '@/api/scheduleApi';
+import { fetchScheduleDetail } from '@/apis/scheduleApi';
 
 // 마커 정보를 나타내는 인터페이스
 interface Makers {

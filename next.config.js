@@ -25,7 +25,7 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: '/api/:path*',
+        source: '/apis/:path*',
         destination: 'https://www.triptune.site/api/:path*',
         // destination: 'http://13.209.177.247:8080/api/:path*',
       },

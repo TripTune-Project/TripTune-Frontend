@@ -5,7 +5,7 @@ import {
   LeaveSchedule,
   ShareSchedule,
 } from '@/types/scheduleType';
-import { handleApiError } from '@/api/errorHandler';
+import { handleApiError } from '@/apis/errorHandler';
 
 // 일정 참석자 조회
 export const fetchScheduleAttendees = async (

@@ -11,7 +11,7 @@ interface MapProps {
   longitude: number;
 }
 
-const DetailPlaceMap = ({ latitude, longitude }: MapProps) => {
+const SearchDetailPlaceMap = ({ latitude, longitude }: MapProps) => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<google.maps.Map | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
@@ -73,4 +73,4 @@ const DetailPlaceMap = ({ latitude, longitude }: MapProps) => {
   return <div ref={mapContainerRef} style={containerStyle} />;
 };
 
-export default DetailPlaceMap;
+export default SearchDetailPlaceMap;

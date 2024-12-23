@@ -9,7 +9,7 @@ import {
 } from '@/utils/validation';
 import styles from '../../styles/Join.module.css';
 import { useRouter } from 'next/navigation';
-import { joinMember } from '@/api/joinApi';
+import { joinMember } from '@/apis/joinApi';
 import EmailVerification from './EmailVerification';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Client } from '@stomp/stompjs';
 import Cookies from 'js-cookie';
-import { fetchScheduleChats } from '@/api/chatApi';
+import { fetchScheduleChats } from '@/apis/chatApi';
 import styles from '../../styles/Schedule.module.css';
 import Image from 'next/image';
 import DataLoading from '@/components/Common/DataLoading';
@@ -31,25 +31,25 @@ const Chatting = () => {
   const { scheduleId } = useParams();
   const token = Cookies.get('trip-tune_at');
   const userNickname = Cookies.get('nickname');
-  
+
   const clientRef = useRef<Client | null>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  
+
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [message, setMessage] = useState('');
   const [currentPage, setCurrentPage] = useState<number | null>(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
-  
+
   const brokerUrl = process.env.NEXT_PUBLIC_BROKER_URL;
-  
+
   // 스크롤 맨 위로 이동
   const scrollToTop = () => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = 0;
     }
   };
-  
+
   // 초기 메시지 로드
   useEffect(() => {
     const loadInitialMessages = async () => {
@@ -59,7 +59,7 @@ const Chatting = () => {
           setMessages(response.data.content);
           setTotalPages(response.data.totalPages);
           setCurrentPage(1);
-          
+
           // 스크롤 맨 위로 강제 이동
           setTimeout(scrollToTop, 0);
         }
@@ -67,9 +67,9 @@ const Chatting = () => {
         console.error('메시지 로드 실패:', error);
       }
     };
-    
+
     loadInitialMessages();
-    
+
     const stompClient = new Client({
       brokerURL: brokerUrl,
       connectHeaders: { Authorization: `Bearer ${token}` },
@@ -77,47 +77,53 @@ const Chatting = () => {
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
       onConnect: () => {
-        stompClient.subscribe(`/sub/schedules/${scheduleId}/chats`, (message) => {
-          const newMessage: ChatMessage = JSON.parse(message.body);
-          
-          setMessages((prev) => {
-            const combinedMessages = [...prev, newMessage];
-            return combinedMessages.sort(
-              (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
-            );
-          });
-        });
+        stompClient.subscribe(
+          `/sub/schedules/${scheduleId}/chats`,
+          (message) => {
+            const newMessage: ChatMessage = JSON.parse(message.body);
+
+            setMessages((prev) => {
+              const combinedMessages = [...prev, newMessage];
+              return combinedMessages.sort(
+                (a, b) =>
+                  new Date(a.timestamp).getTime() -
+                  new Date(b.timestamp).getTime()
+              );
+            });
+          }
+        );
       },
     });
-    
+
     stompClient.activate();
     clientRef.current = stompClient;
-    
+
     return () => {
       clientRef.current?.deactivate();
     };
   }, [scheduleId]);
-  
+
   // 추가 메시지 로드
   const loadNextMessages = async () => {
     if (loading || currentPage === null || currentPage >= totalPages) return;
     setLoading(true);
-    
+
     const previousScrollHeight = chatContainerRef.current?.scrollHeight || 0;
-    
+
     try {
       const nextPage = currentPage + 1;
       const response = await fetchScheduleChats(Number(scheduleId), nextPage);
-      
+
       if (response.success) {
         setMessages((prev) => {
           const combinedMessages = [...response.data.content, ...prev];
           return combinedMessages.sort(
-            (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+            (a, b) =>
+              new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
           );
         });
         setCurrentPage(nextPage);
-        
+
         setTimeout(() => {
           if (chatContainerRef.current) {
             chatContainerRef.current.scrollTop =
@@ -131,15 +137,19 @@ const Chatting = () => {
       setLoading(false);
     }
   };
-  
+
   // 스크롤 이벤트
   const handleScroll = () => {
     const container = chatContainerRef.current;
-    if (container && typeof container.scrollTop === 'number' && container.scrollTop <= 10) {
+    if (
+      container &&
+      typeof container.scrollTop === 'number' &&
+      container.scrollTop <= 10
+    ) {
       loadNextMessages();
     }
   };
-  
+
   const handleSendMessage = () => {
     if (message.trim() && clientRef.current?.connected) {
       clientRef.current?.publish({
@@ -153,7 +163,7 @@ const Chatting = () => {
       setMessage('');
     }
   };
-  
+
   return (
     <div className={styles.chatContainer}>
       <div className={styles.header}>그룹 채팅</div>
@@ -166,14 +176,17 @@ const Chatting = () => {
         {messages.map((msg, index) => {
           const showDate =
             index === 0 ||
-            formatDate(messages[index - 1].timestamp) !== formatDate(msg.timestamp);
-          
+            formatDate(messages[index - 1].timestamp) !==
+              formatDate(msg.timestamp);
+
           return (
             <div key={msg.messageId} className={styles.userMessages}>
               {showDate && (
                 <div className={styles.dateSeparator}>
                   <hr className={styles.dateHr} />
-                  <span className={styles.dateText}>{formatDate(msg.timestamp)}</span>
+                  <span className={styles.dateText}>
+                    {formatDate(msg.timestamp)}
+                  </span>
                   <hr className={styles.dateHr} />
                 </div>
               )}
@@ -197,7 +210,9 @@ const Chatting = () => {
                 }
               >
                 <span>{msg.message}</span>
-                <span className={styles.timestamp}>{formatTimestamp(msg.timestamp)}</span>
+                <span className={styles.timestamp}>
+                  {formatTimestamp(msg.timestamp)}
+                </span>
               </div>
             </div>
           );
@@ -206,11 +221,11 @@ const Chatting = () => {
       </div>
       <div className={styles.inputContainer}>
         <input
-          type="text"
+          type='text'
           value={message}
           className={styles.messageInput}
           onChange={(e) => setMessage(e.target.value)}
-          placeholder="메시지를 입력하세요."
+          placeholder='메시지를 입력하세요.'
           onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
         />
         <button onClick={handleSendMessage} className={styles.sendButton}>

@@ -5,7 +5,7 @@ import {
   fetchScheduleAttendees,
   shareSchedule,
   updatePermission,
-} from '@/api/attendeeApi';
+} from '@/apis/attendeeApi';
 import { useParams } from 'next/navigation';
 
 interface InviteModalProps {

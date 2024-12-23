@@ -16,7 +16,7 @@ interface MapProps {
   places: TravelPlace[];
 }
 
-const PlacesMap = ({ places }: MapProps) => {
+const SearchPlacesMap = ({ places }: MapProps) => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<google.maps.Map | null>(null);
   const [zoom, setZoom] = useState(16);
@@ -120,4 +120,4 @@ const PlacesMap = ({ places }: MapProps) => {
   return <div ref={mapContainerRef} style={containerStyle} />;
 };
 
-export default PlacesMap;
+export default SearchPlacesMap;

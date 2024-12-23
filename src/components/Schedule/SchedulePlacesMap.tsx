@@ -14,7 +14,7 @@ const defaultCenter = {
   lng: 126.9976,
 };
 
-function PlacesScheduleMap() {
+function SchedulePlacesMap() {
   // 여행 일정에 추가된 장소를 가져옴
   const { addedPlaces } = useTravelStore();
 
@@ -147,4 +147,4 @@ function PlacesScheduleMap() {
   return <div ref={mapContainerRef} style={containerStyle} />;
 }
 
-export default PlacesScheduleMap;
+export default SchedulePlacesMap;

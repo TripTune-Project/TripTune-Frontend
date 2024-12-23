@@ -8,10 +8,10 @@ import { useParams, useRouter } from 'next/navigation';
 import styles from '../../../styles/Schedule.module.css';
 import MainLogoImage from '../../../../public/assets/images/로고/triptuneLogo.png';
 import ScheduleMake from '@/components/Schedule/ScheduleMake';
-import PlacesScheduleMap from '@/components/Schedule/PlacesScheduleMap';
+import SchedulePlacesMap from '@/components/Schedule/SchedulePlacesMap';
 import Chatting from '@/components/Schedule/Chatting';
 import InviteModal from '@/components/Schedule/InviteModal';
-import { updateExistingSchedule } from '@/api/scheduleApi';
+import { updateExistingSchedule } from '@/apis/scheduleApi';
 import { useTravelStore } from '@/store/scheduleStore';
 
 export default function ScheduleDetailPage() {
@@ -97,7 +97,7 @@ export default function ScheduleDetailPage() {
           <ScheduleMake initialTab='scheduleTravel' />
         </div>
         <div className={styles.centerSection}>
-          <PlacesScheduleMap />
+          <SchedulePlacesMap />
         </div>
         <div className={styles.rightSection}>
           <Chatting />

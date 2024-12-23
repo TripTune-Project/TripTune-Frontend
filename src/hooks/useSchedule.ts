@@ -1,14 +1,15 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import {
   fetchScheduleList,
-  fetchScheduleListSearch, fetchSchedulesPreview,
+  fetchScheduleListSearch,
+  fetchSchedulesPreview,
   fetchSharedScheduleList,
-} from '@/api/scheduleApi';
+} from '@/apis/scheduleApi';
 import {
   fetchTravelList,
   fetchTravelRoute,
   searchTravelDestinations,
-} from '@/api/locationRouteApi';
+} from '@/apis/locationRouteApi';
 
 // 일정 목록 조회 (GET)
 export const useScheduleList = (enabled = true) => {
@@ -133,7 +134,7 @@ export const useMyScheduleList = (enabled = true) => {
     getNextPageParam: (lastPage) => {
       const currentPage = lastPage?.data?.currentPage ?? 0;
       const totalPages = lastPage?.data?.totalPages ?? 0;
-      
+
       // 다음 페이지가 있으면 페이지 번호를 반환, 없으면 undefined 반환
       if (currentPage < totalPages) {
         return currentPage + 1;

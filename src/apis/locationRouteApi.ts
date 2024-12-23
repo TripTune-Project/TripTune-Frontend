@@ -4,7 +4,7 @@ import {
   ScheduleTravelList,
   RouteList,
 } from '@/types/scheduleType';
-import { handleApiError } from '@/api/errorHandler';
+import { handleApiError } from '@/apis/errorHandler';
 
 // 여행지 조회 (GET)
 export const fetchTravelList = async (
