@@ -1,4 +1,0 @@
-[[redirects]]
-from = "/api/*"
-to = "https:/www.triptune.site/api/:splat"
-status = 200

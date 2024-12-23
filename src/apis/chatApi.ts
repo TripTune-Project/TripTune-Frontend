@@ -1,6 +1,6 @@
 import { get } from './api';
 import { ApiResponse, ChatList } from '@/types/scheduleType';
-import { handleApiError } from '@/api/errorHandler';
+import { handleApiError } from '@/apis/errorHandler';
 
 // 채팅 목록 조회 (GET)
 export const fetchScheduleChats = async (

@@ -4,9 +4,10 @@ import {
   ScheduleList,
   ScheduleDetail,
   CreateSchedule,
-  UpdateSchedule, SchedulePreviewResponse,
+  UpdateSchedule,
+  SchedulePreviewResponse,
 } from '@/types/scheduleType';
-import { handleApiError } from '@/api/errorHandler';
+import { handleApiError } from '@/apis/errorHandler';
 
 // 1. 일정 목록 조회 (GET)
 export const fetchScheduleList = async (
@@ -95,7 +96,7 @@ export const fetchScheduleDetail = async (
 export const createNewSchedule = async (
   scheduleData: CreateSchedule
 ): Promise<ApiResponse<CreateSchedule>> => {
-  const url = '/api/schedules';
+  const url = '/apis/schedules';
 
   try {
     const data = await post<ApiResponse<CreateSchedule>>(url, scheduleData, {
@@ -164,7 +165,7 @@ export const fetchSchedulesPreview = async (
   page: number
 ): Promise<ApiResponse<SchedulePreviewResponse>> => {
   const url = `/api/schedules/preview?page=${page}`;
-  
+
   try {
     const data = await get<ApiResponse<SchedulePreviewResponse>>(url, {
       requiresAuth: true,
@@ -187,11 +188,15 @@ export const addPlaceToSchedule = async (
   placeId: number
 ): Promise<ApiResponse<null>> => {
   const url = `/api/schedules/${scheduleId}/routes`;
-  
+
   try {
-    const data = await post<ApiResponse<null>>(url, { placeId }, {
-      requiresAuth: true,
-    });
+    const data = await post<ApiResponse<null>>(
+      url,
+      { placeId },
+      {
+        requiresAuth: true,
+      }
+    );
     console.log(
       data.success ? '여행지 추가 성공:' : '여행지 추가 실패:',
       data.message

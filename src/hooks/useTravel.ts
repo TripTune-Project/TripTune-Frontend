@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import {
   fetchTravelListByLocation,
   fetchTravelListSearch,
-} from '@/api/travelApi';
+} from '@/apis/travelApi';
 import { Coordinates } from '@/types';
 import { TravelListSearchParams } from '@/types/travelType';
 

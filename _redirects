@@ -1,5 +1,0 @@
-# API 요청은 백엔드로 라우팅
-/api/*   https://www.triptune.site/api/:splat   200
-
-# Next.js 내부의 모든 동적 라우트를 처리
-/*    /.netlify/functions/next_router   200

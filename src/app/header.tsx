@@ -7,7 +7,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
 import LoginIcon from '../../public/assets/images/메인화면/main_loginBtn.png';
 import MainLogoImage from '../../public/assets/images/로고/triptuneLogo.png';
-import { logoutApi } from '@/api/logoutApi';
+import { logoutApi } from '@/apis/logoutApi';
 import useAuth from '@/hooks/useAuth';
 import Cookies from 'js-cookie';
 

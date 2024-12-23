@@ -11,7 +11,7 @@ import Image from 'next/image';
 import kakao from '../../../public/assets/icons/ic_kakao_vector.png';
 import naver from '../../../public/assets/icons/ic_naver_vector.png';
 import VerificationLoading from '../Common/VerificationLoading';
-import { loginUser } from '@/api/loginApi';
+import { loginUser } from '@/apis/loginApi';
 
 interface LoginFormData {
   userId: string;

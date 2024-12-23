@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Pagination from '../../components/Travel/Pagination';
-import PlacesMap from '../../components/Travel/PlacesMap';
+import SearchPlacesMap from '../../components/Travel/SearchPlacesMap';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import DataLoading from '../../components/Common/DataLoading';
@@ -17,7 +17,7 @@ import {
 import styles from '../../styles/Travel.module.css';
 import { useTravelStore } from '@/store/travelStore';
 import { useDebounce } from '@/hooks/useDebounce';
-import { BookMarkApi, BookMarkDeleteApi } from '@/api/bookMarkApi';
+import { BookMarkApi, BookMarkDeleteApi } from '@/apis/bookMarkApi';
 import BookMarkNo from '../../../public/assets/images/여행지 탐색/홈화면/placeHome_bookmarkIcon.png';
 import BookMark from '../../../public/assets/images/여행지 탐색/홈화면/placeHome_bookmarkIconFill.png';
 import locationIcon from '../../../public/assets/images/여행지 탐색/홈화면/placeHome_mapIcon.png';
@@ -344,7 +344,7 @@ const TravelPage = () => {
               )}
             </div>
             <div className={styles.mapContainer}>
-              <PlacesMap places={places || []} />
+              <SearchPlacesMap places={places || []} />
             </div>
           </div>
         )}

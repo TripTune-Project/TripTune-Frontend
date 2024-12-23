@@ -10,9 +10,10 @@ import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
 import styles from '../../../styles/Travel.module.css';
 import DataLoading from '@/components/Common/DataLoading';
-import DetailPlaceMap from '@/components/Travel/DetailPlaceMap';
-import { BookMarkApi, BookMarkDeleteApi } from '@/api/bookMarkApi';
+import SearchDetailPlaceMap from '@/components/Travel/SearchDetailPlaceMap';
+import { BookMarkApi, BookMarkDeleteApi } from '@/apis/bookMarkApi';
 import styled from 'styled-components';
+import MyScheduleEditModal from '@/components/Travel/MyScheduleEditModal';
 import detailBookMarkNo from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_bookmarkIcon.png';
 import detailBookMark from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_bookmarkIconFill.png';
 import scheduleIcon from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_scheduleIcon.png';
@@ -21,7 +22,7 @@ import locationIcon from '../../../../public/assets/images/여행지 탐색/상�
 import timeIcon from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_timeIcon.png';
 import homePageIcon from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_homepageIcon.png';
 import phoneIcon from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_phoneIcon.png';
-import { fetchTravelDetail } from '@/api/travelApi';
+import { fetchTravelDetail } from '@/apis/travelApi';
 import { TravelPlaceDetail } from '@/types/travelType';
 
 const StyledSwiperContainer = styled.div`
@@ -82,6 +83,7 @@ const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [showExpandButton, setShowExpandButton] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const descriptionRef = useRef<HTMLParagraphElement | null>(null);
   const prevButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -134,7 +136,11 @@ const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
   };
 
   const handleScheduleAdd = () => {
-    console.log('내 일정에 추가되었습니다.');
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
   const UseTimeUI = ({ useTime }: { useTime: string }) => (
@@ -358,9 +364,19 @@ const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
             </button>
           )}
         </div>
-        <DetailPlaceMap latitude={latitude ?? 0} longitude={longitude ?? 0} />
+        <SearchDetailPlaceMap
+          latitude={latitude ?? 0}
+          longitude={longitude ?? 0}
+        />
       </div>
       {isLoading && <DataLoading />}
+      {isModalOpen && (
+        <MyScheduleEditModal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          placeId={placeIdNumber}
+        />
+      )}
     </>
   );
 };
