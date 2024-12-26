@@ -109,7 +109,7 @@
 .schedule::before {
   content: '';
   position: absolute;
-  width: 80vw;
+  width: 80%;
   height: 601px;
   border-radius: 0 0 0 200px;
   background: linear-gradient(264deg, #edf9f7 3.98%, #f1f5ff 98.44%);
@@ -1251,7 +1251,7 @@
   justify-content: center;
   margin-top: 30px;
   color: #555;
-  width: 1730px;
+  width: 90vw;
   height: 559px;
   flex-shrink: 0;
   border: 1px solid #d9d9d9;

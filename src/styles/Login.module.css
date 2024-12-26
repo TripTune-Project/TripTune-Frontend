@@ -24,13 +24,10 @@
 
 .loginContainer {
   margin-top: 82px;
-  z-index: 1;
-  width: 80%;
-  max-width: 756px;
+  width: 756px;
   height: 814px;
   flex-shrink: 0;
-  padding: 20px;
-  border-radius: 30px;
+  border-radius: 0px 0px 0px 200px;
   background: #ffffff;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
   display: flex;
