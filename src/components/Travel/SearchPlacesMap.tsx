@@ -3,7 +3,7 @@ import { TravelPlace } from '@/types/travelType';
 
 const containerStyle = {
   width: '100%',
-  height: '820px',
+  height: '100%',
   alignSelf: 'flex-start',
 };
 

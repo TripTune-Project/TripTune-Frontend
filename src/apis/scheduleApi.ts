@@ -96,7 +96,7 @@ export const fetchScheduleDetail = async (
 export const createNewSchedule = async (
   scheduleData: CreateSchedule
 ): Promise<ApiResponse<CreateSchedule>> => {
-  const url = '/apis/schedules';
+  const url = '/api/schedules';
 
   try {
     const data = await post<ApiResponse<CreateSchedule>>(url, scheduleData, {
@@ -164,7 +164,7 @@ export const deleteSchedule = async (
 export const fetchSchedulesPreview = async (
   page: number
 ): Promise<ApiResponse<SchedulePreviewResponse>> => {
-  const url = `/api/schedules/preview?page=${page}`;
+  const url = `/api/schedules/preview?edit=${page}`;
 
   try {
     const data = await get<ApiResponse<SchedulePreviewResponse>>(url, {

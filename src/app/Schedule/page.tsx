@@ -203,7 +203,12 @@ export default function SchedulePage() {
 
       return (
         <div className={styles.noScheduleContainer}>
-          <Image src={NoscheduleIcon} alt='일정 없음 아이콘' />
+          <Image
+            src={NoscheduleIcon}
+            alt='일정 없음 아이콘'
+            width={286}
+            height={180}
+          />
           <p className={styles.noScheduleMessage}>생성된 일정이 없습니다.</p>
           <p className={styles.noScheduleSubMessage}>
             일정을 만들어 멋진 여행을 준비해보세요!

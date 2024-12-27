@@ -6,7 +6,7 @@ import { Alert, Snackbar, Button } from '@mui/material';
 import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
 import LoginIcon from '../../public/assets/images/메인화면/main_loginBtn.png';
-import MainLogoImage from '../../public/assets/images/로고/triptuneLogo.png';
+import MainLogoImage from '../../public/assets/images/로고/triptuneLogo-removebg.png';
 import { logoutApi } from '@/apis/logoutApi';
 import useAuth from '@/hooks/useAuth';
 import Cookies from 'js-cookie';
@@ -17,7 +17,7 @@ const Header = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
-  const [isLogoutClicked, setIsLogoutClicked] = useState(false);
+  const [, setIsLogoutClicked] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userId, setUserId] = useState('');
   const [isAuthChecked, setIsAuthChecked] = useState(false);
@@ -57,19 +57,6 @@ const Header = () => {
     return () => clearInterval(intervalId);
   }, [checkAuthStatus, router]);
 
-  useEffect(() => {
-    checkAuthStatus();
-
-    const handleAuthChange = () => {
-      checkAuthStatus();
-    };
-
-    window.addEventListener('storage', handleAuthChange);
-    return () => {
-      window.removeEventListener('storage', handleAuthChange);
-    };
-  }, [checkAuthStatus, isLogoutClicked]);
-
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
@@ -97,53 +84,59 @@ const Header = () => {
     router.push(`/Login?next=${encodeURIComponent(pathname)}`);
   };
 
-  const isActive = (path: string) => (pathname === path ? styles.active : '');
+  const isActive = (path: string) =>
+    `${styles.navLink} ${pathname === path ? styles.active : ''} ${
+      pathname === '/' ? styles.homeNavLink : styles.otherNavLink
+    }`;
+
+  const headerClassName = `${styles.header} ${pathname === '/' ? styles.homeHeader : ''}`;
 
   return (
-    <>
-      <ul className={styles.headerMenu}>
-        <li>
-          <Link href='/'>
-            <Image
-              src={MainLogoImage}
-              alt='로고'
-              width={184}
-              height={58}
-              style={{ marginLeft: '118px' }}
-              priority
-            />
-          </Link>
-        </li>
-        <li className={`${styles.headerLink} ${isActive('/')}`}>
-          <Link href='/' className={styles.headerLinkA}>
+    <header className={headerClassName}>
+      <div className={styles.headerContent}>
+        <Link href='/'>
+          <Image
+            src={MainLogoImage}
+            alt='로고'
+            width={184}
+            height={58}
+            priority
+          />
+        </Link>
+        <nav className={styles.navMenu}>
+          <Link href='/' className={`${styles.navLink} ${isActive('/')}`}>
             홈 화면
           </Link>
-        </li>
-        <li className={`${styles.headerLink} ${isActive('/Schedule')}`}>
-          <Link href='/Schedule' className={styles.headerLinkA}>
+          <Link
+            href='/Schedule'
+            className={`${styles.navLink} ${isActive('/Schedule')}`}
+          >
             일정 만들기
           </Link>
-        </li>
-        <li className={`${styles.headerLink} ${isActive('/Travel')}`}>
-          <Link href='/Travel' className={styles.headerLinkA}>
+          <Link
+            href='/Travel'
+            className={`${styles.navLink} ${isActive('/Travel')}`}
+          >
             여행지 탐색
           </Link>
-        </li>
-        <li className={`${styles.headerLink} ${isActive('/MyPage')}`}>
-          <Link href='/MyPage' className={styles.headerLinkA}>
+          <Link
+            href='/MyPage'
+            className={`${styles.navLink} ${isActive('/MyPage')}`}
+          >
             마이 페이지
           </Link>
-        </li>
-        {isAuthChecked ? (
-          !isLoggedIn ? (
-            <li className={styles.headerLinkLogin} onClick={handleLogin}>
-              로그인
-              <Image src={LoginIcon} alt={'>'} width={8} height={8} priority />
-            </li>
-          ) : (
-            <>
-              <li className={styles.headerLink}>{userId} 님</li>
-              <li className={styles.headerLink}>
+          {isAuthChecked ? (
+            !isLoggedIn ? (
+              <div className={styles.headerLinkLogin} onClick={handleLogin}>
+                로그인
+                <Image src={LoginIcon} alt='>' width={8} height={8} priority />
+              </div>
+            ) : (
+              <div
+                className={styles.navLink}
+                style={{ color: pathname === '/' ? 'white' : 'black' }}
+              >
+                {userId} 님
                 <Button onClick={openModal} variant='text' size='large'>
                   로그아웃
                 </Button>
@@ -152,27 +145,25 @@ const Header = () => {
                   onClose={closeModal}
                   onConfirm={handleLogout}
                 />
-                <Snackbar
-                  open={alertOpen}
-                  autoHideDuration={6000}
-                  onClose={handleAlertClose}
-                >
-                  <Alert
-                    onClose={handleAlertClose}
-                    severity='error'
-                    sx={{ width: '100%' }}
-                  >
-                    {alertMessage}
-                  </Alert>
-                </Snackbar>
-              </li>
-            </>
-          )
-        ) : (
-          <li className={styles.headerLink}></li>
-        )}
-      </ul>
-    </>
+              </div>
+            )
+          ) : null}
+        </nav>
+      </div>
+      <Snackbar
+        open={alertOpen}
+        autoHideDuration={6000}
+        onClose={handleAlertClose}
+      >
+        <Alert
+          onClose={handleAlertClose}
+          severity='error'
+          sx={{ width: '100%' }}
+        >
+          {alertMessage}
+        </Alert>
+      </Snackbar>
+    </header>
   );
 };
 

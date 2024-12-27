@@ -11,7 +11,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
 import styles from '../styles/onBoard.module.css';
-import HomeImage from '../../public/assets/images/메인화면/ocean.jpg';
+import HomeImage from '../../public/assets/images/메인화면/ocean_title.png';
 import searchIcon from '../../public/assets/images/메인화면/main_searchIcon.png';
 import locationIcon from '../../public/assets/images/메인화면/main_slideMapIcon.png';
 import mainLinkBtn from '../../public/assets/images/메인화면/main_LinkBtn.png';
@@ -184,7 +184,7 @@ const Home = () => {
                     alt='돋보기 아이콘'
                     width={20}
                     height={20}
-                    style={{ marginLeft: '30px' }}
+                    style={{ marginLeft: '25px' }}
                   />
                 </button>
               </div>

@@ -71,8 +71,8 @@
 }
 
 .listContainer {
-  width: 50%;
-  padding: 10px;
+  width: 36%;
+  height: 88vh;
 }
 
 .searchContainer {
@@ -117,16 +117,18 @@
 }
 
 .placeItem {
-  display: flex;
-  margin-bottom: 10px;
-  padding: 10px;
-  border: 1px solid #dddddd;
-  border-radius: 8px;
+  display: inline-flex;
   align-items: center;
   justify-content: space-between;
   background-color: #ffffff;
   transition: box-shadow 0.3s ease;
-  height: 108px;
+  width: 650px;
+  height: 120px;
+  margin-bottom: 7px;
+  border-radius: 10px 0px;
+  padding: 7px;
+  border: 1px solid #e8e8e8;
+  box-shadow: 4px 4px 24px 0px rgba(217, 217, 217, 0.57);
 }
 
 .placeItem:hover {
@@ -135,8 +137,8 @@
 
 .placeThumbnail {
   margin-right: 20px;
-  width: 100px;
-  height: 100px;
+  width: 85px;
+  height: 85px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -147,8 +149,9 @@
 
 .thumbnailImage {
   border-radius: 8px;
-  width: 100%;
-  height: 100%;
+  width: 85px;
+  height: 85px;
+  padding: 5px;
   object-fit: cover;
 }
 
@@ -174,29 +177,36 @@
 }
 
 .placeName {
-  font-size: 18px;
-  font-weight: bold;
+  color: #2c2c2c;
+  font-size: 14px;
+  font-style: normal;
+  line-height: normal;
+  font-weight: 505;
   font-family: 'Noto Sans KR', sans-serif;
-  color: #333;
-  margin-left: 0;
+  margin-top: 10px;
 }
 
 .placeAddress,
 .placeDetailAddress {
-  line-height: 2em;
-  margin: 2px 0;
-  color: #555;
-  font-size: 14px;
+  margin: 0;
+  color: #868686;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  padding-bottom: 7px;
 }
 
 .placeDetailAddress {
   display: flex;
   align-items: center;
+  padding: 0;
 }
 
 .bookmarkButton {
   position: absolute;
   right: 10px;
+  top: 10px;
   background: none;
   border: none;
   cursor: pointer;
@@ -218,7 +228,9 @@
 }
 
 .mapContainer {
-  width: 50%;
+  margin-left: 55px;
+  width: 64%;
+  height: 88vh;
 }
 
 .headerContainer {
@@ -250,15 +262,35 @@
   background-color: #45a049;
 }
 
+.noScheduleContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 30px;
+  color: #555;
+  width: 100%;
+  height: 75vh;
+  flex-shrink: 0;
+  border: 1px solid #d9d9d9;
+  background-color: #ffffff;
+}
+
 .noResults {
   color: #555;
   font-size: 16px;
   text-align: center;
   margin: 20px 0;
-  padding: 10px;
-  background-color: #f9f9f9;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.noText {
+  margin-top: 60px;
+  color: #666;
+  text-align: center;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
 }
 
 .errorMessage {
@@ -370,11 +402,6 @@
   justify-content: center;
   align-items: center;
   overflow: hidden;
-}
-
-.sliderImageContainer img {
-  object-fit: contain !important;
-  aspect-ratio: 3 / 2 !important;
 }
 
 .sliderButton {
@@ -568,8 +595,7 @@
 .phoneLabel {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
-  font-size: 20px;
+  font-size: 18px;
   color: #2d2d2d;
   font-weight: 500;
 }
@@ -578,8 +604,8 @@
 .useTimeLabel img,
 .homepageLabel img,
 .phoneLabel img {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   margin-right: 8px;
   object-fit: contain;
 }
@@ -589,7 +615,7 @@
 .homepageLabel p,
 .phoneLabel p {
   width: 150px;
-  height: 25px;
+  height: 27px;
 }
 
 .homepageLabel a {

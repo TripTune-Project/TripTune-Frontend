@@ -8,7 +8,7 @@
 .onBoard::before {
   content: '';
   position: absolute;
-  width: 80vw;
+  width: 80%;
   height: 601px;
   border-radius: 0 0 0 200px;
   background: linear-gradient(264deg, #edf9f7 3.98%, #f1f5ff 98.44%);
@@ -38,21 +38,21 @@
   color: #ffffff;
   font-family: 'Noto Sans KR', sans-serif;
   position: absolute;
-  left: 7%;
+  left: 5%;
   transform: translateY(-50%);
   text-align: left;
   z-index: 1;
 }
 
 .onBoardingExplainDiv {
-  top: 18%;
-  font-size: 2vw;
+  top: 20%;
+  font-size: 37px;
   font-weight: 800;
 }
 
 .onBoardingExplainP {
-  top: 25%;
-  font-size: 1.5vw;
+  top: 33%;
+  font-size: 25px;
   font-weight: 500;
 }
 
@@ -65,7 +65,7 @@
 
 .onBoardingSearch {
   width: 100%;
-  max-width: 781px;
+  max-width: 725px;
   height: 74px;
   flex-shrink: 0;
   border-radius: 20px;
@@ -75,6 +75,7 @@
   align-items: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
+  margin-right: 50px;
 }
 
 .filterSelect {
@@ -102,18 +103,19 @@
 }
 
 .searchButton {
-  width: 84px;
+  width: 71px;
   height: 51px;
   flex-shrink: 0;
   background: linear-gradient(313deg, #004a55 1.45%, #ccead5 98.55%);
   margin-right: 20px;
   border: none;
+  border-radius: 10px;
 }
 
 .viewBtn {
   background: rgba(255, 255, 255, 0.75);
-  width: 370px;
-  height: 239px;
+  width: 350px;
+  height: 219px;
   border-radius: 30px;
   display: flex;
   flex-direction: column;
@@ -152,8 +154,9 @@
 .buttonContainer {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
   margin-top: 40px;
+  margin-right: 30px;
 }
 
 .onBoardingShow {

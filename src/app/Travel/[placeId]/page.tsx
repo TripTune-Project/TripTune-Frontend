@@ -263,8 +263,8 @@ const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
                         src={image.imageUrl}
                         alt={image.imageName}
                         layout='responsive'
-                        width={749}
-                        height={512}
+                        width={643}
+                        height={433}
                       />
                     </div>
                   </SwiperSlide>
