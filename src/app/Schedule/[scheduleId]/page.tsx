@@ -7,10 +7,10 @@ import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import styles from '../../../styles/Schedule.module.css';
 import MainLogoImage from '../../../../public/assets/images/로고/triptuneLogo.png';
-import ScheduleMake from '@/components/Schedule/ScheduleMake';
-import SchedulePlacesMap from '@/components/Schedule/SchedulePlacesMap';
-import Chatting from '@/components/Schedule/Chatting';
-import InviteModal from '@/components/Schedule/InviteModal';
+import ScheduleMake from '@/components/Feature/Schedule/ScheduleMake';
+import SchedulePlacesMap from '@/components/Feature/Schedule/SchedulePlacesMap';
+import Chatting from '@/components/Feature/Schedule/Chatting';
+import InviteModal from '@/components/Feature/Schedule/InviteModal';
 import { updateExistingSchedule } from '@/apis/scheduleApi';
 import { useTravelStore } from '@/store/scheduleStore';
 

@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import styles from '@/styles/Schedule.module.css';
-import NewScheduleModal from '@/components/Schedule/NewScheduleModal';
+import NewScheduleModal from '@/components/Feature/Schedule/NewScheduleModal';
 import DataLoading from '@/components/Common/DataLoading';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -20,7 +20,7 @@ import {
 } from '@/hooks/useSchedule';
 import { deleteSchedule } from '@/apis/scheduleApi';
 import { leaveSchedule } from '@/apis/attendeeApi';
-import DeleteModal from '@/components/Schedule/DeleteModal';
+import DeleteModal from '@/components/Feature/Schedule/DeleteModal';
 import AlertIcon from '../../../public/assets/images/여행지 탐색/홈화면/alertIcon.png';
 import moreBtn from '../../../public/assets/images/일정 만들기/일정 목록 조회/moreBtn.png';
 

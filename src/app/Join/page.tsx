@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import Head from 'next/head';
-import JoinForm from '../../components/Join/JoinForm';
+import JoinForm from '@/components/Feature/Join/JoinForm';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 

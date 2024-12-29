@@ -45,8 +45,8 @@ interface BookmarkResponse {
 
 // 마이페이지 정보 조회 (GET)
 export const getMyPage = async () => {
-  const url = '/mypage';
-  
+  const url = '/api/mypage';
+
   try {
     const response = await get<{
       success: boolean;
@@ -58,9 +58,11 @@ export const getMyPage = async () => {
       };
       message: string;
     }>(url, { requiresAuth: true });
-    
+
     console.log(
-      response.success ? '마이페이지 정보 조회 성공:' : '마이페이지 정보 조회 실패:',
+      response.success
+        ? '마이페이지 정보 조회 성공:'
+        : '마이페이지 정보 조회 실패:',
       response.message
     );
     return response;
@@ -73,14 +75,14 @@ export const getMyPage = async () => {
 // 내 일정 목록 조회 (GET)
 export const getMySchedules = async (currentPage: number = 1) => {
   const url = `/mypage/schedules?page=${currentPage}`;
-  
+
   try {
     const response = await get<{
       success: boolean;
       data: ScheduleResponse;
       message: string;
     }>(url, { requiresAuth: true });
-    
+
     console.log(
       response.success ? '내 일정 목록 조회 성공:' : '내 일정 목록 조회 실패:',
       response.message
@@ -95,12 +97,12 @@ export const getMySchedules = async (currentPage: number = 1) => {
 // 내 일정 삭제 (DELETE)
 export const deleteSchedule = async (scheduleId: number) => {
   const url = `/mypage/schedules/${scheduleId}`;
-  
+
   try {
     const response = await remove<{ success: boolean; message: string }>(url, {
       requiresAuth: true,
     });
-    
+
     console.log(
       response.success ? '일정 삭제 성공:' : '일정 삭제 실패:',
       response.message
@@ -118,14 +120,14 @@ export const addPlaceToSchedule = async (
   placeId: number
 ) => {
   const url = `/mypage/schedules/${scheduleId}`;
-  
+
   try {
     const response = await post<{ success: boolean; message: string }>(
       url,
       { placeId },
       { requiresAuth: true }
     );
-    
+
     console.log(
       response.success ? '일정에 장소 추가 성공:' : '일정에 장소 추가 실패:',
       response.message
@@ -140,14 +142,14 @@ export const addPlaceToSchedule = async (
 // 북마크 조회 (GET)
 export const getBookmarks = async (page: number = 1) => {
   const url = `/mypage/bookmarks?page=${page}`;
-  
+
   try {
     const response = await get<{
       success: boolean;
       data: BookmarkResponse;
       message: string;
     }>(url, { requiresAuth: true });
-    
+
     console.log(
       response.success ? '북마크 목록 조회 성공:' : '북마크 목록 조회 실패:',
       response.message
@@ -162,14 +164,14 @@ export const getBookmarks = async (page: number = 1) => {
 // 회원정보 조회 (GET)
 export const getProfile = async () => {
   const url = '/mypage/profile';
-  
+
   try {
     const response = await get<{
       success: boolean;
       data: Profile;
       message: string;
     }>(url, { requiresAuth: true });
-    
+
     console.log(
       response.success ? '회원정보 조회 성공:' : '회원정보 조회 실패:',
       response.message
@@ -190,7 +192,7 @@ export const updateProfile = async (
   const formData = new FormData();
   formData.append('nickname', nickname);
   if (profileImage) formData.append('profileImage', profileImage);
-  
+
   try {
     const response = await patch<{ success: boolean; message: string }>(
       url,
@@ -200,7 +202,7 @@ export const updateProfile = async (
         headers: { 'Content-Type': 'multipart/form-data' },
       }
     );
-    
+
     console.log(
       response.success ? '회원정보 수정 성공:' : '회원정보 수정 실패:',
       response.message
@@ -215,14 +217,14 @@ export const updateProfile = async (
 // 회원 탈퇴 (PATCH)
 export const deactivateAccount = async (password: string) => {
   const url = '/mypage/profile/deactivate';
-  
+
   try {
     const response = await patch<{ success: boolean; message: string }>(
       url,
       { password },
       { requiresAuth: true }
     );
-    
+
     console.log(
       response.success ? '회원 탈퇴 성공:' : '회원 탈퇴 실패:',
       response.message
@@ -241,14 +243,14 @@ export const changePassword = async (
   rePassword: string
 ) => {
   const url = '/api/mypage/change-password';
-  
+
   try {
     const response = await patch<{ success: boolean; message: string }>(
       url,
       { nowPassword, newPassword, rePassword },
       { requiresAuth: true }
     );
-    
+
     console.log(
       response.success ? '비밀번호 변경 성공:' : '비밀번호 변경 실패:',
       response.message

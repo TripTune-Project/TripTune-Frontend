@@ -7,11 +7,11 @@ import {
   UseFormGetValues,
 } from 'react-hook-form';
 import { validateEmail } from '@/utils/validation';
-import styles from '../../styles/Join.module.css';
+import styles from '../../../styles/Join.module.css';
 import { requestEmailVerification, verifyEmail } from '@/apis/emailApi';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-import VerificationLoading from '../Common/VerificationLoading';
+import VerificationLoading from '../../Common/VerificationLoading';
 
 interface JoinFormData {
   nickname: string;

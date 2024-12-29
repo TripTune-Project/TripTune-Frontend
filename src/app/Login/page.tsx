@@ -2,7 +2,7 @@
 
 import { useEffect, Suspense } from 'react';
 import Head from 'next/head';
-import LoginForm from '../../components/Login/LoginForm';
+import LoginForm from '@/components/Feature/Login/LoginForm';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import VerificationLoading from '../../components/Common/VerificationLoading';
