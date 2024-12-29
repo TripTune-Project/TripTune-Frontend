@@ -64,9 +64,9 @@ const MyPage = () => {
           />
         </div>
         <div className={styles.info}>
-          <p>아이디: {userData.userId}</p>
-          <p>닉네임: {userData.nickname}</p>
-          <p>가입일: {userData.since}</p>
+          <p>아이디: {userData?.userId}</p>
+          <p>닉네임: {userData?.nickname}</p>
+          <p>가입일: {userData?.since}</p>
         </div>
         <button
           onClick={() => router.push('/MyPage/ProfileEdit')}

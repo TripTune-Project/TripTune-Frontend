@@ -133,7 +133,7 @@ const Header = () => {
               </div>
             ) : (
               <div
-                className={styles.navLink}
+                className={styles.navLogin}
                 style={{ color: pathname === '/' ? 'white' : 'black' }}
               >
                 {userId} 님
