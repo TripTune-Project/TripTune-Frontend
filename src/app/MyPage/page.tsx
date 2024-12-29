@@ -57,7 +57,7 @@ const MyPage = () => {
       <div className={styles.header}>
         <div className={styles.photoBox}>
           <Image
-            src={userData.profileImage || '/default-profile.png'}
+            src={userData?.profileImage ?? '/default-profile.png'}
             alt='프로필 이미지'
             width={200}
             height={200}
