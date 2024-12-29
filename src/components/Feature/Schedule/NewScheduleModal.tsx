@@ -3,11 +3,11 @@ import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import styles from '@/styles/Schedule.module.css';
 import Image from 'next/image';
-import triptuneIcon from '../../../public/assets/images/로고/triptuneIcon-removebg.png';
+import triptuneIcon from '../../../../public/assets/images/로고/triptuneIcon-removebg.png';
 import { ko } from 'date-fns/locale';
 import { createNewSchedule } from '@/apis/scheduleApi';
 import { useRouter } from 'next/navigation';
-import dateIcon from '../../../public/assets/images/일정 만들기/일정 저장 및 수정/dateIcon.png';
+import dateIcon from '../../../../public/assets/images/일정 만들기/일정 저장 및 수정/dateIcon.png';
 
 registerLocale('ko', ko);
 

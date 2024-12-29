@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Client } from '@stomp/stompjs';
 import Cookies from 'js-cookie';
 import { fetchScheduleChats } from '@/apis/chatApi';
-import styles from '../../styles/Schedule.module.css';
+import styles from '../../../styles/Schedule.module.css';
 import Image from 'next/image';
 import DataLoading from '@/components/Common/DataLoading';
 import { ChatMessage } from '@/types/scheduleType';

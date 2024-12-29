@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import styles from '../styles/Header.module.css';
-import LogoutModal from '@/components/Logout/LogoutModal';
+import LogoutModal from '@/components/Common/LogoutModal';
 import { Alert, Snackbar, Button } from '@mui/material';
 import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';

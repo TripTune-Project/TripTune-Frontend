@@ -2,12 +2,12 @@
 
 import React, { useEffect, useState } from 'react';
 import styles from '@/styles/Schedule.module.css';
-import ScheduleTravelSearch from '@/components/Schedule/ScheduleTravelSearch';
-import ScheduleRoute from '@/components/Schedule/ScheduleRoute';
-import UpdateCalendarModal from '@/components/Common/UpdateCalendarModal';
+import ScheduleTravelSearch from '@/components/Feature/Schedule/ScheduleTravelSearch';
+import ScheduleRoute from '@/components/Feature/Schedule/ScheduleRoute';
+import UpdateCalendarModal from '@/components/Feature/Schedule/UpdateCalendarModal';
 import { useParams } from 'next/navigation';
 import { useTravelStore } from '@/store/scheduleStore';
-import dateIcon from '../../../public/assets/images/일정 만들기/일정 저장 및 수정/dateIcon.png';
+import dateIcon from '../../../../public/assets/images/일정 만들기/일정 저장 및 수정/dateIcon.png';
 import Image from 'next/image';
 
 interface ScheduleMakeProps {

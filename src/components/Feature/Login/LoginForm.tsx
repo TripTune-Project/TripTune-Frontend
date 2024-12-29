@@ -3,14 +3,14 @@
 import React, { useState, Suspense } from 'react';
 import { useForm } from 'react-hook-form';
 import { validatePassword, validateUserId } from '@/utils/validation';
-import styles from '../../styles/Login.module.css';
+import styles from '../../../styles/Login.module.css';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import Image from 'next/image';
-import kakao from '../../../public/assets/icons/ic_kakao_vector.png';
-import naver from '../../../public/assets/icons/ic_naver_vector.png';
-import VerificationLoading from '../Common/VerificationLoading';
+import kakao from '../../../../public/assets/icons/ic_kakao_vector.png';
+import naver from '../../../../public/assets/icons/ic_naver_vector.png';
+import VerificationLoading from '../../Common/VerificationLoading';
 import { loginUser } from '@/apis/loginApi';
 
 interface LoginFormData {

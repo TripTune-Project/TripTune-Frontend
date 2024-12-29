@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
-import Pagination from '../../components/Travel/Pagination';
-import SearchPlacesMap from '../../components/Travel/SearchPlacesMap';
+import Pagination from '@/components/Common/Pagination';
+import SearchPlacesMap from '@/components/Feature/Travel/SearchPlacesMap';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import DataLoading from '../../components/Common/DataLoading';
