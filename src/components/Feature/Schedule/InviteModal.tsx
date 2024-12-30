@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import styled from 'styled-components';
 import { Attendee } from '@/types/scheduleType';
 import {
   fetchScheduleAttendees,
@@ -7,6 +8,7 @@ import {
   updatePermission,
 } from '@/apis/attendeeApi';
 import { useParams } from 'next/navigation';
+import triptuneIcon from '../../../../public/assets/images/로고/triptuneIcon-removebg.png';
 
 interface InviteModalProps {
   isOpen: boolean;
@@ -24,13 +26,13 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
   const { scheduleId } = useParams();
   const [email, setEmail] = useState<string>('');
   const [selectedPermission, setSelectedPermission] = useState<string>('EDIT');
-  const [isMainDropdownOpen, setIsMainDropdownOpen] = useState<boolean>(false); // 공유하기 드롭다운 상태
+  const [isMainDropdownOpen, setIsMainDropdownOpen] = useState<boolean>(false);
   const [dropdownStates, setDropdownStates] = useState<{
     [key: string]: boolean;
   }>({});
   const [allUsers, setAllUsers] = useState<Attendee[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-
+  
   useEffect(() => {
     const loadAttendees = async () => {
       if (isOpen) {
@@ -49,25 +51,25 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
         }
       }
     };
-
+    
     loadAttendees();
   }, [isOpen, scheduleId]);
-
+  
   const toggleDropdown = (email: string) => {
     setDropdownStates((prev) => ({
       ...prev,
       [email]: !prev[email],
     }));
   };
-
+  
   const handleShareClick = async () => {
     try {
       const response = await shareSchedule(
         Number(scheduleId),
         email,
-        selectedPermission as 'ALL' | 'EDIT' | 'CHAT' | 'READ'
+        selectedPermission as 'ALL' | 'EDIT' | 'CHAT' | 'READ',
       );
-
+      
       if (response.success) {
         alert('공유가 완료되었습니다.');
         setAllUsers((prevUsers) => [
@@ -77,6 +79,7 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
             nickname: email.split('@')[0],
             profileUrl: '/default-profile.png',
             permission: selectedPermission,
+            attendeeId: Math.random(), // 임시 ID
           } as Attendee,
         ]);
         setEmail('');
@@ -88,27 +91,27 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
       console.error('공유 중 오류 발생:', error);
     }
   };
-
+  
   const handlePermissionChange = async (
     attendeeId: number,
-    newPermission: string
+    newPermission: string,
   ) => {
     try {
       const response = await updatePermission(
         Number(scheduleId),
         attendeeId,
-        newPermission as 'ALL' | 'EDIT' | 'CHAT' | 'READ'
+        newPermission as 'ALL' | 'EDIT' | 'CHAT' | 'READ',
       );
       if (response.success) {
         setAllUsers((prevUsers) =>
           prevUsers.map((user) =>
             user.attendeeId === attendeeId
               ? {
-                  ...user,
-                  permission: newPermission as 'ALL' | 'EDIT' | 'CHAT' | 'READ',
-                }
-              : user
-          )
+                ...user,
+                permission: newPermission as 'ALL' | 'EDIT' | 'CHAT' | 'READ',
+              }
+              : user,
+          ),
         );
         setDropdownStates((prev) => ({
           ...prev,
@@ -121,259 +124,310 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
       console.error('권한 변경 중 오류 발생:', error);
     }
   };
-
+  
   if (!isOpen) return null;
-
+  
   return (
-    <div style={styles.modalOverlay}>
-      <div style={styles.modalContainer}>
-        <div style={styles.modalHeader}>
-          <h2>공유하기</h2>
-          <button onClick={onClose} style={styles.closeButton}>
-            X
-          </button>
-        </div>
-
-        <div style={styles.emailInputContainer}>
-          <input
-            type='email'
-            placeholder='공유할 사용자의 이메일을 입력하세요.'
+    <ModalOverlay>
+      <ModalContainer>
+        <Header>
+          <Image src={triptuneIcon} alt="파비콘" width={24} height={24} />
+          <ModalTitle>공유하기</ModalTitle>
+          <CloseButton onClick={onClose}>✕</CloseButton>
+        </Header>
+        
+        <EmailInputContainer>
+          <EmailInput
+            type="email"
+            placeholder="공유할 사용자의 이메일을 입력하세요."
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            style={styles.emailInput}
           />
-          <div style={styles.dropdownWrapper}>
-            <button
-              style={styles.dropdownButton}
+          <DropdownWrapper>
+            <DropdownButton
               onClick={() => setIsMainDropdownOpen((prev) => !prev)}
             >
               {permissions.find((p) => p.value === selectedPermission)?.label ||
                 '모두 허용'}
-              <span style={styles.dropdownIcon}>▼</span>
-            </button>
+              <DropdownIcon>▼</DropdownIcon>
+            </DropdownButton>
             {isMainDropdownOpen && (
-              <ul style={styles.dropdownMenu}>
+              <DropdownMenu>
                 {permissions.map((permission) => (
-                  <li
+                  <DropdownItem
                     key={permission.value}
-                    style={styles.dropdownItem}
                     onClick={() => {
                       setSelectedPermission(permission.value);
-                      setIsMainDropdownOpen(false); // 드롭다운 닫기
+                      setIsMainDropdownOpen(false);
                     }}
                   >
                     <strong>{permission.label}</strong>
-                    <p style={styles.dropdownDescription}>
+                    <DropdownDescription>
                       {permission.description}
-                    </p>
+                    </DropdownDescription>
                     {selectedPermission === permission.value && (
-                      <span style={styles.checkMark}>✔</span>
+                      <CheckMark>✔</CheckMark>
                     )}
-                  </li>
+                  </DropdownItem>
                 ))}
-              </ul>
+              </DropdownMenu>
             )}
-          </div>
-          <button onClick={handleShareClick} style={styles.shareButton}>
-            공유
-          </button>
-        </div>
-
-        <h3>공유중인 사용자</h3>
-        <hr />
+          </DropdownWrapper>
+          <ShareButton onClick={handleShareClick}>공유</ShareButton>
+        </EmailInputContainer>
+        
+        <UserListHeader>
+          <UserListTitle>공유중인 사용자</UserListTitle>
+          <NoticeText>※ 사용자는 최대 5명까지 공유 가능합니다.</NoticeText>
+        </UserListHeader>
+        <Divider />
         {isLoading ? (
           <p>로딩 중...</p>
         ) : (
-          <ul style={styles.userList}>
+          <UserList>
             {allUsers.map((user) => (
-              <li key={user.email} style={styles.userListItem}>
-                <div style={styles.userDetails}>
+              <UserListItem key={user.email}>
+                <UserDetails>
                   <Image
                     src={user.profileUrl}
                     alt={`${user.nickname}님의 프로필`}
                     width={38}
                     height={38}
-                    style={styles.userIcon}
                   />
                   <span>{user.nickname}</span>
-                  <span style={styles.userEmail}>{user.email}</span>
-                </div>
-                <div style={styles.dropdownWrapper}>
-                  <button
-                    style={{
-                      ...styles.dropdownButton,
-                      background: dropdownStates[user.email]
-                        ? '#EDF9F7'
-                        : '#FFFFFF',
-                    }}
-                    onClick={() => toggleDropdown(user.email)}
-                  >
-                    {permissions.find((p) => p.value === user.permission)
-                      ?.label || '모두 허용'}
-                    <span style={styles.dropdownIcon}>▼</span>
-                  </button>
-                  {dropdownStates[user.email] && (
-                    <ul style={styles.dropdownMenu}>
-                      {permissions.map((permission) => (
-                        <li
-                          key={permission.value}
-                          style={styles.dropdownItem}
-                          onClick={() =>
-                            handlePermissionChange(
-                              user.attendeeId,
-                              permission.value
-                            )
-                          }
-                        >
-                          <strong>{permission.label}</strong>
-                          <p style={styles.dropdownDescription}>
-                            {permission.description}
-                          </p>
-                          {user.permission === permission.value && (
-                            <span style={styles.checkMark}>✔</span>
-                          )}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              </li>
+                  <UserEmail>{user.email}</UserEmail>
+                </UserDetails>
+                {user.role === 'AUTHOR' ? (
+                  <AuthorLabel>작성자</AuthorLabel>
+                ) : (
+                  <DropdownWrapper>
+                    <DropdownButton
+                      onClick={() => toggleDropdown(user.email)}
+                    >
+                      {permissions.find((p) => p.value === user.permission)
+                        ?.label || '모두 허용'}
+                      <DropdownIcon>▼</DropdownIcon>
+                    </DropdownButton>
+                    {dropdownStates[user.email] && (
+                      <DropdownMenu>
+                        {permissions.map((permission) => (
+                          <DropdownItem
+                            key={permission.value}
+                            onClick={() =>
+                              handlePermissionChange(
+                                user.attendeeId,
+                                permission.value,
+                              )
+                            }
+                          >
+                            <strong>{permission.label}</strong>
+                            <DropdownDescription>
+                              {permission.description}
+                            </DropdownDescription>
+                            {user.permission === permission.value && (
+                              <CheckMark>✔</CheckMark>
+                            )}
+                          </DropdownItem>
+                        ))}
+                      </DropdownMenu>
+                    )}
+                  </DropdownWrapper>
+                )}
+              </UserListItem>
             ))}
-          </ul>
+          </UserList>
         )}
-      </div>
-    </div>
+      </ModalContainer>
+    </ModalOverlay>
   );
 };
 
-const styles: { [key: string]: React.CSSProperties } = {
-  modalOverlay: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 1000,
-  },
-  modalContainer: {
-    background: '#FFF',
-    width: '591px',
-    height: '417px',
-    flexShrink: 0,
-    borderRadius: '30px 0px',
-    boxShadow: '0px 8px 24px 0px rgba(0, 0, 0, 0.3)',
-    padding: '20px',
-  },
-  modalHeader: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '20px',
-  },
-  closeButton: {
-    background: 'none',
-    border: 'none',
-    fontSize: '18px',
-    cursor: 'pointer',
-    color: '#888',
-  },
-  emailInputContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px',
-    marginBottom: '20px',
-  },
-  emailInput: {
-    flex: 1,
-    padding: '10px',
-    borderRadius: '4px',
-    border: '1px solid #ccc',
-    fontSize: '14px',
-  },
-  dropdownWrapper: {
-    position: 'relative',
-    width: '200px',
-  },
-  dropdownButton: {
-    padding: '10px',
-    width: '100%',
-    textAlign: 'left',
-    borderRadius: '4px',
-    border: '1px solid #ccc',
-    cursor: 'pointer',
-    background: '#EDF9F7',
-  },
-  dropdownIcon: {
-    float: 'right',
-    marginTop: '2px',
-    fontSize: '12px',
-    color: '#888',
-  },
-  dropdownMenu: {
-    position: 'absolute',
-    top: '100%',
-    left: 0,
-    background: '#fff',
-    border: '1px solid #ccc',
-    borderRadius: '4px',
-    listStyle: 'none',
-    padding: '5px 0',
-    zIndex: 10,
-    width: '230px',
-  },
-  dropdownItem: {
-    padding: '10px 15px',
-    cursor: 'pointer',
-    fontSize: '14px',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    whiteSpace: 'nowrap',
-  },
-  dropdownDescription: {
-    fontSize: '12px',
-    color: '#666',
-    marginLeft: '10px',
-    flex: 1,
-  },
-  checkMark: {
-    color: '#4CAF50',
-    fontSize: '14px',
-    marginLeft: '10px',
-  },
-  shareButton: {
-    padding: '10px 20px',
-    backgroundColor: '#76ADAC',
-    color: '#fff',
-    border: 'none',
-    cursor: 'pointer',
-    borderRadius: '4px',
-  },
-  userList: {
-    listStyle: 'none',
-    padding: 0,
-    margin: 0,
-  },
-  userListItem: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '10px 0',
-    borderBottom: '1px solid #f0f0f0',
-  },
-  userDetails: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px',
-  },
-  userEmail: {
-    marginLeft: '10px',
-    color: '#888',
-  },
-};
-
 export default InviteModal;
+
+// Styled-components
+const ModalOverlay = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+`;
+
+const ModalContainer = styled.div`
+    background: #fff;
+    width: 591px;
+    border-radius: 30px 0px;
+    box-shadow: 0px 8px 24px 0px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+`;
+
+const Header = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 10px;
+`;
+
+const CloseButton = styled.button`
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #888;
+    font-size: 20px;
+    margin-left: 75%;
+`;
+
+const EmailInputContainer = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+`;
+
+const EmailInput = styled.input`
+    flex: 1;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+`;
+
+const DropdownWrapper = styled.div`
+    position: relative;
+    width: 200px;
+`;
+
+const DropdownButton = styled.button`
+    padding: 10px;
+    width: 100%;
+    text-align: left;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    background: #edf9f7;
+`;
+
+const DropdownIcon = styled.span`
+    float: right;
+    margin-top: 2px;
+    font-size: 12px;
+    color: #888;
+`;
+
+const DropdownMenu = styled.ul`
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    list-style: none;
+    padding: 5px 0;
+    z-index: 10;
+    width: 230px;
+`;
+
+const DropdownItem = styled.li`
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    white-space: nowrap;
+`;
+
+const DropdownDescription = styled.p`
+    font-size: 12px;
+    color: #666;
+    margin-left: 10px;
+    flex: 1;
+`;
+
+const CheckMark = styled.span`
+    color: #4caf50;
+    font-size: 14px;
+    margin-left: 10px;
+`;
+
+const ShareButton = styled.button`
+    padding: 10px 20px;
+    background-color: #76adac;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+`;
+
+const UserListHeader = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+`;
+
+const UserListTitle = styled.h3`
+    margin: 0;
+`;
+
+const NoticeText = styled.p`
+    color: red;
+    font-size: 12px;
+`;
+
+const Divider = styled.hr`
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 10px 0;
+`;
+
+const UserList = styled.ul`
+    list-style: none;
+    padding: 0;
+    margin: 0;
+`;
+
+const UserListItem = styled.li`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+`;
+
+const UserDetails = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 10px;
+`;
+
+const UserEmail = styled.span`
+    margin-left: 10px;
+    color: #888;
+`;
+
+const AuthorLabel = styled.span`
+    display: flex;
+    width: 89px;
+    height: 34px;
+    flex-direction: column;
+    justify-content: center;
+    flex-shrink: 0;
+    color: #000;
+    text-align: center;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    background-color: whitesmoke;
+`;
+
+const ModalTitle = styled.h1`
+    color: #000;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+`;
