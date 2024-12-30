@@ -24,45 +24,47 @@ import homePageIcon from '../../../../public/assets/images/여행지 탐색/상�
 import phoneIcon from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_phoneIcon.png';
 import { fetchTravelDetail } from '@/apis/travelApi';
 import { TravelPlaceDetail } from '@/types/travelType';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 
 const StyledSwiperContainer = styled.div`
-  position: relative;
-  width: 749px;
-  height: 512px;
+    position: relative;
+    width: 749px;
+    height: 512px;
 `;
 
 const StyledSwiperButtonPrev = styled.button`
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%);
-  border: none;
-  cursor: pointer;
-  z-index: 10;
-  user-select: none;
-  width: 50px;
-  height: 50px;
-  background-image: url('/assets/images/여행지 탐색/상세화면/placeDetail_imageLeftBtn.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+    user-select: none;
+    width: 50px;
+    height: 50px;
+    background-image: url('/assets/images/여행지 탐색/상세화면/placeDetail_imageLeftBtn.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 `;
 
 const StyledSwiperButtonNext = styled.button`
-  position: absolute;
-  top: 50%;
-  right: 0;
-  transform: translateY(-50%);
-  border: none;
-  cursor: pointer;
-  z-index: 10;
-  user-select: none;
-  width: 50px;
-  height: 50px;
-  background-image: url('/assets/images/여행지 탐색/상세화면/placeDetail_imageRightBtn.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+    user-select: none;
+    width: 50px;
+    height: 50px;
+    background-image: url('/assets/images/여행지 탐색/상세화면/placeDetail_imageRightBtn.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 `;
 
 interface TravelDetailPageProps {
@@ -70,37 +72,40 @@ interface TravelDetailPageProps {
 }
 
 const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
-  useEffect(() => {
-    document.body.style.overflow = 'auto';
-    return () => {
-      document.body.style.overflow = 'hidden';
-    };
-  }, []);
-
+  const router = useRouter();
   const placeIdNumber = parseInt(params.placeId, 10);
+  
   const [data, setData] = useState<TravelPlaceDetail | null>(null);
-  const [isExpanded, setIsExpanded] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [showExpandButton, setShowExpandButton] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  
   const descriptionRef = useRef<HTMLParagraphElement | null>(null);
   const prevButtonRef = useRef<HTMLButtonElement | null>(null);
   const nextButtonRef = useRef<HTMLButtonElement | null>(null);
-
+  
   useEffect(() => {
     const fetchData = async () => {
       const result = await fetchTravelDetail(placeIdNumber);
       if (result.success && result.data) {
         setData(result.data);
+        
+        const accessToken = Cookies.get('trip-tune_at');
+        if (accessToken) {
+          setIsBookmarked(result.data.bookmarkStatus);
+          console.log(isBookmarked,"isBookmarked 확인:")
+        } else {
+          setIsBookmarked(false);
+        }
       } else {
         console.error(`Error: ${result.message}`);
       }
     };
     fetchData();
   }, [placeIdNumber]);
-
+  
   useEffect(() => {
     if (descriptionRef.current) {
       requestAnimationFrame(() => {
@@ -117,16 +122,28 @@ const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
       });
     }
   }, [isExpanded, data]);
-
+  
   const toggleBookmark = async () => {
+    const accessToken = Cookies.get('trip-tune_at');
+    
+    if (!accessToken) {
+      alert('로그인이 필요합니다.');
+      router.push('/login');
+      return;
+    }
+    
     setIsLoading(true);
     try {
       if (isBookmarked) {
-        await BookMarkDeleteApi({ placeId: placeIdNumber });
-        setIsBookmarked(false);
+        const result = await BookMarkDeleteApi({ placeId: placeIdNumber });
+        if (result.success) {
+          setIsBookmarked(false);
+        }
       } else {
-        await BookMarkApi({ placeId: placeIdNumber });
-        setIsBookmarked(true);
+        const result = await BookMarkApi({ placeId: placeIdNumber });
+        if (result.success) {
+          setIsBookmarked(true);
+        }
       }
     } catch (error) {
       console.error('북마크 처리 중 오류 발생:', error);
@@ -134,36 +151,44 @@ const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
       setIsLoading(false);
     }
   };
-
+  
   const handleScheduleAdd = () => {
+    const accessToken = Cookies.get('trip-tune_at');
+    
+    if (!accessToken) {
+      alert('로그인이 필요합니다.');
+      router.push('/login');
+      return;
+    }
+    
     setIsModalOpen(true);
   };
-
+  
   const closeModal = () => {
     setIsModalOpen(false);
   };
-
+  
   const UseTimeUI = ({ useTime }: { useTime: string }) => (
     <div className={styles.useTimeLabel}>
-      <Image width={18} height={18} src={timeIcon} alt={'이용 시간'} />
+      <Image width={18} height={18} src={timeIcon} alt="이용 시간" />
       <p>이용시간</p> {useTime}
     </div>
   );
-
+  
   const CheckInOutUI = ({
-    checkInTime,
-    checkOutTime,
-  }: {
+                          checkInTime,
+                          checkOutTime,
+                        }: {
     checkInTime: string;
     checkOutTime: string;
   }) => (
     <div className={styles.useTimeLabel}>
-      <Image width={18} height={18} src={timeIcon} alt={'입/퇴실 시간'} />
+      <Image width={18} height={18} src={timeIcon} alt="입/퇴실 시간" />
       <p>입실시간</p> {checkInTime}
       <p>퇴실시간</p> {checkOutTime}
     </div>
   );
-
+  
   const renderTimeContent = (
     checkInTime?: string,
     checkOutTime?: string,
@@ -182,7 +207,7 @@ const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
       return null;
     }
   };
-
+  
   const formatDescriptionWithParagraphs = (text: string) => {
     const paragraphs = text.split(/\n+/);
     return paragraphs.map((paragraph, index) => (
@@ -193,13 +218,13 @@ const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
       </React.Fragment>
     ));
   };
-
+  
   const handleExpandClick = () => {
     setIsExpanded(!isExpanded);
   };
-
+  
   if (!data) return <DataLoading />;
-
+  
   const {
     placeName,
     country,
@@ -216,21 +241,21 @@ const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
     checkOutTime,
     checkInTime,
   } = data;
-
+  
   const extractHomepageUrl = (htmlString: string) => {
     if (!htmlString) return '';
     const urlMatch = htmlString.match(/href="([^"]*)"/);
     return urlMatch ? urlMatch[1] : '';
   };
-
+  
   const homepageUrl = homepage ? extractHomepageUrl(homepage) : '';
-
+  
   return (
     <>
       <Head>
         <title>{placeName} - 여행지 상세 정보</title>
         <meta
-          name='description'
+          name="description"
           content={`${placeName}의 상세 정보를 확인하세요.`}
         />
       </Head>
@@ -262,7 +287,7 @@ const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
                       <Image
                         src={image.imageUrl}
                         alt={image.imageName}
-                        layout='responsive'
+                        layout="responsive"
                         width={643}
                         height={433}
                       />
@@ -282,20 +307,15 @@ const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
             </p>
             <div className={styles.detailplaceName}>{placeName}</div>
             <div className={styles.addressLabel}>
-              <Image width={14} height={21} src={locationIcon} alt={'주소'} />
+              <Image width={14} height={21} src={locationIcon} alt="주소" />
               <p> 주소 </p> {address}
             </div>
             {renderTimeContent(checkInTime, checkOutTime, useTime)}
             {homepageUrl && (
               <div className={styles.homepageLabel}>
-                <Image
-                  width={18}
-                  height={18}
-                  src={homePageIcon}
-                  alt='홈페이지'
-                />
+                <Image width={18} height={18} src={homePageIcon} alt="홈페이지" />
                 <p> 홈페이지 </p>
-                <a href={homepageUrl} target='_blank' rel='noopener noreferrer'>
+                <a href={homepageUrl} target="_blank" rel="noopener noreferrer">
                   {homepageUrl}
                 </a>
               </div>
@@ -306,7 +326,7 @@ const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
                   width={36}
                   height={28}
                   src={phoneIcon}
-                  alt={'문의 및 안내'}
+                  alt="문의 및 안내"
                 />
                 <p> 문의 및 안내 </p> {phoneNumber}
               </div>
@@ -321,7 +341,7 @@ const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
                   width={13}
                   height={16}
                   src={isBookmarked ? detailBookMark : detailBookMarkNo}
-                  alt='북마크'
+                  alt="북마크"
                 />
                 {isBookmarked ? '북마크 해제' : '북마크'}
               </button>
@@ -330,7 +350,7 @@ const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
                   width={24}
                   height={21}
                   src={scheduleIcon}
-                  alt='일정 등록'
+                  alt="일정 등록"
                 />
                 내 일정 담기
               </button>
@@ -341,7 +361,7 @@ const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
           <Image
             className={styles.detailTitleIcon}
             src={triptuneIcon}
-            alt='상세 설명'
+            alt="상세 설명"
           />
           상세 설명
         </h2>

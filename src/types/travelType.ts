@@ -37,6 +37,7 @@ export interface TravelPlaceDetail extends TravelPlace {
   checkInTime?: string;
   checkOutTime?: string;
   homepage?: string;
+  bookmarkStatus?:boolean;
   imageList: { imageName: string; imageUrl: string }[];
   // TODO : 추천 여행지 추후 개발 시
   recommandedTravelList?: {
