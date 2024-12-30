@@ -143,10 +143,10 @@ export default function SchedulePage() {
     : selectedTab === 'all'
       ? isFetchingNextAllPage
       : isFetchingNextSharedPage;
-
+  
   const handleObserver = (entries: IntersectionObserverEntry[]) => {
     const target = entries[0];
-    if (target.isIntersecting && hasNextPage) {
+    if (target.isIntersecting && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
   };
@@ -346,7 +346,7 @@ export default function SchedulePage() {
             {allScheduleData?.pages[0]?.data?.totalElements ?? 0}
           </span>
         </button>
-
+        
         <button
           className={`${styles.scheduleCounterShare} ${selectedTab === 'share' ? styles.activeTab : ''}`}
           onClick={() => setSelectedTab('share')}
@@ -358,7 +358,7 @@ export default function SchedulePage() {
               : (allScheduleData?.pages[0]?.data?.totalSharedElements ?? 0)}
           </span>
         </button>
-
+        
         <div className={styles.travelSearchContainer}>
           <input
             type='text'
@@ -387,11 +387,10 @@ export default function SchedulePage() {
           )}
         </div>
         <div ref={observerRef} className={styles.loadingArea}>
-          {isFetchingNextPage ? (
-            <DataLoading />
-          ) : !hasNextPage ? (
+          {isFetchingNextPage && <DataLoading />}
+          {!isFetchingNextPage && !hasNextPage && (
             <p>더 이상 일정이 없습니다.</p>
-          ) : null}
+          )}
         </div>
         {isDeleteModalOpen && (
           <DeleteModal

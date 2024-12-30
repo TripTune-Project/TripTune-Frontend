@@ -58,8 +58,13 @@ const fetchData = async <T>(
       handleRedirectToLogin('액세스 토큰이 없습니다. 다시 로그인 해주세요.');
     }
   }
-
-  const requestConfig: FetchOptions = { ...options, headers };
+  
+  const requestConfig: FetchOptions = {
+    ...options,
+    headers,
+    // credentials: 'include'
+  };
+  
   let response = await fetch(url, requestConfig);
 
   if (response.status === 401 || response.status === 400) {
