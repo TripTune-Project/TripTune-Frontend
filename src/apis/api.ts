@@ -62,7 +62,7 @@ const fetchData = async <T>(
   const requestConfig: FetchOptions = {
     ...options,
     headers,
-    // credentials: 'include'
+    credentials: 'include'
   };
   
   let response = await fetch(url, requestConfig);
