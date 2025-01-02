@@ -21,8 +21,8 @@ import {
 import { deleteSchedule } from '@/apis/scheduleApi';
 import { leaveSchedule } from '@/apis/attendeeApi';
 import DeleteModal from '@/components/Feature/Schedule/DeleteModal';
-import AlertIcon from '../../../public/assets/images/여행지 탐색/홈화면/alertIcon.png';
 import moreBtn from '../../../public/assets/images/일정 만들기/일정 목록 조회/moreBtn.png';
+import NoResultLayout from '../../components/Common/NoResult';
 
 export default function SchedulePage() {
   const router = useRouter();
@@ -184,20 +184,7 @@ export default function SchedulePage() {
     if (!scheduleListData?.data || scheduleListData.data.content.length === 0) {
       if (isSearching) {
         return (
-          <div className={styles.noScheduleContainer}>
-            <p className={styles.noResults}>
-              <Image
-                src={AlertIcon}
-                alt={'no-schedule-root'}
-                width={80}
-                height={80}
-                style={{ marginLeft: '120px' }}
-              />
-              <div className={styles.noText}>검색 결과가 없습니다.</div>
-              <br />
-              <p>검색어의 철자와 띄어쓰기가 정확한지 확인해주세요.</p>
-            </p>
-          </div>
+          <NoResultLayout/>
         );
       }
 

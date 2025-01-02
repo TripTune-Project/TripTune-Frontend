@@ -16,6 +16,7 @@ import { Place } from '@/types/scheduleType';
 import AlertIcon from '../../../../public/assets/images/여행지 탐색/홈화면/alertIcon.png';
 import plusTravelSearch from '../../../../public/assets/images/일정 만들기/일정 저장 및 수정/plusIcon.png';
 import minusTravelSearch from '../../../../public/assets/images/일정 만들기/일정 저장 및 수정/minusBtn.png';
+import NoResultLayout from '@/components/Common/NoResult';
 
 const ScheduleTravelSearch = () => {
   const { scheduleId } = useParams();
@@ -165,18 +166,7 @@ const ScheduleTravelSearch = () => {
             ))}
           </ul>
         ) : (
-          <p className={styles.noResults}>
-            <Image
-              src={AlertIcon}
-              alt={'no-schedule'}
-              width={80}
-              height={80}
-              style={{ marginLeft: '220px' }}
-            />
-            <div className={styles.noText}>검색 결과가 없습니다.</div>
-            <br />
-            <p>검색어의 철자와 띄어쓰기가 정확한지 확인해주세요.</p>
-          </p>
+          <NoResultLayout/>
         )}
       </div>
       {totalPages > 0 && (
