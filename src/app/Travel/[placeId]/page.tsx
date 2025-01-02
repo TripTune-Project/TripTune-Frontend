@@ -94,7 +94,7 @@ const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
         
         const accessToken = Cookies.get('trip-tune_at');
         if (accessToken) {
-          setIsBookmarked(result.data.bookmarkStatus);
+          setIsBookmarked(result.data.bookmarkStatus ?? false);
           console.log(isBookmarked,"isBookmarked 확인:")
         } else {
           setIsBookmarked(false);
@@ -136,12 +136,12 @@ const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
     try {
       if (isBookmarked) {
         const result = await BookMarkDeleteApi({ placeId: placeIdNumber });
-        if (result.success) {
+        if (result) {
           setIsBookmarked(false);
         }
       } else {
         const result = await BookMarkApi({ placeId: placeIdNumber });
-        if (result.success) {
+        if (result) {
           setIsBookmarked(true);
         }
       }
