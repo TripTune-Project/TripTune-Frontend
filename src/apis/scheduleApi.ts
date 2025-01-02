@@ -164,8 +164,7 @@ export const deleteSchedule = async (
 export const fetchSchedulesPreview = async (
   page: number
 ): Promise<ApiResponse<SchedulePreviewResponse>> => {
-  const url = `/api/schedules/preview?=${page}`;
-  // const url = `/api/schedules/edit?=${page}`;
+  const url = `/api/schedules/edit?page=${page}`;
   
   try {
     const data = await get<ApiResponse<SchedulePreviewResponse>>(url, {
