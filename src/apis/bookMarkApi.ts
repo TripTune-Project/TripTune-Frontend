@@ -1,5 +1,5 @@
-import { remove, post } from './api';
-import { handleApiError } from '@/apis/errorHandler';
+import { remove, post } from './Common/api';
+import { handleApiError } from '@/apis/Common/errorHandler';
 
 interface BookMarkData {
   placeId: number;

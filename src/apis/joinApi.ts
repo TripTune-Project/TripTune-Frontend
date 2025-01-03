@@ -1,4 +1,4 @@
-import { post } from './api';
+import { post } from './Common/api';
 
 interface JoinMemberData {
   nickname: string;

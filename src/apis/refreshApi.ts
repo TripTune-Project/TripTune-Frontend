@@ -1,4 +1,4 @@
-import { post } from './api';
+import { post } from './Common/api';
 import Cookies from 'js-cookie';
 
 export const refreshApi = async (): Promise<string | null> => {

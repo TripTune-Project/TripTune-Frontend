@@ -1,4 +1,4 @@
-import { post } from './api';
+import { post } from './Common/api';
 
 export const requestEmailVerification = async (
   email: string

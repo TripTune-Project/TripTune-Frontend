@@ -1,4 +1,4 @@
-import { patch } from './api';
+import { patch } from './Common/api';
 import Cookies from 'js-cookie';
 
 export const logoutApi = async (): Promise<void> => {

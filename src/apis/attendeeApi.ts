@@ -1,11 +1,11 @@
-import { get, patch, post, remove } from './api';
+import { get, patch, post, remove } from './Common/api';
 import {
   ApiResponse,
   Attendee,
   LeaveSchedule,
   ShareSchedule,
 } from '@/types/scheduleType';
-import { handleApiError } from '@/apis/errorHandler';
+import { handleApiError } from '@/apis/Common/errorHandler';
 
 // 일정 참석자 조회
 export const fetchScheduleAttendees = async (

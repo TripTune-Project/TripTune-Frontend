@@ -1,4 +1,4 @@
-import { get, post } from './api';
+import { get, post } from './Common/api';
 import {
   TravelApiEmptyResponse,
   TravelApiErrorResponse,

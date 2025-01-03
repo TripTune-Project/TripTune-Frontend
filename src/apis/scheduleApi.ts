@@ -1,4 +1,4 @@
-import { get, post, patch, remove } from './api';
+import { get, post, patch, remove } from './Common/api';
 import {
   ApiResponse,
   ScheduleList,
@@ -7,7 +7,7 @@ import {
   UpdateSchedule,
   SchedulePreviewResponse,
 } from '@/types/scheduleType';
-import { handleApiError } from '@/apis/errorHandler';
+import { handleApiError } from '@/apis/Common/errorHandler';
 
 // 1. 일정 목록 조회 (GET)
 export const fetchScheduleList = async (
