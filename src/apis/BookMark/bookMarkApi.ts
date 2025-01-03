@@ -1,4 +1,4 @@
-import { remove, post } from './Common/api';
+import { remove, post } from '../Common/api';
 import { handleApiError } from '@/apis/Common/errorHandler';
 
 interface BookMarkData {

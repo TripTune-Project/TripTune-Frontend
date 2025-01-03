@@ -11,7 +11,7 @@ import ScheduleMake from '@/components/Feature/Schedule/ScheduleMake';
 import SchedulePlacesMap from '@/components/Feature/Schedule/SchedulePlacesMap';
 import Chatting from '@/components/Feature/Schedule/Chatting';
 import InviteModal from '@/components/Feature/Schedule/InviteModal';
-import { updateExistingSchedule } from '@/apis/scheduleApi';
+import { updateExistingSchedule } from '@/apis/Schedule/scheduleApi';
 import { useTravelStore } from '@/store/scheduleStore';
 
 export default function ScheduleDetailPage() {

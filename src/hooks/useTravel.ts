@@ -1,6 +1,6 @@
 import { Coordinates } from '@/types';
 import { useQuery } from '@tanstack/react-query';
-import { fetchTravelListByLocation, fetchTravelListSearch } from '@/apis/travelApi';
+import { fetchTravelListByLocation, fetchTravelListSearch } from '@/apis/Travel/travelApi';
 import { TravelListSearchParams } from '@/types/travelType';
 
 export const useTravelListByLocation = (

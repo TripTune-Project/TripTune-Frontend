@@ -1,4 +1,4 @@
-import { get } from './Common/api';
+import { get } from '../Common/api';
 import { ApiResponse, ChatList } from '@/types/scheduleType';
 import { handleApiError } from '@/apis/Common/errorHandler';
 

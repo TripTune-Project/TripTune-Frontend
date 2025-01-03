@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie';
-import { refreshApi } from '../refreshApi';
+import { refreshApi } from '../Login/refreshApi';
 
 const DEFAULT_HEADERS = {
   'Content-Type': 'application/json',

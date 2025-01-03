@@ -1,4 +1,4 @@
-import { post } from './Common/api';
+import { post } from '../Common/api';
 import Cookies from 'js-cookie';
 import { handleApiError } from '@/apis/Common/errorHandler';
 

@@ -1,4 +1,4 @@
-import { get, post, patch, remove } from './Common/api';
+import { get, post, patch, remove } from '../Common/api';
 import {
   ApiResponse,
   ScheduleList,

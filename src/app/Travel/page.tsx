@@ -17,7 +17,7 @@ import {
 import styles from '../../styles/Travel.module.css';
 import { useTravelStore } from '@/store/travelStore';
 import { useDebounce } from '@/hooks/useDebounce';
-import { BookMarkApi, BookMarkDeleteApi } from '@/apis/bookMarkApi';
+import { BookMarkApi, BookMarkDeleteApi } from '@/apis/BookMark/bookMarkApi';
 import BookMarkNo from '../../../public/assets/images/여행지 탐색/홈화면/placeHome_bookmarkIcon.png';
 import BookMark from '../../../public/assets/images/여행지 탐색/홈화면/placeHome_bookmarkIconFill.png';
 import locationIcon from '../../../public/assets/images/여행지 탐색/홈화면/placeHome_mapIcon.png';

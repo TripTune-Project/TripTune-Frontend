@@ -1,4 +1,4 @@
-import { get } from './Common/api';
+import { get } from '../Common/api';
 import {
   EmptyResultResponse,
   ErrorResponse,

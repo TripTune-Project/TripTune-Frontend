@@ -11,7 +11,7 @@ import { Navigation, Pagination } from 'swiper/modules';
 import styles from '../../../styles/Travel.module.css';
 import DataLoading from '@/components/Common/DataLoading';
 import SearchDetailPlaceMap from '@/components/Feature/Travel/SearchDetailPlaceMap';
-import { BookMarkApi, BookMarkDeleteApi } from '@/apis/bookMarkApi';
+import { BookMarkApi, BookMarkDeleteApi } from '@/apis/BookMark/bookMarkApi';
 import styled from 'styled-components';
 import MyScheduleEditModal from '@/components/Feature/Travel/MyScheduleEditModal';
 import detailBookMarkNo from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_bookmarkIcon.png';
@@ -22,7 +22,7 @@ import locationIcon from '../../../../public/assets/images/여행지 탐색/상�
 import timeIcon from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_timeIcon.png';
 import homePageIcon from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_homepageIcon.png';
 import phoneIcon from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_phoneIcon.png';
-import { fetchTravelDetail } from '@/apis/travelApi';
+import { fetchTravelDetail } from '@/apis/Travel/travelApi';
 import Cookies from 'js-cookie';
 import { useParams, useRouter } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';

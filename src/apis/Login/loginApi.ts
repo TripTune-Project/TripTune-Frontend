@@ -1,5 +1,5 @@
-import { post } from './Common/api';
-import saveLocalContent from '../utils/saveLocalContent';
+import { post } from '../Common/api';
+import saveLocalContent from '../../utils/saveLocalContent';
 
 interface LoginData {
   userId: string;

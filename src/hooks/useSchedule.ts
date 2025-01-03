@@ -4,12 +4,12 @@ import {
   fetchScheduleListSearch,
   fetchSchedulesPreview,
   fetchSharedScheduleList,
-} from '@/apis/scheduleApi';
+} from '@/apis/Schedule/scheduleApi';
 import {
   fetchTravelList,
   fetchTravelRoute,
   searchTravelDestinations,
-} from '@/apis/locationRouteApi';
+} from '@/apis/Schedule/locationRouteApi';
 
 // 일정 목록 조회 (GET)
 export const useScheduleList = (enabled = true) => {
