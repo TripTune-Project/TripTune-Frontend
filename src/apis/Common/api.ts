@@ -1,5 +1,6 @@
 import Cookies from 'js-cookie';
 import { refreshApi } from '../Login/refreshApi';
+import saveLocalContent from '@/utils/saveLocalContent';
 
 const DEFAULT_HEADERS = {
   'Content-Type': 'application/json',
@@ -11,10 +12,13 @@ interface FetchOptions extends RequestInit {
 }
 
 const getAuthHeaders = (): HeadersInit => {
-  const accessToken = Cookies.get('trip-tune_at');
-  // if (!accessToken) {
-  //   throw new Error('액세스 토큰이 없습니다. 다시 로그인 해주세요.');
-  // }
+  const { getDecryptedCookie } = saveLocalContent();
+  const accessToken = getDecryptedCookie('trip-tune_at'); // 복호화된 토큰 가져오기
+  
+  if (!accessToken) {
+    throw new Error('액세스 토큰이 없습니다. 다시 로그인 해주세요.');
+  }
+  
   return {
     Authorization: `Bearer ${accessToken}`,
   };
@@ -23,25 +27,18 @@ const getAuthHeaders = (): HeadersInit => {
 let isRetrying = false;
 let isRedirectingToLogin = false;
 
-const handleTokenRefresh = async (): Promise<string | null> => {
-  if (window.location.pathname === '/Login') {
-    return null;
-  }
-  return refreshApi();
-};
-
 const handleRedirectToLogin = (message: string) => {
   if (!isRedirectingToLogin && window.location.pathname !== '/Login') {
     isRedirectingToLogin = true;
-    
-    // 현재 페이지 경로를 저장
     const currentPath = window.location.pathname;
     localStorage.setItem('redirectAfterLogin', currentPath);
     
     alert(message);
+    
     Cookies.remove('trip-tune_at');
     Cookies.remove('trip-tune_rt');
     Cookies.remove('nickname');
+    
     window.location.href = '/Login';
   }
 };
@@ -55,27 +52,33 @@ const fetchData = async <T>(
     ...DEFAULT_HEADERS,
     ...options.headers,
   };
-
+  
   if (options.requiresAuth) {
     try {
       headers = { ...headers, ...getAuthHeaders() };
     } catch {
-      handleRedirectToLogin('액세스 토큰이 없습니다. 다시 로그인 해주세요.');
+      const newAccessToken = await refreshApi();
+      if (newAccessToken) {
+        headers = { ...headers, Authorization: `Bearer ${newAccessToken}` };
+      } else {
+        handleRedirectToLogin('액세스 토큰이 없습니다. 다시 로그인 해주세요.');
+        return Promise.reject('Unauthorized');
+      }
     }
   }
   
   const requestConfig: FetchOptions = {
     ...options,
     headers,
-    credentials: 'include'
+    credentials: 'include',
   };
   
   let response = await fetch(url, requestConfig);
-
-  if (response.status === 401) {
+  // TODO : 로그인 이슈 위치 예측
+  if (response.status !== 200) {
     if (!isRetrying) {
       isRetrying = true;
-      const newAccessToken = await handleTokenRefresh();
+      const newAccessToken = await refreshApi();
       if (newAccessToken) {
         headers = { ...headers, Authorization: `Bearer ${newAccessToken}` };
         response = await fetch(url, { ...requestConfig, headers });
@@ -90,11 +93,11 @@ const fetchData = async <T>(
       );
     }
   }
-
+  
   if (!response.ok) {
     throw new Error(`API 요청 실패: ${response.statusText}`);
   }
-
+  
   isRetrying = false;
   return response.json();
 };
