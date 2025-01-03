@@ -5,9 +5,10 @@ import styles from '@/styles/Schedule.module.css';
 import Image from 'next/image';
 import triptuneIcon from '../../../../public/assets/images/로고/triptuneIcon-removebg.png';
 import { ko } from 'date-fns/locale';
-import { createNewSchedule } from '@/apis/scheduleApi';
+import { createNewSchedule } from '@/apis/Schedule/scheduleApi';
 import { useRouter } from 'next/navigation';
 import dateIcon from '../../../../public/assets/images/일정 만들기/일정 저장 및 수정/dateIcon.png';
+import { isValidDateForCreation } from '@/utils';
 
 registerLocale('ko', ko);
 
@@ -22,38 +23,35 @@ const NewScheduleModal = ({ onClose }: ScheduleModalProps) => {
   const [travelName, setTravelName] = useState<string>('');
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
   const router = useRouter();
-
+  
   useEffect(() => {
-    today.setHours(0, 0, 0, 0);
-
     setIsFormValid(
       travelName.trim() !== '' &&
-        startDate !== null &&
-        endDate !== null &&
-        startDate >= today &&
-        startDate <= endDate
+      startDate !== null &&
+      endDate !== null &&
+      isValidDateForCreation(startDate, endDate)
     );
   }, [travelName, startDate, endDate]);
-
+  
   const formatDateToString = (date: Date): string => {
     return date.toISOString().split('T')[0];
   };
-
+  
   const handleCreateSchedule = async (): Promise<void> => {
     if (!isFormValid) {
       console.error('모든 필드를 올바르게 입력해야 합니다.');
       return;
     }
-
+    
     const scheduleData = {
       scheduleName: travelName,
       startDate: formatDateToString(startDate!),
       endDate: formatDateToString(endDate!),
     };
-
+    
     try {
       const response = await createNewSchedule(scheduleData);
-
+      
       if (response && response.data) {
         const scheduleId = response.data.scheduleId;
         onClose();
@@ -65,17 +63,17 @@ const NewScheduleModal = ({ onClose }: ScheduleModalProps) => {
       console.error('일정 생성 중 오류 발생:', error);
     }
   };
-
+  
   const getFormattedDate = (date: Date | null): string => {
     return date
       ? date.toLocaleDateString('ko-KR', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        })
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      })
       : '';
   };
-
+  
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContainer}>

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import Cookies from 'js-cookie';
-import { refreshApi } from '@/apis/refreshApi';
+import { refreshApi } from '@/apis/Login/refreshApi';
 
 const useAuth = () => {
   const isRefreshing = useRef(false);

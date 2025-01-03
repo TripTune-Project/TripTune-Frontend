@@ -9,20 +9,18 @@ import VerificationLoading from '../../components/Common/VerificationLoading';
 
 export default function LoginPage() {
   const router = useRouter();
-
+  
   useEffect(() => {
-    const checkAuthStatus = () => {
-      const accessToken = Cookies.get('trip-tune_at');
-      const refreshToken = Cookies.get('trip-tune_rt');
-
-      if (accessToken && refreshToken) {
-        router.push('/');
-      }
-    };
-
-    checkAuthStatus();
+    const accessToken = Cookies.get('trip-tune_at');
+    const refreshToken = Cookies.get('trip-tune_rt');
+    
+    if (accessToken && refreshToken) {
+      const redirectPath = localStorage.getItem('redirectAfterLogin') || '/'; // 이전 경로 또는 홈
+      localStorage.removeItem('redirectAfterLogin'); // 사용 후 제거
+      router.push(redirectPath);
+    }
   }, [router]);
-
+  
   return (
     <>
       <Head>

@@ -4,6 +4,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import styles from '@/styles/Schedule.module.css';
 import { ko } from 'date-fns/locale';
 import { useTravelStore } from '@/store/scheduleStore';
+import { isValidDateForUpdate } from '@/utils/index';
 
 registerLocale('ko', ko);
 
@@ -14,12 +15,12 @@ interface CalendarModalProps {
 }
 
 const UpdateCalendarModal = ({
-  initialStartDate,
-  initialEndDate,
-  onClose,
-}: CalendarModalProps) => {
+                               initialStartDate,
+                               initialEndDate,
+                               onClose,
+                             }: CalendarModalProps) => {
   const { updateScheduleDetail } = useTravelStore();
-
+  
   const today = new Date();
   const [startDate, setStartDate] = useState<Date | null>(
     initialStartDate ? new Date(initialStartDate) : null
@@ -28,12 +29,11 @@ const UpdateCalendarModal = ({
     initialEndDate ? new Date(initialEndDate) : today
   );
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
-
+  
   useEffect(() => {
-    today.setHours(0, 0, 0, 0);
-    setIsFormValid(endDate !== null && endDate > today);
-  }, [startDate, endDate]);
-
+    setIsFormValid(endDate !== null && isValidDateForUpdate(endDate));
+  }, [endDate]);
+  
   const formatDateToKoreanWithDay = (date: Date | null): string => {
     if (!date) return '';
     return new Intl.DateTimeFormat('ko-KR', {
@@ -46,7 +46,7 @@ const UpdateCalendarModal = ({
       .replace(/\./g, '.')
       .replace(' ', '');
   };
-
+  
   const handleConfirm = () => {
     if (isFormValid) {
       updateScheduleDetail({
@@ -55,10 +55,10 @@ const UpdateCalendarModal = ({
       });
       onClose();
     } else {
-      console.error('모든 필드를 올바르게 입력해야 합니다.');
+      console.error('종료 날짜는 오늘 이후여야 합니다.');
     }
   };
-
+  
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContainer}>

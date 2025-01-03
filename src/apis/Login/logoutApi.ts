@@ -1,7 +1,8 @@
-import { patch } from './api';
+import { patch } from '@/apis/Common/api';
 import Cookies from 'js-cookie';
+import { handleApiError } from '@/apis/Common/errorHandler';
 
-export const logoutApi = async (): Promise<void> => {
+export const logoutApi = async (): Promise<unknown> => {
   const accessToken = Cookies.get('trip-tune_at');
   const nickname = Cookies.get('nickname');
 
@@ -20,8 +21,8 @@ export const logoutApi = async (): Promise<void> => {
       Cookies.remove('trip-tune_at');
       Cookies.remove('trip-tune_rt');
       Cookies.remove('nickname');
-    } catch (error) {
-      throw new Error('Logout failed');
+    } catch (error:any) {
+      return handleApiError(error, '로그아웃이 실패하였습니다.');
     }
   }
 };

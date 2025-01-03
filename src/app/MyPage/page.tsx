@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import LogoutModal from '@/components/Common/LogoutModal';
 import styles from '@/styles/Mypage.module.css';
-import { logoutApi } from '@/apis/logoutApi';
-import { getMyPage } from '@/apis/myPageApi';
+import { logoutApi } from '@/apis/Login/logoutApi';
+import { getMyPage } from '@/apis/MyPage/myPageApi';
 
 const MyPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

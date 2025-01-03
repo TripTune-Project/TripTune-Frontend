@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie';
-import { refreshApi } from './refreshApi';
+import { refreshApi } from '../Login/refreshApi';
 
 const DEFAULT_HEADERS = {
   'Content-Type': 'application/json',
@@ -33,6 +33,11 @@ const handleTokenRefresh = async (): Promise<string | null> => {
 const handleRedirectToLogin = (message: string) => {
   if (!isRedirectingToLogin && window.location.pathname !== '/Login') {
     isRedirectingToLogin = true;
+    
+    // 현재 페이지 경로를 저장
+    const currentPath = window.location.pathname;
+    localStorage.setItem('redirectAfterLogin', currentPath);
+    
     alert(message);
     Cookies.remove('trip-tune_at');
     Cookies.remove('trip-tune_rt');
@@ -67,7 +72,7 @@ const fetchData = async <T>(
   
   let response = await fetch(url, requestConfig);
 
-  if (response.status === 401 || response.status === 400) {
+  if (response.status === 401) {
     if (!isRetrying) {
       isRetrying = true;
       const newAccessToken = await handleTokenRefresh();

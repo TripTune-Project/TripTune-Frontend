@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
 import Image from 'next/image';
 import { useMyScheduleList } from '@/hooks/useSchedule';
-import { addPlaceToSchedule } from '@/apis/scheduleApi';
+import { addPlaceToSchedule } from '@/apis/Schedule/scheduleApi';
 import triptuneIcon from '../../../../public/assets/images/로고/triptuneIcon-removebg.png';
 import AlertIcon from '../../../../public/assets/images/여행지 탐색/홈화면/alertIcon.png';
 

@@ -6,7 +6,7 @@ import {
   fetchScheduleAttendees,
   shareSchedule,
   updatePermission,
-} from '@/apis/attendeeApi';
+} from '@/apis/Schedule/attendeeApi';
 import { useParams } from 'next/navigation';
 import triptuneIcon from '../../../../public/assets/images/로고/triptuneIcon-removebg.png';
 
