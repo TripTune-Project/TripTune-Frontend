@@ -23,19 +23,35 @@ import { leaveSchedule } from '@/apis/Schedule/attendeeApi';
 import DeleteModal from '@/components/Feature/Schedule/DeleteModal';
 import moreBtn from '../../../public/assets/images/일정 만들기/일정 목록 조회/moreBtn.png';
 import NoResultLayout from '../../components/Common/NoResult';
+import LoginModal from '@/components/Common/LoginModal';
+import Cookies from 'js-cookie';
 
 export default function SchedulePage() {
   const router = useRouter();
+  
   const { checkAuthStatus } = useAuth();
-
+  
   useEffect(() => {
-    document.body.style.overflow = 'auto';
-    checkAuthStatus();
+    const checkAuthentication = async () => {
+      await checkAuthStatus(); // 로그인 상태를 확인
+      const accessToken = Cookies.get('trip-tune_at');
+      if (!accessToken) {
+        setShowLoginModal(true);
+        document.body.style.overflow = 'hidden'; // 스크롤 비활성화
+      } else {
+        document.body.style.overflow = 'auto'; // 스크롤 활성화
+      }
+    };
+    
+    checkAuthentication();
+    
+    // 컴포넌트가 언마운트될 때 cleanup
     return () => {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = 'auto';
     };
   }, [checkAuthStatus]);
-
+  
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeDeleteMenu, setActiveDeleteMenu] = useState<number | null>(null);
   const [selectedScheduleId, setSelectedScheduleId] = useState<number | null>(
@@ -284,7 +300,11 @@ export default function SchedulePage() {
   if (isAllScheduleError || isSharedScheduleError) {
     return <div>일정 목록을 불러오는 중 오류가 발생했습니다.</div>;
   }
-
+  
+  const closeLoginModal = () => {
+    setShowLoginModal(false);
+  };
+  
   return (
     <div className={styles.schedule}>
       <Head>
@@ -390,6 +410,7 @@ export default function SchedulePage() {
           <NewScheduleModal onClose={() => setIsModalOpen(false)} />
         )}
       </div>
+      {showLoginModal && <LoginModal onClose={closeLoginModal} />}
     </div>
   );
 }

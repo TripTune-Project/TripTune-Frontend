@@ -26,6 +26,7 @@ import { fetchTravelDetail } from '@/apis/Travel/travelApi';
 import Cookies from 'js-cookie';
 import { useParams, useRouter } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import LoginModal from '@/components/Common/LoginModal';
 
 const StyledSwiperContainer = styled.div`
     position: relative;
@@ -101,7 +102,9 @@ const TravelDetailPage = () => {
 
   const [isExpanded, setIsExpanded] = useState(false);
   const [showExpandButton, setShowExpandButton] = useState(false);
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   
   const descriptionRef = useRef<HTMLParagraphElement | null>(null);
   const prevButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -128,8 +131,7 @@ const TravelDetailPage = () => {
     mutationFn: async (bookmarkStatus: boolean) => {
       const accessToken = Cookies.get('trip-tune_at');
       if (!accessToken) {
-        alert('로그인이 필요합니다.');
-        router.push('/login');
+        setShowLoginModal(true);
         return;
       }
       return bookmarkStatus
@@ -152,8 +154,7 @@ const TravelDetailPage = () => {
     const accessToken = Cookies.get('trip-tune_at');
     
     if (!accessToken) {
-      alert('로그인이 필요합니다.');
-      router.push('/login');
+      setShowLoginModal(true);
       return;
     }
     
@@ -162,6 +163,10 @@ const TravelDetailPage = () => {
   
   const closeModal = () => {
     setIsModalOpen(false);
+  };
+  
+  const closeLoginModal = () => {
+    setShowLoginModal(false);
   };
   
   const UseTimeUI = ({ useTime }: { useTime: string }) => (
@@ -394,6 +399,7 @@ const TravelDetailPage = () => {
           placeId={placeIdNumber}
         />
       )}
+      {showLoginModal && <LoginModal onClose={closeLoginModal} />}
     </>
   );
 };
