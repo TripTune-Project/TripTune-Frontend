@@ -21,8 +21,6 @@ export const BookMarkApi = async (data: BookMarkData) => {
     if (response.data) {
       console.log('북마크 등록 성공:', response.data);
       return response.data;
-    } else {
-      throw new Error('북마크 등록에 실패했습니다.');
     }
   } catch (error) {
     throw new Error(
@@ -50,8 +48,6 @@ export const BookMarkDeleteApi = async (data: BookMarkData) => {
     if (response.data) {
       console.log('북마크 해제 성공:', response.data);
       return response.data;
-    } else {
-      throw new Error('북마크 해제에 실패했습니다.');
     }
   } catch (error) {
     throw new Error(

@@ -23,9 +23,9 @@ import timeIcon from '../../../../public/assets/images/여행지 탐색/상세�
 import homePageIcon from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_homepageIcon.png';
 import phoneIcon from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_phoneIcon.png';
 import { fetchTravelDetail } from '@/apis/travelApi';
-import { TravelPlaceDetail } from '@/types/travelType';
 import Cookies from 'js-cookie';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 const StyledSwiperContainer = styled.div`
     position: relative;
@@ -67,44 +67,45 @@ const StyledSwiperButtonNext = styled.button`
     background-position: center;
 `;
 
-interface TravelDetailPageProps {
-  params: { placeId: string };
-}
+const fetchTravelDetailData = async (placeId: number, requiresAuth: boolean) => {
+  return await fetchTravelDetail(placeId, requiresAuth);
+};
 
-const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
-  const router = useRouter();
-  const placeIdNumber = parseInt(params.placeId, 10);
+const TravelDetailPage = () => {
+  useEffect(() => {
+    document.body.style.overflow = 'auto';
+    return () => {
+      document.body.style.overflow = 'hidden';
+    };
+  }, []);
   
-  const [data, setData] = useState<TravelPlaceDetail | null>(null);
-  const [isBookmarked, setIsBookmarked] = useState(false);
+  const { placeId } = useParams<{ placeId: string }>();
+  const placeIdNumber = parseInt(placeId, 10);
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  
+  const { data, isLoading } = useQuery({
+    queryKey: ['travelDetail', placeIdNumber],
+    queryFn: async () => {
+      const accessToken = Cookies.get('trip-tune_at');
+      const requiresAuth = !!accessToken;
+      const result = await fetchTravelDetailData(placeIdNumber, requiresAuth);
+      if (result.success) {
+        return result.data;
+      } else {
+        console.error(`Error: ${result.message}`);
+        throw new Error(result.message);
+      }
+    },
+  });
+
   const [isExpanded, setIsExpanded] = useState(false);
   const [showExpandButton, setShowExpandButton] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   
   const descriptionRef = useRef<HTMLParagraphElement | null>(null);
   const prevButtonRef = useRef<HTMLButtonElement | null>(null);
   const nextButtonRef = useRef<HTMLButtonElement | null>(null);
-  
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = await fetchTravelDetail(placeIdNumber);
-      if (result.success && result.data) {
-        setData(result.data);
-        
-        const accessToken = Cookies.get('trip-tune_at');
-        if (accessToken) {
-          setIsBookmarked(result.data.bookmarkStatus ?? false);
-          console.log(isBookmarked,"isBookmarked 확인:")
-        } else {
-          setIsBookmarked(false);
-        }
-      } else {
-        console.error(`Error: ${result.message}`);
-      }
-    };
-    fetchData();
-  }, [placeIdNumber]);
   
   useEffect(() => {
     if (descriptionRef.current) {
@@ -123,33 +124,28 @@ const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
     }
   }, [isExpanded, data]);
   
-  const toggleBookmark = async () => {
-    const accessToken = Cookies.get('trip-tune_at');
-    
-    if (!accessToken) {
-      alert('로그인이 필요합니다.');
-      router.push('/login');
-      return;
-    }
-    
-    setIsLoading(true);
-    try {
-      if (isBookmarked) {
-        const result = await BookMarkDeleteApi({ placeId: placeIdNumber });
-        if (result) {
-          setIsBookmarked(false);
-        }
-      } else {
-        const result = await BookMarkApi({ placeId: placeIdNumber });
-        if (result) {
-          setIsBookmarked(true);
-        }
+  const toggleBookmarkMutation = useMutation({
+    mutationFn: async (bookmarkStatus: boolean) => {
+      const accessToken = Cookies.get('trip-tune_at');
+      if (!accessToken) {
+        alert('로그인이 필요합니다.');
+        router.push('/login');
+        return;
       }
-    } catch (error) {
-      console.error('북마크 처리 중 오류 발생:', error);
-    } finally {
-      setIsLoading(false);
-    }
+      return bookmarkStatus
+        ? await BookMarkDeleteApi({ placeId : placeIdNumber })
+        : await BookMarkApi({ placeId : placeIdNumber });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['travelDetail', placeIdNumber] });
+    },
+    onError: (error) => {
+      console.error('북마크 변경 오류:', error);
+    },
+  });
+  
+  const handleBookmarkToggle = () => {
+    toggleBookmarkMutation.mutate(data?.bookmarkStatus ?? false);
   };
   
   const handleScheduleAdd = () => {
@@ -223,7 +219,7 @@ const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
     setIsExpanded(!isExpanded);
   };
   
-  if (!data) return <DataLoading />;
+  if (isLoading || !data) return <DataLoading />;
   
   const {
     placeName,
@@ -240,6 +236,7 @@ const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
     useTime,
     checkOutTime,
     checkInTime,
+    bookmarkStatus
   } = data;
   
   const extractHomepageUrl = (htmlString: string) => {
@@ -333,17 +330,17 @@ const TravelDetailPage = ({ params }: TravelDetailPageProps) => {
             )}
             <div className={styles.buttonContainer}>
               <button
-                onClick={toggleBookmark}
+                onClick={handleBookmarkToggle}
                 className={styles.bookmarkBtn}
                 disabled={isLoading}
               >
                 <Image
                   width={13}
                   height={16}
-                  src={isBookmarked ? detailBookMark : detailBookMarkNo}
+                  src={bookmarkStatus ? detailBookMark : detailBookMarkNo}
                   alt="북마크"
                 />
-                {isBookmarked ? '북마크 해제' : '북마크'}
+                {bookmarkStatus ? '북마크 해제' : '북마크'}
               </button>
               <button onClick={handleScheduleAdd} className={styles.chooseBtn}>
                 <Image

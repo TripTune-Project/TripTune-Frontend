@@ -22,10 +22,11 @@ import BookMarkNo from '../../../public/assets/images/여행지 탐색/홈화면
 import BookMark from '../../../public/assets/images/여행지 탐색/홈화면/placeHome_bookmarkIconFill.png';
 import locationIcon from '../../../public/assets/images/여행지 탐색/홈화면/placeHome_mapIcon.png';
 import NoResultLayout from '@/components/Common/NoResult';
+import Cookies from 'js-cookie';
 
 const TravelPage = () => {
   const router = useRouter();
-
+  
   const {
     currentPage,
     searchTerm,
@@ -34,11 +35,11 @@ const TravelPage = () => {
     setSearchTerm,
     setIsSearching,
   } = useTravelStore();
-
+  
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertSeverity, setAlertSeverity] = useState<AlertColor>('info');
-
+  
   const {
     userCoordinates,
     errorMessage: geoErrorMessage,
@@ -48,12 +49,15 @@ const TravelPage = () => {
     latitude: number;
     longitude: number;
   } | null>(null);
-
+  
   const defaultCoordinates = {
     latitude: 37.5642135,
     longitude: 127.0016985,
   };
-
+  
+  const accessToken = Cookies.get('trip-tune_at');
+  const requiresAuth = !!accessToken; // 토큰이 있는 경우만 인증 필요
+  
   const {
     data: locationData,
     isLoading: isLoadingLocation,
@@ -61,9 +65,10 @@ const TravelPage = () => {
   } = useTravelListByLocation(
     coordinates ?? defaultCoordinates,
     currentPage,
-    !isSearching
+    requiresAuth,
+    !isSearching,
   );
-
+  
   const {
     data: searchData,
     isLoading: isLoadingSearch,
@@ -75,11 +80,12 @@ const TravelPage = () => {
       longitude: coordinates?.longitude ?? 0,
     },
     currentPage,
-    isSearching
+    requiresAuth,
+    isSearching,
   );
-
+  
   const debouncedSearchTerm = useDebounce(searchTerm, 800);
-
+  
   useEffect(() => {
     if (permissionState === 'granted' && userCoordinates) {
       setCoordinates(userCoordinates);
@@ -92,7 +98,7 @@ const TravelPage = () => {
       }
     }
   }, [permissionState, userCoordinates, geoErrorMessage]);
-
+  
   useEffect(() => {
     if (debouncedSearchTerm.trim()) {
       setIsSearching(true);
@@ -109,7 +115,7 @@ const TravelPage = () => {
     setCurrentPage,
     setIsSearching,
   ]);
-
+  
   const handleSearch = () => {
     if (searchTerm.trim()) {
       setIsSearching(true);
@@ -119,20 +125,20 @@ const TravelPage = () => {
       alert('검색어를 입력해주세요.');
     }
   };
-
+  
   const handleSearchInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const input = event.target.value;
     const regex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]*$/;
-
+    
     if (regex.test(input)) {
       setSearchTerm(input);
     } else {
       alert('특수문자는 사용할 수 없습니다. 다른 검색어를 입력해 주세요.');
     }
   };
-
+  
   const handleSearchInputBlur = () => {
     if (searchTerm.trim() === '') {
       setIsSearching(false);
@@ -140,45 +146,41 @@ const TravelPage = () => {
       refetchLocation();
     }
   };
-
+  
   const handleSearchKeyPress = (
-    event: React.KeyboardEvent<HTMLInputElement>
+    event: React.KeyboardEvent<HTMLInputElement>,
   ) => {
     if (event.key === 'Enter') {
       handleSearch();
     }
   };
-
-  const toggleBookmark = async (placeId: number, isBookmarked = false) => {
+  
+  const toggleBookmark = async (placeId: number, bookmarkStatus = false) => {
     try {
-      if (isBookmarked) {
+      // 서버 요청
+      if (bookmarkStatus) {
         await BookMarkDeleteApi({ placeId });
-        setAlertMessage('북마크가 해제되었습니다.');
       } else {
         await BookMarkApi({ placeId });
-        setAlertMessage('북마크가 등록되었습니다.');
       }
-      setAlertSeverity('success');
-      setAlertOpen(true);
-    } catch (error) {
-      setAlertMessage('북마크 처리 중 오류가 발생했습니다.');
-      setAlertSeverity('error');
-      setAlertOpen(true);
+    } finally {
+      // 데이터 동기화
+      isSearching ? await refetchSearch() : await refetchLocation();
     }
   };
-
+  
   const handleAlertClose = (
     event?: React.SyntheticEvent | Event,
-    reason?: string
+    reason?: string,
   ) => {
     if (reason === 'clickaway') return;
     setAlertOpen(false);
   };
-
+  
   const handleDetailClick = (placeId: number) => {
     router.push(`/Travel/${placeId}`);
   };
-
+  
   const calculateTravelTime = (distance: number) => {
     if (isNaN(distance)) {
       return {
@@ -186,52 +188,52 @@ const TravelPage = () => {
         driving: '차로 거리 정보 없음',
       };
     }
-
+    
     const distanceInKm = Math.floor(distance * 10) / 10;
     const walkingSpeed = 5;
     const drivingSpeed = 50;
-
+    
     const walkingTime = Math.round((distanceInKm / walkingSpeed) * 60);
     const drivingTime = Math.round((distanceInKm / drivingSpeed) * 60);
-
+    
     return {
       walking: `도보 ${walkingTime}분 (${distanceInKm} km)`,
       driving: `차로 ${drivingTime}분 (${distanceInKm} km)`,
     };
   };
-
+  
   const places = isSearching
     ? searchData?.data?.content
     : locationData?.data?.content;
-
+  
   const totalPages = isSearching
     ? (searchData?.data?.totalPages ?? 0)
     : (locationData?.data?.totalPages ?? 0);
-
+  
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo(0, 0);
   };
-
+  
   return (
     <>
       <Head>
         <title>여행지 탐색 | 검색 리스트 조회</title>
         <meta
-          name='description'
-          content='여행지를 검색하고 위치를 기반으로 추천받아보세요. 원하는 키워드로 검색하거나 내 위치에서 가까운 여행지를 찾아볼 수 있습니다.'
+          name="description"
+          content="여행지를 검색하고 위치를 기반으로 추천받아보세요. 원하는 키워드로 검색하거나 내 위치에서 가까운 여행지를 찾아볼 수 있습니다."
         />
         <meta
-          name='keywords'
-          content='여행, 여행지 검색, 위치 기반 추천, 내 위치, 여행지 추천, 여행 정보'
+          name="keywords"
+          content="여행, 여행지 검색, 위치 기반 추천, 내 위치, 여행지 추천, 여행 정보"
         />
-        <meta property='og:title' content='여행지 탐색 | 검색 리스트 조회' />
+        <meta property="og:title" content="여행지 탐색 | 검색 리스트 조회" />
         <meta
-          property='og:description'
-          content='여행지를 검색하고 위치를 기반으로 추천받아보세요. 원하는 키워드로 검색하거나 내 위치에서 가까운 여행지를 찾아볼 수 있습니다.'
+          property="og:description"
+          content="여행지를 검색하고 위치를 기반으로 추천받아보세요. 원하는 키워드로 검색하거나 내 위치에서 가까운 여행지를 찾아볼 수 있습니다."
         />
-        <meta property='og:image' content='/assets/Logo.png' />
-        <meta name='viewport' content='width=device-width, initial-scale=1' />
+        <meta property="og:image" content="/assets/Logo.png" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <>
         {isLoadingLocation || isLoadingSearch ? (
@@ -241,8 +243,8 @@ const TravelPage = () => {
             <div className={styles.listContainer}>
               <div className={styles.searchContainer}>
                 <input
-                  type='text'
-                  placeholder='원하는 여행지를 검색하세요.'
+                  type="text"
+                  placeholder="원하는 여행지를 검색하세요."
                   value={searchTerm}
                   onChange={handleSearchInputChange}
                   onKeyPress={handleSearchKeyPress}
@@ -257,7 +259,7 @@ const TravelPage = () => {
                 {places && places.length > 0 ? (
                   places.map((place) => {
                     const { walking, driving } = calculateTravelTime(
-                      place.distance
+                      place.distance,
                     );
                     return (
                       <li
@@ -290,14 +292,14 @@ const TravelPage = () => {
                               e.stopPropagation();
                               toggleBookmark(
                                 place.placeId,
-                                place.isBookmarked ?? false
+                                place.bookmarkStatus ?? false,
                               );
                             }}
                           >
-                            {place.isBookmarked ? (
+                            {place.bookmarkStatus ? (
                               <Image
                                 src={BookMark}
-                                alt='북마크'
+                                alt="북마크"
                                 width={16}
                                 height={16}
                                 priority
@@ -305,7 +307,7 @@ const TravelPage = () => {
                             ) : (
                               <Image
                                 src={BookMarkNo}
-                                alt='북마크 해제'
+                                alt="북마크 해제"
                                 width={16}
                                 height={16}
                                 priority
@@ -321,7 +323,7 @@ const TravelPage = () => {
                           <p className={styles.placeDetailAddress}>
                             <Image
                               src={locationIcon}
-                              alt='장소'
+                              alt="장소"
                               width={15}
                               height={21}
                             />
@@ -337,7 +339,7 @@ const TravelPage = () => {
                     );
                   })
                 ) : (
-                  <NoResultLayout/>
+                  <NoResultLayout />
                 )}
               </ul>
               {places && places.length > 0 && totalPages > 0 && (
