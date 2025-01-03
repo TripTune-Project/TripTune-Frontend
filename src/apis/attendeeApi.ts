@@ -14,14 +14,14 @@ export const fetchScheduleAttendees = async (
   const url = `/api/schedules/${scheduleId}/attendees`;
 
   try {
-    const data = await get<ApiResponse<Attendee[]>>(url, {
+    const response = await get<ApiResponse<Attendee[]>>(url, {
       requiresAuth: true,
     });
     console.log(
-      data.success ? '참석자 조회 성공:' : '참석자 조회 실패:',
-      data.message
+      response.success ? '참석자 조회 성공:' : '참석자 조회 실패:',
+      response.message
     );
-    return data;
+    return response;
   } catch (error: any) {
     return handleApiError(error, '서버 내부 오류가 발생하였습니다.');
   }
@@ -36,16 +36,16 @@ export const shareSchedule = async (
   const url = `/api/schedules/${scheduleId}/attendees`;
 
   try {
-    const data = await post<ApiResponse<ShareSchedule>>(
+    const response = await post<ApiResponse<ShareSchedule>>(
       url,
       { email, permission },
       { requiresAuth: true }
     );
     console.log(
-      data.success ? '일정 공유 성공:' : '일정 공유 실패:',
-      data.message
+      response.success ? '일정 공유 성공:' : '일정 공유 실패:',
+      response.message
     );
-    return data;
+    return response;
   } catch (error: any) {
     return handleApiError(error, '서버 내부 오류가 발생하였습니다.');
   }
@@ -60,14 +60,14 @@ export const updatePermission = async (
   const url = `/api/schedules/${scheduleId}/attendees/${attendeeId}`;
 
   try {
-    const data = await patch<
+    const response = await patch<
       ApiResponse<{ success: boolean; message: string }>
     >(url, { permission }, { requiresAuth: true });
     console.log(
-      data.success ? '접근 권한 수정 성공:' : '접근 권한 수정 실패:',
-      data.message
+      response.success ? '접근 권한 수정 성공:' : '접근 권한 수정 실패:',
+      response.message
     );
-    return data;
+    return response;
   } catch (error: any) {
     return handleApiError(error, '서버 내부 오류가 발생하였습니다.');
   }
@@ -80,14 +80,14 @@ export const leaveSchedule = async (
   const url = `/api/schedules/${scheduleId}/attendees`;
 
   try {
-    const data = await remove<ApiResponse<LeaveSchedule>>(url, {
+    const response = await remove<ApiResponse<LeaveSchedule>>(url, {
       requiresAuth: true,
     });
     console.log(
-      data.success ? '일정 나가기 성공:' : '일정 나가기 실패:',
-      data.message
+      response.success ? '일정 나가기 성공:' : '일정 나가기 실패:',
+      response.message
     );
-    return data;
+    return response;
   } catch (error: any) {
     if (error?.status === 403 && error?.message === '작성자 나가기 금지') {
       return handleApiError<LeaveSchedule>(

@@ -10,15 +10,15 @@ export const fetchScheduleChats = async (
   const url = `/api/schedules/${scheduleId}/chats?page=${page}`;
 
   try {
-    const data = await get<ApiResponse<ChatList>>(url, {
+    const response = await get<ApiResponse<ChatList>>(url, {
       requiresAuth: true,
     });
 
     console.log(
-      data.success ? '채팅 목록 조회 성공:' : '채팅 목록 조회 실패:',
-      data.message
+      response.success ? '채팅 목록 조회 성공:' : '채팅 목록 조회 실패:',
+      response.message
     );
-    return data;
+    return response;
   } catch (error: any) {
     if (error.status === 404) {
       return handleApiError(error, '일정 데이터가 존재하지 않습니다.', 404);

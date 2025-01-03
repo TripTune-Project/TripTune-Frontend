@@ -67,7 +67,7 @@ const fetchData = async <T>(
   
   let response = await fetch(url, requestConfig);
 
-  if (response.status === 401 || response.status === 400) {
+  if (response.status === 401) {
     if (!isRetrying) {
       isRetrying = true;
       const newAccessToken = await handleTokenRefresh();
