@@ -23,6 +23,7 @@ import BookMark from '../../../public/assets/images/여행지 탐색/홈화면/p
 import locationIcon from '../../../public/assets/images/여행지 탐색/홈화면/placeHome_mapIcon.png';
 import NoResultLayout from '@/components/Common/NoResult';
 import Cookies from 'js-cookie';
+import LoginModal from '@/components/Common/LoginModal';
 
 const TravelPage = () => {
   const router = useRouter();
@@ -57,6 +58,7 @@ const TravelPage = () => {
   
   const accessToken = Cookies.get('trip-tune_at');
   const requiresAuth = !!accessToken; // 토큰이 있는 경우만 인증 필요
+  const [showLoginModal, setShowLoginModal] = useState(false);
   
   const {
     data: locationData,
@@ -156,6 +158,10 @@ const TravelPage = () => {
   };
   
   const toggleBookmark = async (placeId: number, bookmarkStatus = false) => {
+    if (!accessToken) {
+      setShowLoginModal(true);
+      return;
+    }
     try {
       // 서버 요청
       if (bookmarkStatus) {
@@ -213,6 +219,10 @@ const TravelPage = () => {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo(0, 0);
+  };
+  
+  const closeLoginModal = () => {
+    setShowLoginModal(false);
   };
   
   return (
@@ -367,6 +377,7 @@ const TravelPage = () => {
           </Alert>
         </Snackbar>
       </>
+      {showLoginModal && <LoginModal onClose={closeLoginModal} />}
     </>
   );
 };

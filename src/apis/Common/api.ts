@@ -12,9 +12,9 @@ interface FetchOptions extends RequestInit {
 
 const getAuthHeaders = (): HeadersInit => {
   const accessToken = Cookies.get('trip-tune_at');
-  if (!accessToken) {
-    throw new Error('액세스 토큰이 없습니다. 다시 로그인 해주세요.');
-  }
+  // if (!accessToken) {
+  //   throw new Error('액세스 토큰이 없습니다. 다시 로그인 해주세요.');
+  // }
   return {
     Authorization: `Bearer ${accessToken}`,
   };
