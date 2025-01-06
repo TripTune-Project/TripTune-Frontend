@@ -21,6 +21,7 @@ export const logoutApi = async (): Promise<unknown> => {
       Cookies.remove('trip-tune_at');
       Cookies.remove('trip-tune_rt');
       Cookies.remove('nickname');
+      window.location.href = '/';
     } catch (error:any) {
       return handleApiError(error, '로그아웃이 실패하였습니다.');
     }
