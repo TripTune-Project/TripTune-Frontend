@@ -9,23 +9,6 @@ interface Profile {
   profileImage: string;
 }
 
-interface Schedule {
-  scheduleId: number;
-  scheduleName: string;
-  startDate: string;
-  endDate: string;
-  createdAt?: string;
-  updatedAt?: string;
-}
-
-interface ScheduleResponse {
-  totalPages: number;
-  currentPage: number;
-  totalElements: number;
-  pageSize: number;
-  content: Schedule[];
-}
-
 interface Bookmark {
   placeId: number;
   country: string;
@@ -68,73 +51,6 @@ export const getMyPage = async () => {
     return response;
   } catch (error: any) {
     console.error('마이페이지 정보 조회 중 오류 발생:', error);
-    throw new Error(error.message);
-  }
-};
-
-// 내 일정 목록 조회 (GET)
-export const getMySchedules = async (currentPage: number = 1) => {
-  const url = `/mypage/schedules?page=${currentPage}`;
-  
-  try {
-    const response = await get<{
-      success: boolean;
-      data: ScheduleResponse;
-      message: string;
-    }>(url, { requiresAuth: true });
-    
-    console.log(
-      response.success ? '내 일정 목록 조회 성공:' : '내 일정 목록 조회 실패:',
-      response.message,
-    );
-    return response;
-  } catch (error: any) {
-    console.error('내 일정 목록 조회 중 오류 발생:', error);
-    throw new Error(error.message);
-  }
-};
-
-// 내 일정 삭제 (DELETE)
-export const deleteSchedule = async (scheduleId: number) => {
-  const url = `/mypage/schedules/${scheduleId}`;
-  
-  try {
-    const response = await remove<{ success: boolean; message: string }>(url, {
-      requiresAuth: true,
-    });
-    
-    console.log(
-      response.success ? '일정 삭제 성공:' : '일정 삭제 실패:',
-      response.message,
-    );
-    return response;
-  } catch (error:any) {
-    console.error('일정 삭제 중 오류 발생:', error);
-    throw new Error(error.message);
-  }
-};
-
-// 내 일정에 장소 추가 (POST)
-export const addPlaceToSchedule = async (
-  scheduleId: number,
-  placeId: number,
-) => {
-  const url = `/mypage/schedules/${scheduleId}`;
-  
-  try {
-    const response = await post<{ success: boolean; message: string }>(
-      url,
-      { placeId },
-      { requiresAuth: true },
-    );
-    
-    console.log(
-      response.success ? '일정에 장소 추가 성공:' : '일정에 장소 추가 실패:',
-      response.message,
-    );
-    return response;
-  } catch (error:any) {
-    console.error('일정에 장소 추가 중 오류 발생:', error);
     throw new Error(error.message);
   }
 };

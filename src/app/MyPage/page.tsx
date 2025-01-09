@@ -77,9 +77,6 @@ const MyPage = () => {
       </div>
       <div className={styles.menu}>
         <ul>
-          <li onClick={() => router.push('/MyPage/MyScheduleList')}>
-            내 일정 목록
-          </li>
           <li onClick={() => router.push('/MyPage/Bookmark')}>북마크</li>
           <li onClick={() => router.push('/MyPage/PasswordChange')}>
             비밀번호 변경
