@@ -34,7 +34,7 @@ export default function NoResultLayout() {
       lineHeight: 'normal',
     },
   };
-  
+
   return (
     <div style={styles.noScheduleContainer}>
       <p style={styles.noResults}>

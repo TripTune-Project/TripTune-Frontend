@@ -6,21 +6,23 @@ import LoginForm from '@/components/Feature/Login/LoginForm';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import VerificationLoading from '../../components/Common/VerificationLoading';
+import saveLocalContent from '@/utils/saveLocalContent';
 
 export default function LoginPage() {
   const router = useRouter();
-  
+
   useEffect(() => {
-    const accessToken = Cookies.get('trip-tune_at');
-    const refreshToken = Cookies.get('trip-tune_rt');
-    
+    const { getDecryptedCookie } = saveLocalContent();
+    const accessToken = getDecryptedCookie('trip-tune_at');
+    const refreshToken = getDecryptedCookie('trip-tune_rt');
+
     if (accessToken && refreshToken) {
       const redirectPath = localStorage.getItem('redirectAfterLogin') || '/'; // 이전 경로 또는 홈
       localStorage.removeItem('redirectAfterLogin'); // 사용 후 제거
       router.push(redirectPath);
     }
   }, [router]);
-  
+
   return (
     <>
       <Head>

@@ -3,17 +3,17 @@
 import { useEffect } from 'react';
 import Head from 'next/head';
 import JoinForm from '@/components/Feature/Join/JoinForm';
-import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
+import saveLocalContent from '@/utils/saveLocalContent';
 
 export default function JoinPage() {
   const router = useRouter();
 
   useEffect(() => {
     const checkAuthStatus = () => {
-      const accessToken = Cookies.get('trip-tune_at');
-      const refreshToken = Cookies.get('trip-tune_rt');
-
+      const { getDecryptedCookie } = saveLocalContent();
+      const accessToken = getDecryptedCookie('trip-tune_at');
+      const refreshToken = getDecryptedCookie('trip-tune_rt');
       if (accessToken && refreshToken) {
         router.push('/');
       }

@@ -165,7 +165,7 @@ export const fetchSchedulesPreview = async (
   page: number
 ): Promise<ApiResponse<SchedulePreviewResponse>> => {
   const url = `/api/schedules/edit?page=${page}`;
-  
+
   try {
     const data = await get<ApiResponse<SchedulePreviewResponse>>(url, {
       requiresAuth: true,

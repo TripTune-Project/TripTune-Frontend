@@ -3,12 +3,12 @@ import saveLocalContent from '@/utils/saveLocalContent';
 
 export const refreshApi = async (): Promise<string | null> => {
   const { setEncryptedCookie, getDecryptedCookie } = saveLocalContent();
-  const refreshToken = getDecryptedCookie('trip-tune_rt'); // 복호화된 리프레시 토큰 가져오기
-  
+  const refreshToken = getDecryptedCookie('trip-tune_rt');
+
   if (!refreshToken) {
     throw new Error('리프레시 토큰이 없습니다. 다시 로그인 해주세요.');
   }
-  
+
   try {
     const response = await post<{ data: { accessToken: string } }>(
       '/api/members/refresh',

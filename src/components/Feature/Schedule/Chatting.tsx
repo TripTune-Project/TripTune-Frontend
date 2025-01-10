@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Client } from '@stomp/stompjs';
-import Cookies from 'js-cookie';
 import { fetchScheduleChats } from '@/apis/Schedule/chatApi';
 import styles from '../../../styles/Schedule.module.css';
 import Image from 'next/image';
 import DataLoading from '@/components/Common/DataLoading';
 import { ChatMessage } from '@/types/scheduleType';
 import { useParams } from 'next/navigation';
+import saveLocalContent from '@/utils/saveLocalContent';
 
 // 날짜 포맷팅
 const formatDate = (timestamp: string) => {
@@ -29,27 +29,28 @@ const formatTimestamp = (timestamp: string) => {
 
 const Chatting = () => {
   const { scheduleId } = useParams();
-  const token = Cookies.get('trip-tune_at');
-  const userNickname = Cookies.get('nickname');
-  
+  const { getDecryptedCookie } = saveLocalContent();
+  const token = getDecryptedCookie('trip-tune_at');
+  const userNickname = getDecryptedCookie('nickname');
+
   const clientRef = useRef<Client | null>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  
+
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [message, setMessage] = useState('');
   const [currentPage, setCurrentPage] = useState<number | null>(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
-  
+
   const brokerUrl = process.env.NEXT_PUBLIC_BROKER_URL;
-  
+
   // 스크롤 맨 위로 이동
   const scrollToTop = () => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = 0;
     }
   };
-  
+
   // 초기 메시지 로드
   useEffect(() => {
     const loadInitialMessages = async () => {
@@ -59,7 +60,7 @@ const Chatting = () => {
           setMessages(response.data.content);
           setTotalPages(response.data.totalPages);
           setCurrentPage(1);
-          
+
           // 스크롤 맨 위로 강제 이동
           setTimeout(scrollToTop, 0);
         }
@@ -67,9 +68,9 @@ const Chatting = () => {
         console.error('메시지 로드 실패:', error);
       }
     };
-    
+
     loadInitialMessages();
-    
+
     const stompClient = new Client({
       brokerURL: brokerUrl,
       connectHeaders: { Authorization: `Bearer ${token}` },
@@ -81,49 +82,49 @@ const Chatting = () => {
           `/sub/schedules/${scheduleId}/chats`,
           (message) => {
             const newMessage: ChatMessage = JSON.parse(message.body);
-            
+
             setMessages((prev) => {
               const combinedMessages = [...prev, newMessage];
               return combinedMessages.sort(
                 (a, b) =>
                   new Date(a.timestamp).getTime() -
-                  new Date(b.timestamp).getTime(),
+                  new Date(b.timestamp).getTime()
               );
             });
-          },
+          }
         );
       },
     });
-    
+
     stompClient.activate();
     clientRef.current = stompClient;
-    
+
     return () => {
       clientRef.current?.deactivate();
     };
   }, [scheduleId]);
-  
+
   // 추가 메시지 로드
   const loadNextMessages = async () => {
     if (loading || currentPage === null || currentPage >= totalPages) return;
     setLoading(true);
-    
+
     const previousScrollHeight = chatContainerRef.current?.scrollHeight || 0;
-    
+
     try {
       const nextPage = currentPage + 1;
       const response = await fetchScheduleChats(Number(scheduleId), nextPage);
-      
+
       if (response.success) {
         setMessages((prev) => {
           const combinedMessages = [...response.data.content, ...prev];
           return combinedMessages.sort(
             (a, b) =>
-              new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
+              new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
           );
         });
         setCurrentPage(nextPage);
-        
+
         setTimeout(() => {
           if (chatContainerRef.current) {
             chatContainerRef.current.scrollTop =
@@ -137,7 +138,7 @@ const Chatting = () => {
       setLoading(false);
     }
   };
-  
+
   // 스크롤 이벤트
   const handleScroll = () => {
     const container = chatContainerRef.current;
@@ -149,17 +150,17 @@ const Chatting = () => {
       loadNextMessages();
     }
   };
-  
+
   // 메시지 전송
   const handleSendMessage = () => {
     const messageLines = message.split('\n').length;
-    
+
     // 메시지 전송 제한 조건
     if (messageLines > 3 || message.length > 1000) {
       alert('전송 제한: 메시지는 3줄 이하 및 1000자 이하로 작성하세요.');
       return;
     }
-    
+
     if (message.trim() && clientRef.current?.connected) {
       clientRef.current?.publish({
         destination: '/pub/chats',
@@ -172,7 +173,7 @@ const Chatting = () => {
       setMessage('');
     }
   };
-  
+
   return (
     <div className={styles.chatContainer}>
       <div className={styles.header}>그룹 채팅</div>
@@ -186,8 +187,8 @@ const Chatting = () => {
           const showDate =
             index === 0 ||
             formatDate(messages[index - 1].timestamp) !==
-            formatDate(msg.timestamp);
-          
+              formatDate(msg.timestamp);
+
           return (
             <div key={msg.messageId} className={styles.userMessages}>
               {showDate && (
@@ -230,23 +231,25 @@ const Chatting = () => {
       </div>
       <div className={styles.inputContainer}>
         <input
-          type="text"
+          type='text'
           value={message}
           className={styles.messageInput}
           onChange={(e) => {
             const newMessage = e.target.value;
             const messageLines = newMessage.split('\n').length;
-            
+
             // 입력 제한
             if (messageLines > 3 || newMessage.length > 1000) {
-              alert('입력 제한: 메시지는 3줄 이하 및 1000자 이하로 작성하세요.');
+              alert(
+                '입력 제한: 메시지는 3줄 이하 및 1000자 이하로 작성하세요.'
+              );
               return;
             }
-            
+
             setMessage(newMessage);
           }}
           onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-          placeholder="메시지를 입력하세요. (최대 3줄 또는 1000자)"
+          placeholder='메시지를 입력하세요. (최대 3줄 또는 1000자)'
         />
         <button onClick={handleSendMessage} className={styles.sendButton}>
           전송

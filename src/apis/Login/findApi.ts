@@ -11,10 +11,9 @@ interface FindPasswordResponse {
 
 export const requestFindId = async (email: string): Promise<FindIdResponse> => {
   try {
-    const response = await post<FindIdResponse>('/api/members/find-id', {
+    return await post<FindIdResponse>('/api/members/find-id', {
       email,
     });
-    return response;
   } catch (error) {
     throw new Error(
       error instanceof Error ? error.message : '이메일이 유효하지 않습니다.'

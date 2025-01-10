@@ -25,16 +25,18 @@ import moreBtn from '../../../public/assets/images/일정 만들기/일정 목�
 import NoResultLayout from '../../components/Common/NoResult';
 import LoginModal from '@/components/Common/LoginModal';
 import Cookies from 'js-cookie';
+import saveLocalContent from '@/utils/saveLocalContent';
 
 export default function SchedulePage() {
   const router = useRouter();
-  
+
   const { checkAuthStatus } = useAuth();
-  
+
   useEffect(() => {
     const checkAuthentication = async () => {
       await checkAuthStatus(); // 로그인 상태를 확인
-      const accessToken = Cookies.get('trip-tune_at');
+      const { getDecryptedCookie } = saveLocalContent();
+      const accessToken = getDecryptedCookie('trip-tune_at');
       if (!accessToken) {
         setShowLoginModal(true);
         document.body.style.overflow = 'hidden'; // 스크롤 비활성화
@@ -42,15 +44,15 @@ export default function SchedulePage() {
         document.body.style.overflow = 'auto'; // 스크롤 활성화
       }
     };
-    
+
     checkAuthentication();
-    
+
     // 컴포넌트가 언마운트될 때 cleanup
     return () => {
       document.body.style.overflow = 'auto';
     };
   }, [checkAuthStatus]);
-  
+
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeDeleteMenu, setActiveDeleteMenu] = useState<number | null>(null);
@@ -159,7 +161,7 @@ export default function SchedulePage() {
     : selectedTab === 'all'
       ? isFetchingNextAllPage
       : isFetchingNextSharedPage;
-  
+
   const handleObserver = (entries: IntersectionObserverEntry[]) => {
     const target = entries[0];
     if (target.isIntersecting && hasNextPage && !isFetchingNextPage) {
@@ -199,9 +201,7 @@ export default function SchedulePage() {
   ) => {
     if (!scheduleListData?.data || scheduleListData.data.content.length === 0) {
       if (isSearching) {
-        return (
-          <NoResultLayout/>
-        );
+        return <NoResultLayout />;
       }
 
       return (
@@ -300,11 +300,11 @@ export default function SchedulePage() {
   if (isAllScheduleError || isSharedScheduleError) {
     return <div>일정 목록을 불러오는 중 오류가 발생했습니다.</div>;
   }
-  
+
   const closeLoginModal = () => {
     setShowLoginModal(false);
   };
-  
+
   return (
     <div className={styles.schedule}>
       <Head>
@@ -353,7 +353,7 @@ export default function SchedulePage() {
             {allScheduleData?.pages[0]?.data?.totalElements ?? 0}
           </span>
         </button>
-        
+
         <button
           className={`${styles.scheduleCounterShare} ${selectedTab === 'share' ? styles.activeTab : ''}`}
           onClick={() => setSelectedTab('share')}
@@ -365,7 +365,7 @@ export default function SchedulePage() {
               : (allScheduleData?.pages[0]?.data?.totalSharedElements ?? 0)}
           </span>
         </button>
-        
+
         <div className={styles.travelSearchContainer}>
           <input
             type='text'

@@ -11,12 +11,12 @@ interface AlertModalProps {
 }
 
 const AlertModal = ({
-                       isOpen,
-                       onClose,
-                       title,
-                       description,
-                       children,
-                     }: AlertModalProps) => {
+  isOpen,
+  onClose,
+  title,
+  description,
+  children,
+}: AlertModalProps) => {
   return (
     <Modal open={isOpen} onClose={onClose}>
       <Box
@@ -34,16 +34,16 @@ const AlertModal = ({
           outline: 'none',
         }}
       >
-        <Stack direction="row" justifyContent="flex-end">
+        <Stack direction='row' justifyContent='flex-end'>
           <IconButton onClick={onClose}>
             <CloseIcon />
           </IconButton>
         </Stack>
-        <Typography variant="h6" component="h2" gutterBottom>
+        <Typography variant='h6' component='h2' gutterBottom>
           {title}
         </Typography>
         {description && (
-          <Typography variant="body2" color="text.secondary" mb={3}>
+          <Typography variant='body2' color='text.secondary' mb={3}>
             {description}
           </Typography>
         )}
