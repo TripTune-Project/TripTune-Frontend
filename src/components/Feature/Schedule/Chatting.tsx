@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Client } from '@stomp/stompjs';
-import Cookies from 'js-cookie';
 import { fetchScheduleChats } from '@/apis/Schedule/chatApi';
 import styles from '../../../styles/Schedule.module.css';
 import Image from 'next/image';
 import DataLoading from '@/components/Common/DataLoading';
 import { ChatMessage } from '@/types/scheduleType';
 import { useParams } from 'next/navigation';
+import saveLocalContent from '@/utils/saveLocalContent';
 
 // 날짜 포맷팅
 const formatDate = (timestamp: string) => {
@@ -29,8 +29,9 @@ const formatTimestamp = (timestamp: string) => {
 
 const Chatting = () => {
   const { scheduleId } = useParams();
-  const token = Cookies.get('trip-tune_at');
-  const userNickname = Cookies.get('nickname');
+  const { getDecryptedCookie } = saveLocalContent();
+  const token = getDecryptedCookie('trip-tune_at');
+  const userNickname = getDecryptedCookie('nickname');
 
   const clientRef = useRef<Client | null>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);

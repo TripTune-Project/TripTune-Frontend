@@ -10,6 +10,7 @@ import MainLogoImage from '../../public/assets/images/로고/triptuneLogo-remove
 import { logoutApi } from '@/apis/Login/logoutApi';
 import useAuth from '@/hooks/useAuth';
 import Cookies from 'js-cookie';
+import saveLocalContent from '@/utils/saveLocalContent';
 
 const Header = () => {
   const router = useRouter();
@@ -26,7 +27,9 @@ const Header = () => {
 
   useEffect(() => {
     const checkLoginStatus = async () => {
-      const storedUserNickname = Cookies.get('nickname');
+      const { getDecryptedCookie } = saveLocalContent();
+      const storedUserNickname = getDecryptedCookie('nickname');
+      
       if (storedUserNickname) {
         setIsLoggedIn(true);
         setUserId(storedUserNickname as string);
