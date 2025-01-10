@@ -27,48 +27,52 @@ import Cookies from 'js-cookie';
 import { useParams, useRouter } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import LoginModal from '@/components/Common/LoginModal';
+import saveLocalContent from '@/utils/saveLocalContent';
 
 const StyledSwiperContainer = styled.div`
-    position: relative;
-    width: 749px;
-    height: 512px;
+  position: relative;
+  width: 749px;
+  height: 512px;
 `;
 
 const StyledSwiperButtonPrev = styled.button`
-    position: absolute;
-    top: 50%;
-    left: 0;
-    transform: translateY(-50%);
-    border: none;
-    cursor: pointer;
-    z-index: 10;
-    user-select: none;
-    width: 50px;
-    height: 50px;
-    background-image: url('/assets/images/여행지 탐색/상세화면/placeDetail_imageLeftBtn.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+  user-select: none;
+  width: 50px;
+  height: 50px;
+  background-image: url('/assets/images/여행지 탐색/상세화면/placeDetail_imageLeftBtn.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 `;
 
 const StyledSwiperButtonNext = styled.button`
-    position: absolute;
-    top: 50%;
-    right: 0;
-    transform: translateY(-50%);
-    border: none;
-    cursor: pointer;
-    z-index: 10;
-    user-select: none;
-    width: 50px;
-    height: 50px;
-    background-image: url('/assets/images/여행지 탐색/상세화면/placeDetail_imageRightBtn.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+  user-select: none;
+  width: 50px;
+  height: 50px;
+  background-image: url('/assets/images/여행지 탐색/상세화면/placeDetail_imageRightBtn.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 `;
 
-const fetchTravelDetailData = async (placeId: number, requiresAuth: boolean) => {
+const fetchTravelDetailData = async (
+  placeId: number,
+  requiresAuth: boolean
+) => {
   return await fetchTravelDetail(placeId, requiresAuth);
 };
 
@@ -79,22 +83,24 @@ const TravelDetailPage = () => {
       document.body.style.overflow = 'hidden';
     };
   }, []);
-  
+
   const { placeId } = useParams<{ placeId: string }>();
   const placeIdNumber = parseInt(placeId, 10);
   const router = useRouter();
   const queryClient = useQueryClient();
-  
+
   const { data, isLoading } = useQuery({
     queryKey: ['travelDetail', placeIdNumber],
     queryFn: async () => {
-      const accessToken = Cookies.get('trip-tune_at');
+      const { getDecryptedCookie } = saveLocalContent();
+      const accessToken = getDecryptedCookie('trip-tune_at');
+      const refreshToken = getDecryptedCookie('trip-tune_rt');
       const requiresAuth = !!accessToken;
       const result = await fetchTravelDetailData(placeIdNumber, requiresAuth);
       if (result.success) {
         return result.data;
       } else {
-        console.error(`Error: ${result.message}`);
+        console.error(`에러 발생: ${result.message}`);
         throw new Error(result.message);
       }
     },
@@ -102,14 +108,14 @@ const TravelDetailPage = () => {
 
   const [isExpanded, setIsExpanded] = useState(false);
   const [showExpandButton, setShowExpandButton] = useState(false);
-  
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  
+
   const descriptionRef = useRef<HTMLParagraphElement | null>(null);
   const prevButtonRef = useRef<HTMLButtonElement | null>(null);
   const nextButtonRef = useRef<HTMLButtonElement | null>(null);
-  
+
   useEffect(() => {
     if (descriptionRef.current) {
       requestAnimationFrame(() => {
@@ -126,70 +132,73 @@ const TravelDetailPage = () => {
       });
     }
   }, [isExpanded, data]);
-  
+
   const toggleBookmarkMutation = useMutation({
     mutationFn: async (bookmarkStatus: boolean) => {
-      const accessToken = Cookies.get('trip-tune_at');
+      const { getDecryptedCookie } = saveLocalContent();
+      const accessToken = getDecryptedCookie('trip-tune_at');
       if (!accessToken) {
         setShowLoginModal(true);
         return;
       }
       return bookmarkStatus
-        ? await BookMarkDeleteApi({ placeId : placeIdNumber })
-        : await BookMarkApi({ placeId : placeIdNumber });
+        ? await BookMarkDeleteApi({ placeId: placeIdNumber })
+        : await BookMarkApi({ placeId: placeIdNumber });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['travelDetail', placeIdNumber] });
+      queryClient.invalidateQueries({
+        queryKey: ['travelDetail', placeIdNumber],
+      });
     },
     onError: (error) => {
       console.error('북마크 변경 오류:', error);
     },
   });
-  
+
   const handleBookmarkToggle = () => {
     toggleBookmarkMutation.mutate(data?.bookmarkStatus ?? false);
   };
-  
+
   const handleScheduleAdd = () => {
-    const accessToken = Cookies.get('trip-tune_at');
-    
+    const { getDecryptedCookie } = saveLocalContent();
+    const accessToken = getDecryptedCookie('trip-tune_at');
     if (!accessToken) {
       setShowLoginModal(true);
       return;
     }
-    
+
     setIsModalOpen(true);
   };
-  
+
   const closeModal = () => {
     setIsModalOpen(false);
   };
-  
+
   const closeLoginModal = () => {
     setShowLoginModal(false);
   };
-  
+
   const UseTimeUI = ({ useTime }: { useTime: string }) => (
     <div className={styles.useTimeLabel}>
-      <Image width={18} height={18} src={timeIcon} alt="이용 시간" />
+      <Image width={18} height={18} src={timeIcon} alt='이용 시간' />
       <p>이용시간</p> {useTime}
     </div>
   );
-  
+
   const CheckInOutUI = ({
-                          checkInTime,
-                          checkOutTime,
-                        }: {
+    checkInTime,
+    checkOutTime,
+  }: {
     checkInTime: string;
     checkOutTime: string;
   }) => (
     <div className={styles.useTimeLabel}>
-      <Image width={18} height={18} src={timeIcon} alt="입/퇴실 시간" />
+      <Image width={18} height={18} src={timeIcon} alt='입/퇴실 시간' />
       <p>입실시간</p> {checkInTime}
       <p>퇴실시간</p> {checkOutTime}
     </div>
   );
-  
+
   const renderTimeContent = (
     checkInTime?: string,
     checkOutTime?: string,
@@ -208,7 +217,7 @@ const TravelDetailPage = () => {
       return null;
     }
   };
-  
+
   const formatDescriptionWithParagraphs = (text: string) => {
     const paragraphs = text.split(/\n+/);
     return paragraphs.map((paragraph, index) => (
@@ -219,13 +228,13 @@ const TravelDetailPage = () => {
       </React.Fragment>
     ));
   };
-  
+
   const handleExpandClick = () => {
     setIsExpanded(!isExpanded);
   };
-  
+
   if (isLoading || !data) return <DataLoading />;
-  
+
   const {
     placeName,
     country,
@@ -241,23 +250,23 @@ const TravelDetailPage = () => {
     useTime,
     checkOutTime,
     checkInTime,
-    bookmarkStatus
+    bookmarkStatus,
   } = data;
-  
+
   const extractHomepageUrl = (htmlString: string) => {
     if (!htmlString) return '';
     const urlMatch = htmlString.match(/href="([^"]*)"/);
     return urlMatch ? urlMatch[1] : '';
   };
-  
+
   const homepageUrl = homepage ? extractHomepageUrl(homepage) : '';
-  
+
   return (
     <>
       <Head>
         <title>{placeName} - 여행지 상세 정보</title>
         <meta
-          name="description"
+          name='description'
           content={`${placeName}의 상세 정보를 확인하세요.`}
         />
       </Head>
@@ -289,7 +298,7 @@ const TravelDetailPage = () => {
                       <Image
                         src={image.imageUrl}
                         alt={image.imageName}
-                        layout="responsive"
+                        layout='responsive'
                         width={643}
                         height={433}
                       />
@@ -309,15 +318,20 @@ const TravelDetailPage = () => {
             </p>
             <div className={styles.detailplaceName}>{placeName}</div>
             <div className={styles.addressLabel}>
-              <Image width={14} height={21} src={locationIcon} alt="주소" />
+              <Image width={14} height={21} src={locationIcon} alt='주소' />
               <p> 주소 </p> {address}
             </div>
             {renderTimeContent(checkInTime, checkOutTime, useTime)}
             {homepageUrl && (
               <div className={styles.homepageLabel}>
-                <Image width={18} height={18} src={homePageIcon} alt="홈페이지" />
+                <Image
+                  width={18}
+                  height={18}
+                  src={homePageIcon}
+                  alt='홈페이지'
+                />
                 <p> 홈페이지 </p>
-                <a href={homepageUrl} target="_blank" rel="noopener noreferrer">
+                <a href={homepageUrl} target='_blank' rel='noopener noreferrer'>
                   {homepageUrl}
                 </a>
               </div>
@@ -328,7 +342,7 @@ const TravelDetailPage = () => {
                   width={36}
                   height={28}
                   src={phoneIcon}
-                  alt="문의 및 안내"
+                  alt='문의 및 안내'
                 />
                 <p> 문의 및 안내 </p> {phoneNumber}
               </div>
@@ -343,7 +357,7 @@ const TravelDetailPage = () => {
                   width={13}
                   height={16}
                   src={bookmarkStatus ? detailBookMark : detailBookMarkNo}
-                  alt="북마크"
+                  alt='북마크'
                 />
                 {bookmarkStatus ? '북마크 해제' : '북마크'}
               </button>
@@ -352,7 +366,7 @@ const TravelDetailPage = () => {
                   width={24}
                   height={21}
                   src={scheduleIcon}
-                  alt="일정 등록"
+                  alt='일정 등록'
                 />
                 내 일정 담기
               </button>
@@ -363,7 +377,7 @@ const TravelDetailPage = () => {
           <Image
             className={styles.detailTitleIcon}
             src={triptuneIcon}
-            alt="상세 설명"
+            alt='상세 설명'
           />
           상세 설명
         </h2>

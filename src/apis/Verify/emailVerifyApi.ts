@@ -4,9 +4,12 @@ export const requestEmailVerification = async (
   email: string
 ): Promise<string> => {
   try {
-    const response = await post<{ message: string }>('/api/emails/verify-request', {
-      email,
-    });
+    const response = await post<{ message: string }>(
+      '/api/emails/verify-request',
+      {
+        email,
+      }
+    );
     return response.message;
   } catch (error) {
     throw new Error(

@@ -73,6 +73,7 @@ const ScheduleMake = ({ initialTab }: ScheduleMakeProps) => {
           )}`}
           placeholder='시작일 ~ 종료일'
           onClick={() => setShowModal(true)}
+          readOnly
         />
         <Image
           src={dateIcon}

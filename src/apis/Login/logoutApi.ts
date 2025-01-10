@@ -1,10 +1,12 @@
 import { patch } from '@/apis/Common/api';
 import Cookies from 'js-cookie';
 import { handleApiError } from '@/apis/Common/errorHandler';
+import saveLocalContent from '@/utils/saveLocalContent';
 
 export const logoutApi = async (): Promise<unknown> => {
-  const accessToken = Cookies.get('trip-tune_at');
-  const nickname = Cookies.get('nickname');
+  const { getDecryptedCookie } = saveLocalContent();
+  const accessToken = getDecryptedCookie('trip-tune_at');
+  const nickname = getDecryptedCookie('nickname');
 
   if (accessToken) {
     try {
@@ -22,7 +24,7 @@ export const logoutApi = async (): Promise<unknown> => {
       Cookies.remove('trip-tune_rt');
       Cookies.remove('nickname');
       window.location.href = '/';
-    } catch (error:any) {
+    } catch (error: any) {
       return handleApiError(error, '로그아웃이 실패하였습니다.');
     }
   }

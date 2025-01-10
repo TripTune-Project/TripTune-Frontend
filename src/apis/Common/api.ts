@@ -14,11 +14,11 @@ interface FetchOptions extends RequestInit {
 const getAuthHeaders = (): HeadersInit => {
   const { getDecryptedCookie } = saveLocalContent();
   const accessToken = getDecryptedCookie('trip-tune_at'); // 복호화된 토큰 가져오기
-  
+
   if (!accessToken) {
     throw new Error('액세스 토큰이 없습니다. 다시 로그인 해주세요.');
   }
-  
+
   return {
     Authorization: `Bearer ${accessToken}`,
   };
@@ -32,9 +32,9 @@ const handleRedirectToLogin = (message: string) => {
     isRedirectingToLogin = true;
     const currentPath = window.location.pathname;
     localStorage.setItem('redirectAfterLogin', currentPath);
-    
+
     alert(message);
-    
+
     Cookies.remove('trip-tune_at');
     Cookies.remove('trip-tune_rt');
     Cookies.remove('nickname');
@@ -51,7 +51,7 @@ const fetchData = async <T>(
     ...DEFAULT_HEADERS,
     ...options.headers,
   };
-  
+
   if (options.requiresAuth) {
     try {
       headers = { ...headers, ...getAuthHeaders() };
@@ -65,13 +65,13 @@ const fetchData = async <T>(
       }
     }
   }
-  
+
   const requestConfig: FetchOptions = {
     ...options,
     headers,
     credentials: 'include',
   };
-  
+
   let response = await fetch(url, requestConfig);
   // TODO : 로그인 이슈 위치 예측
   if (response.status !== 200) {
@@ -92,11 +92,11 @@ const fetchData = async <T>(
       );
     }
   }
-  
+
   if (!response.ok) {
     throw new Error(`API 요청 실패: ${response.statusText}`);
   }
-  
+
   isRetrying = false;
   return response.json();
 };

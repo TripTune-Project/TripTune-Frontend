@@ -166,7 +166,7 @@ const ScheduleTravelSearch = () => {
             ))}
           </ul>
         ) : (
-          <NoResultLayout/>
+          <NoResultLayout />
         )}
       </div>
       {totalPages > 0 && (

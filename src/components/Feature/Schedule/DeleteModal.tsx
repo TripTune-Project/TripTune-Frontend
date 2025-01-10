@@ -17,11 +17,21 @@ const DeleteModal = ({ isOpen, onClose, onConfirm }: DeleteModalProps) => {
       title={MODAL_MESSAGES.confirmDeleteSchedule.title}
       description={MODAL_MESSAGES.confirmDeleteSchedule.description}
     >
-      <Stack direction="row" spacing={2} justifyContent="center">
-        <Button onClick={onConfirm} variant="contained" color="error" size="large">
+      <Stack direction='row' spacing={2} justifyContent='center'>
+        <Button
+          onClick={onConfirm}
+          variant='contained'
+          color='error'
+          size='large'
+        >
           {MODAL_MESSAGES.confirmDeleteSchedule.confirmButton}
         </Button>
-        <Button onClick={onClose} variant="outlined" color="primary" size="large">
+        <Button
+          onClick={onClose}
+          variant='outlined'
+          color='primary'
+          size='large'
+        >
           {MODAL_MESSAGES.confirmDeleteSchedule.cancelButton}
         </Button>
       </Stack>

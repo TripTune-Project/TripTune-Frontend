@@ -68,7 +68,7 @@ const ChangePassword = () => {
         alert('비밀번호 변경에 실패했습니다.');
       }
     } catch (error) {
-      console.error('에러:', error);
+      console.error('에러 발생:', error);
       alert('비밀번호 변경에 실패했습니다.');
     } finally {
       setLoading(false);

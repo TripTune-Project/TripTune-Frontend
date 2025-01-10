@@ -17,11 +17,21 @@ const LogoutModal = ({ isOpen, onClose, onConfirm }: LogoutModalProps) => {
       title={MODAL_MESSAGES.confirmLogout.title}
       description={MODAL_MESSAGES.confirmLogout.description}
     >
-      <Stack direction="row" spacing={2} justifyContent="center">
-        <Button onClick={onConfirm} variant="contained" color="error" size="large">
+      <Stack direction='row' spacing={2} justifyContent='center'>
+        <Button
+          onClick={onConfirm}
+          variant='contained'
+          color='error'
+          size='large'
+        >
           {MODAL_MESSAGES.confirmLogout.confirmButton}
         </Button>
-        <Button onClick={onClose} variant="outlined" color="primary" size="large">
+        <Button
+          onClick={onClose}
+          variant='outlined'
+          color='primary'
+          size='large'
+        >
           {MODAL_MESSAGES.confirmLogout.cancelButton}
         </Button>
       </Stack>

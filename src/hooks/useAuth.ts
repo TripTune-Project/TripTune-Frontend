@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
-import Cookies from 'js-cookie';
 import { refreshApi } from '@/apis/Login/refreshApi';
+import saveLocalContent from '@/utils/saveLocalContent';
 
 const useAuth = () => {
   const isRefreshing = useRef(false);
@@ -21,8 +21,9 @@ const useAuth = () => {
   };
 
   const checkAuthStatus = async () => {
-    const accessToken = Cookies.get('trip-tune_at');
-    const refreshToken = Cookies.get('trip-tune_rt');
+    const { getDecryptedCookie } = saveLocalContent();
+    const accessToken = getDecryptedCookie('trip-tune_at');
+    const refreshToken = getDecryptedCookie('trip-tune_rt');
 
     if (!accessToken || isTokenExpired(accessToken)) {
       if (refreshToken && !isRefreshing.current) {

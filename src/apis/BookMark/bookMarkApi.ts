@@ -16,9 +16,9 @@ export const BookMarkApi = async (data: BookMarkData) => {
           'Content-Type': 'application/json',
         },
         requiresAuth: true,
-      },
+      }
     );
-    
+
     if (response.data) {
       console.log('북마크 등록 성공:', response.data);
       return response.data;
@@ -33,7 +33,6 @@ export const BookMarkApi = async (data: BookMarkData) => {
 
 // 북마크 등록 해제
 export const BookMarkDeleteApi = async (data: BookMarkData) => {
-  
   try {
     const response = await remove<{ data: { placeId: number } }>(
       '/api/bookmarks',
@@ -43,14 +42,14 @@ export const BookMarkDeleteApi = async (data: BookMarkData) => {
           'Content-Type': 'application/json',
         },
         requiresAuth: true,
-      },
+      }
     );
-    
+
     if (response.data) {
       console.log('북마크 해제 성공:', response.data);
       return response.data;
     }
-  } catch (error:any) {
+  } catch (error: any) {
     if (error?.status === 404) {
       return handleApiError(error, '북마크가 등록되어 있지 않습니다.', 404);
     }

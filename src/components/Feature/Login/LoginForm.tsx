@@ -4,7 +4,7 @@ import React, { useState, Suspense } from 'react';
 import { useForm } from 'react-hook-form';
 import { validatePassword, validateUserId } from '@/utils/validation';
 import styles from '../../../styles/Login.module.css';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import Image from 'next/image';
@@ -20,12 +20,10 @@ interface LoginFormData {
 
 const LoginForm = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const next = searchParams.get('next') || '/'; // 이전 페이지 또는 기본 페이지
-  
+
   const [errorMessage, setErrorMessage] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  
+
   const {
     register,
     handleSubmit,
@@ -33,11 +31,11 @@ const LoginForm = () => {
   } = useForm<LoginFormData>({
     mode: 'onChange',
   });
-  
+
   const onSubmit = async (data: LoginFormData) => {
     try {
       await loginUser(data);
-      
+
       // 이전 페이지로 리디렉션
       const redirectPath = localStorage.getItem('redirectAfterLogin') || '/';
       localStorage.removeItem('redirectAfterLogin'); // 사용 후 제거
@@ -48,21 +46,21 @@ const LoginForm = () => {
       setOpenSnackbar(true);
     }
   };
-  
+
   const closeSnackbar = () => {
     setOpenSnackbar(false);
   };
-  
+
   const handleKakaoLogin = () => {
     window.location.href =
       'https://kauth.kakao.com/oauth/authorize?client_id=YOUR_KAKAO_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&response_type=code';
   };
-  
+
   const handleNaverLogin = () => {
     window.location.href =
       'https://nid.naver.com/oauth2.0/authorize?client_id=YOUR_NAVER_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&response_type=code';
   };
-  
+
   return (
     <Suspense fallback={<VerificationLoading />}>
       <div className={styles.loginBackground}>
@@ -96,7 +94,7 @@ const LoginForm = () => {
                 <p className={styles.errorText}>{errors.password.message}</p>
               )}
             </div>
-            
+
             <button
               type='submit'
               className={styles.submitButton}
@@ -105,19 +103,27 @@ const LoginForm = () => {
               로그인하기
             </button>
           </form>
-          
+
           <div className={styles.linkContainer}>
-            <span className={styles.findId} onClick={() => router.push('/Find?tab=findId')}>
+            <span
+              className={styles.findId}
+              onClick={() => router.push('/Find?tab=findId')}
+            >
               아이디 찾기
             </span>{' '}
             |{' '}
-            <span className={styles.findPassword} onClick={() => router.push('/Find?tab=findPassword')}>
+            <span
+              className={styles.findPassword}
+              onClick={() => router.push('/Find?tab=findPassword')}
+            >
               비밀번호 찾기
             </span>{' '}
             |{' '}
-            <span className={styles.join} onClick={() => router.push('/Join')}>회원가입</span>
+            <span className={styles.join} onClick={() => router.push('/Join')}>
+              회원가입
+            </span>
           </div>
-          
+
           <div className={styles.socialLoginContainer}>
             <div className={styles.hrContainer}>
               <hr className={styles.hrStyle} />
@@ -139,14 +145,18 @@ const LoginForm = () => {
               네이버로 시작하기
             </button>
           </div>
-          
+
           <Snackbar
             open={openSnackbar}
             autoHideDuration={3000}
             onClose={closeSnackbar}
             anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
           >
-            <Alert onClose={closeSnackbar} severity='error' sx={{ width: '100%' }}>
+            <Alert
+              onClose={closeSnackbar}
+              severity='error'
+              sx={{ width: '100%' }}
+            >
               {errorMessage}
             </Alert>
           </Snackbar>
