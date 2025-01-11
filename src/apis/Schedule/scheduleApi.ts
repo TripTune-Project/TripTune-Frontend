@@ -1,11 +1,11 @@
-import { get, post, patch, remove } from '../Common/api';
+import { get, patch, post, remove } from '../Common/api';
 import {
   ApiResponse,
-  ScheduleList,
-  ScheduleDetail,
   CreateSchedule,
-  UpdateSchedule,
+  ScheduleDetail,
+  ScheduleList,
   SchedulePreviewResponse,
+  UpdateSchedule,
 } from '@/types/scheduleType';
 import { handleApiError } from '@/apis/Common/errorHandler';
 
@@ -16,14 +16,9 @@ export const fetchScheduleList = async (
   const url = `/api/schedules?page=${page}`;
 
   try {
-    const data = await get<ApiResponse<ScheduleList>>(url, {
+    return await get<ApiResponse<ScheduleList>>(url, {
       requiresAuth: true,
     });
-    console.log(
-      data.success ? '일정 목록 조회 성공:' : '일정 목록 조회 실패:',
-      data.message
-    );
-    return data;
   } catch (error: unknown) {
     return handleApiError(error, '서버 내부 오류가 발생하였습니다.');
   }
@@ -36,14 +31,9 @@ export const fetchSharedScheduleList = async (
   const url = `/api/schedules/shared?page=${page}`;
 
   try {
-    const data = await get<ApiResponse<ScheduleList>>(url, {
+    return await get<ApiResponse<ScheduleList>>(url, {
       requiresAuth: true,
     });
-    console.log(
-      data.success ? '공유 일정 목록 조회 성공:' : '공유 일정 목록 조회 실패:',
-      data.message
-    );
-    return data;
   } catch (error: unknown) {
     return handleApiError(error, '서버 내부 오류가 발생하였습니다.');
   }
@@ -58,14 +48,9 @@ export const fetchScheduleListSearch = async (
   const url = `/api/schedules/search?page=${page}&keyword=${encodeURIComponent(keyword)}&type=${type}`;
 
   try {
-    const data = await get<ApiResponse<ScheduleList>>(url, {
+    return await get<ApiResponse<ScheduleList>>(url, {
       requiresAuth: true,
     });
-    console.log(
-      data.success ? '일정 검색 성공:' : '일정 검색 실패:',
-      data.message
-    );
-    return data;
   } catch (error: unknown) {
     return handleApiError(error, '서버 내부 오류가 발생하였습니다.');
   }
@@ -79,14 +64,9 @@ export const fetchScheduleDetail = async (
   const url = `/api/schedules/${scheduleId}?page=${page}`;
 
   try {
-    const data = await get<ApiResponse<ScheduleDetail>>(url, {
+    return await get<ApiResponse<ScheduleDetail>>(url, {
       requiresAuth: true,
     });
-    console.log(
-      data.success ? '일정 조회 성공:' : '일정 조회 실패:',
-      data.message
-    );
-    return data;
   } catch (error: unknown) {
     return handleApiError(error, '서버 내부 오류가 발생하였습니다.');
   }
@@ -99,14 +79,9 @@ export const createNewSchedule = async (
   const url = '/api/schedules';
 
   try {
-    const data = await post<ApiResponse<CreateSchedule>>(url, scheduleData, {
+    return await post<ApiResponse<CreateSchedule>>(url, scheduleData, {
       requiresAuth: true,
     });
-    console.log(
-      data.success ? '일정 생성 성공:' : '일정 생성 실패:',
-      data.message
-    );
-    return data;
   } catch (error: unknown) {
     return handleApiError(error, '서버 내부 오류가 발생하였습니다.');
   }
@@ -127,14 +102,9 @@ export const updateExistingSchedule = async (
   };
 
   try {
-    const data = await patch<ApiResponse<UpdateSchedule>>(url, requestBody, {
+    return await patch<ApiResponse<UpdateSchedule>>(url, requestBody, {
       requiresAuth: true,
     });
-    console.log(
-      data.success ? '일정 수정 성공:' : '일정 수정 실패:',
-      data.message
-    );
-    return data;
   } catch (error: unknown) {
     return handleApiError(error, '서버 내부 오류가 발생하였습니다.');
   }
@@ -147,14 +117,9 @@ export const deleteSchedule = async (
   const url = `/api/schedules/${scheduleId}`;
 
   try {
-    const data = await remove<ApiResponse<null>>(url, {
+    return await remove<ApiResponse<null>>(url, {
       requiresAuth: true,
     });
-    console.log(
-      data.success ? '일정 삭제 성공:' : '일정 삭제 실패:',
-      data.message
-    );
-    return data;
   } catch (error: unknown) {
     return handleApiError(error, '서버 내부 오류가 발생하였습니다.');
   }
@@ -167,16 +132,9 @@ export const fetchSchedulesPreview = async (
   const url = `/api/schedules/edit?page=${page}`;
 
   try {
-    const data = await get<ApiResponse<SchedulePreviewResponse>>(url, {
+    return await get<ApiResponse<SchedulePreviewResponse>>(url, {
       requiresAuth: true,
     });
-    console.log(
-      data.success
-        ? `일정 목록 조회 성공 (현재 페이지: ${data.data?.currentPage})`
-        : '일정 목록 조회 실패:',
-      data.message
-    );
-    return data;
   } catch (error: unknown) {
     return handleApiError(error, '서버 내부 오류가 발생하였습니다.');
   }
@@ -190,18 +148,13 @@ export const addPlaceToSchedule = async (
   const url = `/api/schedules/${scheduleId}/routes`;
 
   try {
-    const data = await post<ApiResponse<null>>(
+    return await post<ApiResponse<null>>(
       url,
       { placeId },
       {
         requiresAuth: true,
       }
     );
-    console.log(
-      data.success ? '여행지 추가 성공:' : '여행지 추가 실패:',
-      data.message
-    );
-    return data;
   } catch (error: unknown) {
     return handleApiError(error, '서버 내부 오류가 발생하였습니다.');
   }

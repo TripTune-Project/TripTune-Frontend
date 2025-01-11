@@ -20,7 +20,6 @@ export const BookMarkApi = async (data: BookMarkData) => {
     );
 
     if (response.data) {
-      console.log('북마크 등록 성공:', response.data);
       return response.data;
     }
   } catch (error: any) {
@@ -46,7 +45,6 @@ export const BookMarkDeleteApi = async (data: BookMarkData) => {
     );
 
     if (response.data) {
-      console.log('북마크 해제 성공:', response.data);
       return response.data;
     }
   } catch (error: any) {

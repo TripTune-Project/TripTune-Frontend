@@ -13,7 +13,6 @@ import { useDebounce } from '@/hooks/useDebounce';
 import DataLoading from '@/components/Common/DataLoading';
 import { truncateText } from '@/utils';
 import { Place } from '@/types/scheduleType';
-import AlertIcon from '../../../../public/assets/images/여행지 탐색/홈화면/alertIcon.png';
 import plusTravelSearch from '../../../../public/assets/images/일정 만들기/일정 저장 및 수정/plusIcon.png';
 import minusTravelSearch from '../../../../public/assets/images/일정 만들기/일정 저장 및 수정/minusBtn.png';
 import NoResultLayout from '@/components/Common/NoResult';
@@ -31,15 +30,31 @@ const ScheduleTravelSearch = () => {
     addPlace,
     removePlace,
     removePlaceFromRoute,
+    fetchAndMergeRoutes,
   } = useTravelStore();
 
+  // 여행지 검색과 여행루트 데이터 동기화
+  useEffect(() => {
+    const loadTravelRoutes = async () => {
+      if (scheduleId) {
+        await fetchAndMergeRoutes(Number(scheduleId));
+        useTravelStore.getState().addedPlaces;
+      }
+    };
+    loadTravelRoutes();
+  }, [fetchAndMergeRoutes, scheduleId]);
+
+  // 검색을 위한 디바운스
   const debouncedSearchKeyword = useDebounce(searchKeyword, 800);
 
+  // 기본 리스트 쿼리
   const travelListQuery = useScheduleTravelList(
     Number(scheduleId),
     currentPage,
     !isSearching
   );
+
+  // 검색 리스트 쿼리
   const searchTravelQuery = useTravelListByLocation(
     Number(scheduleId),
     debouncedSearchKeyword,
@@ -47,6 +62,7 @@ const ScheduleTravelSearch = () => {
     isSearching
   );
 
+  // 마커 제거
   const removeMarker = useCallback((latitude: number, longitude: number) => {
     const markerIndex = markersRef.current.findIndex(
       (marker) =>
@@ -89,7 +105,7 @@ const ScheduleTravelSearch = () => {
     if (placeExists) {
       removePlace(place.placeId);
       removePlaceFromRoute(place.placeId);
-      removeMarker(place.latitude, place.longitude); // 수정된 호출
+      removeMarker(place.latitude, place.longitude);
     } else {
       addPlace({
         placeId: place.placeId,

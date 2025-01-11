@@ -2,13 +2,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useInView } from 'react-intersection-observer';
-import { useScheduleTravelRoute } from '@/hooks/useSchedule';
-import styles from '@/styles/Schedule.module.css';
-import Image from 'next/image';
-import locationIcon from '../../../../public/assets/images/일정 만들기/일정 저장 및 수정/mapIcon.png';
 import { useTravelStore } from '@/store/scheduleStore';
 import { useParams } from 'next/navigation';
 import { Place } from '@/types/scheduleType';
+import styles from '@/styles/Schedule.module.css';
+import Image from 'next/image';
+import locationIcon from '../../../../public/assets/images/일정 만들기/일정 저장 및 수정/mapIcon.png';
 import travelRootEmptyIcon from '../../../../public/assets/images/일정 만들기/일정 저장 및 수정/travelRootEmptyIcon.png';
 import trashIconGray from '../../../../public/assets/images/일정 만들기/일정 저장 및 수정/trashIconGray.png';
 import trashIconRed from '../../../../public/assets/images/일정 만들기/일정 저장 및 수정/trashIconRed.png';
@@ -18,53 +17,46 @@ const ScheduleRoute = () => {
   // URL 파라미터에서 scheduleId 가져오기
   const { scheduleId } = useParams();
 
-  // 여행 경로와 장소 데이터를 관리하는 상태 및 액션 가져오기
-  const { removePlace, travelRoute, removePlaceFromRoute, onMovePlace } =
-    useTravelStore();
+  // Zustand store에서 액션 및 상태 가져오기
+  const {
+    travelRoute,
+    removePlace,
+    removePlaceFromRoute,
+    onMovePlace,
+    fetchAndMergeRoutes,
+  } = useTravelStore();
 
-  // 무한 스크롤을 위한 Intersection Observer 설정
+  // 무한 스크롤 준비
+  // 이전에는 react-query로 했었음
+  // 병합 이슈로 인하여 zustand만 살리기로!
   const { ref, inView } = useInView();
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useScheduleTravelRoute(Number(scheduleId));
+  const [hasMore, setHasMore] = useState(true);
 
-  // API에서 가져온 데이터를 가공하여 fetchedPlaces 생성
-  const fetchedPlaces: Place[] =
-    data?.pages?.flatMap((page) =>
-      page?.data?.content?.map((route) => ({
-        ...route,
-        thumbnailUrl: route.thumbnailUrl ?? null,
-      }))
-    ) ?? [];
-
-  // TODO : 여행 루트 이슈 PART
-  // travelRoute와 API 데이터를 병합하여 places 생성
-  const places = [
-    ...fetchedPlaces.filter(
-      (place) => !travelRoute.some((route) => route.placeId === place.placeId)
-    ), // 신규 데이터는 기존 데이터 뒤에 추가
-    ...travelRoute, // 기존 데이터 유지
-  ];
-
-  // 원래 코드
-  // const places = travelRoute.length
-  //   ? travelRoute.map((route) => {
-  //     const matchedPlace = fetchedPlaces.find(
-  //       (p) => p.placeId === route.placeId
-  //     );
-  //     return matchedPlace ? { ...matchedPlace, ...route } : route;
-  //   })
-  //   : fetchedPlaces;
-
-  // 무한 스크롤 감지 시 다음 페이지 데이터 가져오기
+  // 페이지 로드 시 과거 데이터와 병합
   useEffect(() => {
-    if (inView && hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
+    if (scheduleId) {
+      fetchAndMergeRoutes(Number(scheduleId)).then((data: unknown) => {
+        if (!data) {
+          setHasMore(false); // 더 이상 가져올 데이터가 없는 경우 처리
+        }
+      });
     }
-  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [scheduleId, fetchAndMergeRoutes]);
+
+  // 사용자가 무한 스크롤 영역에 도달(inView)하고, 더 가져올 데이터가 있을(hasMore) 경우
+  useEffect(() => {
+    if (inView && hasMore) {
+      fetchAndMergeRoutes(Number(scheduleId)).then((data: unknown) => {
+        if (!data) {
+          setHasMore(false);
+        }
+      });
+    }
+  }, [inView, hasMore, scheduleId, fetchAndMergeRoutes]);
 
   // 지도 마커를 관리하는 참조
   const markersRef = useRef<
-    { latitude: number; longitude: number; map: any }[]
+    { latitude: number; longitude: number; map: unknown }[]
   >([]);
 
   // 지도 마커를 제거하는 함수
@@ -105,12 +97,6 @@ const ScheduleRoute = () => {
           item.index = hoverIndex;
         }
       },
-      // 필요 없는 코드라고 생각함
-      // drop: (item: { place: Place }) => {
-      //   removePlaceFromRoute(item.place.placeId);
-      //   removePlace(item.place.placeId);
-      //   removeMarker(item.place.latitude, item.place.longitude);
-      // },
     });
 
     // 드래그와 드롭을 참조에 연결
@@ -125,7 +111,7 @@ const ScheduleRoute = () => {
         <div className={styles.placeIndexContainer}>
           <div className={styles.indexCircle}>{index + 1}</div>
         </div>
-        {index < places.length - 1 && (
+        {index < travelRoute.length - 1 && (
           <Image
             className={styles.routeVector}
             src={routeVector}
@@ -167,9 +153,6 @@ const ScheduleRoute = () => {
     // 드롭 영역 설정
     const [, drop] = useDrop({
       accept: 'PLACE',
-      collect: (monitor) => ({
-        isOverCurrent: monitor.isOver(),
-      }),
       hover: () => {
         setIsOver(true);
       },
@@ -207,7 +190,7 @@ const ScheduleRoute = () => {
   };
 
   // 여행 경로가 없는 경우 안내 메시지 표시
-  if (!places || places.length === 0) {
+  if (!travelRoute || travelRoute.length === 0) {
     return (
       <p className={styles.noResults}>
         <Image
@@ -228,15 +211,11 @@ const ScheduleRoute = () => {
   return (
     <DndProvider backend={HTML5Backend}>
       <ul style={{ height: '500px', overflowY: 'auto' }}>
-        {places.map((place, index) => (
+        {travelRoute.map((place, index) => (
           <PlaceItem key={place.placeId} place={place} index={index} />
         ))}
-        {hasNextPage && (
-          <li ref={ref} className={styles.loading}>
-            {isFetchingNextPage ? '로딩 중...' : '더 불러오기...'}
-          </li>
-        )}
       </ul>
+      <div ref={ref} style={{ height: '1px', background: 'transparent' }}></div>
       <DeleteDropZone />
     </DndProvider>
   );

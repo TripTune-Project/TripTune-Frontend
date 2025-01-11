@@ -1,6 +1,7 @@
 import { create } from 'zustand';
-import { Place, Schedule } from '@/types/scheduleType';
 import { fetchScheduleDetail } from '@/apis/Schedule/scheduleApi';
+import { Place, Schedule } from '@/types/scheduleType';
+import { fetchTravelRoute } from '@/apis/Schedule/locationRouteApi';
 
 // 마커 정보를 나타내는 인터페이스
 interface Makers {
@@ -30,10 +31,13 @@ interface TravelStore {
   setScheduleDetail: (schedule: Schedule) => void;
   fetchScheduleDetailById: (scheduleId: string, page: number) => Promise<void>;
   updateScheduleDetail: (schedule: Schedule) => void;
+
+  // 과거 데이터와 새로운 데이터를 병합
+  fetchAndMergeRoutes: (scheduleId: number) => Promise<void>;
 }
 
 // Zustand로 TravelStore 상태를 생성
-export const useTravelStore = create<TravelStore>((set) => ({
+export const useTravelStore = create<TravelStore>((set, get) => ({
   addedPlaces: [], // 초기 추가된 장소 리스트
   travelRoute: [], // 초기 여행 경로 리스트
   scheduleDetail: {}, // 초기 일정 세부 정보
@@ -41,72 +45,134 @@ export const useTravelStore = create<TravelStore>((set) => ({
   // 장소 추가
   addPlace: (place: Makers) =>
     set((state) => {
-      // 이미 추가된 장소인지 확인
-      if (state.addedPlaces.some((p) => p.placeId === place.placeId)) {
-        return state; // 이미 추가된 경우 상태 변경 없음
-      }
-      return { addedPlaces: [...state.addedPlaces, place] }; // 새로운 장소 추가
+      return state.addedPlaces.some((p) => p.placeId === place.placeId)
+        ? state
+        : { addedPlaces: [...state.addedPlaces, place] };
     }),
 
   // 장소 제거
   removePlace: (placeId: number) =>
-    set((state) => ({
-      addedPlaces: state.addedPlaces.filter(
-        (place) => place.placeId !== placeId // ID가 일치하지 않는 장소만 유지
-      ),
-    })),
+    set((state) => {
+      return {
+        addedPlaces: state.addedPlaces.filter(
+          (place) => place.placeId !== placeId
+        ),
+      };
+    }),
 
   // 여행 경로에 장소 추가
   addPlaceToRoute: (place: Place) =>
     set((state) => {
       const updatedRoute = state.travelRoute.some(
-        (p) => p.placeId === place.placeId // 이미 추가된 장소인지 확인
+        (p) => p.placeId === place.placeId
       )
-        ? state.travelRoute // 이미 추가된 경우 기존 경로 유지
-        : [...state.travelRoute, place]; // 새로운 장소 추가
+        ? state.travelRoute
+        : [...state.travelRoute, place];
       return { travelRoute: updatedRoute };
     }),
 
   // 여행 경로에서 장소 제거
   removePlaceFromRoute: (placeId: number) =>
-    set((state) => ({
-      travelRoute: state.travelRoute.filter(
-        (place) => place.placeId !== placeId // ID가 일치하지 않는 장소만 유지
-      ),
-    })),
+    set((state) => {
+      return {
+        travelRoute: state.travelRoute.filter(
+          (place) => place.placeId !== placeId
+        ),
+      };
+    }),
 
   // 여행 경로에서 장소 이동 (드래그 앤 드롭)
   onMovePlace: (dragIndex: number, hoverIndex: number) =>
     set((state) => {
       const updatedRoute = [...state.travelRoute];
-      const [movedItem] = updatedRoute.splice(dragIndex, 1); // 드래그한 장소를 제거
-      updatedRoute.splice(hoverIndex, 0, movedItem); // 새로운 위치에 삽입
+      const [movedItem] = updatedRoute.splice(dragIndex, 1);
+      updatedRoute.splice(hoverIndex, 0, movedItem);
       return { travelRoute: updatedRoute };
     }),
 
   // 일정 세부 정보를 설정
-  setScheduleDetail: (schedule: Schedule) => set({ scheduleDetail: schedule }),
+  setScheduleDetail: (schedule: Schedule) =>
+    set(() => {
+      return { scheduleDetail: schedule };
+    }),
 
-  // 일정 세부 정보를 ID로 가져오기
+  // 일정 세부 정보를 ID로 가져오기 (원래 코드를 그대로 유지)
   fetchScheduleDetailById: async (scheduleId: string, page: number) => {
     try {
       const result = await fetchScheduleDetail(Number(scheduleId), page);
       if (result.success) {
-        set({ scheduleDetail: result.data }); // 성공 시 데이터 설정
+        set(() => {
+          return { scheduleDetail: result.data };
+        });
       } else {
-        console.error('Failed to fetch schedule detail:', result.message); // 실패 메시지 출력
+        console.error(
+          '일정 세부 정보를 가져오는데 실패했습니다:',
+          result.message
+        );
       }
     } catch (error) {
-      console.error('Error fetching schedule detail:', error); // 오류 출력
+      console.error('일정 세부 정보를 가져오는 중 오류 발생:', error);
     }
   },
 
   // 일정 세부 정보를 업데이트
   updateScheduleDetail: (updates: Partial<Schedule>) =>
-    set((state) => ({
-      scheduleDetail: {
-        ...state.scheduleDetail, // 기존 세부 정보
-        ...updates, // 업데이트할 정보 병합
-      },
-    })),
+    set((state) => {
+      return {
+        scheduleDetail: {
+          ...state.scheduleDetail,
+          ...updates,
+        },
+      };
+    }),
+
+  // 과거 데이터와 새로운 데이터를 병합
+  fetchAndMergeRoutes: async (scheduleId: number) => {
+    try {
+      let currentPage = 1; // 현재 페이지
+      let totalPages = 1; // 총 페이지 수
+      let allRoutes: Place[] = []; // 모든 페이지 데이터를 담을 배열
+
+      // 모든 페이지 데이터를 가져올 때까지 반복
+      while (currentPage <= totalPages) {
+        const response = await fetchTravelRoute(scheduleId, currentPage);
+
+        if (response.success) {
+          const { data } = response;
+          totalPages = data.totalPages; // 총 페이지 수 업데이트
+          allRoutes = [...allRoutes, ...data.content];
+          currentPage++; // 다음 페이지로 이동
+        } else {
+          console.error(
+            `[fetchAndMergeRoutes] 페이지 ${currentPage} 조회 실패`
+          );
+          break; // 실패 시 반복 중단
+        }
+      }
+
+      // 상태에 병합된 데이터를 반영
+      set((state) => {
+        const mergedRoutes = [
+          ...allRoutes.filter(
+            (newRoute) =>
+              !state.travelRoute.some(
+                (route) => route.placeId === newRoute.placeId
+              )
+          ),
+          ...state.travelRoute,
+        ];
+
+        return {
+          travelRoute: mergedRoutes,
+          addedPlaces: mergedRoutes.map((route) => ({
+            placeId: route.placeId,
+            lat: route.latitude,
+            lng: route.longitude,
+          })),
+        };
+      });
+    } catch (error) {
+      console.error('%c[fetchAndMergeRoutes] 오류 발생:', 'color: red;', error);
+    }
+  },
 }));
