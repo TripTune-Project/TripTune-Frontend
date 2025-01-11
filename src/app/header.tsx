@@ -29,7 +29,7 @@ const Header = () => {
     const checkLoginStatus = async () => {
       const { getDecryptedCookie } = saveLocalContent();
       const storedUserNickname = getDecryptedCookie('nickname');
-      
+
       if (storedUserNickname) {
         setIsLoggedIn(true);
         setUserId(storedUserNickname as string);

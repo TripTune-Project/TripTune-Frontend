@@ -53,10 +53,8 @@ export default function ScheduleDetailPage() {
   const handleCloseModal = () => setIsInviteModalOpen(false);
 
   const handleSaveSchedule = async () => {
-    // TODO : 여행 루트의 값이 없을때도 수정을 해야하는지 ?
     if (!scheduleDetail) return;
-    // if (!scheduleDetail || travelRoute.length === 0) return;
-
+    
     const transformedRoute = travelRoute.map((place, index) => ({
       routeOrder: index + 1,
       placeId: place.placeId,

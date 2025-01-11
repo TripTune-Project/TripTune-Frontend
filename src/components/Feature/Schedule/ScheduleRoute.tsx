@@ -16,7 +16,7 @@ import routeVector from '../../../../public/assets/images/일정 만들기/일�
 const ScheduleRoute = () => {
   // URL 파라미터에서 scheduleId 가져오기
   const { scheduleId } = useParams();
-  
+
   // Zustand store에서 액션 및 상태 가져오기
   const {
     travelRoute,
@@ -25,35 +25,56 @@ const ScheduleRoute = () => {
     onMovePlace,
     fetchAndMergeRoutes,
   } = useTravelStore();
-  
+
+  // 무한 스크롤 준비
+  // 이전에는 react-query로 했었음
+  // 병합 이슈로 인하여 zustand만 살리기로!
+  const { ref, inView } = useInView();
+  const [hasMore, setHasMore] = useState(true);
+
   // 페이지 로드 시 과거 데이터와 병합
   useEffect(() => {
     if (scheduleId) {
-      fetchAndMergeRoutes(Number(scheduleId)); // 과거 데이터를 병합
+      fetchAndMergeRoutes(Number(scheduleId)).then((data: unknown) => {
+        if (!data) {
+          setHasMore(false); // 더 이상 가져올 데이터가 없는 경우 처리
+        }
+      });
     }
   }, [scheduleId, fetchAndMergeRoutes]);
-  
+
+  // 사용자가 무한 스크롤 영역에 도달(inView)하고, 더 가져올 데이터가 있을(hasMore) 경우
+  useEffect(() => {
+    if (inView && hasMore) {
+      fetchAndMergeRoutes(Number(scheduleId)).then((data: unknown) => {
+        if (!data) {
+          setHasMore(false);
+        }
+      });
+    }
+  }, [inView, hasMore, scheduleId, fetchAndMergeRoutes]);
+
   // 지도 마커를 관리하는 참조
   const markersRef = useRef<
-    { latitude: number; longitude: number; map: any }[]
+    { latitude: number; longitude: number; map: unknown }[]
   >([]);
-  
+
   // 지도 마커를 제거하는 함수
   const removeMarker = (latitude: number, longitude: number) => {
     const markerIndex = markersRef.current.findIndex(
       (marker) => marker.latitude === latitude && marker.longitude === longitude
     );
-    
+
     if (markerIndex > -1) {
       const [removedMarker] = markersRef.current.splice(markerIndex, 1);
       removedMarker.map = null;
     }
   };
-  
+
   // 개별 장소 항목 컴포넌트
   const PlaceItem = ({ place, index }: { place: Place; index: number }) => {
     const ref = useRef<HTMLLIElement>(null);
-    
+
     // 드래그를 설정
     const [{ isDragging }, drag] = useDrag({
       type: 'PLACE',
@@ -62,7 +83,7 @@ const ScheduleRoute = () => {
         isDragging: monitor.isDragging(),
       }),
     });
-    
+
     // 드롭을 설정
     const [, drop] = useDrop({
       accept: 'PLACE',
@@ -70,17 +91,17 @@ const ScheduleRoute = () => {
         if (!ref.current) return;
         const dragIndex = item.index ?? -1;
         const hoverIndex = index;
-        
+
         if (dragIndex !== hoverIndex && dragIndex !== -1) {
           onMovePlace(dragIndex, hoverIndex);
           item.index = hoverIndex;
         }
       },
     });
-    
+
     // 드래그와 드롭을 참조에 연결
     drag(drop(ref));
-    
+
     return (
       <li
         ref={ref}
@@ -123,12 +144,12 @@ const ScheduleRoute = () => {
       </li>
     );
   };
-  
+
   // 삭제 드롭존 컴포넌트
   const DeleteDropZone = () => {
     const dropRef = useRef<HTMLDivElement>(null);
     const [isOver, setIsOver] = useState(false);
-    
+
     // 드롭 영역 설정
     const [, drop] = useDrop({
       accept: 'PLACE',
@@ -142,14 +163,14 @@ const ScheduleRoute = () => {
         removeMarker(item.place.latitude, item.place.longitude);
       },
     });
-    
+
     // 드롭 참조 연결
     useEffect(() => {
       if (dropRef.current) {
         drop(dropRef.current);
       }
     }, [drop]);
-    
+
     return (
       <div
         className={`${styles.deleteZone} ${isOver ? styles.trashRed : ''}`}
@@ -167,7 +188,7 @@ const ScheduleRoute = () => {
       </div>
     );
   };
-  
+
   // 여행 경로가 없는 경우 안내 메시지 표시
   if (!travelRoute || travelRoute.length === 0) {
     return (
@@ -185,7 +206,7 @@ const ScheduleRoute = () => {
       </p>
     );
   }
-  
+
   // 여행 경로와 삭제 드롭존 렌더링
   return (
     <DndProvider backend={HTML5Backend}>
@@ -194,6 +215,7 @@ const ScheduleRoute = () => {
           <PlaceItem key={place.placeId} place={place} index={index} />
         ))}
       </ul>
+      <div ref={ref} style={{ height: '1px', background: 'transparent' }}></div>
       <DeleteDropZone />
     </DndProvider>
   );
