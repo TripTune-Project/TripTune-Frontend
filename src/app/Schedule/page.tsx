@@ -24,7 +24,6 @@ import DeleteModal from '@/components/Feature/Schedule/DeleteModal';
 import moreBtn from '../../../public/assets/images/일정 만들기/일정 목록 조회/moreBtn.png';
 import NoResultLayout from '../../components/Common/NoResult';
 import LoginModal from '@/components/Common/LoginModal';
-import Cookies from 'js-cookie';
 import saveLocalContent from '@/utils/saveLocalContent';
 
 export default function SchedulePage() {
