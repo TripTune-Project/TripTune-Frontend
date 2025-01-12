@@ -34,7 +34,7 @@ interface TravelStore {
   
   // 과거 데이터와 새로운 데이터를 병합
   fetchAndMergeRoutes: (scheduleId: number) => Promise<void>;
-  deletedPlaces : unknown;
+  deletedPlaces : any;
 }
 
 // Zustand로 TravelStore 상태를 생성
