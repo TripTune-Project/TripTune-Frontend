@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-// import styles from '@/styles/Mypage.module.css';
+import styles from '@/styles/Mypage.module.css';
 import { getMyPage } from '@/apis/MyPage/myPageApi';
 
 const Profile = () => {
   const [userData, setUserData] = useState({
-    userId: '',
-    nickname: '',
-    profileImage: '',
+    userId: 'hyo814',
+    nickname: 'hyojin',
+    profileImage: '/default-profile.png',
   });
   
   useEffect(() => {
@@ -28,34 +28,42 @@ const Profile = () => {
   }, []);
   
   return (
-    <div>
-      <h3>프로필 관리</h3>
-      <div>
+    <>
+      <div className={styles.flexColumnF}>
+        <span className={styles.profileManagement4}>프로필 관리</span>
         <div>
-          <strong>프로필 이미지</strong>
-          <Image
-            src={userData?.profileImage ?? '/default-profile.png'}
-            alt="프로필 이미지"
-            width={95}
-            height={95}
-          />
-          <button>변경</button>
-          <ul>
-            <li>PNG, JPG, JPEG의 확장자 파일만 업로드 가능합니다.</li>
-            <li>이미지는 10MB 이하만 업로드 가능합니다.</li>
-          </ul>
+          <div className={styles.flexRowAeb}>
+            <span className={styles.profileImage}>프로필 이미지</span>
+            <Image
+              className={styles.rectangle7}
+              src={userData?.profileImage}
+              alt="프로필 이미지"
+              width={95}
+              height={95}
+            />
+            <div className={styles.change}>변경</div>
+            <span className={styles.fileUploadMessage}>
+                PNG, JPG, JPEG의 확장자 파일만 업로드 가능합니다.
+                <br />
+                이미지는 10MB 이하만 업로드 가능합니다.
+              </span>
+          </div>
+          <div className={styles.flexRowCc}>
+            <span className={styles.id}>아이디</span>
+            <span className={styles.user}>{userData?.userId}</span>
+          </div>
+          <div className={styles.flexRowCc8}>
+            <div className={styles.rectangle9}>
+              <span className={styles.userA}>{userData?.nickname}</span>
+            </div>
+            <span className={styles.nickname}>닉네임</span>
+          </div>
+          <div className={styles.rectangleB}>
+            <span className={styles.save}>저장</span>
+          </div>
         </div>
-        <div>
-          <strong>아이디</strong>
-          <p>{userData?.userId}</p>
-        </div>
-        <div>
-          <strong>닉네임</strong>
-          <p>{userData?.nickname}</p>
-        </div>
-        <button>저장</button>
       </div>
-    </div>
+    </>
   );
 };
 

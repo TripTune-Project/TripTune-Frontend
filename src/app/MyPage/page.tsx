@@ -32,39 +32,20 @@ const MyPage = () => {
   };
   
   return (
-    <div className={styles.container}>
-      <div className={styles.sidebar}>
-        <div
-          className={`${styles.tab} ${activeTab === 'profile' ? styles.active : ''}`}
-          onClick={() => setActiveTab('profile')}
-        >
-          프로필 관리
-        </div>
-        <div
-          className={`${styles.tab} ${activeTab === 'account' ? styles.active : ''}`}
-          onClick={() => setActiveTab('account')}
-        >
-          계정 관리
-        </div>
-        <div
-          className={`${styles.tab} ${activeTab === 'bookmark' ? styles.active : ''}`}
-          onClick={() => setActiveTab('bookmark')}
-        >
-          북마크
-        </div>
-        <div
-          className={styles.tab}
-          onClick={() => setIsModalOpen(true)}
-        >
-          <div onClick={openModal}>로그아웃</div>
+    <div className={styles.mainContainer}>
+      <div className={styles.rectangle2}>
+        <div className={styles.flexColumnDb}>
+          <span className={`${styles.tab} ${activeTab === 'profile' ? styles.profileManagementActive : styles.profileManagement}`}  onClick={() => setActiveTab('profile')}>프로필 관리</span>
+          <span className={`${styles.tab} ${activeTab === 'account' ? styles.accountManagementActive : styles.accountManagement}`} onClick={() => setActiveTab('account')}>계정 관리</span>
+          <span className={`${styles.tab} ${activeTab === 'bookmark' ? styles.bookmarkManagementActive : styles.bookmarkManagement}`} onClick={() => setActiveTab('bookmark')}>북마크</span>
+          <span className={styles.logout} onClick={openModal} >로그아웃</span>
+          <div className={styles.logoutIcon} />
           <LogoutModal
             isOpen={isModalOpen}
             onClose={closeModal}
             onConfirm={handleLogout}
           />
         </div>
-      </div>
-      <div className={styles.content}>
         {activeTab === 'profile' && (
           <Profile />
         )}

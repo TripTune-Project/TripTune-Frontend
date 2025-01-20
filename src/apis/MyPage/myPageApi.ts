@@ -28,7 +28,7 @@ interface BookmarkResponse {
 
 // 마이페이지 회원 정보 조회 (GET)
 export const getMyPage = async () => {
-  const url = ' /api/mypage/profile';
+  const url = '/api/mypage/profile';
 
   try {
     return await get<{
@@ -36,7 +36,6 @@ export const getMyPage = async () => {
       data: {
         userId: string;
         nickname: string;
-        since: string;
         profileImage: string;
       };
       message: string;
