@@ -26,9 +26,9 @@ interface BookmarkResponse {
   content: Bookmark[];
 }
 
-// 마이페이지 정보 조회 (GET)
+// 마이페이지 회원 정보 조회 (GET)
 export const getMyPage = async () => {
-  const url = '/api/mypage';
+  const url = ' /api/mypage/profile';
 
   try {
     return await get<{
@@ -48,8 +48,9 @@ export const getMyPage = async () => {
 };
 
 // 북마크 조회 (GET)
+// TODO : orderby ?
 export const getBookmarks = async (page: number = 1) => {
-  const url = `/mypage/bookmarks?page=${page}`;
+  const url = `/api/mypage/bookmarks?page=${page}`;
 
   try {
     return await get<{
@@ -65,7 +66,7 @@ export const getBookmarks = async (page: number = 1) => {
 
 // 회원정보 조회 (GET)
 export const getProfile = async () => {
-  const url = '/mypage/profile';
+  const url = '/api/mypage/profile';
 
   try {
     return await get<{
@@ -79,12 +80,12 @@ export const getProfile = async () => {
   }
 };
 
-// 회원정보 수정 (PATCH)
+// 마이페이지 회원정보 프로필 수정 (PATCH)
 export const updateProfile = async (
   nickname: string,
   profileImage: File | null
 ) => {
-  const url = '/mypage/profile';
+  const url = '/api/mypage/profile';
   const formData = new FormData();
   formData.append('nickname', nickname);
   if (profileImage) formData.append('profileImage', profileImage);
@@ -102,7 +103,7 @@ export const updateProfile = async (
 
 // 회원 탈퇴 (PATCH)
 export const deactivateAccount = async (password: string) => {
-  const url = '/mypage/profile/deactivate';
+  const url = '/api/mypage/account/deactivate';
 
   try {
     return await patch<{ success: boolean; message: string }>(
@@ -122,7 +123,7 @@ export const changePassword = async (
   newPassword: string,
   rePassword: string
 ) => {
-  const url = '/api/mypage/change-password';
+  const url = '/api/mypage/account/change-password';
 
   try {
     return await patch<{ success: boolean; message: string }>(
