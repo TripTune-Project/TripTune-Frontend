@@ -4,16 +4,7 @@ import styles from '@/styles/Mypage.module.css';
 import { getMyPage, updateMyPage } from '@/apis/MyPage/myPageApi';
 import { useForm } from 'react-hook-form';
 import { validateNickname } from '@/utils/validation';
-
-interface UserData {
-  userId: string;
-  nickname: string;
-  profileImage: string;
-}
-
-interface FormData {
-  nickname: string;
-}
+import { UserData, FormData } from '@/types/myPage';
 
 const Profile = () => {
   const [userData, setUserData] = useState<UserData>({

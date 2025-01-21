@@ -9,14 +9,7 @@ import {
   verifyEmail,
 } from '@/apis/Verify/emailVerifyApi';
 import { validateEmail, validatePassword } from '@/utils/validation';
-
-interface AccountFormData {
-  email: string;
-  verificationCode: string;
-  nowPassword: string;
-  newPassword: string;
-  rePassword: string;
-}
+import { AccountFormData } from '@/types/myPage';
 
 const Account = () => {
   const router = useRouter();

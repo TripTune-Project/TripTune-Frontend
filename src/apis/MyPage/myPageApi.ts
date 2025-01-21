@@ -1,30 +1,5 @@
 import { get, patch } from '../Common/api';
-
-interface Profile {
-  userId: string;
-  email: string;
-  nickname: string;
-  createdAt: string;
-  updatedAt: string;
-  profileImage: string;
-}
-
-interface Bookmark {
-  placeId: number;
-  country: string;
-  city: string;
-  district: string;
-  placeName: string;
-  ThumbnailUrl: string;
-}
-
-interface BookmarkResponse {
-  totalPages: number;
-  currentPage: number;
-  totalElements: number;
-  pageSize: number;
-  content: Bookmark[];
-}
+import { BookmarkResponse } from '@/types/myPage';
 
 // 마이페이지 - 프로필 관리
 // 회원정보 조회

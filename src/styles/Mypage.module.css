@@ -1,37 +1,37 @@
 /* 마이페이지 - 기본 페이지 구축 */
 .mainContainer {
-    overflow: hidden;
+  overflow: hidden;
 }
 
 .mainContainer,
 .mainContainer * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 .mainContainer {
-    position: relative;
-    width: 1920px;
-    height: 900px;
-    margin: 0 auto;
+  position: relative;
+  width: 1920px;
+  height: 900px;
+  margin: 0 auto;
 }
 
 .rectangle2 {
-    position: relative;
-    width: 1265px;
-    height: 702px;
-    margin: 50px 0 0 312px;
-    background: #ffffff;
-    z-index: 14;
-    box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.3);
+  position: relative;
+  width: 1265px;
+  height: 702px;
+  margin: 50px 0 0 312px;
+  background: #ffffff;
+  z-index: 14;
+  box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.3);
 }
 
 .flexColumnDb {
-    position: absolute;
-    height: 602.398px;
-    top: 42px;
-    right: 1045px;
-    left: -10px;
-    z-index: 22;
+  position: absolute;
+  height: 602.398px;
+  top: 42px;
+  right: 1045px;
+  left: -10px;
+  z-index: 22;
 }
 
 .profileManagement,
@@ -41,548 +41,701 @@
 .accountManagementActive,
 .bookmarkManagementActive,
 .accountManagementTitle {
-    margin: 0px 0 0 41px;
-    display: flex;
-    position: relative;
-    width: 203px;
-    height: 55px;
-    color: #000000;
-    font-size: 18px;
-    font-weight: 400;
-    text-align: center;
-    white-space: nowrap;
-    z-index: 132;
+  margin: 0px 0 0 41px;
+  display: flex;
+  position: relative;
+  width: 203px;
+  height: 55px;
+  color: #000000;
+  font-size: 18px;
+  font-weight: 400;
+  text-align: center;
+  white-space: nowrap;
+  z-index: 132;
 }
 
 .accountManagementTitle {
-    margin: 0;
+  margin: 0;
 }
 
 .profileManagementActive,
 .accountManagementActive,
 .bookmarkManagementActive {
-    background-color: #edf9f7;
-    color: #004a55;
-    font-weight: bold;
+  background-color: #edf9f7;
+  color: #004a55;
+  font-weight: bold;
 }
 
 .tab {
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 8px;
-    transition: background-color 0.3s;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.3s;
 }
 
 .tab:hover {
-    background-color: #e1e5ea;
+  background-color: #e1e5ea;
 }
 
 .logout {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    width: 56px;
-    height: 18px;
-    top: 587px;
-    left: 67px;
-    color: #000000;
-    font-size: 15px;
-    font-weight: 400;
-    line-height: 18px;
-    text-align: center;
-    white-space: nowrap;
-    z-index: 17;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 56px;
+  height: 18px;
+  top: 587px;
+  left: 67px;
+  color: #000000;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 18px;
+  text-align: center;
+  white-space: nowrap;
+  z-index: 17;
 }
 
 .logoutIcon {
-    position: absolute;
-    width: 14.398px;
-    height: 14.5px;
-    top: 587.898px;
-    left: 41px;
-    background: url('/assets/images/마이페이지/logoutIcon.png');
-    background-size: cover;
-    z-index: 18;
+  position: absolute;
+  width: 14.398px;
+  height: 14.5px;
+  top: 587.898px;
+  left: 41px;
+  background: url('/assets/images/마이페이지/logoutIcon.png');
+  background-size: cover;
+  z-index: 18;
 }
 
 /* 마이페이지 프로필 관리 */
 .flexColumnF {
-    position: absolute;
-    height: 602px;
-    top: 50px;
-    right: 60px;
-    left: 257px;
-    font-size: 0px;
-    z-index: 44;
+  position: absolute;
+  height: 602px;
+  top: 50px;
+  right: 60px;
+  left: 257px;
+  font-size: 0px;
+  z-index: 44;
 }
 
 .profileManagement4 {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    width: 98px;
-    height: 24px;
-    margin: 0 0 0 0;
-    color: #000000;
-    font-size: 20px;
-    font-weight: 400;
-    line-height: 24px;
-    text-align: center;
-    white-space: nowrap;
-    z-index: 44;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 98px;
+  height: 24px;
+  margin: 0 0 0 0;
+  color: #000000;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 24px;
+  text-align: center;
+  white-space: nowrap;
+  z-index: 44;
 }
 
 .flexRowAeb {
-    position: relative;
-    width: 627.614px;
-    height: 97px;
-    margin: 35px 0 0 33px;
-    z-index: 40;
+  position: relative;
+  width: 627.614px;
+  height: 97px;
+  margin: 35px 0 0 33px;
+  z-index: 40;
 }
 
 .profileImage {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    width: 88.522px;
-    height: 18px;
-    top: 0;
-    left: 0;
-    color: #000000;
-    font-size: 15px;
-    font-weight: 505;
-    line-height: 18px;
-    text-align: center;
-    white-space: nowrap;
-    z-index: 39;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 88.522px;
+  height: 18px;
+  top: 0;
+  left: 0;
+  color: #000000;
+  font-size: 15px;
+  font-weight: 505;
+  line-height: 18px;
+  text-align: center;
+  white-space: nowrap;
+  z-index: 39;
 }
 
 .rectangle7 {
-    position: absolute;
-    width: 95px;
-    height: 95px;
-    top: 0;
-    left: 165px;
-    background: #ffffff;
-    border: 1px solid #d9d9d9;
-    z-index: 39;
-    border-radius: 50%;
+  position: absolute;
+  width: 95px;
+  height: 95px;
+  top: 0;
+  left: 165px;
+  background: #ffffff;
+  border: 1px solid #d9d9d9;
+  z-index: 39;
+  border-radius: 50%;
 }
 
-
 .change {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    width: 71.224px;
-    height: 40px;
-    top: 0;
-    left: 278px;
-    color: #333333;
-    background: #f5f5f5;
-    font-size: 15px;
-    font-weight: 400;
-    line-height: 18.153px;
-    text-align: center;
-    z-index: 38;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 71.224px;
+  height: 40px;
+  top: 0;
+  left: 278px;
+  color: #333333;
+  background: #f5f5f5;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 18.153px;
+  text-align: center;
+  z-index: 38;
 }
 
 .fileUploadMessage {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    position: absolute;
-    width: 347.981px;
-    height: 40px;
-    top: 57px;
-    left: 279.633px;
-    color: #838282;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 20px;
-    text-align: left;
-    text-overflow: initial;
-    z-index: 40;
-    overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  position: absolute;
+  width: 347.981px;
+  height: 40px;
+  top: 57px;
+  left: 279.633px;
+  color: #838282;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  text-align: left;
+  text-overflow: initial;
+  z-index: 40;
+  overflow: hidden;
 }
 
 .flexRowCc {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: relative;
-    width: 222.278px;
-    height: 18px;
-    margin: 59px 0 0 33px;
-    z-index: 33;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  width: 222.278px;
+  height: 18px;
+  margin: 59px 0 0 33px;
+  z-index: 33;
 }
 
 .id {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    position: relative;
-    width: 42.735px;
-    height: 18px;
-    color: #000000;
-    font-size: 15px;
-    font-weight: 505;
-    line-height: 18px;
-    text-align: center;
-    white-space: nowrap;
-    z-index: 33;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  width: 42.735px;
+  height: 18px;
+  color: #000000;
+  font-size: 15px;
+  font-weight: 505;
+  line-height: 18px;
+  text-align: center;
+  white-space: nowrap;
+  z-index: 33;
 }
 
 .user {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    position: relative;
-    width: 57.997px;
-    height: 18px;
-    color: #000000;
-    font-size: 15px;
-    font-weight: 400;
-    line-height: 18px;
-    text-align: center;
-    white-space: nowrap;
-    z-index: 32;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  width: 57.997px;
+  height: 18px;
+  color: #000000;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 18px;
+  text-align: center;
+  white-space: nowrap;
+  z-index: 32;
 }
 
 .flexRowCc8 {
-    position: relative;
-    width: 653.696px;
-    height: 50px;
-    margin: 37px 0 0 33px;
-    z-index: 30;
+  position: relative;
+  width: 653.696px;
+  height: 50px;
+  margin: 37px 0 0 33px;
+  z-index: 30;
 }
 
 .input,
 .inputProfile {
-    width: 480px;
-    max-width: 480px;
-    height: 55px;
-    border: 1px solid #848282;
-    border-radius: 5px;
-    background: #ffffff;
-    font-size: 16px;
-    padding-left: 15px;
+  width: 480px;
+  max-width: 480px;
+  height: 55px;
+  border: 1px solid #848282;
+  border-radius: 5px;
+  background: #ffffff;
+  font-size: 16px;
+  padding-left: 15px;
 }
 
 .inputError,
 .inputProfileError {
-    width: 480px;
-    font-family:
-            Noto Sans KR,
-            sans-serif;
-    font-size: 16px;
-    max-width: 480px;
-    height: 55px;
-    border: 1px solid red;
-    padding-left: 15px;
+  width: 480px;
+  font-family:
+    Noto Sans KR,
+    sans-serif;
+  font-size: 16px;
+  max-width: 480px;
+  height: 55px;
+  border: 1px solid red;
+  padding-left: 15px;
 }
 
 .inputProfile,
 .inputProfileError,
 .inputErrorText {
-    margin-left: 160px;
+  margin-left: 160px;
 }
 
 .errorText,
 .inputErrorText {
-    color: red;
-    font-family:
-            Noto Sans KR,
-            sans-serif;
-    font-size: 14px;
-    margin-top: 5px;
+  color: red;
+  font-family:
+    Noto Sans KR,
+    sans-serif;
+  font-size: 14px;
+  margin-top: 5px;
 }
 
 .nickname {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    width: 42.735px;
-    height: 18px;
-    top: 12px;
-    left: 0;
-    color: #000000;
-    font-size: 15px;
-    font-weight: 505;
-    line-height: 18px;
-    text-align: center;
-    white-space: nowrap;
-    z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 42.735px;
+  height: 18px;
+  top: 12px;
+  left: 0;
+  color: #000000;
+  font-size: 15px;
+  font-weight: 505;
+  line-height: 18px;
+  text-align: center;
+  white-space: nowrap;
+  z-index: 30;
 }
 
 .rectangleB {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    width: 81px;
-    height: 47.968px;
-    margin: 187px 0 0 834px;
-    background: #76adac;
-    z-index: 43;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 81px;
+  height: 47.968px;
+  margin: 187px 0 0 834px;
+  background: #76adac;
+  z-index: 43;
 }
 
 .save {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    position: relative;
-    width: 81px;
-    height: 47.028px;
-    color: #ffffff;
-    font-size: 15px;
-    font-weight: 700;
-    line-height: 18.153px;
-    text-align: center;
-    z-index: 43;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  width: 81px;
+  height: 47.028px;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 18.153px;
+  text-align: center;
+  z-index: 43;
 }
 
 /* 프로필 사진 관련 팝업 */
 .imagePopup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
 }
 
 .popupContent {
-    background-color: #fff;
-    border-radius: 8px;
-    width: 400px;
-    padding: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25); /* 그림자 */
-    text-align: center;
+  background-color: #fff;
+  border-radius: 8px;
+  width: 400px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25); /* 그림자 */
+  text-align: center;
 }
 
 .popupTitle {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 20px;
 }
 
 .popupActions {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
 }
 
 .popupSave {
-    background-color: #4caf50;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s ease;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
 }
 
 .popupSave:hover {
-    background-color: #45a049;
+  background-color: #45a049;
 }
 
 .fileInputWrapper input[type='file'] {
-    margin: 15px 0;
-    font-size: 14px;
-    display: block;
-    width: 100%;
+  margin: 15px 0;
+  font-size: 14px;
+  display: block;
+  width: 100%;
+}
+/* 마이페이지 계정 관리 */
+.rectangleC {
+  position: relative;
+  width: 949px;
+  height: 225px;
+  background: #ffffff;
+  border: 1px solid #e8e8e8;
+  z-index: 17;
+  border-radius: 20px;
+}
+
+.rectangleD {
+  position: absolute;
+  width: 81px;
+  height: 47px;
+  bottom: 25px;
+  left: 850px;
+  color: #ffffff;
+  background: #76adac;
+  z-index: 61;
+}
+
+.saveAccountBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  width: 81px;
+  height: 47.028px;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 18.153px;
+  text-align: center;
+  z-index: 20;
+}
+
+.flexColumn {
+  position: absolute;
+  width: 488.397px;
+  height: 178px;
+  top: 35px;
+  left: 168px;
+  z-index: 31;
+}
+
+.accountText {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 56px;
+  height: 18px;
+  top: 51px;
+  left: 32px;
+  color: #000000;
+  font-size: 15px;
+  font-weight: 505;
+  line-height: 18px;
+  text-align: center;
+  white-space: nowrap;
+  z-index: 22;
+}
+
+.rectangleCK {
+  position: relative;
+  width: 949px;
+  height: 265px;
+  margin: 23px 0 0 0;
+  background: #ffffff;
+  border: 1px solid #e8e8e8;
+  z-index: 17;
+  border-radius: 20px;
+}
+
+.inputGroup {
+  width: 480px;
+  max-width: 480px;
+  height: auto;
+  flex-shrink: 0;
+  margin-bottom: 15px;
+  position: relative;
+}
+.accountTermination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 72px;
+  height: 22px;
+  top: 585px;
+  left: 850px;
+  color: #666666;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 21.784px;
+  text-align: center;
+  white-space: nowrap;
+  z-index: 58;
+}
+
+.deleteUserVector {
+  position: absolute;
+  width: 0.74%;
+  height: 2.2%;
+  top: 590px;
+  left: 98.52%;
+  background: url('/assets/images/마이페이지/Vector.png') no-repeat center;
+  background-size: 100% 100%;
+  z-index: 57;
+}
+
+.authentication {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  position: absolute;
+  width: 470.08px;
+  height: 60px;
+  top: 0;
+  left: 18.316px;
+  color: #838282;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 18.153px;
+  text-align: left;
+  z-index: 32;
+}
+
+.authenticationCheck {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  position: absolute;
+  width: 470.08px;
+  height: 50px;
+  top: 0;
+  left: 18.316px;
+  color: #838282;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 18.153px;
+  text-align: left;
+  z-index: 29;
+}
+
+.authentication,
+.authenticationCheck {
+  left: 520px;
+  background: #76adac;
+  width: 81px;
+  height: 47.028px;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
 }
 
 /* 마이페이지 북마크 전체 조회 */
 .flexColumnC {
-    position: absolute;
-    width: 75.02%;
-    height: 83.49%;
-    top: 6.16%;
-    left: 20.24%;
-    font-size: 0px;
-    z-index: 58;
+  position: absolute;
+  width: 75.02%;
+  height: 83.49%;
+  top: 6.16%;
+  left: 20.24%;
+  font-size: 0px;
+  z-index: 58;
 }
 
 .flexRowAbe {
-    position: relative;
-    width: 948px;
-    height: 33px;
-    margin: -3px 0 0 257px;
-    z-index: 124;
+  position: relative;
+  width: 948px;
+  height: 33px;
+  margin: -3px 0 0 257px;
+  z-index: 124;
 }
 
 .regroup {
-    position: absolute;
-    width: 91px;
-    height: 33px;
-    top: 0;
-    left: 0;
-    z-index: 124;
+  position: absolute;
+  width: 91px;
+  height: 33px;
+  top: 0;
+  left: 0;
+  z-index: 124;
 }
 
 .dateRegistered {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    position: absolute;
-    width: 98px;
-    height: 33px;
-    top: 0px;
-    left: 600px;
-    color: #555555;
-    font-size: 12px;
-    font-weight: 500;
-    line-height: 14.523px;
-    text-align: left;
-    z-index: 119;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  position: absolute;
+  width: 98px;
+  height: 33px;
+  top: 0px;
+  left: 600px;
+  color: #555555;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 14.523px;
+  text-align: left;
+  z-index: 119;
 }
 
 .fullWidth {
-    display: flex;
-    position: absolute;
-    width: 34px;
-    height: 22px;
-    top: 2px;
-    left: -216px;
-    color: #666666;
-    font-size: 18px;
-    font-weight: 505;
-    line-height: 21.784px;
-    white-space: nowrap;
-    z-index: 122;
+  display: flex;
+  position: absolute;
+  width: 34px;
+  height: 22px;
+  top: 2px;
+  left: -216px;
+  color: #666666;
+  font-size: 18px;
+  font-weight: 505;
+  line-height: 21.784px;
+  white-space: nowrap;
+  z-index: 122;
 }
 
 .flexRowD15 {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    align-items: center;
-    justify-content: space-between;
-    position: relative;
-    width: 708px;
-    height: 228px;
-    margin: 12px 0 0 30px;
-    z-index: 94;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  width: 708px;
+  height: 228px;
+  margin: 12px 0 0 30px;
+  z-index: 94;
 }
 
 .rectangle16 {
-    flex-shrink: 0;
-    position: relative;
-    width: 228px;
-    height: 228px;
-    background: #ffffff;
-    border: 1px solid #d9d9d9;
-    z-index: 72;
-    border-radius: 10px 0 10px 0;
+  flex-shrink: 0;
+  position: relative;
+  width: 228px;
+  height: 228px;
+  background: #ffffff;
+  border: 1px solid #d9d9d9;
+  z-index: 72;
+  border-radius: 10px 0 10px 0;
 }
 
-
-
 .tourapiFirstimage17 {
-    position: relative;
-    width: 228px;
-    height: 122px;
-    margin: 0 0 0 0;
-    background-color: #dddddd;
-    background-size: cover;
-    z-index: 73;
-    border-radius: 10px 0 0 0;
+  position: relative;
+  width: 228px;
+  height: 122px;
+  margin: 0 0 0 0;
+  background-color: #dddddd;
+  background-size: cover;
+  z-index: 73;
+  border-radius: 10px 0 0 0;
 }
 
 .koreaSeoulEunpyeonggu18 {
-    display: block;
-    position: relative;
-    height: 13px;
-    margin: 53px 0 0 18px;
-    color: #666666;
-    font-size: 11px;
-    font-weight: 400;
-    line-height: 13px;
-    text-align: left;
-    white-space: nowrap;
-    z-index: 77;
+  display: block;
+  position: relative;
+  height: 13px;
+  margin: 53px 0 0 18px;
+  color: #666666;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 13px;
+  text-align: left;
+  white-space: nowrap;
+  z-index: 77;
 }
 
 .sugugasaSeoul {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    position: absolute;
-    height: 16px;
-    top: 139px;
-    left: 17px;
-    color: #000000;
-    font-size: 13px;
-    font-weight: 500;
-    line-height: 15.733px;
-    text-align: left;
-    white-space: nowrap;
-    z-index: 76;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  position: absolute;
+  height: 16px;
+  top: 139px;
+  left: 17px;
+  color: #000000;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 15.733px;
+  text-align: left;
+  white-space: nowrap;
+  z-index: 76;
 }
 
 .moreBtn19 {
-    position: absolute;
-    width: 2px;
-    height: 11px;
-    top: 141px;
-    left: 207px;
-    background-color: black;
-    background-size: cover;
-    z-index: 81;
+  position: absolute;
+  width: 2px;
+  height: 11px;
+  top: 141px;
+  left: 207px;
+  background-color: black;
+  background-size: cover;
+  z-index: 81;
 }
 
 .seoulEunpyeongRoad {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    position: absolute;
-    height: 13px;
-    top: 193px;
-    left: 18px;
-    color: #666666;
-    font-size: 11px;
-    font-weight: 400;
-    line-height: 13px;
-    text-align: left;
-    white-space: nowrap;
-    z-index: 79;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  position: absolute;
+  height: 13px;
+  top: 193px;
+  left: 18px;
+  color: #666666;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 13px;
+  text-align: left;
+  white-space: nowrap;
+  z-index: 79;
 }
 .flexRowD24 {
-    position: relative;
-    width: 855.1px;
-    height: 33px;
-    margin: 23px 0 0 44.9px;
-    z-index: 130;
+  position: relative;
+  width: 855.1px;
+  height: 33px;
+  margin: 23px 0 0 44.9px;
+  z-index: 130;
 }
 
 .noImage {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    width: 227px;
-    height: 121px;
-    top: 0;
-    left: 0;
-    color: #999999;
-    font-size: 13px;
-    font-weight: 500;
-    line-height: 15.733px;
-    text-align: center;
-    z-index: 116;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 227px;
+  height: 121px;
+  top: 0;
+  left: 0;
+  color: #999999;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 15.733px;
+  text-align: center;
+  z-index: 116;
 }
