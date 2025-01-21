@@ -35,8 +35,8 @@ const BookMark = () => {
       <span className={styles.accountManagement}>북마크</span>
       <div className={styles.flexRowAbe}>
         <div className={styles.regroup}>
-          <span className={styles.dateRegistered}>등록 날짜순</span>
-          <span className={styles.fullWidth}>전체 {places.length}</span>
+          <div className={styles.dateRegistered}>등록 날짜순</div>
+          <div className={styles.fullWidth}>전체 {places.length}</div>
         </div>
       </div>
       <div className={styles.flexRowD15}>
