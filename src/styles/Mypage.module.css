@@ -46,11 +46,12 @@
 .accountManagementActive,
 .bookmarkManagementActive,
 .accountManagementTitle {
-  margin: 0px 0 0 41px;
+  margin: 0 0 0 41px;
   display: flex;
   position: relative;
-  width: 203px;
-  height: 55px;
+  align-items:center;
+  width: 163px;
+  height: 45px;
   color: #000000;
   font-size: 18px;
   font-weight: 400;

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Head from 'next/head';
 import LogoutModal from '@/components/Common/LogoutModal';
 import styles from '@/styles/Mypage.module.css';
 import Profile from '@/components/Feature/MyPage/Profile';
@@ -14,8 +15,11 @@ import saveLocalContent from '@/utils/saveLocalContent';
 
 const MyPage = () => {
   const router = useRouter();
-  
   const { checkAuthStatus } = useAuth();
+  
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [activeTab, setActiveTab] = useState('profile');
   
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -28,11 +32,6 @@ const MyPage = () => {
     };
     checkAuthentication();
   }, [checkAuthStatus]);
-  
-  
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [activeTab, setActiveTab] = useState('profile');
   
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -55,8 +54,40 @@ const MyPage = () => {
     setShowLoginModal(false);
   };
   
+  // 탭별 메타 태그 설정
+  const getMetaTags = () => {
+    switch (activeTab) {
+      case 'profile':
+        return {
+          title: '프로필 관리 - MyPage',
+          description: '사용자 프로필 정보를 관리하세요.',
+        };
+      case 'account':
+        return {
+          title: '계정 관리 - MyPage',
+          description: '계정 설정 및 정보를 확인하세요.',
+        };
+      case 'bookmark':
+        return {
+          title: '북마크 조회 - MyPage',
+          description: '저장한 북마크를 확인하세요.',
+        };
+      default:
+        return {
+          title: 'MyPage',
+          description: 'MyPage를 관리하세요.',
+        };
+    }
+  };
+  
+  const metaTags = getMetaTags();
+  
   return (
     <div className={styles.mainContainer}>
+      <Head>
+        <title>{metaTags.title}</title>
+        <meta name="description" content={metaTags.description} />
+      </Head>
       <div className={styles.rectangle2}>
         <div className={styles.flexColumnDb}>
           <span
