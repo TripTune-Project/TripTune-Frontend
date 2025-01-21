@@ -24,12 +24,12 @@ const BookMark = () => {
       district: '중구',
       address: '서울특별시 중구 남산공원길',
       detailAddress: '105',
-    }
+    },
   ]);
-  
+
   const [totalPages] = useState<number>(1);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  
+
   return (
     <div className={styles.flexColumnC}>
       <span className={styles.accountManagement}>북마크</span>
@@ -61,12 +61,7 @@ const BookMark = () => {
             <span className={styles.sugugasaSeoul}>{place.placeName}</span>
             <div className={styles.moreBtn19}>...</div>
             <span className={styles.seoulEunpyeongRoad}>
-              <Image
-                src={locationIcon}
-                alt="장소"
-                width={15}
-                height={21}
-              />
+              <Image src={locationIcon} alt='장소' width={15} height={21} />
               &nbsp;{place.address} {place.detailAddress}
             </span>
           </div>

@@ -54,7 +54,7 @@ export default function ScheduleDetailPage() {
 
   const handleSaveSchedule = async () => {
     if (!scheduleDetail) return;
-    
+
     const transformedRoute = travelRoute.map((place, index) => ({
       routeOrder: index + 1,
       placeId: place.placeId,

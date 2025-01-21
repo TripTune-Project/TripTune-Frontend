@@ -26,9 +26,10 @@ interface BookmarkResponse {
   content: Bookmark[];
 }
 
-// 마이페이지 회원 정보 조회 (GET)
+// 마이페이지 - 프로필 관리
+// 회원정보 조회
 export const getMyPage = async () => {
-  const url = '/api/mypage/profile';
+  const url = '/api/mypage/profiles';
 
   try {
     return await get<{
@@ -36,6 +37,7 @@ export const getMyPage = async () => {
       data: {
         userId: string;
         nickname: string;
+        createdAt: string;
         profileImage: string;
       };
       message: string;
@@ -46,56 +48,52 @@ export const getMyPage = async () => {
   }
 };
 
-// 북마크 조회 (GET)
-// TODO : orderby ?
-export const getBookmarks = async (page: number = 1) => {
-  const url = `/api/mypage/bookmarks?page=${page}`;
-
-  try {
-    return await get<{
-      success: boolean;
-      data: BookmarkResponse;
-      message: string;
-    }>(url, { requiresAuth: true });
-  } catch (error: any) {
-    console.error('북마크 목록 조회 중 오류 발생:', error);
-    throw new Error(error.message);
-  }
-};
-
-// 회원정보 조회 (GET)
-export const getProfile = async () => {
-  const url = '/api/mypage/profile';
-
-  try {
-    return await get<{
-      success: boolean;
-      data: Profile;
-      message: string;
-    }>(url, { requiresAuth: true });
-  } catch (error: any) {
-    console.error('회원정보 조회 중 오류 발생:', error);
-    throw new Error(error.message);
-  }
-};
-
-// 마이페이지 회원정보 프로필 수정 (PATCH)
-export const updateProfile = async (
+// 프로필 수정 / 업데이트 (PATCH)
+export const updateMyPage = async (
   nickname: string,
   profileImage: File | null
-) => {
-  const url = '/api/mypage/profile';
+): Promise<{ success: boolean; message: string }> => {
+  const url = `/api/mypage/profiles`;
+
   const formData = new FormData();
   formData.append('nickname', nickname);
-  if (profileImage) formData.append('profileImage', profileImage);
+  if (profileImage) {
+    formData.append('profileImage', profileImage);
+  }
 
   try {
     return await patch<{ success: boolean; message: string }>(url, formData, {
       requiresAuth: true,
-      headers: { 'Content-Type': 'multipart/form-data' },
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
     });
   } catch (error: any) {
-    console.error('회원정보 수정 중 오류 발생:', error);
+    console.error('마이페이지 정보 업데이트 중 오류 발생:', error);
+    throw new Error(error.message);
+  }
+};
+
+// 마이페이지 - 계정 관리
+// 이메일 인증, 검증은 Verify 파일에서 관리
+
+// 비밀 번호 변경
+// 비밀번호 변경 (PATCH)
+export const changePassword = async (
+  nowPassword: string,
+  newPassword: string,
+  rePassword: string
+) => {
+  const url = '/api/mypage/account/change-password';
+
+  try {
+    return await patch<{ success: boolean; message: string }>(
+      url,
+      { nowPassword, newPassword, rePassword },
+      { requiresAuth: true }
+    );
+  } catch (error: any) {
+    console.error('비밀번호 변경 중 오류 발생:', error);
     throw new Error(error.message);
   }
 };
@@ -116,22 +114,27 @@ export const deactivateAccount = async (password: string) => {
   }
 };
 
-// 비밀번호 변경 (PATCH)
-export const changePassword = async (
-  nowPassword: string,
-  newPassword: string,
-  rePassword: string
-) => {
-  const url = '/api/mypage/account/change-password';
+// 마이페이지 - 북마크
+// 북마크 조회 (GET)
+// orderBy TODO : 이해 못함
+export const getBookmarks = async (
+  page: number = 1,
+  orderBy: 'newest' | 'oldest' | 'name' = 'newest'
+): Promise<{
+  success: boolean;
+  data?: BookmarkResponse;
+  message: string;
+}> => {
+  const url = `/api/mypage/bookmarks?page=${page}&orderBy=${orderBy}`;
 
   try {
-    return await patch<{ success: boolean; message: string }>(
-      url,
-      { nowPassword, newPassword, rePassword },
-      { requiresAuth: true }
-    );
+    return await get<{
+      success: boolean;
+      data: BookmarkResponse;
+      message: string;
+    }>(url, { requiresAuth: true });
   } catch (error: any) {
-    console.error('비밀번호 변경 중 오류 발생:', error);
+    console.error('북마크 조회에 실패:', error);
     throw new Error(error.message);
   }
 };

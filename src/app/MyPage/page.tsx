@@ -13,15 +13,15 @@ const MyPage = () => {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
-  
+
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-  
+
   const handleLogout = async () => {
     closeModal();
     await performLogout();
   };
-  
+
   const performLogout = async () => {
     try {
       await logoutApi();
@@ -30,15 +30,32 @@ const MyPage = () => {
       console.error('로그아웃에 실패했습니다. 다시 시도해 주세요.');
     }
   };
-  
+
   return (
     <div className={styles.mainContainer}>
       <div className={styles.rectangle2}>
         <div className={styles.flexColumnDb}>
-          <span className={`${styles.tab} ${activeTab === 'profile' ? styles.profileManagementActive : styles.profileManagement}`}  onClick={() => setActiveTab('profile')}>프로필 관리</span>
-          <span className={`${styles.tab} ${activeTab === 'account' ? styles.accountManagementActive : styles.accountManagement}`} onClick={() => setActiveTab('account')}>계정 관리</span>
-          <span className={`${styles.tab} ${activeTab === 'bookmark' ? styles.bookmarkManagementActive : styles.bookmarkManagement}`} onClick={() => setActiveTab('bookmark')}>북마크</span>
-          <span className={styles.logout} onClick={openModal} >로그아웃</span>
+          <span
+            className={`${styles.tab} ${activeTab === 'profile' ? styles.profileManagementActive : styles.profileManagement}`}
+            onClick={() => setActiveTab('profile')}
+          >
+            프로필 관리
+          </span>
+          <span
+            className={`${styles.tab} ${activeTab === 'account' ? styles.accountManagementActive : styles.accountManagement}`}
+            onClick={() => setActiveTab('account')}
+          >
+            계정 관리
+          </span>
+          <span
+            className={`${styles.tab} ${activeTab === 'bookmark' ? styles.bookmarkManagementActive : styles.bookmarkManagement}`}
+            onClick={() => setActiveTab('bookmark')}
+          >
+            북마크
+          </span>
+          <span className={styles.logout} onClick={openModal}>
+            로그아웃
+          </span>
           <div className={styles.logoutIcon} />
           <LogoutModal
             isOpen={isModalOpen}
@@ -46,15 +63,9 @@ const MyPage = () => {
             onConfirm={handleLogout}
           />
         </div>
-        {activeTab === 'profile' && (
-          <Profile />
-        )}
-        {activeTab === 'account' && (
-          <Account />
-        )}
-        {activeTab === 'bookmark' &&
-          <BookMark />
-        }
+        {activeTab === 'profile' && <Profile />}
+        {activeTab === 'account' && <Account />}
+        {activeTab === 'bookmark' && <BookMark />}
       </div>
     </div>
   );
