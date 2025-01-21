@@ -42,7 +42,6 @@ const EmailVerification = ({
   setIsVerificationComplete,
   isVerificationComplete,
   errors,
-  errorMessage,
 }: EmailVerificationProps) => {
   const [isVerificationSent, setIsVerificationSent] = useState(false);
   const [isEmailDisabled, setIsEmailDisabled] = useState(false);
