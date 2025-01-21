@@ -1,18 +1,23 @@
 /* 마이페이지 - 기본 페이지 구축 */
 .mainContainer {
-  overflow: hidden;
-}
-
-.mainContainer,
-.mainContainer * {
-  box-sizing: border-box;
-}
-
-.mainContainer {
+  margin: 0;
+  padding: 0;
+  flex-shrink: 0;
   position: relative;
-  width: 1920px;
-  height: 900px;
-  margin: 0 auto;
+}
+
+.mainContainer::before {
+  content: '';
+  position: absolute;
+  width: 80%;
+  max-width: 1455px;
+  height: 601px;
+  border-radius: 0 0 0 200px;
+  background: linear-gradient(264deg, #edf9f7 3.98%, #f1f5ff 98.44%);
+  top: 0;
+  left: 66%;
+  transform: translateX(-50%);
+  z-index: -1;
 }
 
 .rectangle2 {

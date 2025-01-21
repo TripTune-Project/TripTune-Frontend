@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import LogoutModal from '@/components/Common/LogoutModal';
 import styles from '@/styles/Mypage.module.css';
@@ -8,20 +8,40 @@ import Profile from '@/components/Feature/MyPage/Profile';
 import Account from '@/components/Feature/MyPage/Account';
 import BookMark from '@/components/Feature/MyPage/BookMark';
 import { logoutApi } from '@/apis/Login/logoutApi';
+import LoginModal from '@/components/Common/LoginModal';
+import useAuth from '@/hooks/useAuth';
+import saveLocalContent from '@/utils/saveLocalContent';
 
 const MyPage = () => {
   const router = useRouter();
+  
+  const { checkAuthStatus } = useAuth();
+  
+  useEffect(() => {
+    const checkAuthentication = async () => {
+      await checkAuthStatus();
+      const { getDecryptedCookie } = saveLocalContent();
+      const accessToken = getDecryptedCookie('trip-tune_at');
+      if (!accessToken) {
+        setShowLoginModal(true);
+      }
+    };
+    checkAuthentication();
+  }, [checkAuthStatus]);
+  
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
-
+  
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-
+  
   const handleLogout = async () => {
     closeModal();
     await performLogout();
   };
-
+  
   const performLogout = async () => {
     try {
       await logoutApi();
@@ -30,7 +50,11 @@ const MyPage = () => {
       console.error('로그아웃에 실패했습니다. 다시 시도해 주세요.');
     }
   };
-
+  
+  const closeLoginModal = () => {
+    setShowLoginModal(false);
+  };
+  
   return (
     <div className={styles.mainContainer}>
       <div className={styles.rectangle2}>
@@ -67,6 +91,7 @@ const MyPage = () => {
         {activeTab === 'account' && <Account />}
         {activeTab === 'bookmark' && <BookMark />}
       </div>
+      {showLoginModal && <LoginModal onClose={closeLoginModal} />}
     </div>
   );
 };
