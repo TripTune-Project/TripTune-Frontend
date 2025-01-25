@@ -1,16 +1,12 @@
 import { remove, post } from '../Common/api';
 import { handleApiError } from '@/apis/Common/errorHandler';
 
-interface BookMarkData {
-  placeId: number;
-}
-
 // 북마크 등록
-export const BookMarkApi = async (data: BookMarkData) => {
+export const BookMarkApi = async (placeId: number) => {
   try {
-    const response = await post<{ data: { placeId: number } }>(
+    const response = await post(
       '/api/bookmarks',
-      data,
+      placeId,
       {
         headers: {
           'Content-Type': 'application/json',
@@ -31,11 +27,10 @@ export const BookMarkApi = async (data: BookMarkData) => {
 };
 
 // 북마크 등록 해제
-export const BookMarkDeleteApi = async (data: BookMarkData) => {
+export const BookMarkDeleteApi = async (placeId: number) => {
   try {
-    const response = await remove<{ data: { placeId: number } }>(
-      '/api/bookmarks',
-      data,
+    const response = await remove(
+      `/api/bookmarks?placeId=${placeId}`,
       {
         headers: {
           'Content-Type': 'application/json',
