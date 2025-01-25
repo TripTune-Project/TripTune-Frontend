@@ -14,7 +14,7 @@ const ChangePassword = () => {
   const router = useRouter();
   const passwordToken = searchParams.get('passwordToken');
   const [password, setPassword] = useState('');
-  const [repassword, setRepassword] = useState('');
+  const [rePassword, setRepassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [isRepasswordValid, setIsRepasswordValid] = useState(false);
@@ -28,11 +28,11 @@ const ChangePassword = () => {
 
   useEffect(() => {
     const passwordValid = validatePassword(password) === true;
-    const repasswordValid = password === repassword;
+    const rePasswordValid = password === rePassword;
     setIsPasswordValid(passwordValid);
-    setIsRepasswordValid(repasswordValid);
-    setIsFormValid(passwordValid && repasswordValid);
-  }, [password, repassword]);
+    setIsRepasswordValid(rePasswordValid);
+    setIsFormValid(passwordValid && rePasswordValid);
+  }, [password, rePassword]);
 
   const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,7 +44,7 @@ const ChangePassword = () => {
       return;
     }
 
-    if (password !== repassword) {
+    if (password !== rePassword) {
       alert('비밀번호가 일치하지 않습니다.');
       setLoading(false);
       return;
@@ -56,7 +56,7 @@ const ChangePassword = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ passwordToken, password, repassword }),
+        body: JSON.stringify({ passwordToken, password, rePassword }),
       });
 
       const data = await response.json();
@@ -133,14 +133,14 @@ const ChangePassword = () => {
         <p> 비밀번호 재입력 </p>
         <input
           type='password'
-          id='repassword'
-          value={repassword}
+          id='rePassword'
+          value={rePassword}
           onChange={(e) => setRepassword(e.target.value)}
           required
           placeholder={'비밀번호 재입력'}
           className={styles.input}
         />
-        {!isRepasswordValid && repassword && (
+        {!isRepasswordValid && rePassword && (
           <div className={styles.errorText}>비밀번호가 일치하지 않습니다.</div>
         )}
         <button

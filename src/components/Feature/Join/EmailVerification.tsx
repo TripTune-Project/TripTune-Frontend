@@ -20,7 +20,7 @@ interface JoinFormData {
   nickname: string;
   userId: string;
   password: string;
-  repassword: string;
+  rePassword: string;
   email: string;
   authCode?: string;
 }
