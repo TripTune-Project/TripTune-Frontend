@@ -23,7 +23,7 @@ const ScheduleTravelSearch = () => {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const markersRef = useRef<any[]>([]);
-
+  
   const {
     addPlaceToRoute,
     addedPlaces,
@@ -32,7 +32,7 @@ const ScheduleTravelSearch = () => {
     removePlaceFromRoute,
     fetchAndMergeRoutes,
   } = useTravelStore();
-
+  
   // 여행지 검색과 여행루트 데이터 동기화
   useEffect(() => {
     const loadTravelRoutes = async () => {
@@ -43,39 +43,39 @@ const ScheduleTravelSearch = () => {
     };
     loadTravelRoutes();
   }, [fetchAndMergeRoutes, scheduleId]);
-
+  
   // 검색을 위한 디바운스
   const debouncedSearchKeyword = useDebounce(searchKeyword, 800);
-
+  
   // 기본 리스트 쿼리
   const travelListQuery = useScheduleTravelList(
     Number(scheduleId),
     currentPage,
-    !isSearching
+    !isSearching,
   );
-
+  
   // 검색 리스트 쿼리
   const searchTravelQuery = useTravelListByLocation(
     Number(scheduleId),
     debouncedSearchKeyword,
     currentPage,
-    isSearching
+    isSearching,
   );
-
+  
   // 마커 제거
   const removeMarker = useCallback((latitude: number, longitude: number) => {
     const markerIndex = markersRef.current.findIndex(
       (marker) =>
         marker.position.lat() === latitude &&
-        marker.position.lng() === longitude
+        marker.position.lng() === longitude,
     );
-
+    
     if (markerIndex > -1) {
       const [removedMarker] = markersRef.current.splice(markerIndex, 1);
       removedMarker.setMap(null); // setMap을 통해 지도에서 제거
     }
   }, []);
-
+  
   useEffect(() => {
     if (debouncedSearchKeyword.trim()) {
       setCurrentPage(1);
@@ -84,24 +84,24 @@ const ScheduleTravelSearch = () => {
       setIsSearching(false);
     }
   }, [debouncedSearchKeyword]);
-
+  
   const travels = isSearching
     ? searchTravelQuery?.data?.data?.content || []
     : travelListQuery?.data?.data?.content || [];
   const totalPages = isSearching
     ? searchTravelQuery?.data?.data?.totalPages || 0
     : travelListQuery?.data?.data?.totalPages || 0;
-
+  
   if (travelListQuery.isLoading || searchTravelQuery.isLoading)
     return <DataLoading />;
   if (travelListQuery.error || searchTravelQuery.error)
     return <p>데이터를 불러오는데 오류가 발생했습니다.</p>;
-
+  
   const handleAddOrRemovePlace = (place: Place) => {
     const placeExists = Array.from(addedPlaces).some(
-      (addedPlace) => addedPlace.placeId === place.placeId
+      (addedPlace) => addedPlace.placeId === place.placeId,
     );
-
+    
     if (placeExists) {
       removePlace(place.placeId);
       removePlaceFromRoute(place.placeId);
@@ -115,13 +115,13 @@ const ScheduleTravelSearch = () => {
       addPlaceToRoute(place);
     }
   };
-
+  
   return (
     <>
       <div className={styles.travelSearchContainerSearch}>
         <input
-          type='text'
-          placeholder='원하는 여행지를 검색하세요'
+          type="text"
+          placeholder="원하는 여행지를 검색하세요"
           value={searchKeyword}
           onChange={(e) => setSearchKeyword(e.target.value)}
         />
@@ -148,22 +148,26 @@ const ScheduleTravelSearch = () => {
                 </div>
                 <div className={styles.placeInfo}>
                   <div className={styles.placeName}>
-                    {truncateText(place.placeName, 20)}
+                    {truncateText(place.placeName, 16)}
                   </div>
                   <p className={styles.placeAddress}>
                     {truncateText(
                       `${place.country} / ${place.city} / ${place.district}`,
-                      20
+                      16,
                     )}
                   </p>
                   <p className={styles.placeDetailAddress}>
                     <Image
                       src={locationIcon}
-                      alt='장소'
+                      alt="장소"
                       width={15}
                       height={21}
                     />
-                    &nbsp;{place.address} {place.detailAddress ?? ''}
+                    &nbsp;
+                    {truncateText(
+                      `${place.address} ${place.detailAddress ?? ''}`,
+                      16,
+                    )}
                   </p>
                 </div>
                 <button
@@ -171,7 +175,7 @@ const ScheduleTravelSearch = () => {
                   onClick={() => handleAddOrRemovePlace(place)}
                 >
                   {Array.from(addedPlaces).some(
-                    (addedPlace) => addedPlace.placeId === place.placeId
+                    (addedPlace) => addedPlace.placeId === place.placeId,
                   ) ? (
                     <Image src={minusTravelSearch} alt={'minusTravelSearch'} />
                   ) : (

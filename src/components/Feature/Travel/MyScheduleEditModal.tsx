@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
 import Image from 'next/image';
 import { useMyScheduleList } from '@/hooks/useSchedule';
@@ -18,7 +17,6 @@ const MyScheduleEditModal = ({
   onClose,
   placeId,
 }: MyScheduleEditModalProps) => {
-  const router = useRouter();
   const [selectedScheduleId, setSelectedScheduleId] = useState<number | null>(
     null
   );

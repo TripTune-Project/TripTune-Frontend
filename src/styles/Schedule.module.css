@@ -75,11 +75,11 @@
 }
 
 .sunday {
-  color: blue !important;
+  color: blue;
 }
 
 .saturday {
-  color: red !important;
+  color: red;
 }
 
 .confirmButton {
@@ -320,18 +320,6 @@
   flex-direction: column;
   margin-bottom: 20px;
   transition: box-shadow 0.3s ease;
-}
-
-.hoverMenu {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 417px;
-  height: 308px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: opacity 0.3s ease;
 }
 
 .threeDots {
