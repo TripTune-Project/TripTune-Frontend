@@ -56,7 +56,6 @@ const MyScheduleEditModal = ({
       const response = await addPlaceToSchedule(selectedScheduleId, placeId);
       if (response.success) {
         alert('장소가 성공적으로 추가되었습니다.');
-        router.push('/Schedule');
       } else {
         alert(response.message);
       }
