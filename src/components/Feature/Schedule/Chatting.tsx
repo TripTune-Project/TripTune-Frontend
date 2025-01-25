@@ -181,7 +181,6 @@ const Chatting = () => {
         className={styles.messageContainer}
         ref={chatContainerRef}
         onScroll={handleScroll}
-        style={{ paddingTop: messages.length < 10 ? '700px' : '0' }}
       >
         {messages.map((msg, index) => {
           const showDate =
