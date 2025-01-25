@@ -54,7 +54,6 @@ const MyPage = () => {
     setShowLoginModal(false);
   };
   
-  // 탭별 메타 태그 설정
   const getMetaTags = () => {
     switch (activeTab) {
       case 'profile':
