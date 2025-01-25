@@ -394,9 +394,6 @@ export default function SchedulePage() {
         </div>
         <div ref={observerRef} className={styles.loadingArea}>
           {isFetchingNextPage && <DataLoading />}
-          {!isFetchingNextPage && !hasNextPage && (
-            <p>더 이상 일정이 없습니다.</p>
-          )}
         </div>
         {isDeleteModalOpen && (
           <DeleteModal
