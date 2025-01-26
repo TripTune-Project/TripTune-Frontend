@@ -73,30 +73,32 @@ const fetchData = async <T>(
   };
 
   let response = await fetch(url, requestConfig);
-  if (response.status === 401) {
-    if (!isRetrying) {
-      isRetrying = true;
-      const newAccessToken = await refreshApi();
-      if (newAccessToken) {
-        headers = { ...headers, Authorization: `Bearer ${newAccessToken}` };
-        response = await fetch(url, { ...requestConfig, headers });
-      } else {
-        handleRedirectToLogin(
-          '토큰 갱신에 실패했습니다. 다시 로그인 해주세요.'
-        );
-      }
-    } else {
-      handleRedirectToLogin(
-        '토큰 갱신 시도 후에도 실패했습니다. 다시 로그인 해주세요.'
-      );
-    }
-  }
-
   // 실패한 경우 서버의 에러 메시지를 처리
   if (!response.ok) {
     try {
       const errorData = await response.json();
       alert(errorData.message || '알 수 없는 오류가 발생했습니다.');
+      if (response.status === 401) {
+        if (!isRetrying) {
+          isRetrying = true;
+          const newAccessToken = await refreshApi();
+          if (newAccessToken) {
+            headers = { ...headers, Authorization: `Bearer ${newAccessToken}` };
+            response = await fetch(url, { ...requestConfig, headers });
+          } else {
+            handleRedirectToLogin(
+              '토큰 갱신에 실패했습니다. 다시 로그인 해주세요.'
+            );
+          }
+        } else {
+          handleRedirectToLogin(
+            '토큰 갱신 시도 후에도 실패했습니다. 다시 로그인 해주세요.'
+          );
+        }
+      }
+      if ((response.status === 404 || 403) && window.location.pathname.includes('/Schedule')) {
+        window.history.go(-1);
+      }
     } catch {
       alert('서버 응답을 처리할 수 없습니다.');
     }

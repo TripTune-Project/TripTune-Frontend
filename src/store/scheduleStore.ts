@@ -113,8 +113,6 @@ export const useTravelStore = create<TravelStore>((set) => ({
         return { scheduleDetail: response.data };
       });
     } else {
-      alert("유효하지 않은 접속입니다. 이전 페이지로 이동 합니다.")
-      window.history.go(-1);
       console.error(
         '일정 세부 정보를 가져오는데 실패했습니다:',
         response.message
