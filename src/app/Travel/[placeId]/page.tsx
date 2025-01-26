@@ -142,7 +142,7 @@ const TravelDetailPage = () => {
         return;
       }
       return bookmarkStatus
-        ? await BookMarkDeleteApi({ placeId: placeIdNumber })
+        ? await BookMarkDeleteApi(placeIdNumber)
         : await BookMarkApi({ placeId: placeIdNumber });
     },
     onSuccess: () => {

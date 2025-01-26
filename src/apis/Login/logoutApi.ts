@@ -13,9 +13,7 @@ export const logoutApi = async () => {
       url,
       { nickname },
       {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+        requiresAuth: true,
       }
     );
 
