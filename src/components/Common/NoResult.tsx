@@ -14,7 +14,7 @@ export default function NoResultLayout() {
       marginTop: '30px',
       color: '#555',
       width: isTravelPage ? '35vw' : '78vw',
-      height: isTravelPage ? '75vh' : '30vw',
+      height: isTravelPage ? '75vh' : '43vw',
       marginLeft: isTravelPage ? '' : '-58px',
       flexShrink: 0,
       border: '1px solid #d9d9d9',

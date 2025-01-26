@@ -197,7 +197,7 @@
 .createContainer {
   margin-left: 10%;
   width: 1296px;
-  height: 1080px;
+  height: fit-content;
 }
 
 .createContainer::before {
