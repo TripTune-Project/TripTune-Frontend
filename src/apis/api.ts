@@ -73,7 +73,7 @@ const fetchData = async <T>(
   };
 
   let response = await fetch(url, requestConfig);
-  if (response.status !== 200) {
+  if (response.status === 401) {
     if (!isRetrying) {
       isRetrying = true;
       const newAccessToken = await refreshApi();
