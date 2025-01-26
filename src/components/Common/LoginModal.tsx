@@ -10,6 +10,11 @@ interface LoginModalProps {
 const LoginModal = ({ onClose }: LoginModalProps) => {
   const router = useRouter();
 
+  const handleLinkTogoLogin = async () => {
+    onClose();
+    router.push('/Login');
+  };
+
   const handleCancel = () => {
     onClose();
     router.push('/');
@@ -21,7 +26,7 @@ const LoginModal = ({ onClose }: LoginModalProps) => {
         <h2>{MODAL_MESSAGES.loginRequired.title}</h2>
         <p>{MODAL_MESSAGES.loginRequired.description}</p>
         <ButtonContainer>
-          <ConfirmButton onClick={onClose}>
+          <ConfirmButton onClick={handleLinkTogoLogin}>
             {MODAL_MESSAGES.loginRequired.confirmButton}
           </ConfirmButton>
           <CancelButton onClick={handleCancel}>

@@ -63,32 +63,26 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
   };
 
   const handleShareClick = async () => {
-    try {
-      const response = await shareSchedule(
-        Number(scheduleId),
-        email,
-        selectedPermission as 'ALL' | 'EDIT' | 'CHAT' | 'READ'
-      );
+    const response = await shareSchedule(
+      Number(scheduleId),
+      email,
+      selectedPermission as 'ALL' | 'EDIT' | 'CHAT' | 'READ'
+    );
 
-      if (response.success) {
-        alert('공유가 완료되었습니다.');
-        setAllUsers((prevUsers) => [
-          ...prevUsers,
-          {
-            email,
-            nickname: email.split('@')[0],
-            profileUrl: '/default-profile.png',
-            permission: selectedPermission,
-            attendeeId: Math.random(), // 임시 ID
-          } as Attendee,
-        ]);
-        setEmail('');
-        setSelectedPermission('EDIT');
-      } else {
-        alert(response.message);
-      }
-    } catch (error) {
-      console.error('공유 중 오류 발생:', error);
+    if (response.success) {
+      alert('공유가 완료되었습니다.');
+      setAllUsers((prevUsers) => [
+        ...prevUsers,
+        {
+          email,
+          nickname: email.split('@')[0],
+          profileUrl: '/default-profile.png',
+          permission: selectedPermission,
+          attendeeId: Math.random(),
+        } as Attendee,
+      ]);
+      setEmail('');
+      setSelectedPermission('EDIT');
     }
   };
 

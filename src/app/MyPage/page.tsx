@@ -16,11 +16,11 @@ import saveLocalContent from '@/utils/saveLocalContent';
 const MyPage = () => {
   const router = useRouter();
   const { checkAuthStatus } = useAuth();
-  
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
-  
+
   useEffect(() => {
     const checkAuthentication = async () => {
       await checkAuthStatus();
@@ -32,15 +32,15 @@ const MyPage = () => {
     };
     checkAuthentication();
   }, [checkAuthStatus]);
-  
+
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-  
+
   const handleLogout = async () => {
     closeModal();
     await performLogout();
   };
-  
+
   const performLogout = async () => {
     try {
       await logoutApi();
@@ -49,11 +49,11 @@ const MyPage = () => {
       console.error('로그아웃에 실패했습니다. 다시 시도해 주세요.');
     }
   };
-  
+
   const closeLoginModal = () => {
     setShowLoginModal(false);
   };
-  
+
   const getMetaTags = () => {
     switch (activeTab) {
       case 'profile':
@@ -78,14 +78,14 @@ const MyPage = () => {
         };
     }
   };
-  
+
   const metaTags = getMetaTags();
-  
+
   return (
     <div className={styles.mainContainer}>
       <Head>
         <title>{metaTags.title}</title>
-        <meta name="description" content={metaTags.description} />
+        <meta name='description' content={metaTags.description} />
       </Head>
       <div className={styles.rectangle2}>
         <div className={styles.flexColumnDb}>

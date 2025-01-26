@@ -1,4 +1,4 @@
-import { post } from '../Common/api';
+import { post } from '../api';
 import saveLocalContent from '../../utils/saveLocalContent';
 
 interface LoginData {
@@ -19,16 +19,13 @@ const saveTokens = (
 };
 
 export const loginUser = async (data: LoginData) => {
-  try {
-    const responseData = await post<{
-      data: { accessToken: string; refreshToken: string; nickname: string };
-    }>('/api/members/login', data);
+  const url = '/api/members/login';
+  const response = await post<{
+    data: { accessToken: string; refreshToken: string; nickname: string };
+  }>(url, data);
 
-    const { accessToken, refreshToken, nickname } = responseData.data;
-    saveTokens(accessToken, refreshToken, nickname);
+  const { accessToken, refreshToken, nickname } = response.data;
+  saveTokens(accessToken, refreshToken, nickname);
 
-    return responseData;
-  } catch (error) {
-    throw new Error(error instanceof Error ? error.message : '로그인 실패');
-  }
+  return response.data;
 };

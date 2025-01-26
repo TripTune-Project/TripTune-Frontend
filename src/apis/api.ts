@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie';
-import { refreshApi } from '../Login/refreshApi';
+import { refreshApi } from './Login/refreshApi';
 import saveLocalContent from '@/utils/saveLocalContent';
 
 const DEFAULT_HEADERS = {
@@ -92,8 +92,14 @@ const fetchData = async <T>(
     }
   }
 
+  // 실패한 경우 서버의 에러 메시지를 처리
   if (!response.ok) {
-    throw new Error(`API 요청 실패: ${response.statusText}`);
+    try {
+      const errorData = await response.json();
+      alert(errorData.message || '알 수 없는 오류가 발생했습니다.');
+    } catch {
+      alert('서버 응답을 처리할 수 없습니다.');
+    }
   }
 
   isRetrying = false;

@@ -164,14 +164,12 @@ const TravelPage = () => {
       return;
     }
     try {
-      // 서버 요청
       if (bookmarkStatus) {
         await BookMarkDeleteApi({ placeId });
       } else {
         await BookMarkApi({ placeId });
       }
     } finally {
-      // 데이터 동기화
       isSearching ? await refetchSearch() : await refetchLocation();
     }
   };
