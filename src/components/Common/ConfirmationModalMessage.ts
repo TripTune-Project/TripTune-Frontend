@@ -5,13 +5,6 @@ export const MODAL_MESSAGES = {
     confirmButton: '확인',
     cancelButton: '취소',
   },
-  confirmDeleteUser: {
-    title: '회원탈퇴 하시겠습니까?',
-    description:
-      '회원탈퇴를 진행하면 모든 데이터가 삭제되며 복구할 수 없습니다. 계속 진행하시겠습니까?',
-    confirmButton: '회원탈퇴',
-    cancelButton: '취소',
-  },
   confirmDeleteSchedule: {
     title: '정말로 일정을 삭제하시겠습니까?',
     description: '',
