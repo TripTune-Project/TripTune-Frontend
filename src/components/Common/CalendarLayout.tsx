@@ -128,18 +128,22 @@ const CalendarLayout = ({
         </div>
         <div className={styles.datePickerContainer}>
           <DatePicker
-            locale='ko'
+            locale="ko"
             selected={startDate || undefined}
             onChange={(dates: [Date | null, Date | null]) => {
               let [start, end] = dates;
-              if (start && end && start > end) {
-                [start, end] = [end, start];
+              if (start && end) {
+                if (start > end) {
+                  setStartDate(end);
+                  setEndDate(start);
+                } else {
+                  setStartDate(start);
+                  setEndDate(end);
+                }
+              } else if (start) {
+                setStartDate(start);
+                setEndDate(null);
               }
-              if (!start && end) {
-                start = end;
-              }
-              setStartDate(start);
-              setEndDate(end);
             }}
             startDate={startDate || undefined}
             endDate={endDate || undefined}
@@ -147,11 +151,10 @@ const CalendarLayout = ({
             selectsRange
             inline
             monthsShown={2}
-            dateFormat='yyyy.MM.dd'
+            dateFormat="yyyy.MM.dd"
             dayClassName={(date: Date) => {
               const isPast = date < today.setHours(0, 0, 0, 0);
               const day = date.getDay();
-              
               if (day === 0) return isPast ? styles.pastSunday : styles.sunday;
               if (day === 6) return isPast ? styles.pastSaturday : styles.saturday;
               return "";
