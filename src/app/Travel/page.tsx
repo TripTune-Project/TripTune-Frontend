@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Head from 'next/head';
 import Pagination from '@/components/Common/Pagination';
 import SearchPlacesMap from '@/components/Feature/Travel/SearchPlacesMap';
@@ -101,15 +101,23 @@ const TravelPage = () => {
       }
     }
   }, [permissionState, userCoordinates, geoErrorMessage]);
-
+  
   useEffect(() => {
     if (debouncedSearchTerm.trim()) {
       setIsSearching(true);
       setCurrentPage(1);
-      refetchSearch();
+      refetchSearch().finally(() => {
+        if (debouncedSearchTerm.trim()) {
+          inputRef.current?.focus();
+        }
+      });
     } else if (debouncedSearchTerm === '') {
       setIsSearching(false);
-      refetchLocation();
+      refetchLocation().finally(() => {
+        if (debouncedSearchTerm.trim()) {
+          inputRef.current?.focus();
+        }
+      });
     }
   }, [
     debouncedSearchTerm,
@@ -118,7 +126,7 @@ const TravelPage = () => {
     setCurrentPage,
     setIsSearching,
   ]);
-
+  
   const handleSearch = () => {
     if (searchTerm.trim()) {
       setIsSearching(true);
@@ -223,7 +231,9 @@ const TravelPage = () => {
   const closeLoginModal = () => {
     setShowLoginModal(false);
   };
-
+  
+  const inputRef = useRef<HTMLInputElement>(null);
+  
   return (
     <>
       <Head>
@@ -252,6 +262,7 @@ const TravelPage = () => {
             <div className={styles.listContainer}>
               <div className={styles.searchContainer}>
                 <input
+                  ref={inputRef}
                   type='text'
                   placeholder='원하는 여행지를 검색하세요.'
                   value={searchTerm}

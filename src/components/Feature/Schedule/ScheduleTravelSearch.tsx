@@ -23,6 +23,7 @@ const ScheduleTravelSearch = () => {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const markersRef = useRef<any[]>([]);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const {
     addPlaceToRoute,
@@ -80,6 +81,7 @@ const ScheduleTravelSearch = () => {
     if (debouncedSearchKeyword.trim()) {
       setCurrentPage(1);
       setIsSearching(true);
+      inputRef.current?.focus();
     } else {
       setIsSearching(false);
     }
@@ -120,6 +122,7 @@ const ScheduleTravelSearch = () => {
     <>
       <div className={styles.travelSearchContainerSearch}>
         <input
+          ref={inputRef}
           type='text'
           placeholder='원하는 여행지를 검색하세요'
           value={searchKeyword}
