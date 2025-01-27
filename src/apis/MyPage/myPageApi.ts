@@ -4,29 +4,26 @@ import { BookmarkResponse } from '@/types/myPage';
 // 마이페이지 - 프로필 관리
 // 회원정보 조회
 export const getMyPage = async () => {
-  const url = '/api/members/profile';
+  const url = '/api/members/info';
   return await get<{
     success: boolean;
     data: {
       userId: string;
       email: string;
       nickname: string;
-      createdAt: string;
       profileImage: string;
     };
     message: string;
   }>(url, { requiresAuth: true });
 };
 
-// 프로필 수정 / 업데이트 (PATCH)
+// 프로필 이미지 수정 / 업데이트 (PATCH)
 export const updateMyPage = async (
-  nickname: string,
   profileImage: File | null
 ): Promise<{ success: boolean; message: string }> => {
-  const url = `/api/members/profile`;
+  const url = `/api/profiles`;
 
   const formData = new FormData();
-  formData.append('nickname', nickname);
   if (profileImage) {
     formData.append('profileImage', profileImage);
   }
@@ -36,6 +33,16 @@ export const updateMyPage = async (
       'Content-Type': 'multipart/form-data',
     },
   });
+};
+
+// 닉네임 수정 (PATCH)
+export const nickNameChange = async (nickname: string) => {
+  const url = '/api/members/change-nickname';
+  return await patch<{ success: boolean; message: string }>(
+    url,
+    { nickname },
+    { requiresAuth: true }
+  );
 };
 
 // 마이페이지 - 계정 관리
