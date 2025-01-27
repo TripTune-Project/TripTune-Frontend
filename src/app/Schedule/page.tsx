@@ -25,6 +25,7 @@ import moreBtn from '../../../public/assets/images/일정 만들기/일정 목�
 import NoResultLayout from '../../components/Common/NoResult';
 import LoginModal from '@/components/Common/LoginModal';
 import saveLocalContent from '@/utils/saveLocalContent';
+import CalendarLayout from '@/components/Common/CalendarLayout';
 
 export default function SchedulePage() {
   const router = useRouter();
@@ -403,7 +404,7 @@ export default function SchedulePage() {
           />
         )}
         {isModalOpen && (
-          <NewScheduleModal onClose={() => setIsModalOpen(false)} />
+          <CalendarLayout mode="create" onClose={() => setIsModalOpen(false)}/>
         )}
       </div>
       {showLoginModal && <LoginModal onClose={closeLoginModal} />}
