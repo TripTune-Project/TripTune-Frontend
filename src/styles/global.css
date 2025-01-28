@@ -124,11 +124,11 @@ body::-webkit-scrollbar {
 .react-datepicker__day--range-start {
   background-color: #76adac !important;
   border-radius: 50% !important;
-  color:#ffffff!important;
+  color: #ffffff !important;
 }
 
 .react-datepicker__day--range-end {
   background-color: #76adac !important;
   border-radius: 50% !important;
-  color:#ffffff!important;
+  color: #ffffff !important;
 }

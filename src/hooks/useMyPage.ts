@@ -12,13 +12,16 @@ type MyPageState = {
   userData: UserData | null;
   isEmailLoaded: boolean; // 이메일이 로드되었는지 확인하는 상태
   fetchUserData: () => Promise<void>;
-  updateUserData: (nickname: string, profileImage?: File | null) => Promise<void>;
+  updateUserData: (
+    nickname: string,
+    profileImage?: File | null
+  ) => Promise<void>;
 };
 
 export const useMyPage = create<MyPageState>((set) => ({
   userData: null,
   isEmailLoaded: false, // 이메일 로드 상태 초기화
-  
+
   // 회원 정보 조회
   fetchUserData: async () => {
     try {
@@ -32,7 +35,7 @@ export const useMyPage = create<MyPageState>((set) => ({
       console.error('회원 정보 조회 중 오류:', error);
     }
   },
-  
+
   // 회원 정보 업데이트
   updateUserData: async (nickname, profileImage = null) => {
     try {
@@ -42,7 +45,8 @@ export const useMyPage = create<MyPageState>((set) => ({
           userData: {
             ...state.userData,
             nickname,
-            profileImage: response.data.profileImage || state.userData?.profileImage,
+            profileImage:
+              response.data.profileImage || state.userData?.profileImage,
           },
         }));
         alert('프로필이 성공적으로 업데이트되었습니다.');

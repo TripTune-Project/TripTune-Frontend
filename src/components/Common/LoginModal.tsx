@@ -3,20 +3,16 @@ import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
 import { MODAL_MESSAGES } from '@/components/Common/ConfirmationModalMessage';
 
-interface LoginModalProps {
-  onClose: () => void;
-}
-
-const LoginModal = ({ onClose }: LoginModalProps) => {
+const LoginModal = () => {
   const router = useRouter();
 
   const handleLinkTogoLogin = async () => {
-    onClose();
+    const currentPath = window.location.pathname;
+    localStorage.setItem('redirectAfterLogin', currentPath);
     router.push('/Login');
   };
 
   const handleCancel = () => {
-    onClose();
     router.push('/');
   };
 
@@ -43,9 +39,8 @@ export default LoginModal;
 const ModalOverlay = styled.div`
   position: fixed;
   left: 0;
-  bottom: 400px;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;

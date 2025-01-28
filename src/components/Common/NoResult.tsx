@@ -3,8 +3,8 @@ import Image from 'next/image';
 import AlertIcon from '../../../public/assets/images/여행지 탐색/홈화면/alertIcon.png';
 
 export default function NoResultLayout() {
-  const isTravelPage = window.location.pathname.includes('/Travel')
-  
+  const isTravelPage = window.location.pathname.includes('/Travel');
+
   const styles: { [key: string]: React.CSSProperties } = {
     noScheduleContainer: {
       display: 'flex',

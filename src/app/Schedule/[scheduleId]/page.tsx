@@ -14,34 +14,20 @@ import InviteModal from '@/components/Feature/Schedule/InviteModal';
 import { updateExistingSchedule } from '@/apis/Schedule/scheduleApi';
 import { useTravelStore } from '@/store/scheduleStore';
 import useAuth from '@/hooks/useAuth';
-import Cookies from 'js-cookie';
 import LoginModal from '@/components/Common/LoginModal';
-import saveLocalContent from '@/utils/saveLocalContent';
+import DataLoading from '@/components/Common/DataLoading';
 
 export default function ScheduleDetailPage() {
   const { scheduleId } = useParams();
   const router = useRouter();
 
-  const { checkAuthStatus } = useAuth();
-  const [showLoginModal, setShowLoginModal] = useState(false);
+  const { isAuthenticated, isLoading } = useAuth();
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
 
   const { travelRoute, scheduleDetail, fetchScheduleDetailById } =
     useTravelStore();
 
-  // 로그인 상태 확인 및 리다이렉트
-  useEffect(() => {
-    const checkAuthentication = async () => {
-      await checkAuthStatus();
-      const { getDecryptedCookie } = saveLocalContent();
-      const accessToken = getDecryptedCookie('trip-tune_at');
-      if (!accessToken) {
-        setShowLoginModal(true);
-      }
-    };
-
-    checkAuthentication();
-  }, [checkAuthStatus, router]);
+  useEffect(() => {}, [isAuthenticated, router]);
 
   useEffect(() => {
     if (scheduleId) {
@@ -76,9 +62,13 @@ export default function ScheduleDetailPage() {
     }
   };
 
-  const closeLoginModal = () => {
-    setShowLoginModal(false);
-  };
+  if (isLoading) {
+    return <DataLoading />;
+  }
+
+  if (!isAuthenticated) {
+    return <LoginModal />;
+  }
 
   return (
     <>
@@ -127,7 +117,6 @@ export default function ScheduleDetailPage() {
           <Chatting />
         </div>
       </div>
-      {showLoginModal && <LoginModal onClose={closeLoginModal} />}
     </>
   );
 }

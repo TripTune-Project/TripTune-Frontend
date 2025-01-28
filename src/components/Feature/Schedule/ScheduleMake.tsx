@@ -104,7 +104,7 @@ const ScheduleMake = ({ initialTab }: ScheduleMakeProps) => {
       {tab === 'scheduleTravel' ? <ScheduleTravelSearch /> : <ScheduleRoute />}
       {showModal && (
         <CalendarLayout
-          mode = "update"
+          mode='update'
           initialStartDate={scheduleDetail?.startDate || ''}
           initialEndDate={scheduleDetail?.endDate || ''}
           onClose={() => setShowModal(false)}

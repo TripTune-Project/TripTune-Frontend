@@ -16,23 +16,23 @@ const Account = () => {
   const router = useRouter();
   const { userData, fetchUserData, isEmailLoaded } = useMyPage(); // Zustand 상태 불러오기
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
+
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-  
+
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
   } = useForm<AccountFormData>({ mode: 'onChange' });
-  
+
   useEffect(() => {
     if (!isEmailLoaded) {
       fetchUserData();
     }
   }, [isEmailLoaded, fetchUserData]);
-  
+
   const handleEmailVerification = async (data: AccountFormData) => {
     try {
       const response = await requestEmailVerification(data.email);
@@ -43,7 +43,7 @@ const Account = () => {
       alert('이메일 인증 요청에 실패했습니다.');
     }
   };
-  
+
   const handleEmailVerificationConfirm = async (data: AccountFormData) => {
     try {
       const response = await verifyEmail(data.email, data.verificationCode);
@@ -54,7 +54,7 @@ const Account = () => {
       alert('이메일 인증 확인에 실패했습니다.');
     }
   };
-  
+
   const handlePasswordChange = async (data: AccountFormData) => {
     try {
       await changePassword(data.nowPassword, data.newPassword, data.rePassword);
@@ -64,7 +64,7 @@ const Account = () => {
       alert('비밀번호 변경에 실패했습니다.');
     }
   };
-  
+
   const handleDeleteUser = async (password: string) => {
     try {
       await deactivateAccount(password);
@@ -75,7 +75,7 @@ const Account = () => {
       alert('회원 탈퇴에 실패했습니다. 다시 시도해주세요.');
     }
   };
-  
+
   return (
     <div className={styles.flexColumnC}>
       <div className={styles.accountManagementTitle}>계정 관리</div>
@@ -87,8 +87,8 @@ const Account = () => {
           <form onSubmit={handleSubmit(handleEmailVerification)}>
             <div className={styles.inputGroup}>
               <input
-                type="text"
-                placeholder="이메일"
+                type='text'
+                placeholder='이메일'
                 defaultValue={userData?.email || ''} // Zustand에서 이메일 가져오기
                 {...register('email', {
                   validate: validateEmail,
@@ -104,8 +104,8 @@ const Account = () => {
           <form onSubmit={handleSubmit(handleEmailVerificationConfirm)}>
             <div className={styles.inputGroup}>
               <input
-                type="text"
-                placeholder="인증 코드 입력"
+                type='text'
+                placeholder='인증 코드 입력'
                 {...register('verificationCode', {
                   required: '인증 코드를 입력해주세요.',
                 })}
@@ -142,9 +142,7 @@ const Account = () => {
                 }
               />
               {errors.nowPassword && (
-                <p className={styles.errorText}>
-                  {errors.nowPassword.message}
-                </p>
+                <p className={styles.errorText}>{errors.nowPassword.message}</p>
               )}
             </div>
             <div className={styles.inputGroup}>
@@ -159,9 +157,7 @@ const Account = () => {
                 }
               />
               {errors.newPassword && (
-                <p className={styles.errorText}>
-                  {errors.newPassword.message}
-                </p>
+                <p className={styles.errorText}>{errors.newPassword.message}</p>
               )}
             </div>
             <div className={styles.inputGroup}>
@@ -173,14 +169,10 @@ const Account = () => {
                     value === watch('newPassword') ||
                     '비밀번호가 일치하지 않습니다.',
                 })}
-                className={
-                  errors.rePassword ? styles.inputError : styles.input
-                }
+                className={errors.rePassword ? styles.inputError : styles.input}
               />
               {errors.rePassword && (
-                <p className={styles.errorText}>
-                  {errors.rePassword.message}
-                </p>
+                <p className={styles.errorText}>{errors.rePassword.message}</p>
               )}
             </div>
           </div>

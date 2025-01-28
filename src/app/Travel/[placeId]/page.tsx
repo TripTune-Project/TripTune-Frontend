@@ -23,7 +23,6 @@ import timeIcon from '../../../../public/assets/images/여행지 탐색/상세�
 import homePageIcon from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_homepageIcon.png';
 import phoneIcon from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_phoneIcon.png';
 import { fetchTravelDetail } from '@/apis/Travel/travelApi';
-import Cookies from 'js-cookie';
 import { useParams, useRouter } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import LoginModal from '@/components/Common/LoginModal';

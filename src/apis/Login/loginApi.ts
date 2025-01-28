@@ -27,5 +27,5 @@ export const loginUser = async (data: LoginData) => {
   const { accessToken, refreshToken, nickname } = response.data;
   saveTokens(accessToken, refreshToken, nickname);
 
-  return response.data;
+  return response;
 };

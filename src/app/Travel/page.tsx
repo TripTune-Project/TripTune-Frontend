@@ -101,7 +101,7 @@ const TravelPage = () => {
       }
     }
   }, [permissionState, userCoordinates, geoErrorMessage]);
-  
+
   useEffect(() => {
     if (debouncedSearchTerm.trim()) {
       setIsSearching(true);
@@ -126,7 +126,7 @@ const TravelPage = () => {
     setCurrentPage,
     setIsSearching,
   ]);
-  
+
   const handleSearch = () => {
     if (searchTerm.trim()) {
       setIsSearching(true);
@@ -231,9 +231,9 @@ const TravelPage = () => {
   const closeLoginModal = () => {
     setShowLoginModal(false);
   };
-  
+
   const inputRef = useRef<HTMLInputElement>(null);
-  
+
   return (
     <>
       <Head>

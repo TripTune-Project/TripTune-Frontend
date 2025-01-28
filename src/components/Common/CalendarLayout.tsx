@@ -128,7 +128,7 @@ const CalendarLayout = ({
         </div>
         <div className={styles.datePickerContainer}>
           <DatePicker
-            locale="ko"
+            locale='ko'
             selected={startDate || undefined}
             onChange={(dates: [Date | null, Date | null]) => {
               let [start, end] = dates;
@@ -151,13 +151,14 @@ const CalendarLayout = ({
             selectsRange
             inline
             monthsShown={2}
-            dateFormat="yyyy.MM.dd"
+            dateFormat='yyyy.MM.dd'
             dayClassName={(date: Date) => {
               const isPast = date < today.setHours(0, 0, 0, 0);
               const day = date.getDay();
               if (day === 0) return isPast ? styles.pastSunday : styles.sunday;
-              if (day === 6) return isPast ? styles.pastSaturday : styles.saturday;
-              return "";
+              if (day === 6)
+                return isPast ? styles.pastSaturday : styles.saturday;
+              return '';
             }}
           />
         </div>

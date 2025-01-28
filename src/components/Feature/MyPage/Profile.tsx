@@ -9,7 +9,7 @@ import { nickNameChange, updateMyPage } from '@/apis/MyPage/myPageApi';
 const Profile = () => {
   const { userData, fetchUserData } = useMyPage();
   const [, setSelectedImage] = useState<File | null>(null);
-  
+
   const {
     register,
     handleSubmit,
@@ -21,17 +21,17 @@ const Profile = () => {
       nickname: userData?.nickname || '',
     },
   });
-  
+
   useEffect(() => {
     fetchUserData();
   }, [fetchUserData]);
-  
+
   useEffect(() => {
     if (userData?.nickname) {
       setValue('nickname', userData.nickname);
     }
   }, [userData, setValue]);
-  
+
   const handleFileClick = () => {
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
@@ -56,7 +56,7 @@ const Profile = () => {
     };
     fileInput.click();
   };
-  
+
   const handleSave = async (data: { nickname: string }) => {
     try {
       const response = await nickNameChange(data.nickname);
@@ -71,7 +71,7 @@ const Profile = () => {
       alert('오류가 발생했습니다. 다시 시도해주세요.');
     }
   };
-  
+
   return (
     <div className={styles.flexColumnF}>
       <span className={styles.profileManagement4}>프로필 관리</span>
@@ -108,15 +108,11 @@ const Profile = () => {
               })}
               placeholder='닉네임 (영문 대/소문자, 숫자 조합 4 ~ 15자리)'
               className={
-                errors.nickname
-                  ? styles.inputProfileError
-                  : styles.inputProfile
+                errors.nickname ? styles.inputProfileError : styles.inputProfile
               }
             />
             {errors.nickname && (
-              <p className={styles.inputErrorText}>
-                {errors.nickname.message}
-              </p>
+              <p className={styles.inputErrorText}>{errors.nickname.message}</p>
             )}
             <span className={styles.nickname}>닉네임</span>
           </div>
