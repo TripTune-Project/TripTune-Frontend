@@ -39,16 +39,15 @@ export const useMyPage = create<MyPageState>((set) => ({
   // 회원 정보 업데이트
   updateUserData: async (nickname, profileImage = null) => {
     try {
-      const response = await updateMyPage(nickname, profileImage);
+      const response = await updateMyPage(profileImage);
       if (response.success) {
-        set((state) => ({
-          userData: {
-            ...state.userData,
-            nickname,
-            profileImage:
-              response.data.profileImage || state.userData?.profileImage,
-          },
-        }));
+        // set((state) => ({
+        //   userData: {
+        //     ...state.userData,
+        //     profileImage:
+        //       response.data.profileImage || state.userData?.profileImage,
+        //   },
+        // }));
         alert('프로필이 성공적으로 업데이트되었습니다.');
       } else {
         alert(`프로필 업데이트 실패: ${response.message}`);

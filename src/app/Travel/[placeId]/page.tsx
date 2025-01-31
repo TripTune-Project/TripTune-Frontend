@@ -141,7 +141,8 @@ const TravelDetailPage = () => {
         return;
       }
       return bookmarkStatus
-        ? await BookMarkDeleteApi(placeIdNumber)
+        ? // TODO : DELETE 되는 지 확인 필요!!
+          await BookMarkDeleteApi({ placeId: placeIdNumber })
         : await BookMarkApi({ placeId: placeIdNumber });
     },
     onSuccess: () => {
@@ -171,10 +172,6 @@ const TravelDetailPage = () => {
 
   const closeModal = () => {
     setIsModalOpen(false);
-  };
-
-  const closeLoginModal = () => {
-    setShowLoginModal(false);
   };
 
   const UseTimeUI = ({ useTime }: { useTime: string }) => (
@@ -412,7 +409,7 @@ const TravelDetailPage = () => {
           placeId={placeIdNumber}
         />
       )}
-      {showLoginModal && <LoginModal onClose={closeLoginModal} />}
+      {showLoginModal && <LoginModal />}
     </>
   );
 };

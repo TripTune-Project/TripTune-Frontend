@@ -173,7 +173,7 @@ const TravelPage = () => {
     }
     try {
       if (bookmarkStatus) {
-        await BookMarkDeleteApi(placeId);
+        await BookMarkDeleteApi({ placeId });
       } else {
         await BookMarkApi({ placeId });
       }
@@ -226,10 +226,6 @@ const TravelPage = () => {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo(0, 0);
-  };
-
-  const closeLoginModal = () => {
-    setShowLoginModal(false);
   };
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -387,7 +383,7 @@ const TravelPage = () => {
           </Alert>
         </Snackbar>
       </>
-      {showLoginModal && <LoginModal onClose={closeLoginModal} />}
+      {showLoginModal && <LoginModal />}
     </>
   );
 };

@@ -152,7 +152,7 @@ const CalendarLayout = ({
             inline
             monthsShown={2}
             dateFormat='yyyy.MM.dd'
-            dayClassName={(date: Date) => {
+            dayClassName={(date: any) => {
               const isPast = date < today.setHours(0, 0, 0, 0);
               const day = date.getDay();
               if (day === 0) return isPast ? styles.pastSunday : styles.sunday;
