@@ -4,11 +4,11 @@ import React, { useEffect, useState } from 'react';
 import styles from '@/styles/Schedule.module.css';
 import ScheduleTravelSearch from '@/components/Feature/Schedule/ScheduleTravelSearch';
 import ScheduleRoute from '@/components/Feature/Schedule/ScheduleRoute';
-import UpdateCalendarModal from '@/components/Feature/Schedule/UpdateCalendarModal';
 import { useParams } from 'next/navigation';
 import { useTravelStore } from '@/store/scheduleStore';
 import dateIcon from '../../../../public/assets/images/일정 만들기/일정 저장 및 수정/dateIcon.png';
 import Image from 'next/image';
+import CalendarLayout from '@/components/Common/CalendarLayout';
 
 interface ScheduleMakeProps {
   initialTab: string;
@@ -103,7 +103,8 @@ const ScheduleMake = ({ initialTab }: ScheduleMakeProps) => {
       </div>
       {tab === 'scheduleTravel' ? <ScheduleTravelSearch /> : <ScheduleRoute />}
       {showModal && (
-        <UpdateCalendarModal
+        <CalendarLayout
+          mode='update'
           initialStartDate={scheduleDetail?.startDate || ''}
           initialEndDate={scheduleDetail?.endDate || ''}
           onClose={() => setShowModal(false)}

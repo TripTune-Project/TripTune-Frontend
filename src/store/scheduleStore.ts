@@ -105,22 +105,18 @@ export const useTravelStore = create<TravelStore>((set) => ({
       return { scheduleDetail: schedule };
     }),
 
-  // 일정 세부 정보를 ID로 가져오기 (원래 코드를 그대로 유지)
+  // 일정 세부 정보를 ID로 가져오기
   fetchScheduleDetailById: async (scheduleId: string, page: number) => {
-    try {
-      const result = await fetchScheduleDetail(Number(scheduleId), page);
-      if (result.success) {
-        set(() => {
-          return { scheduleDetail: result.data };
-        });
-      } else {
-        console.error(
-          '일정 세부 정보를 가져오는데 실패했습니다:',
-          result.message
-        );
-      }
-    } catch (error) {
-      console.error('일정 세부 정보를 가져오는 중 오류 발생:', error);
+    const response = await fetchScheduleDetail(Number(scheduleId), page);
+    if (response.success) {
+      set(() => {
+        return { scheduleDetail: response.data };
+      });
+    } else {
+      console.error(
+        '일정 세부 정보를 가져오는데 실패했습니다:',
+        response.message
+      );
     }
   },
 

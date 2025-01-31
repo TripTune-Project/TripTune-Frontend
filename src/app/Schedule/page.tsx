@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import styles from '@/styles/Schedule.module.css';
-import NewScheduleModal from '@/components/Feature/Schedule/NewScheduleModal';
 import DataLoading from '@/components/Common/DataLoading';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -24,35 +23,21 @@ import DeleteModal from '@/components/Feature/Schedule/DeleteModal';
 import moreBtn from '../../../public/assets/images/일정 만들기/일정 목록 조회/moreBtn.png';
 import NoResultLayout from '../../components/Common/NoResult';
 import LoginModal from '@/components/Common/LoginModal';
-import saveLocalContent from '@/utils/saveLocalContent';
+import CalendarLayout from '@/components/Common/CalendarLayout';
 
 export default function SchedulePage() {
   const router = useRouter();
-
-  const { checkAuthStatus } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
 
   useEffect(() => {
-    const checkAuthentication = async () => {
-      await checkAuthStatus(); // 로그인 상태를 확인
-      const { getDecryptedCookie } = saveLocalContent();
-      const accessToken = getDecryptedCookie('trip-tune_at');
-      if (!accessToken) {
-        setShowLoginModal(true);
-        document.body.style.overflow = 'hidden'; // 스크롤 비활성화
-      } else {
-        document.body.style.overflow = 'auto'; // 스크롤 활성화
-      }
-    };
-
-    checkAuthentication();
-
-    // 컴포넌트가 언마운트될 때 cleanup
+    if (!isAuthenticated) {
+      document.body.style.overflow = 'hidden';
+    }
     return () => {
       document.body.style.overflow = 'auto';
     };
-  }, [checkAuthStatus]);
+  }, [isAuthenticated]);
 
-  const [showLoginModal, setShowLoginModal] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeDeleteMenu, setActiveDeleteMenu] = useState<number | null>(null);
   const [selectedScheduleId, setSelectedScheduleId] = useState<number | null>(
@@ -296,13 +281,17 @@ export default function SchedulePage() {
     return <DataLoading />;
   }
 
+  if (isLoading) {
+    return <DataLoading />;
+  }
+
+  if (!isAuthenticated) {
+    return <LoginModal />;
+  }
+
   if (isAllScheduleError || isSharedScheduleError) {
     return <div>일정 목록을 불러오는 중 오류가 발생했습니다.</div>;
   }
-
-  const closeLoginModal = () => {
-    setShowLoginModal(false);
-  };
 
   return (
     <div className={styles.schedule}>
@@ -394,9 +383,6 @@ export default function SchedulePage() {
         </div>
         <div ref={observerRef} className={styles.loadingArea}>
           {isFetchingNextPage && <DataLoading />}
-          {!isFetchingNextPage && !hasNextPage && (
-            <p>더 이상 일정이 없습니다.</p>
-          )}
         </div>
         {isDeleteModalOpen && (
           <DeleteModal
@@ -406,10 +392,9 @@ export default function SchedulePage() {
           />
         )}
         {isModalOpen && (
-          <NewScheduleModal onClose={() => setIsModalOpen(false)} />
+          <CalendarLayout mode='create' onClose={() => setIsModalOpen(false)} />
         )}
       </div>
-      {showLoginModal && <LoginModal onClose={closeLoginModal} />}
     </div>
   );
 }

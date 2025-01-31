@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
 import Image from 'next/image';
 import { useMyScheduleList } from '@/hooks/useSchedule';
@@ -18,7 +17,6 @@ const MyScheduleEditModal = ({
   onClose,
   placeId,
 }: MyScheduleEditModalProps) => {
-  const router = useRouter();
   const [selectedScheduleId, setSelectedScheduleId] = useState<number | null>(
     null
   );
@@ -56,7 +54,6 @@ const MyScheduleEditModal = ({
       const response = await addPlaceToSchedule(selectedScheduleId, placeId);
       if (response.success) {
         alert('장소가 성공적으로 추가되었습니다.');
-        router.push('/Schedule');
       } else {
         alert(response.message);
       }
@@ -141,7 +138,9 @@ const MyScheduleEditModal = ({
           {isFetchingNextPage && <LoadingMessage>로딩 중...</LoadingMessage>}
         </ScrollableContainer>
         {schedules.length > 0 && (
-          <SelectButton onClick={handleAddPlace}>선택하기</SelectButton>
+          <SelectButton disabled={!selectedScheduleId} onClick={handleAddPlace}>
+            선택하기
+          </SelectButton>
         )}
       </ModalContainer>
     </ModalOverlay>
@@ -280,16 +279,6 @@ const StyledCheckbox = styled.input`
   }
 `;
 
-const SelectButton = styled.button`
-  background: #76adac;
-  color: #ffffff;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  font-size: 16px;
-  width: 100%;
-`;
-
 const EmptyMessage = styled.div`
   display: flex;
   flex-direction: column;
@@ -315,4 +304,14 @@ const LoadingMessage = styled.p`
   text-align: center;
   font-size: 14px;
   color: #666;
+`;
+
+const SelectButton = styled.button`
+  background: ${({ disabled }) => (disabled ? '#ccc' : '#76adac')};
+  color: ${({ disabled }) => (disabled ? '#888' : '#ffffff')};
+  border: none;
+  padding: 10px 20px;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+  font-size: 16px;
+  width: 100%;
 `;

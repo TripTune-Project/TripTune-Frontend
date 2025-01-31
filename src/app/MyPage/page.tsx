@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Head from 'next/head';
 import LogoutModal from '@/components/Common/LogoutModal';
@@ -8,39 +8,26 @@ import styles from '@/styles/Mypage.module.css';
 import Profile from '@/components/Feature/MyPage/Profile';
 import Account from '@/components/Feature/MyPage/Account';
 import BookMark from '@/components/Feature/MyPage/BookMark';
-import { logoutApi } from '@/apis/Login/logoutApi';
 import LoginModal from '@/components/Common/LoginModal';
 import useAuth from '@/hooks/useAuth';
-import saveLocalContent from '@/utils/saveLocalContent';
+import DataLoading from '@/components/Common/DataLoading';
+import { logoutApi } from '@/apis/Login/logoutApi';
 
 const MyPage = () => {
   const router = useRouter();
-  const { checkAuthStatus } = useAuth();
-  
+  const { isAuthenticated, isLoading } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [showLoginModal, setShowLoginModal] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
-  
-  useEffect(() => {
-    const checkAuthentication = async () => {
-      await checkAuthStatus();
-      const { getDecryptedCookie } = saveLocalContent();
-      const accessToken = getDecryptedCookie('trip-tune_at');
-      if (!accessToken) {
-        setShowLoginModal(true);
-      }
-    };
-    checkAuthentication();
-  }, [checkAuthStatus]);
-  
+
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-  
+
   const handleLogout = async () => {
     closeModal();
+    router.push('/');
     await performLogout();
   };
-  
+
   const performLogout = async () => {
     try {
       await logoutApi();
@@ -49,12 +36,15 @@ const MyPage = () => {
       console.error('로그아웃에 실패했습니다. 다시 시도해 주세요.');
     }
   };
-  
-  const closeLoginModal = () => {
-    setShowLoginModal(false);
-  };
-  
-  // 탭별 메타 태그 설정
+
+  if (isLoading) {
+    return <DataLoading />;
+  }
+
+  if (!isAuthenticated) {
+    return <LoginModal />;
+  }
+
   const getMetaTags = () => {
     switch (activeTab) {
       case 'profile':
@@ -79,31 +69,43 @@ const MyPage = () => {
         };
     }
   };
-  
+
   const metaTags = getMetaTags();
-  
+
   return (
     <div className={styles.mainContainer}>
       <Head>
         <title>{metaTags.title}</title>
-        <meta name="description" content={metaTags.description} />
+        <meta name='description' content={metaTags.description} />
       </Head>
       <div className={styles.rectangle2}>
         <div className={styles.flexColumnDb}>
           <span
-            className={`${styles.tab} ${activeTab === 'profile' ? styles.profileManagementActive : styles.profileManagement}`}
+            className={`${styles.tab} ${
+              activeTab === 'profile'
+                ? styles.profileManagementActive
+                : styles.profileManagement
+            }`}
             onClick={() => setActiveTab('profile')}
           >
             프로필 관리
           </span>
           <span
-            className={`${styles.tab} ${activeTab === 'account' ? styles.accountManagementActive : styles.accountManagement}`}
+            className={`${styles.tab} ${
+              activeTab === 'account'
+                ? styles.accountManagementActive
+                : styles.accountManagement
+            }`}
             onClick={() => setActiveTab('account')}
           >
             계정 관리
           </span>
           <span
-            className={`${styles.tab} ${activeTab === 'bookmark' ? styles.bookmarkManagementActive : styles.bookmarkManagement}`}
+            className={`${styles.tab} ${
+              activeTab === 'bookmark'
+                ? styles.bookmarkManagementActive
+                : styles.bookmarkManagement
+            }`}
             onClick={() => setActiveTab('bookmark')}
           >
             북마크
@@ -122,7 +124,6 @@ const MyPage = () => {
         {activeTab === 'account' && <Account />}
         {activeTab === 'bookmark' && <BookMark />}
       </div>
-      {showLoginModal && <LoginModal onClose={closeLoginModal} />}
     </div>
   );
 };

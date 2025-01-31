@@ -1,4 +1,4 @@
-import { post } from '../Common/api';
+import { post } from '../api';
 
 interface JoinMemberData {
   nickname: string;
@@ -16,13 +16,6 @@ interface JoinMemberResponse {
 export const joinMember = async (
   data: JoinMemberData
 ): Promise<JoinMemberResponse> => {
-  try {
-    return await post<JoinMemberResponse>('/api/members/join', data);
-  } catch (error) {
-    throw new Error(
-      error instanceof Error
-        ? error.message
-        : '회원가입에 실패했습니다. 다시 시도해주세요.'
-    );
-  }
+  const url = '/api/members/join';
+  return await post<JoinMemberResponse>(url, data);
 };

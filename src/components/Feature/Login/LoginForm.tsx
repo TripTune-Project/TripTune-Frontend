@@ -36,7 +36,6 @@ const LoginForm = () => {
     try {
       await loginUser(data);
 
-      // 이전 페이지로 리디렉션
       const redirectPath = localStorage.getItem('redirectAfterLogin') || '/';
       localStorage.removeItem('redirectAfterLogin'); // 사용 후 제거
       router.push(redirectPath);

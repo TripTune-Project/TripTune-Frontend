@@ -18,7 +18,7 @@ interface JoinFormData {
   nickname: string;
   userId: string;
   password: string;
-  repassword: string;
+  rePassword: string;
   email: string;
   authCode?: string;
 }
@@ -134,15 +134,15 @@ const JoinForm = () => {
             <input
               type='password'
               placeholder='비밀번호 재입력'
-              {...register('repassword', {
+              {...register('rePassword', {
                 validate: (value) =>
                   value === watch('password') ||
                   '비밀번호가 일치하지 않습니다.',
               })}
-              className={errors.repassword ? styles.inputError : styles.input}
+              className={errors.rePassword ? styles.inputError : styles.input}
             />
-            {errors.repassword && (
-              <p className={styles.errorText}>{errors.repassword.message}</p>
+            {errors.rePassword && (
+              <p className={styles.errorText}>{errors.rePassword.message}</p>
             )}
           </div>
           <EmailVerification

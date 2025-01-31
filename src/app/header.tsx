@@ -9,7 +9,6 @@ import LoginIcon from '../../public/assets/images/메인화면/main_loginBtn.png
 import MainLogoImage from '../../public/assets/images/로고/triptuneLogo-removebg.png';
 import { logoutApi } from '@/apis/Login/logoutApi';
 import useAuth from '@/hooks/useAuth';
-import Cookies from 'js-cookie';
 import saveLocalContent from '@/utils/saveLocalContent';
 
 const Header = () => {
@@ -18,53 +17,29 @@ const Header = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
-  const [, setIsLogoutClicked] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userId, setUserId] = useState('');
+  const [nickName, setNickName] = useState('');
   const [isAuthChecked, setIsAuthChecked] = useState(false);
-
-  const { checkAuthStatus } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
-    const checkLoginStatus = async () => {
+    setIsAuthChecked(false);
+    if (isAuthenticated) {
       const { getDecryptedCookie } = saveLocalContent();
       const storedUserNickname = getDecryptedCookie('nickname');
-
-      if (storedUserNickname) {
-        setIsLoggedIn(true);
-        setUserId(storedUserNickname as string);
-      } else {
-        setIsLoggedIn(false);
-        setUserId('');
-      }
-      setIsAuthChecked(true);
-    };
-
-    checkLoginStatus();
-
-    const intervalId = setInterval(
-      () => {
-        checkAuthStatus().catch(() => {
-          setIsLoggedIn(false);
-          setUserId('');
-          Cookies.remove('trip-tune_at');
-          Cookies.remove('trip-tune_rt');
-          Cookies.remove('nickname');
-          alert('세션이 만료되었습니다. 다시 로그인해주세요.');
-          router.push('/Login');
-        });
-      },
-      5 * 60 * 1000
-    );
-
-    return () => clearInterval(intervalId);
-  }, [checkAuthStatus, router]);
+      setIsLoggedIn(true);
+      setNickName(storedUserNickname as string);
+    } else {
+      setIsLoggedIn(false);
+      setNickName('');
+    }
+    setIsAuthChecked(true);
+  }, [isAuthenticated, router]);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
   const handleLogout = async () => {
-    setIsLogoutClicked(true);
     closeModal();
     await performLogout();
   };
@@ -73,7 +48,7 @@ const Header = () => {
     try {
       await logoutApi();
       setIsLoggedIn(false);
-      setUserId('');
+      setNickName('');
       router.push('/');
     } catch (error) {
       setAlertMessage('로그아웃에 실패했습니다. 다시 시도해 주세요.');
@@ -139,7 +114,7 @@ const Header = () => {
                 className={styles.navLogin}
                 style={{ color: pathname === '/' ? 'white' : 'black' }}
               >
-                {userId} 님
+                {nickName} 님
                 <Button onClick={openModal} variant='text' size='large'>
                   로그아웃
                 </Button>
@@ -150,7 +125,9 @@ const Header = () => {
                 />
               </div>
             )
-          ) : null}
+          ) : (
+            <div>로딩 중...</div>
+          )}
         </nav>
       </div>
       <Snackbar

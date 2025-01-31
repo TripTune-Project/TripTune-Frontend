@@ -112,7 +112,6 @@ interface Place {
 //
 // export default BookMark;
 
-
 // TODO : 잠시 목업 북마크
 
 const BookMark = () => {
@@ -127,10 +126,10 @@ const BookMark = () => {
       detailAddress: '105',
     },
   ]);
-  
+
   const [totalPages] = useState<number>(1);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  
+
   return (
     <div className={styles.flexColumnC}>
       <span className={styles.accountManagement}>북마크</span>

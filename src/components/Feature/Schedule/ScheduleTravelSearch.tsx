@@ -15,7 +15,7 @@ import { truncateText } from '@/utils';
 import { Place } from '@/types/scheduleType';
 import plusTravelSearch from '../../../../public/assets/images/일정 만들기/일정 저장 및 수정/plusIcon.png';
 import minusTravelSearch from '../../../../public/assets/images/일정 만들기/일정 저장 및 수정/minusBtn.png';
-import NoResultLayout from '@/components/Common/NoResult';
+import AlertIcon from '../../../../public/assets/images/여행지 탐색/홈화면/alertIcon.png';
 
 const ScheduleTravelSearch = () => {
   const { scheduleId } = useParams();
@@ -23,6 +23,7 @@ const ScheduleTravelSearch = () => {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const markersRef = useRef<any[]>([]);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const {
     addPlaceToRoute,
@@ -80,6 +81,7 @@ const ScheduleTravelSearch = () => {
     if (debouncedSearchKeyword.trim()) {
       setCurrentPage(1);
       setIsSearching(true);
+      inputRef.current?.focus();
     } else {
       setIsSearching(false);
     }
@@ -120,6 +122,7 @@ const ScheduleTravelSearch = () => {
     <>
       <div className={styles.travelSearchContainerSearch}>
         <input
+          ref={inputRef}
           type='text'
           placeholder='원하는 여행지를 검색하세요'
           value={searchKeyword}
@@ -148,12 +151,12 @@ const ScheduleTravelSearch = () => {
                 </div>
                 <div className={styles.placeInfo}>
                   <div className={styles.placeName}>
-                    {truncateText(place.placeName, 20)}
+                    {truncateText(place.placeName, 16)}
                   </div>
                   <p className={styles.placeAddress}>
                     {truncateText(
                       `${place.country} / ${place.city} / ${place.district}`,
-                      20
+                      16
                     )}
                   </p>
                   <p className={styles.placeDetailAddress}>
@@ -163,7 +166,11 @@ const ScheduleTravelSearch = () => {
                       width={15}
                       height={21}
                     />
-                    &nbsp;{place.address} {place.detailAddress ?? ''}
+                    &nbsp;
+                    {truncateText(
+                      `${place.address} ${place.detailAddress ?? ''}`,
+                      16
+                    )}
                   </p>
                 </div>
                 <button
@@ -182,7 +189,20 @@ const ScheduleTravelSearch = () => {
             ))}
           </ul>
         ) : (
-          <NoResultLayout />
+          <>
+            <p className={styles.noResults}>
+              <Image
+                src={AlertIcon}
+                alt={'no-schedule-root'}
+                width={80}
+                height={80}
+                style={{ marginLeft: '43%' }}
+              />
+              <div className={styles.noText}>검색 결과가 없습니다.</div>
+              <br />
+              <p>검색어의 철자와 띄어쓰기가 정확한지 확인해주세요.</p>
+            </p>
+          </>
         )}
       </div>
       {totalPages > 0 && (

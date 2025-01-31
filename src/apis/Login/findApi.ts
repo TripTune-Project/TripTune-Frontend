@@ -1,4 +1,4 @@
-import { post } from '../Common/api';
+import { post } from '../api';
 
 interface FindIdResponse {
   id: string;
@@ -10,29 +10,19 @@ interface FindPasswordResponse {
 }
 
 export const requestFindId = async (email: string): Promise<FindIdResponse> => {
-  try {
-    return await post<FindIdResponse>('/api/members/find-id', {
-      email,
-    });
-  } catch (error) {
-    throw new Error(
-      error instanceof Error ? error.message : '이메일이 유효하지 않습니다.'
-    );
-  }
+  const url = '/api/members/find-id';
+  return await post<FindIdResponse>(url, {
+    email,
+  });
 };
 
 export const requestFindPassword = async (
   email: string,
   userId: string
 ): Promise<FindPasswordResponse> => {
-  try {
-    return await post<FindPasswordResponse>('/api/emails/verify', {
-      email,
-      userId,
-    });
-  } catch (error) {
-    throw new Error(
-      error instanceof Error ? error.message : '이메일이 유효하지 않습니다.'
-    );
-  }
+  const url = '/api/emails/verify';
+  return await post<FindPasswordResponse>(url, {
+    email,
+    userId,
+  });
 };
