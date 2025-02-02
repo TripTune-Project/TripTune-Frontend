@@ -119,10 +119,10 @@
 
 .profileBox {
   margin-top:20px;
-    position: relative;
-    width: 948px;
-    height: 552px;
-    border:  1px solid #E0E0E0;
+  position: relative;
+  width: 948px;
+  height: 552px;
+  border:  1px solid #E0E0E0;
   border-radius: 20px;
 }
 
@@ -276,8 +276,8 @@
 .inputProfileError {
   width: 480px;
   font-family:
-    Noto Sans KR,
-    sans-serif;
+          Noto Sans KR,
+          sans-serif;
   font-size: 16px;
   max-width: 480px;
   height: 55px;
@@ -295,8 +295,8 @@
 .inputErrorText {
   color: red;
   font-family:
-    Noto Sans KR,
-    sans-serif;
+          Noto Sans KR,
+          sans-serif;
   font-size: 14px;
   margin-top: 5px;
 }
@@ -351,7 +351,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -363,7 +363,7 @@
   border-radius: 8px;
   width: 400px;
   padding: 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25); /* 그림자 */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
   text-align: center;
 }
 
@@ -541,15 +541,6 @@
 }
 
 /* 마이페이지 계정 관리 */
-.rectangleC {
-  position: relative;
-  width: 949px;
-  height: 515px;
-  background: #ffffff;
-  border: 1px solid #e8e8e8;
-  border-radius: 20px;
-}
-
 .rectangleD {
   position: absolute;
   width: 81px;
@@ -597,16 +588,6 @@
   line-height: 18px;
   text-align: center;
   white-space: nowrap;
-}
-
-.rectangleCK {
-  position: relative;
-  width: 949px;
-  height: 265px;
-  margin: 23px 0 0 0;
-  background: #ffffff;
-  border: 1px solid #e8e8e8;
-  border-radius: 20px;
 }
 
 .inputGroup {
@@ -685,6 +666,316 @@
   align-items: center;
   justify-content: center;
   color: #ffffff;
+}
+
+.flexRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.input {
+  font-size: 16px;
+  padding: 10px;
+  background: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  flex: 1;
+}
+
+.accountText {
+  font-size: 15px;
+  font-weight: 500;
+  margin-left: 20px;
+}
+
+.flexColumnC {
+  position: absolute;
+  width: 75.02%;
+  height: 83.49%;
+  top: 6.16%;
+  left: 20.24%;
+  font-size: 0;
+}
+
+.accountManagementTitle {
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: 400;
+  text-align: left;
+}
+
+.rowField {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.input {
+  width: 100%;
+  max-width: 480px;
+  height: 47px;
+  border-radius: 5px;
+  background: #f9f9f9;
+  font-size: 16px;
+  padding: 0 10px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.inputError {
+  border: 1px solid red;
+}
+
+.saveBtn {
+  width: 81px;
+  height: 47px;
+  background-color: #76adac;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: 5px;
+  cursor: pointer;
+  border: none;
+}
+
+.cancelBtn {
+  width: 81px;
+  height: 47px;
+  background-color: #f5f5f5;
+  color: #333333;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: 5px;
+  cursor: pointer;
+  border: none;
+}
+
+.editBtn {
+  width: 100px;
+  height: 47px;
+  background-color: #f5f5f5;
+  color: #333333;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: 5px;
+  cursor: pointer;
+  border: none;
+}
+
+.accountTermination {
+  position: absolute;
+  width: 72px;
+  height: 22px;
+  top: 585px;
+  left: 850px;
+  color: #666666;
+  font-size: 18px;
+  text-align: center;
+}
+
+.deleteUserVector {
+  position: absolute;
+  width: 1%;
+  height: 2%;
+  top: 590px;
+  left: 98%;
+  background: url('/assets/images/마이페이지/Vector.png') no-repeat center;
+  background-size: contain;
+}
+
+.flexColumnC {
+  position: absolute;
+  width: 75.02%;
+  height: 83.49%;
+  top: 6.16%;
+  left: 20.24%;
+  font-size: 0;
+}
+
+.accountManagementTitle {
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: 400;
+  text-align: left;
+}
+
+.rectangleC {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 30px;
+  width: 949px;
+  height:502px;
+  background: #ffffff;
+  border: 1px solid #e8e8e8;
+  border-radius: 20px;
+  box-sizing: border-box;
+}
+
+.formRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rowLabel {
+  width: 150px;
+  font-size: 16px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.rowField {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.input {
+  width: 100%;
+  max-width: 480px;
+  height: 47px;
+  border-radius: 5px;
+  background: #f9f9f9;
+  font-size: 16px;
+  padding: 0 10px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.inputError {
+  border: 1px solid red;
+}
+
+.saveBtn {
+  width: 81px;
+  height: 47px;
+  background-color: #76adac;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: 5px;
+  cursor: pointer;
+  border: none;
+}
+
+.cancelBtn {
+  width: 81px;
+  height: 47px;
+  background-color: #f5f5f5;
+  color: #333333;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: 5px;
+  cursor: pointer;
+  border: none;
+}
+
+.editBtn {
+  width: 100px;
+  height: 47px;
+  background-color: #f5f5f5;
+  color: #333333;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: 5px;
+  cursor: pointer;
+  border: none;
+}
+
+.emailEditingContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  height:220px;
+}
+
+.emailRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.requestBtn {
+  width: 100px;
+  height: 47px;
+  background-color: #76adac;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.verifyBtn {
+  width: 100px;
+  height: 47px;
+  background-color: #76adac;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.passwordEditingContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  height:220px;
+}
+
+.actionRow {
+  display: flex;
+  gap: 10px;
+  margin-left:490px;
+}
+
+.accountTermination {
+  position: absolute;
+  width: 72px;
+  height: 22px;
+  top: 585px;
+  left: 850px;
+  color: #666666;
+  font-size: 18px;
+  text-align: center;
+}
+
+.deleteUserVector {
+  position: absolute;
+  width: 1%;
+  height: 2%;
+  top: 590px;
+  left: 98%;
+  background: url('/assets/images/마이페이지/Vector.png') no-repeat center;
+  background-size: contain;
+}
+
+/* Mypage.module.css 파일 내에 추가 */
+.fixedText {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 480px;
+  height: 47px;
+  font-size: 16px;
+  padding: 0 10px;
+  background: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
 /* 마이페이지 북마크 전체 조회 */
