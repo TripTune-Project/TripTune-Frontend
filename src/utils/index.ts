@@ -23,13 +23,13 @@ export const isValidDateForCreation = (
 };
 
 // 날짜 유효성 검사 -> 수정
-export const isValidDateForUpdate = (
-  endDate: string | Date | null
-): boolean => {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0); // 오늘 날짜 기준으로 시간 제거
-
-  const end = new Date(endDate ?? today);
-
-  return end > today; // 수정일 조건: endDate가 오늘 이후
-};
+// export const isValidDateForUpdate = (
+//   endDate: string | Date | null
+// ): boolean => {
+//   const today = new Date();
+//   today.setHours(0, 0, 0, 0); // 오늘 날짜 기준으로 시간 제거
+//
+//   const end = new Date(endDate ?? today);
+//
+//   return end > today; // 수정일 조건: endDate가 오늘 이후
+// };

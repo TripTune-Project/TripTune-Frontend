@@ -99,7 +99,7 @@ const fetchData = async <T>(
         (response.status === 404 || 403) &&
         window.location.pathname.includes('/Schedule')
       ) {
-        window.history.go(-1);
+        return undefined as unknown as T;
       }
     } catch {
       alert('서버 응답을 처리할 수 없습니다.');
