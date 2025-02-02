@@ -5,7 +5,7 @@ import styles from '@/styles/Schedule.module.css';
 import { ko } from 'date-fns/locale';
 import { createNewSchedule } from '@/apis/Schedule/scheduleApi';
 import { useTravelStore } from '@/store/scheduleStore';
-import { isValidDateForCreation, isValidDateForUpdate } from '@/utils';
+import { isValidDateForCreation } from '@/utils';
 import Image from 'next/image';
 import triptuneIcon from '../../../public/assets/images/로고/triptuneIcon-removebg.png';
 
@@ -20,12 +20,12 @@ interface CalendarLayoutProps {
 }
 
 const CalendarLayout = ({
-  mode,
-  initialStartDate,
-  initialEndDate,
-  travelName = '',
-  onClose,
-}: CalendarLayoutProps) => {
+                          mode,
+                          initialStartDate,
+                          initialEndDate,
+                          travelName = '',
+                          onClose,
+                        }: CalendarLayoutProps) => {
   const today = new Date();
   const { updateScheduleDetail } = useTravelStore();
   const [startDate, setStartDate] = useState<Date | null>(
@@ -36,18 +36,15 @@ const CalendarLayout = ({
   );
   const [scheduleName, setScheduleName] = useState<string>(travelName);
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
-
+  
   useEffect(() => {
-    const isValid =
-      mode === 'create'
-        ? isValidDateForCreation(startDate, endDate)
-        : isValidDateForUpdate(endDate);
-
-    setIsFormValid(
-      mode === 'create' ? scheduleName.trim() !== '' && isValid : isValid
-    );
+    if (mode === 'create') {
+      setIsFormValid(scheduleName.trim() !== '' && isValidDateForCreation(startDate, endDate));
+    } else {
+      setIsFormValid(true);
+    }
   }, [startDate, endDate, scheduleName, mode]);
-
+  
   const formatDateToKoreanWithDay = (date: Date | null): string => {
     if (!date) return '';
     return new Intl.DateTimeFormat('ko-KR', {
@@ -60,7 +57,7 @@ const CalendarLayout = ({
       .replace(/\./g, '.')
       .replace(' ', '');
   };
-
+  
   const handleConfirm = async () => {
     if (!isFormValid) {
       console.error(
@@ -70,7 +67,7 @@ const CalendarLayout = ({
       );
       return;
     }
-
+    
     if (mode === 'create') {
       const scheduleData = {
         scheduleName,
@@ -96,7 +93,7 @@ const CalendarLayout = ({
       onClose();
     }
   };
-
+  
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContainer}>
@@ -109,22 +106,19 @@ const CalendarLayout = ({
         </h2>
         {mode === 'create' && (
           <div className={styles.inputGroup}>
-            <>
-              <label>여행 이름</label>
-              <input
-                type='text'
-                className={styles.inputField}
-                placeholder='여행 이름을 입력해주세요.'
-                value={scheduleName}
-                onChange={(e) => setScheduleName(e.target.value)}
-              />
-            </>
+            <label>여행 이름</label>
+            <input
+              type='text'
+              className={styles.inputField}
+              placeholder='여행 이름을 입력해주세요.'
+              value={scheduleName}
+              onChange={(e) => setScheduleName(e.target.value)}
+            />
           </div>
         )}
         <div className={styles.inputGroup}>
           <label>여행 날짜</label>&nbsp;&nbsp;
-          {formatDateToKoreanWithDay(startDate)} ~{' '}
-          {formatDateToKoreanWithDay(endDate)}
+          {formatDateToKoreanWithDay(startDate)} ~ {formatDateToKoreanWithDay(endDate)}
         </div>
         <div className={styles.datePickerContainer}>
           <DatePicker
@@ -156,8 +150,7 @@ const CalendarLayout = ({
               const isPast = date < today.setHours(0, 0, 0, 0);
               const day = date.getDay();
               if (day === 0) return isPast ? styles.pastSunday : styles.sunday;
-              if (day === 6)
-                return isPast ? styles.pastSaturday : styles.saturday;
+              if (day === 6) return isPast ? styles.pastSaturday : styles.saturday;
               return '';
             }}
           />
