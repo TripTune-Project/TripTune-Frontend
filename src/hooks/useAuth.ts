@@ -31,10 +31,10 @@ const useAuth = () => {
   useEffect(() => {
     // 최초 인증 체크
     checkAuth();
-    // 이후 5분 갱신 시점마다 주기적으로 체크
-    const intervalId = setInterval(checkAuth, 300000);
+    // 이후 60초마다 주기적으로 체크
+    const intervalId = setInterval(checkAuth, 60000);
     return () => clearInterval(intervalId);
-  }, []);
+  }, [getDecryptedCookie]);
   
   return { isAuthenticated, isLoading: isAuthenticated === null };
 };
