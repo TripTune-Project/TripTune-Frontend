@@ -134,8 +134,7 @@ const TravelDetailPage = () => {
     mutationFn: async (bookmarkStatus: boolean) => {
       const { getDecryptedCookie } = saveLocalContent();
       const accessToken = getDecryptedCookie('trip-tune_at');
-      console.log(accessToken,"accessToken 1: ")
-      if (!accessToken) {
+      if  (!accessToken || accessToken === "undefined" || accessToken === "null") {
         setShowLoginModal(true);
         return;
       }
@@ -161,8 +160,7 @@ const TravelDetailPage = () => {
   const handleScheduleAdd = () => {
     const { getDecryptedCookie } = saveLocalContent();
     const accessToken = getDecryptedCookie('trip-tune_at');
-    console.log(accessToken,"accessToken 2: ")
-    if (!accessToken) {
+    if  (!accessToken || accessToken === "undefined" || accessToken === "null") {
       setShowLoginModal(true);
       return;
     }

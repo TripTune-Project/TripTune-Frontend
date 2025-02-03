@@ -167,7 +167,7 @@ const TravelPage = () => {
   };
 
   const toggleBookmark = async (placeId: number, bookmarkStatus = false) => {
-    if (!accessToken) {
+    if ( !accessToken || accessToken === "undefined" || accessToken === "null") {
       setShowLoginModal(true);
       return;
     }
