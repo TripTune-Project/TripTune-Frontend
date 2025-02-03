@@ -12,6 +12,7 @@
   width: 80%;
   max-width: 1455px;
   height: 601px;
+  margin-top:-50px;
   border-radius: 0 0 0 200px;
   background: linear-gradient(264deg, #edf9f7 3.98%, #f1f5ff 98.44%);
   top: 0;
@@ -963,7 +964,6 @@
   background-size: contain;
 }
 
-/* Mypage.module.css 파일 내에 추가 */
 .fixedText {
   display: flex;
   align-items: center;
@@ -979,164 +979,153 @@
 }
 
 /* 마이페이지 북마크 전체 조회 */
-.flexColumnC {
-  position: absolute;
-  width: 75.02%;
-  height: 83.49%;
-  top: 6.16%;
-  left: 20.24%;
-  font-size: 0px;
-}
-
-.flexRowAbe {
-  position: relative;
-  width: 948px;
-  height: 33px;
-  margin: -3px 0 0 257px;
-}
-
-.regroup {
-  position: absolute;
-  width: 91px;
-  height: 33px;
-  top: 0;
-  left: 0;
-}
-
-.dateRegistered {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  position: absolute;
-  width: 98px;
-  height: 33px;
-  top: 0px;
-  left: 600px;
-  color: #555555;
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 14.523px;
-  text-align: left;
-}
-
-.fullWidth {
-  display: flex;
-  position: absolute;
-  width: 34px;
-  height: 22px;
-  top: 2px;
-  left: -216px;
-  color: #666666;
-  font-size: 18px;
-  font-weight: 505;
-  line-height: 21.784px;
-  white-space: nowrap;
-}
-
-.flexRowD15 {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-  width: 708px;
-  height: 228px;
-  margin: 12px 0 0 30px;
-}
-
-.rectangle16 {
-  flex-shrink: 0;
-  position: relative;
-  width: 228px;
-  height: 228px;
-  background: #ffffff;
-  border: 1px solid #d9d9d9;
-  border-radius: 10px 0 10px 0;
-}
-
-.tourapiFirstimage17 {
-  position: relative;
-  width: 228px;
-  height: 122px;
-  margin: 0 0 0 0;
-  background-color: #dddddd;
-  background-size: cover;
-  border-radius: 10px 0 0 0;
-}
-
-.koreaSeoulEunpyeonggu18 {
-  display: block;
-  position: relative;
-  height: 13px;
-  margin: 53px 0 0 18px;
-  color: #666666;
-  font-size: 11px;
-  font-weight: 400;
-  line-height: 13px;
-  text-align: left;
-  white-space: nowrap;
-}
-
-.sugugasaSeoul {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  position: absolute;
-  height: 16px;
-  top: 139px;
-  left: 17px;
-  color: #000000;
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 15.733px;
-  text-align: left;
-  white-space: nowrap;
-}
-
-.moreBtn19 {
-  position: absolute;
-  width: 2px;
-  height: 11px;
-  top: 141px;
-  left: 207px;
-  background-color: black;
-  background-size: cover;
-}
-
-.seoulEunpyeongRoad {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  position: absolute;
-  height: 13px;
-  top: 193px;
-  left: 18px;
-  color: #666666;
-  font-size: 11px;
-  font-weight: 400;
-  line-height: 13px;
-  text-align: left;
-  white-space: nowrap;
-}
-.flexRowD24 {
-  position: relative;
-  width: 855.1px;
-  height: 33px;
-  margin: 23px 0 0 44.9px;
-}
-
 .noImage {
+  position: relative;
+  width: 749px;
+  height: 512px;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: absolute;
-  width: 227px;
-  height: 121px;
-  top: 0;
-  left: 0;
-  color: #999999;
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 15.733px;
-  text-align: center;
+  border-radius: 8px;
+  background-color: #e0e0e0;
+  border: 1px dashed #ccc;
+  color: #888;
+  font-size: 18px;
 }
+
+.placeName {
+  color: #2c2c2c;
+  font-size: 14px;
+  font-style: normal;
+  line-height: normal;
+  font-weight: 505;
+  font-family: 'Noto Sans KR', sans-serif;
+  margin-top: 10px;
+}
+
+.placeAddress,
+.placeDetailAddress {
+  margin: 0;
+  color: #868686;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  padding-bottom: 7px;
+}
+
+.sortOption,
+.totalCount {
+  font-size: 14px;
+  color: #555;
+}
+
+.bookmarkGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-left:200px;
+}
+
+.pageTitle {
+  margin-left:200px;
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+
+.totalCount {
+  font-size: 14px;
+  color: #555;
+  margin-left:200px;
+}
+
+.orderSelect {
+  padding: 5px 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: #fff;
+}
+
+.listContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.headerContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.leftHeader {
+  text-align: left;
+}
+
+.totalCount {
+  font-size: 14px;
+  color: #555;
+}
+
+.rightHeader {
+  text-align: right;
+}
+
+.orderSelect {
+  padding: 5px 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: #fff;
+}
+
+.bookmarkCard {
+  background: #ffffff;
+  border: 1px solid #d9d9d9;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.bookmarkCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.imageContainer {
+  width: 100%;
+  height: 122px;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.thumbnailImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.placeInfo {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.placeDetailAddress {
+  font-size: 12px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
