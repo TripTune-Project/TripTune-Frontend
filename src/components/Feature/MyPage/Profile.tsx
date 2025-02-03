@@ -13,7 +13,7 @@ const Profile = () => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [tempNickname, setTempNickname] = useState(userData?.nickname || '');
-  
+
   const {
     register,
     handleSubmit,
@@ -23,16 +23,20 @@ const Profile = () => {
     mode: 'onChange',
     defaultValues: {
       nickname: userData?.nickname || '',
-      profileImage : userData?.profileImage || selectedImage
+      profileImage: userData?.profileImage || selectedImage,
     },
   });
-  
+
+  useEffect(() => {
+    fetchUserData();
+  }, [fetchUserData]);
+
   useEffect(() => {
     if (userData?.nickname) {
       setValue('nickname', userData.nickname);
     }
   }, [userData, setValue]);
-  
+
   const handleFileClick = () => {
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
@@ -57,26 +61,25 @@ const Profile = () => {
     };
     fileInput.click();
   };
-  
+
   const handleEdit = () => {
     setTempNickname(userData?.nickname || '');
     setIsEditing(true);
   };
-  
+
   const handleCancel = () => {
     setIsEditing(false);
     setValue('nickname', tempNickname);
   };
-  
+
   const handleSave = async (data: { nickname: string }) => {
     try {
       const response = await nickNameChange(data.nickname);
       if (response.success) {
+        setEncryptedCookie('nickname', data.nickname, 7);
         alert('닉네임이 성공적으로 변경되었습니다.');
         await fetchUserData();
-        const nickname = userData?.nickname || '';
-        console.log(nickname, "nickname: ")
-        setEncryptedCookie('nickname', nickname, 7);
+        window.history.go(0);
         setIsEditing(false);
       } else {
         alert(response.message || '닉네임 변경에 실패했습니다.');
@@ -86,7 +89,7 @@ const Profile = () => {
       alert('오류가 발생했습니다. 다시 시도해주세요.');
     }
   };
-  
+
   return (
     <div className={styles.flexColumnF}>
       <span className={styles.profileManagement4}>프로필 관리</span>
@@ -106,32 +109,54 @@ const Profile = () => {
           </div>
           <span className={styles.fileUploadMessage}>
             • PNG, JPG, JPEG의 확장자 파일만 업로드 가능합니다.
-            <br />
-            • 이미지는 10MB 이하만 업로드 가능합니다.
+            <br />• 이미지는 10MB 이하만 업로드 가능합니다.
           </span>
         </div>
         <div className={styles.flexRowCc8}>
           <span className={styles.nicknameLabel}>닉네임</span>
           {isEditing ? (
-            <form onSubmit={handleSubmit(handleSave)} className={styles.nicknameEditContainer}>
+            <form
+              onSubmit={handleSubmit(handleSave)}
+              className={styles.nicknameEditContainer}
+            >
               <input
                 {...register('nickname', {
                   required: '닉네임을 입력해주세요.',
                   validate: validateNickname,
                 })}
                 placeholder='닉네임 (영문 대/소문자, 숫자 조합 4 ~ 15자리)'
-                className={errors.nickname ? styles.inputProfileError : styles.inputProfile}
+                className={
+                  errors.nickname
+                    ? styles.inputProfileError
+                    : styles.inputProfile
+                }
               />
               {errors.nickname && (
-                <p className={styles.inputErrorText}>{errors.nickname.message}</p>
+                <p className={styles.inputErrorText}>
+                  {errors.nickname.message}
+                </p>
               )}
-              <button type="button" className={styles.cancelBtn} onClick={handleCancel}>취소</button>
-              <button type="submit" className={styles.saveBtn}>저장</button>
+              <button
+                type='button'
+                className={styles.cancelBtn}
+                onClick={handleCancel}
+              >
+                취소
+              </button>
+              <button type='submit' className={styles.saveBtn}>
+                저장
+              </button>
             </form>
           ) : (
             <div className={styles.nicknameDisplay}>
               <span className={styles.testUser}>{userData?.nickname}</span>
-              <button type="button" className={styles.change3} onClick={handleEdit}>변경</button>
+              <button
+                type='button'
+                className={styles.change3}
+                onClick={handleEdit}
+              >
+                변경
+              </button>
             </div>
           )}
         </div>

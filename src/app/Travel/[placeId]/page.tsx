@@ -93,7 +93,7 @@ const TravelDetailPage = () => {
     queryFn: async () => {
       const { getDecryptedCookie } = saveLocalContent();
       const accessToken = getDecryptedCookie('trip-tune_at');
-      const refreshToken = getDecryptedCookie('trip-tune_rt');
+      console.log(accessToken,"accessToken: 1");
       const requiresAuth = !!accessToken;
       const result = await fetchTravelDetailData(placeIdNumber, requiresAuth);
       if (result.success) {
@@ -136,12 +136,13 @@ const TravelDetailPage = () => {
     mutationFn: async (bookmarkStatus: boolean) => {
       const { getDecryptedCookie } = saveLocalContent();
       const accessToken = getDecryptedCookie('trip-tune_at');
+      console.log(accessToken, "accessToken: 2")
       if (!accessToken) {
         setShowLoginModal(true);
         return;
       }
       return bookmarkStatus
-        ? // TODO : DELETE 되는 지 확인 필요!!
+        ?
           await BookMarkDeleteApi({ placeId: placeIdNumber })
         : await BookMarkApi({ placeId: placeIdNumber });
     },
