@@ -110,8 +110,14 @@ const fetchData = async <T>(
   return response.json();
 };
 
-export const get = <T>(endpoint: string, options?: FetchOptions) =>
-  fetchData<T>(endpoint, { method: 'GET', ...options });
+export const get = <T>(
+  endpoint: string,
+  options?: FetchOptions
+) =>
+  fetchData<T>(endpoint, {
+    method: 'GET',
+    ...options
+  });
 
 export const post = <T>(
   endpoint: string,
@@ -142,6 +148,6 @@ export const remove = <T>(
 ) =>
   fetchData<T>(endpoint, {
     method: 'DELETE',
-    body: body ? JSON.stringify(body) : undefined,
+    body: JSON.stringify(body),
     ...options,
   });
