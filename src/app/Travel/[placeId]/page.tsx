@@ -354,7 +354,7 @@ const TravelDetailPage = () => {
                   src={bookmarkStatus ? detailBookMark : detailBookMarkNo}
                   alt='북마크'
                 />
-                {bookmarkStatus ? '북마크 해제' : '북마크'}
+                {bookmarkStatus ? `${bookmarkStatus}북마크 해제` : `${bookmarkStatus}북마크`}
               </button>
               <button onClick={handleScheduleAdd} className={styles.chooseBtn}>
                 <Image

@@ -35,7 +35,7 @@ const Header = () => {
       setNickName('');
     }
     setIsAuthChecked(true);
-  }, [isAuthenticated, router, getDecryptedCookie]);
+  }, [isAuthenticated, router]);
   
   const openModal = (): void => setIsModalOpen(true);
   const closeModal = (): void => setIsModalOpen(false);
