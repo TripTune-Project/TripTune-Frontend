@@ -5,8 +5,10 @@ import { useForm } from 'react-hook-form';
 import { validateNickname } from '@/utils/validation';
 import { useMyPage } from '@/hooks/useMyPage';
 import { nickNameChange, updateMyPage } from '@/apis/MyPage/myPageApi';
+import saveLocalContent from '@/utils/saveLocalContent';
 
 const Profile = () => {
+  const { setEncryptedCookie } = saveLocalContent();
   const { userData, fetchUserData } = useMyPage();
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -24,10 +26,6 @@ const Profile = () => {
       profileImage : userData?.profileImage || selectedImage
     },
   });
-  
-  useEffect(() => {
-    fetchUserData();
-  }, [fetchUserData]);
   
   useEffect(() => {
     if (userData?.nickname) {
@@ -76,6 +74,9 @@ const Profile = () => {
       if (response.success) {
         alert('닉네임이 성공적으로 변경되었습니다.');
         await fetchUserData();
+        const nickname = userData?.nickname || '';
+        console.log(nickname, "nickname: ")
+        setEncryptedCookie('nickname', nickname, 7);
         setIsEditing(false);
       } else {
         alert(response.message || '닉네임 변경에 실패했습니다.');
