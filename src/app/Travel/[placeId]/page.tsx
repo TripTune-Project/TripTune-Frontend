@@ -23,10 +23,11 @@ import timeIcon from '../../../../public/assets/images/여행지 탐색/상세�
 import homePageIcon from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_homepageIcon.png';
 import phoneIcon from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_phoneIcon.png';
 import { fetchTravelDetail } from '@/apis/Travel/travelApi';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import LoginModal from '@/components/Common/LoginModal';
 import saveLocalContent from '@/utils/saveLocalContent';
+import useAuth from '@/hooks/useAuth';
 
 const StyledSwiperContainer = styled.div`
   position: relative;
@@ -85,8 +86,9 @@ const TravelDetailPage = () => {
 
   const { placeId } = useParams<{ placeId: string }>();
   const placeIdNumber = parseInt(placeId, 10);
-  const router = useRouter();
   const queryClient = useQueryClient();
+  
+  const { isAuthenticated } = useAuth();
 
   const { data, isLoading } = useQuery({
     queryKey: ['travelDetail', placeIdNumber],
@@ -108,7 +110,6 @@ const TravelDetailPage = () => {
   const [showExpandButton, setShowExpandButton] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const descriptionRef = useRef<HTMLParagraphElement | null>(null);
   const prevButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -133,11 +134,8 @@ const TravelDetailPage = () => {
 
   const toggleBookmarkMutation = useMutation({
     mutationFn: async (bookmarkStatus: boolean) => {
-      const { getDecryptedCookie } = saveLocalContent();
-      const accessToken = getDecryptedCookie('trip-tune_at');
-      if (!accessToken) {
-        setShowLoginModal(true);
-        return;
+      if  (!isAuthenticated) {
+        return <LoginModal />;
       }
       return bookmarkStatus
         ?
@@ -159,11 +157,8 @@ const TravelDetailPage = () => {
   };
 
   const handleScheduleAdd = () => {
-    const { getDecryptedCookie } = saveLocalContent();
-    const accessToken = getDecryptedCookie('trip-tune_at');
-    if (!accessToken) {
-      setShowLoginModal(true);
-      return;
+    if (!isAuthenticated) {
+      return <LoginModal />;
     }
 
     setIsModalOpen(true);
@@ -408,7 +403,6 @@ const TravelDetailPage = () => {
           placeId={placeIdNumber}
         />
       )}
-      {showLoginModal && <LoginModal />}
     </>
   );
 };
