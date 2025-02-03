@@ -85,7 +85,6 @@ const TravelDetailPage = () => {
 
   const { placeId } = useParams<{ placeId: string }>();
   const placeIdNumber = parseInt(placeId, 10);
-  const router = useRouter();
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
@@ -135,6 +134,7 @@ const TravelDetailPage = () => {
     mutationFn: async (bookmarkStatus: boolean) => {
       const { getDecryptedCookie } = saveLocalContent();
       const accessToken = getDecryptedCookie('trip-tune_at');
+      console.log(accessToken,"accessToken 1: ")
       if (!accessToken) {
         setShowLoginModal(true);
         return;
@@ -161,6 +161,7 @@ const TravelDetailPage = () => {
   const handleScheduleAdd = () => {
     const { getDecryptedCookie } = saveLocalContent();
     const accessToken = getDecryptedCookie('trip-tune_at');
+    console.log(accessToken,"accessToken 2: ")
     if (!accessToken) {
       setShowLoginModal(true);
       return;
