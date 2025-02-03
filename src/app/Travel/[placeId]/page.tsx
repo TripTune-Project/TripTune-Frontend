@@ -93,7 +93,6 @@ const TravelDetailPage = () => {
     queryFn: async () => {
       const { getDecryptedCookie } = saveLocalContent();
       const accessToken = getDecryptedCookie('trip-tune_at');
-      console.log(accessToken,"accessToken: 1");
       const requiresAuth = !!accessToken;
       const result = await fetchTravelDetailData(placeIdNumber, requiresAuth);
       if (result.success) {
@@ -136,7 +135,6 @@ const TravelDetailPage = () => {
     mutationFn: async (bookmarkStatus: boolean) => {
       const { getDecryptedCookie } = saveLocalContent();
       const accessToken = getDecryptedCookie('trip-tune_at');
-      console.log(accessToken, "accessToken: 2")
       if (!accessToken) {
         setShowLoginModal(true);
         return;

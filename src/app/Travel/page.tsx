@@ -58,7 +58,6 @@ const TravelPage = () => {
 
   const { getDecryptedCookie } = saveLocalContent();
   const accessToken = getDecryptedCookie('trip-tune_at');
-  console.log(accessToken,"accessToken: 3")
   const requiresAuth = !!accessToken;
   const [showLoginModal, setShowLoginModal] = useState(false);
 
@@ -169,7 +168,6 @@ const TravelPage = () => {
 
   const toggleBookmark = async (placeId: number, bookmarkStatus = false) => {
     if (!accessToken) {
-      console.log(accessToken,"accessToken : 4")
       setShowLoginModal(true);
       return;
     }

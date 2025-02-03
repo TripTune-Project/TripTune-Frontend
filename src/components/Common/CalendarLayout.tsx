@@ -89,7 +89,6 @@ const CalendarLayout = ({
         startDate: startDate?.toISOString() || '',
         endDate: endDate?.toISOString() || '',
       });
-      console.log('일정이 수정되었습니다!');
       onClose();
     }
   };
