@@ -1,181 +1,116 @@
-// import React, { useEffect, useState } from 'react';
 import React, { useState } from 'react';
-import Image from 'next/image';
 import Pagination from '@/components/Common/Pagination';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useTravelListByLocation } from '@/hooks/useTravel';
+import { useTravelStore } from '@/store/travelStore';
+import NoResultLayout from '@/components/Common/NoResult';
 import locationIcon from '../../../../public/assets/images/여행지 탐색/홈화면/placeHome_mapIcon.png';
 import styles from '@/styles/Mypage.module.css';
-// import { getBookmarks } from '@/apis/MyPage/myPageApi';
-// import DataLoading from '@/components/Common/DataLoading';
-// import { BookmarkPlace } from '@/types/myPage';
-
-interface Place {
-  thumbnailUrl?: string;
-  placeName: string;
-  country: string;
-  city: string;
-  district: string;
-  address: string;
-  detailAddress?: string;
-}
-
-//
-// const BookMark = () => {
-//   const [places, setPlaces] = useState<BookmarkPlace[]>([]);
-//   const [totalPages, setTotalPages] = useState<number>(0);
-//   const [currentPage, setCurrentPage] = useState<number>(1);
-//   const [loading, setLoading] = useState<boolean>(false);
-//   const [error, setError] = useState<string | null>(null);
-//
-//   useEffect(() => {
-//     const fetchBookmarks = async () => {
-//       setLoading(true);
-//       setError(null);
-//       try {
-//         const response = await getBookmarks(currentPage);
-//         if (response.success) {
-//           setPlaces(response.data?.content || []);
-//           setTotalPages(response.data?.totalPages || 1);
-//         } else {
-//           setError(
-//             response.message || '데이터를 가져오는 중 문제가 발생했습니다.'
-//           );
-//         }
-//       } catch (err: any) {
-//         setError(err.message || '알 수 없는 오류가 발생했습니다.');
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-//
-//     fetchBookmarks();
-//   }, [currentPage]);
-//
-//   return (
-//     <div className={styles.flexColumnC}>
-//       <span className={styles.accountManagement}>북마크</span>
-//       <div className={styles.flexRowAbe}>
-//         <div className={styles.regroup}>
-//           <div className={styles.dateRegistered}>등록 날짜순</div>
-//           <div className={styles.fullWidth}>전체 {places.length}</div>
-//         </div>
-//       </div>
-//       {loading && <DataLoading />}
-//       {loading ? (
-//         <DataLoading />
-//       ) : error ? (
-//         <div>{error}</div>
-//       ) : (
-//         <>
-//           <div className={styles.flexRowD15}>
-//             {places.map((place, index) => (
-//               <div key={index} className={styles.rectangle16}>
-//                 <div className={styles.tourapiFirstimage17}>
-//                   {place.thumbnailUrl ? (
-//                     <Image
-//                       src={place.thumbnailUrl}
-//                       alt={place.placeName}
-//                       width={95}
-//                       height={95}
-//                       priority
-//                     />
-//                   ) : (
-//                     <div className={styles.noImage}>이미지 없음</div>
-//                   )}
-//                 </div>
-//                 <span className={styles.koreaSeoulEunpyeonggu18}>
-//                   {`${place.country} / ${place.city} / ${place.district}`}
-//                 </span>
-//                 <span className={styles.sugugasaSeoul}>{place.placeName}</span>
-//                 <div className={styles.moreBtn19}>...</div>
-//                 <span className={styles.seoulEunpyeongRoad}>
-//                   <Image src={locationIcon} alt='장소' width={15} height={21} />
-//                   &nbsp;{place.address} {place.detailAddress}
-//                 </span>
-//               </div>
-//             ))}
-//           </div>
-//           {totalPages > 1 && (
-//             <div className={styles.flexRowD24}>
-//               <Pagination
-//                 total={totalPages}
-//                 currentPage={currentPage}
-//                 pageSize={5}
-//                 onPageChange={setCurrentPage}
-//               />
-//             </div>
-//           )}
-//         </>
-//       )}
-//     </div>
-//   );
-// };
-//
-// export default BookMark;
-
-// TODO : 잠시 목업 북마크
 
 const BookMark = () => {
-  const [places] = useState<Place[]>([
-    {
-      thumbnailUrl: '',
-      placeName: '서울 타워',
-      country: '대한민국',
-      city: '서울',
-      district: '중구',
-      address: '서울특별시 중구 남산공원길',
-      detailAddress: '105',
-    },
-  ]);
-
-  const [totalPages] = useState<number>(1);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-
+  const router = useRouter();
+  const { currentPage, setCurrentPage } = useTravelStore();
+  
+  const [orderBy, setOrderBy] = useState('newest');
+  const [coordinates] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
+  
+  const defaultCoordinates = {
+    latitude: 37.5642135,
+    longitude: 127.0016985,
+  };
+  
+  const { data: locationData } = useTravelListByLocation(
+    coordinates ?? defaultCoordinates,
+    currentPage
+  );
+  
+  const handleDetailClick = (placeId: number) => {
+    router.push(`/Travel/${placeId}`);
+  };
+  
+  const places = locationData?.data?.content;
+  const totalPages = locationData?.data?.totalPages ?? 0;
+  
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo(0, 0);
+  };
+  
   return (
-    <div className={styles.flexColumnC}>
-      <span className={styles.accountManagement}>북마크</span>
-      <div className={styles.flexRowAbe}>
-        <div className={styles.regroup}>
-          <div className={styles.dateRegistered}>등록 날짜순</div>
-          <div className={styles.fullWidth}>전체 {places.length}</div>
+    <div className={styles.listContainer}>
+      <div className={styles.headerContainer}>
+        <div className={styles.leftHeader}>
+          <div className={styles.pageTitle}>북마크</div>
+          <div className={styles.totalCount}>전체 개수 5</div>
+        </div>
+        <div className={styles.rightHeader}>
+          <select
+            className={styles.orderSelect}
+            value={orderBy}
+            onChange={(e) => setOrderBy(e.target.value)}
+          >
+            <option value="newest">최신순</option>
+            <option value="oldest">오래된 순</option>
+            <option value="name">이름 순</option>
+          </select>
         </div>
       </div>
-      <div className={styles.flexRowD15}>
-        {places.map((place, index) => (
-          <div key={index} className={styles.rectangle16}>
-            <div className={styles.tourapiFirstimage17}>
-              {place.thumbnailUrl ? (
-                <Image
-                  src={place.thumbnailUrl}
-                  alt={place.placeName}
-                  width={95}
-                  height={95}
-                  priority
-                />
-              ) : (
-                <div className={styles.noImage}>이미지 없음</div>
-              )}
+      
+      <div className={styles.bookmarkGrid}>
+        {places && places.length > 0 ? (
+          places.map((place) => (
+            <div
+              key={place.placeId}
+              className={styles.bookmarkCard}
+              onClick={() => handleDetailClick(place.placeId)}
+            >
+              <div className={styles.imageContainer}>
+                {place.thumbnailUrl ? (
+                  <Image
+                    src={place.thumbnailUrl}
+                    alt={place.placeName}
+                    width={95}
+                    height={95}
+                    className={styles.thumbnailImage}
+                    priority
+                  />
+                ) : (
+                  <div className={styles.noImage}>이미지 없음</div>
+                )}
+              </div>
+              <div className={styles.placeInfo}>
+                <div className={styles.placeName}>{place.placeName}</div>
+                <p className={styles.placeAddress}>
+                  {`${place.country} / ${place.city} / ${place.district}`}
+                </p>
+                <p className={styles.placeDetailAddress}>
+                  <Image
+                    src={locationIcon}
+                    alt="장소"
+                    width={15}
+                    height={21}
+                  />
+                  {` ${place.address} ${place.detailAddress}`}
+                </p>
+              </div>
             </div>
-            <span className={styles.koreaSeoulEunpyeonggu18}>
-              {`${place.country} / ${place.city} / ${place.district}`}
-            </span>
-            <span className={styles.sugugasaSeoul}>{place.placeName}</span>
-            <div className={styles.moreBtn19}>...</div>
-            <span className={styles.seoulEunpyeongRoad}>
-              <Image src={locationIcon} alt='장소' width={15} height={21} />
-              &nbsp;{place.address} {place.detailAddress}
-            </span>
-          </div>
-        ))}
+          ))
+        ) : (
+          <NoResultLayout />
+        )}
       </div>
-      {totalPages > 0 && (
-        <div className={styles.flexRowD24}>
-          <Pagination
-            total={places.length}
-            currentPage={currentPage}
-            pageSize={5}
-            onPageChange={setCurrentPage}
-          />
-        </div>
+      
+      {places && places.length > 0 && totalPages > 0 && (
+        <Pagination
+          total={totalPages * 5}
+          currentPage={currentPage}
+          pageSize={5}
+          onPageChange={handlePageChange}
+        />
       )}
     </div>
   );
