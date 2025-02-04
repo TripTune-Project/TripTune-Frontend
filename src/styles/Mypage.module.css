@@ -618,12 +618,12 @@
 
 .deleteUserVector {
   position: absolute;
-  width: 0.74%;
-  height: 2.2%;
+  width: 1%;
+  height: 2%;
   top: 590px;
-  left: 98.52%;
+  left: 98%;
   background: url('/assets/images/마이페이지/Vector.png') no-repeat center;
-  background-size: 100% 100%;
+  background-size: contain;
 }
 
 .authentication {
@@ -774,16 +774,6 @@
   color: #666666;
   font-size: 18px;
   text-align: center;
-}
-
-.deleteUserVector {
-  position: absolute;
-  width: 1%;
-  height: 2%;
-  top: 590px;
-  left: 98%;
-  background: url('/assets/images/마이페이지/Vector.png') no-repeat center;
-  background-size: contain;
 }
 
 .flexColumnC {
@@ -952,16 +942,6 @@
   color: #666666;
   font-size: 18px;
   text-align: center;
-}
-
-.deleteUserVector {
-  position: absolute;
-  width: 1%;
-  height: 2%;
-  top: 590px;
-  left: 98%;
-  background: url('/assets/images/마이페이지/Vector.png') no-repeat center;
-  background-size: contain;
 }
 
 .fixedText {

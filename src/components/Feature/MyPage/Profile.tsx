@@ -6,6 +6,7 @@ import { validateNickname } from '@/utils/validation';
 import { useMyPage } from '@/hooks/useMyPage';
 import { nickNameChange, updateMyPage } from '@/apis/MyPage/myPageApi';
 import saveLocalContent from '@/utils/saveLocalContent';
+import ProfileBasicImg from "../../../../public/assets/images/마이페이지/profileImage.png";
 
 const Profile = () => {
   const { setEncryptedCookie } = saveLocalContent();
@@ -23,7 +24,7 @@ const Profile = () => {
     mode: 'onChange',
     defaultValues: {
       nickname: userData?.nickname || '',
-      profileImage: userData?.profileImage || selectedImage,
+      profileImage: userData?.profileImage || ProfileBasicImg,
     },
   });
 
@@ -98,7 +99,7 @@ const Profile = () => {
           <span className={styles.profileImage}>프로필 이미지</span>
           <Image
             className={styles.rectangle7}
-            src={userData?.profileImage || '/default-profile.png'}
+            src={userData?.profileImage ?? ProfileBasicImg }
             alt='프로필 이미지'
             width={95}
             height={95}
