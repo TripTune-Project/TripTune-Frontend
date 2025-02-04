@@ -7,6 +7,22 @@ import { useTravelStore } from '@/store/travelStore';
 import NoResultLayout from '@/components/Common/NoResult';
 import locationIcon from '../../../../public/assets/images/여행지 탐색/홈화면/placeHome_mapIcon.png';
 import styles from '@/styles/Mypage.module.css';
+// import React, { useEffect, useState } from 'react';
+// import { getBookmarks } from '@/apis/MyPage/myPageApi';
+// import DataLoading from '@/components/Common/DataLoading';
+// import { BookmarkPlace } from '@/types/myPage';
+// TODO : 참고할 코드 위치
+// https://github.com/TripTune-Project/TripTune-Frontend/blob/a61256d676e78aecd01d16a65a4eee61dead5883/src/components/Feature/MyPage/BookMark.tsx
+
+interface Place {
+  thumbnailUrl?: string;
+  placeName: string;
+  country: string;
+  city: string;
+  district: string;
+  address: string;
+  detailAddress?: string;
+}
 
 const BookMark = () => {
   const router = useRouter();
