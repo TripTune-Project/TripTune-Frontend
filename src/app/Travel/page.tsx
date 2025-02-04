@@ -58,6 +58,7 @@ const TravelPage = () => {
   
   const { isAuthenticated } = useAuth();
   const requiresAuth = !!isAuthenticated;
+  const [showLoginModal, setShowLoginModal] = useState(false);
   
   const {
     data: locationData,
@@ -166,7 +167,9 @@ const TravelPage = () => {
 
   const toggleBookmark = async (placeId: number, bookmarkStatus = false) => {
     if (!isAuthenticated) {
-      return <LoginModal />;
+      alert("북마크를 하기 위해서는 로그인이 필요합니다.")
+      setShowLoginModal(true);
+      return;
     }
     try {
       if (bookmarkStatus) {
@@ -379,6 +382,7 @@ const TravelPage = () => {
             {alertMessage}
           </Alert>
         </Snackbar>
+        {showLoginModal && <LoginModal />}
       </>
     </>
   );

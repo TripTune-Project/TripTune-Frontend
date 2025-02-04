@@ -89,6 +89,7 @@ const TravelDetailPage = () => {
   const queryClient = useQueryClient();
   
   const { isAuthenticated } = useAuth();
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const { data, isLoading } = useQuery({
     queryKey: ['travelDetail', placeIdNumber],
@@ -135,7 +136,9 @@ const TravelDetailPage = () => {
   const toggleBookmarkMutation = useMutation({
     mutationFn: async (bookmarkStatus: boolean) => {
       if  (!isAuthenticated) {
-        return <LoginModal />;
+        alert("북마크를 하기 위해서는 로그인이 필요합니다.")
+        setShowLoginModal(true);
+        return;
       }
       return bookmarkStatus
         ?
@@ -158,7 +161,9 @@ const TravelDetailPage = () => {
 
   const handleScheduleAdd = () => {
     if (!isAuthenticated) {
-      return <LoginModal />;
+      alert("내 일정 담기를 위해서는 로그인이 필요합니다.")
+      setShowLoginModal(true);
+      return;
     }
 
     setIsModalOpen(true);
@@ -403,6 +408,7 @@ const TravelDetailPage = () => {
           placeId={placeIdNumber}
         />
       )}
+      {showLoginModal && <LoginModal />}
     </>
   );
 };
