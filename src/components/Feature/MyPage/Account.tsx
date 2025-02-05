@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import styles from '@/styles/Mypage.module.css';
 import DeleteUserModal from '@/components/Common/DeleteUserModal';
@@ -11,7 +11,7 @@ import { AccountFormData } from '@/types/myPage';
 
 const Account = () => {
   const router = useRouter();
-  const { userData, fetchUserData, isEmailLoaded } = useMyPage();
+  const { userData } = useMyPage();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -26,12 +26,6 @@ const Account = () => {
       email: userData?.email || '',
     },
   });
-  
-  useEffect(() => {
-    if (!isEmailLoaded) {
-      fetchUserData();
-    }
-  }, [isEmailLoaded, fetchUserData]);
   
   const handleEmailSave = async (data: AccountFormData) => {
     if (!data.verificationCode) {

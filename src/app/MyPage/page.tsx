@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Head from 'next/head';
 import LogoutModal from '@/components/Common/LogoutModal';
@@ -12,9 +12,11 @@ import LoginModal from '@/components/Common/LoginModal';
 import useAuth from '@/hooks/useAuth';
 import DataLoading from '@/components/Common/DataLoading';
 import { logoutApi } from '@/apis/Login/logoutApi';
+import { useMyPage } from '@/hooks/useMyPage';
 
 const MyPage = () => {
   const router = useRouter();
+  const { fetchUserData } = useMyPage();
   const { isAuthenticated, isLoading } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
@@ -36,6 +38,10 @@ const MyPage = () => {
       console.error('로그아웃에 실패했습니다. 다시 시도해 주세요.');
     }
   };
+  
+  useEffect(() => {
+    fetchUserData();
+  }, [fetchUserData]);
 
   if (isLoading) {
     return <DataLoading />;
@@ -71,7 +77,7 @@ const MyPage = () => {
   };
 
   const metaTags = getMetaTags();
-
+  
   return (
     <div className={styles.mainContainer}>
       <Head>

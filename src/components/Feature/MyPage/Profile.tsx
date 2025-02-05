@@ -27,11 +27,7 @@ const Profile = () => {
       profileImage: userData?.profileImage || ProfileBasicImg,
     },
   });
-
-  useEffect(() => {
-    fetchUserData();
-  }, [fetchUserData]);
-
+  
   useEffect(() => {
     if (userData?.nickname) {
       setValue('nickname', userData.nickname);
@@ -46,6 +42,7 @@ const Profile = () => {
       const file = e.target.files[0];
       if (file) {
         setSelectedImage(file);
+        console.log(file,"file: ")
         try {
           const response = await updateMyPage(file);
           if (response.success) {
