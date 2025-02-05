@@ -11,6 +11,12 @@ interface FetchOptions extends RequestInit {
   requiresAuth?: boolean;
 }
 
+const clearCookies = () => {
+  Cookies.remove('trip-tune_at');
+  Cookies.remove('trip-tune_rt');
+  Cookies.remove('nickname');
+}
+
 const getAuthHeaders = (): HeadersInit => {
   const { getDecryptedCookie } = saveLocalContent();
   const accessToken = getDecryptedCookie('trip-tune_at'); // 복호화된 토큰 가져오기
@@ -33,10 +39,9 @@ const handleRedirectToLogin = (message: string) => {
     const currentPath = window.location.pathname;
     localStorage.setItem('redirectAfterLogin', currentPath);
 
-    alert(message);
-
-    Cookies.remove('trip-tune_at');
-    Cookies.remove('trip-tune_rt');
+   alert(message);
+    
+    clearCookies();
     window.location.href = '/Login';
   }
 };
@@ -70,13 +75,22 @@ const fetchData = async <T>(
     headers,
     credentials: 'include',
   };
-
+  
   let response = await fetch(url, requestConfig);
-  // 실패한 경우 서버의 에러 메시지를 처리
+
+// 실패한 경우 서버의 에러 메시지를 처리
   if (!response.ok) {
     try {
       const errorData = await response.json();
-      alert(errorData.message || '알 수 없는 오류가 발생했습니다.');
+      
+      // 1. 유효하지 않은 JWT 토큰이면 로그인 페이지로 이동
+      if (errorData.message === "유효하지 않은 JWT 토큰입니다. 로그인 후 이용해주세요.") {
+        clearCookies();
+        handleRedirectToLogin("토큰 갱신 시도 후에도 실패했습니다. 다시 로그인 해주세요.");
+        return undefined as unknown as T;
+      }
+      
+      // 2. 401 (토큰 만료) 시 갱신 시도
       if (response.status === 401) {
         if (!isRetrying) {
           isRetrying = true;
@@ -84,28 +98,40 @@ const fetchData = async <T>(
           if (newAccessToken) {
             headers = { ...headers, Authorization: `Bearer ${newAccessToken}` };
             response = await fetch(url, { ...requestConfig, headers });
+            
+            // 새로운 요청도 실패하면 로그인 페이지로 이동
+            if (!response.ok) {
+              clearCookies();
+              handleRedirectToLogin("토큰 갱신 시도 후에도 실패했습니다. 다시 로그인 해주세요.");
+              return undefined as unknown as T;;
+            }
           } else {
-            handleRedirectToLogin(
-              '토큰 갱신에 실패했습니다. 다시 로그인 해주세요.'
-            );
+            clearCookies();
+            handleRedirectToLogin("토큰 갱신에 실패했습니다. 다시 로그인 해주세요.");
+            return undefined as unknown as T;;
           }
         } else {
-          handleRedirectToLogin(
-            '토큰 갱신 시도 후에도 실패했습니다. 다시 로그인 해주세요.'
-          );
+          clearCookies();
+          handleRedirectToLogin("토큰 갱신 시도 후에도 실패했습니다. 다시 로그인 해주세요.");
+          return undefined as unknown as T;;
         }
       }
+      
+      // 3. /Schedule 포함 & 404 또는 403 상태 코드일 경우 undefined 반환
       if (
-        (response.status === 404 || 403) &&
-        window.location.pathname.includes('/Schedule')
+        window.location.pathname.includes("/Schedule") &&
+        (response.status === 404 || response.status === 403)
       ) {
-        return undefined as unknown as T;
+        return undefined as unknown as T;;
       }
+      
+      // 4. 기타 에러 메시지 처리
+      alert(errorData.message || "알 수 없는 오류가 발생했습니다.");
     } catch {
-      alert('서버 응답을 처리할 수 없습니다.');
+      alert("서버 응답을 처리할 수 없습니다.");
     }
   }
-
+  
   isRetrying = false;
   return response.json();
 };
