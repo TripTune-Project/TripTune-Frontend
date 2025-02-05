@@ -4,9 +4,9 @@ import styles from '@/styles/Mypage.module.css';
 import { useForm } from 'react-hook-form';
 import { validateNickname } from '@/utils/validation';
 import { useMyPage } from '@/hooks/useMyPage';
-import { nickNameChange, updateMyPage } from '@/apis/MyPage/myPageApi';
+import { nickNameChange } from '@/apis/MyPage/myPageApi';
 import saveLocalContent from '@/utils/saveLocalContent';
-import ProfileBasicImg from "../../../../public/assets/images/마이페이지/profileImage.png";
+import ProfileBasicImg from '../../../../public/assets/images/마이페이지/profileImage.png';
 
 const Profile = () => {
   const { setEncryptedCookie } = saveLocalContent();
@@ -27,7 +27,7 @@ const Profile = () => {
       profileImage: userData?.profileImage || ProfileBasicImg,
     },
   });
-  
+
   useEffect(() => {
     if (userData?.nickname) {
       setValue('nickname', userData.nickname);
@@ -41,15 +41,35 @@ const Profile = () => {
     fileInput.onchange = async (e: any) => {
       const file = e.target.files[0];
       if (file) {
+        const maxSizeInBytes = 5 * 1024 * 1024; // 5MB
+        if (file.size > maxSizeInBytes) {
+          alert('파일 크기는 5MB 이하로 업로드해 주세요.');
+          return;
+        }
         setSelectedImage(file);
-        console.log(file,"file: ")
         try {
-          const response = await updateMyPage(file);
-          if (response.success) {
+          const formData = new FormData();
+          formData.append('profileImage', file);
+          const { getDecryptedCookie } = saveLocalContent();
+          const accessToken = getDecryptedCookie('trip-tune_at');
+          const response = await fetch(
+            'https://www.triptune.site/api/profiles',
+            {
+              method: 'PATCH',
+              body: formData,
+              credentials: 'include',
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          );
+
+          const data = await response.json();
+          if (data.success) {
             alert('프로필 이미지가 성공적으로 변경되었습니다.');
             await fetchUserData();
           } else {
-            alert(response.message || '이미지 변경에 실패했습니다.');
+            alert(data.message || '이미지 변경에 실패했습니다.');
           }
         } catch (error) {
           console.error('이미지 변경 중 오류 발생:', error);
@@ -96,7 +116,7 @@ const Profile = () => {
           <span className={styles.profileImage}>프로필 이미지</span>
           <Image
             className={styles.rectangle7}
-            src={userData?.profileImage ?? ProfileBasicImg }
+            src={userData?.profileImage ?? ProfileBasicImg}
             alt='프로필 이미지'
             width={95}
             height={95}

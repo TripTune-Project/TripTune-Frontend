@@ -18,22 +18,6 @@ export const getMyPage = async () => {
 };
 
 // 프로필 이미지 수정 / 업데이트 (PATCH)
-export const updateMyPage = async (
-  profileImage: File | null
-): Promise<{ success: boolean; message: string }> => {
-  const url = `/api/profiles`;
-
-  const formData = new FormData();
-  if (profileImage) {
-    formData.append('profileImage', profileImage);
-  }
-  return await patch<{ success: boolean; message: string }>(url, formData, {
-    requiresAuth: true,
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
-};
 
 // 닉네임 수정 (PATCH)
 export const nickNameChange = async (nickname: string) => {

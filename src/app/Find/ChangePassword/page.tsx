@@ -8,6 +8,7 @@ import Image from 'next/image';
 import triptuneIcon from '../../../../public/assets/images/로고/triptuneIcon-removebg.png';
 import VerificationLoading from '../../../components/Common/VerificationLoading';
 import { validatePassword } from '@/utils/validation';
+import saveLocalContent from '@/utils/saveLocalContent';
 
 const ChangePassword = () => {
   const searchParams = useSearchParams();
@@ -51,12 +52,16 @@ const ChangePassword = () => {
     }
 
     try {
-      const response = await fetch('/api/members/reset-password', {
+      const { getDecryptedCookie } = saveLocalContent();
+      const accessToken = getDecryptedCookie('trip-tune_at'); // 복호화된 토큰 가져오기
+      const response = await fetch('https://www.triptune.site/api/members/reset-password', {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify({ passwordToken, password, rePassword }),
+        credentials: 'include',
+        headers: {
+          // 'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        },
       });
 
       const data = await response.json();
