@@ -87,7 +87,7 @@ const TravelDetailPage = () => {
   const { placeId } = useParams<{ placeId: string }>();
   const placeIdNumber = parseInt(placeId, 10);
   const queryClient = useQueryClient();
-  
+
   const { isAuthenticated } = useAuth();
   const [showLoginModal, setShowLoginModal] = useState(false);
 
@@ -135,14 +135,12 @@ const TravelDetailPage = () => {
 
   const toggleBookmarkMutation = useMutation({
     mutationFn: async (bookmarkStatus: boolean) => {
-      if  (!isAuthenticated) {
-        alert("북마크를 하기 위해서는 로그인이 필요합니다.")
+      if (!isAuthenticated) {
         setShowLoginModal(true);
         return;
       }
       return bookmarkStatus
-        ?
-          await BookMarkDeleteApi({ placeId: placeIdNumber })
+        ? await BookMarkDeleteApi({ placeId: placeIdNumber })
         : await BookMarkApi({ placeId: placeIdNumber });
     },
     onSuccess: () => {
@@ -161,7 +159,6 @@ const TravelDetailPage = () => {
 
   const handleScheduleAdd = () => {
     if (!isAuthenticated) {
-      alert("내 일정 담기를 위해서는 로그인이 필요합니다.")
       setShowLoginModal(true);
       return;
     }
@@ -265,6 +262,7 @@ const TravelDetailPage = () => {
           content={`${placeName}의 상세 정보를 확인하세요.`}
         />
       </Head>
+      {showLoginModal && <LoginModal />}
       <div className={styles.travelDetailContent}>
         <div className={styles.topSection}>
           {imageList && imageList.length > 0 ? (
@@ -408,7 +406,6 @@ const TravelDetailPage = () => {
           placeId={placeIdNumber}
         />
       )}
-      {showLoginModal && <LoginModal />}
     </>
   );
 };

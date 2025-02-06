@@ -6,7 +6,7 @@ const useAuth = () => {
   // null: 아직 체크 중, true/false: 체크 완료 결과
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const { getDecryptedCookie } = saveLocalContent();
-  
+
   const checkAuth = async () => {
     try {
       // refreshToken이 없으면 바로 인증 실패 처리
@@ -27,7 +27,7 @@ const useAuth = () => {
       setIsAuthenticated(false);
     }
   };
-  
+
   useEffect(() => {
     // 최초 인증 체크
     checkAuth();
@@ -35,7 +35,7 @@ const useAuth = () => {
     const intervalId = setInterval(checkAuth, 60000);
     return () => clearInterval(intervalId);
   }, [getDecryptedCookie]);
-  
+
   return { isAuthenticated, isLoading: isAuthenticated === null };
 };
 

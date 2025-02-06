@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
 import { MODAL_MESSAGES } from '@/components/Common/ConfirmationModalMessage';
@@ -13,11 +13,19 @@ const LoginModal = () => {
   };
 
   const handleCancel = () => {
-    router.push('/');
+    if (window.location.pathname.includes('/Travel')) {
+      window.location.reload();
+    } else {
+      router.push('/');
+    }
   };
-
+  
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+  }, []);
+  
   return (
-    <ModalOverlay>
+    <ModalOverlay style={{ marginTop: '-93px'}}>
       <Modal>
         <h2>{MODAL_MESSAGES.loginRequired.title}</h2>
         <p>{MODAL_MESSAGES.loginRequired.description}</p>

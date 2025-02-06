@@ -22,7 +22,7 @@ const Header = () => {
   const [isAuthChecked, setIsAuthChecked] = useState<boolean>(false);
   const { isAuthenticated } = useAuth();
   const { getDecryptedCookie } = saveLocalContent();
-  
+
   useEffect(() => {
     setIsAuthChecked(false);
     const refreshToken = getDecryptedCookie('trip-tune_rt');
@@ -36,15 +36,15 @@ const Header = () => {
     }
     setIsAuthChecked(true);
   }, [isAuthenticated, router]);
-  
+
   const openModal = (): void => setIsModalOpen(true);
   const closeModal = (): void => setIsModalOpen(false);
-  
+
   const handleLogout = async (): Promise<void> => {
     closeModal();
     await performLogout();
   };
-  
+
   const performLogout = async (): Promise<void> => {
     try {
       await logoutApi();
@@ -56,49 +56,58 @@ const Header = () => {
       setAlertOpen(true);
     }
   };
-  
+
   const handleAlertClose = (): void => setAlertOpen(false);
   const handleLogin = (): void => {
     router.push(`/Login?next=${encodeURIComponent(pathname)}`);
   };
-  
+
   const isActive = (path: string): string =>
     `${styles.navLink} ${pathname === path ? styles.active : ''} ${
       pathname === '/' ? styles.homeNavLink : styles.otherNavLink
     }`;
-  
+
   const headerClassName = `${styles.header} ${pathname === '/' ? styles.homeHeader : ''}`;
-  
+
   return (
     <header className={headerClassName}>
       <div className={styles.headerContent}>
-        <Link href="/">
+        <Link href='/'>
           <Image
             src={MainLogoImage}
-            alt="로고"
+            alt='로고'
             width={184}
             height={58}
             priority
           />
         </Link>
         <nav className={styles.navMenu}>
-          <Link href="/" className={`${styles.navLink} ${isActive('/')}`}>
+          <Link href='/' className={`${styles.navLink} ${isActive('/')}`}>
             홈 화면
           </Link>
-          <Link href="/Schedule" className={`${styles.navLink} ${isActive('/Schedule')}`}>
+          <Link
+            href='/Schedule'
+            className={`${styles.navLink} ${isActive('/Schedule')}`}
+          >
             일정 만들기
           </Link>
-          <Link href="/Travel" className={`${styles.navLink} ${isActive('/Travel')}`}>
+          <Link
+            href='/Travel'
+            className={`${styles.navLink} ${isActive('/Travel')}`}
+          >
             여행지 탐색
           </Link>
-          <Link href="/MyPage" className={`${styles.navLink} ${isActive('/MyPage')}`}>
+          <Link
+            href='/MyPage'
+            className={`${styles.navLink} ${isActive('/MyPage')}`}
+          >
             마이 페이지
           </Link>
           {isAuthChecked ? (
             !isLoggedIn ? (
               <div className={styles.headerLinkLogin} onClick={handleLogin}>
                 로그인
-                <Image src={LoginIcon} alt=">" width={8} height={8} priority />
+                <Image src={LoginIcon} alt='>' width={8} height={8} priority />
               </div>
             ) : (
               <div
@@ -106,7 +115,7 @@ const Header = () => {
                 style={{ color: pathname === '/' ? 'white' : 'black' }}
               >
                 {nickName} 님
-                <Button onClick={openModal} variant="text" size="large">
+                <Button onClick={openModal} variant='text' size='large'>
                   로그아웃
                 </Button>
                 <LogoutModal
@@ -121,8 +130,16 @@ const Header = () => {
           )}
         </nav>
       </div>
-      <Snackbar open={alertOpen} autoHideDuration={6000} onClose={handleAlertClose}>
-        <Alert onClose={handleAlertClose} severity="error" sx={{ width: '100%' }}>
+      <Snackbar
+        open={alertOpen}
+        autoHideDuration={6000}
+        onClose={handleAlertClose}
+      >
+        <Alert
+          onClose={handleAlertClose}
+          severity='error'
+          sx={{ width: '100%' }}
+        >
           {alertMessage}
         </Alert>
       </Snackbar>
