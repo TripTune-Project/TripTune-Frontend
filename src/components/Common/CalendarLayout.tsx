@@ -20,12 +20,12 @@ interface CalendarLayoutProps {
 }
 
 const CalendarLayout = ({
-                          mode,
-                          initialStartDate,
-                          initialEndDate,
-                          travelName = '',
-                          onClose,
-                        }: CalendarLayoutProps) => {
+  mode,
+  initialStartDate,
+  initialEndDate,
+  travelName = '',
+  onClose,
+}: CalendarLayoutProps) => {
   const today = new Date();
   const { updateScheduleDetail } = useTravelStore();
   const [startDate, setStartDate] = useState<Date | null>(
@@ -36,15 +36,17 @@ const CalendarLayout = ({
   );
   const [scheduleName, setScheduleName] = useState<string>(travelName);
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
-  
+
   useEffect(() => {
     if (mode === 'create') {
-      setIsFormValid(scheduleName.trim() !== '' && isValidDateForCreation(startDate, endDate));
+      setIsFormValid(
+        scheduleName.trim() !== '' && isValidDateForCreation(startDate, endDate)
+      );
     } else {
       setIsFormValid(true);
     }
   }, [startDate, endDate, scheduleName, mode]);
-  
+
   const formatDateToKoreanWithDay = (date: Date | null): string => {
     if (!date) return '';
     return new Intl.DateTimeFormat('ko-KR', {
@@ -57,7 +59,7 @@ const CalendarLayout = ({
       .replace(/\./g, '.')
       .replace(' ', '');
   };
-  
+
   const handleConfirm = async () => {
     if (!isFormValid) {
       console.error(
@@ -67,7 +69,7 @@ const CalendarLayout = ({
       );
       return;
     }
-    
+
     if (mode === 'create') {
       const scheduleData = {
         scheduleName,
@@ -92,7 +94,7 @@ const CalendarLayout = ({
       onClose();
     }
   };
-  
+
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContainer}>
@@ -117,7 +119,8 @@ const CalendarLayout = ({
         )}
         <div className={styles.inputGroup}>
           <label>여행 날짜</label>&nbsp;&nbsp;
-          {formatDateToKoreanWithDay(startDate)} ~ {formatDateToKoreanWithDay(endDate)}
+          {formatDateToKoreanWithDay(startDate)} ~{' '}
+          {formatDateToKoreanWithDay(endDate)}
         </div>
         <div className={styles.datePickerContainer}>
           <DatePicker
@@ -149,7 +152,8 @@ const CalendarLayout = ({
               const isPast = date < today.setHours(0, 0, 0, 0);
               const day = date.getDay();
               if (day === 0) return isPast ? styles.pastSunday : styles.sunday;
-              if (day === 6) return isPast ? styles.pastSaturday : styles.saturday;
+              if (day === 6)
+                return isPast ? styles.pastSaturday : styles.saturday;
               return '';
             }}
           />

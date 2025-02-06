@@ -127,7 +127,7 @@ const Profile = () => {
           </div>
           <span className={styles.fileUploadMessage}>
             • PNG, JPG, JPEG의 확장자 파일만 업로드 가능합니다.
-            <br />• 이미지는 10MB 이하만 업로드 가능합니다.
+            <br />• 이미지는 5MB 이하만 업로드 가능합니다.
           </span>
         </div>
         <div className={styles.flexRowCc8}>

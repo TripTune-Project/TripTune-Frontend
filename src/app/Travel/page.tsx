@@ -55,11 +55,11 @@ const TravelPage = () => {
     latitude: 37.5642135,
     longitude: 127.0016985,
   };
-  
+
   const { isAuthenticated } = useAuth();
   const requiresAuth = !!isAuthenticated;
   const [showLoginModal, setShowLoginModal] = useState(false);
-  
+
   const {
     data: locationData,
     isLoading: isLoadingLocation,
@@ -167,7 +167,6 @@ const TravelPage = () => {
 
   const toggleBookmark = async (placeId: number, bookmarkStatus = false) => {
     if (!isAuthenticated) {
-      alert("북마크를 하기 위해서는 로그인이 필요합니다.")
       setShowLoginModal(true);
       return;
     }
@@ -255,6 +254,7 @@ const TravelPage = () => {
           <DataLoading />
         ) : (
           <div className={styles.container}>
+            {showLoginModal && <LoginModal />}
             <div className={styles.listContainer}>
               <div className={styles.searchContainer}>
                 <input
@@ -382,7 +382,6 @@ const TravelPage = () => {
             {alertMessage}
           </Alert>
         </Snackbar>
-        {showLoginModal && <LoginModal />}
       </>
     </>
   );

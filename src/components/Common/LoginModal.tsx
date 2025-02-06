@@ -13,11 +13,15 @@ const LoginModal = () => {
   };
 
   const handleCancel = () => {
-    router.push('/');
+    if (window.location.pathname.includes('/Travel')) {
+      window.location.reload();
+    } else {
+      router.push('/');
+    }
   };
 
   return (
-    <ModalOverlay>
+    <ModalOverlay style={{ marginTop: '-108px' }}>
       <Modal>
         <h2>{MODAL_MESSAGES.loginRequired.title}</h2>
         <p>{MODAL_MESSAGES.loginRequired.description}</p>

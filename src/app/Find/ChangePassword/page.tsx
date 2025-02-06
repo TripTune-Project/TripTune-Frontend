@@ -54,15 +54,18 @@ const ChangePassword = () => {
     try {
       const { getDecryptedCookie } = saveLocalContent();
       const accessToken = getDecryptedCookie('trip-tune_at'); // 복호화된 토큰 가져오기
-      const response = await fetch('https://www.triptune.site/api/members/reset-password', {
-        method: 'PATCH',
-        body: JSON.stringify({ passwordToken, password, rePassword }),
-        credentials: 'include',
-        headers: {
-          // 'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`
-        },
-      });
+      const response = await fetch(
+        'https://www.triptune.site/api/members/reset-password',
+        {
+          method: 'PATCH',
+          body: JSON.stringify({ passwordToken, password, rePassword }),
+          credentials: 'include',
+          headers: {
+            // 'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
 
       const data = await response.json();
 

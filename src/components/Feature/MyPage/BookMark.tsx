@@ -27,35 +27,35 @@ interface Place {
 const BookMark = () => {
   const router = useRouter();
   const { currentPage, setCurrentPage } = useTravelStore();
-  
+
   const [orderBy, setOrderBy] = useState('newest');
   const [coordinates] = useState<{
     latitude: number;
     longitude: number;
   } | null>(null);
-  
+
   const defaultCoordinates = {
     latitude: 37.5642135,
     longitude: 127.0016985,
   };
-  
+
   const { data: locationData } = useTravelListByLocation(
     coordinates ?? defaultCoordinates,
     currentPage
   );
-  
+
   const handleDetailClick = (placeId: number) => {
     router.push(`/Travel/${placeId}`);
   };
-  
+
   const places = locationData?.data?.content;
   const totalPages = locationData?.data?.totalPages ?? 0;
-  
+
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo(0, 0);
   };
-  
+
   return (
     <div className={styles.listContainer}>
       <div className={styles.headerContainer}>
@@ -69,13 +69,13 @@ const BookMark = () => {
             value={orderBy}
             onChange={(e) => setOrderBy(e.target.value)}
           >
-            <option value="newest">최신순</option>
-            <option value="oldest">오래된 순</option>
-            <option value="name">이름 순</option>
+            <option value='newest'>최신순</option>
+            <option value='oldest'>오래된 순</option>
+            <option value='name'>이름 순</option>
           </select>
         </div>
       </div>
-      
+
       <div className={styles.bookmarkGrid}>
         {places && places.length > 0 ? (
           places.map((place) => (
@@ -104,12 +104,7 @@ const BookMark = () => {
                   {`${place.country} / ${place.city} / ${place.district}`}
                 </p>
                 <p className={styles.placeDetailAddress}>
-                  <Image
-                    src={locationIcon}
-                    alt="장소"
-                    width={15}
-                    height={21}
-                  />
+                  <Image src={locationIcon} alt='장소' width={15} height={21} />
                   {` ${place.address} ${place.detailAddress}`}
                 </p>
               </div>
@@ -119,7 +114,7 @@ const BookMark = () => {
           <NoResultLayout />
         )}
       </div>
-      
+
       {places && places.length > 0 && totalPages > 0 && (
         <Pagination
           total={totalPages * 5}
