@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
 import { MODAL_MESSAGES } from '@/components/Common/ConfirmationModalMessage';
@@ -19,9 +19,13 @@ const LoginModal = () => {
       router.push('/');
     }
   };
-
+  
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+  }, []);
+  
   return (
-    <ModalOverlay style={{ marginTop: '-108px' }}>
+    <ModalOverlay style={{ marginTop: '-93px'}}>
       <Modal>
         <h2>{MODAL_MESSAGES.loginRequired.title}</h2>
         <p>{MODAL_MESSAGES.loginRequired.description}</p>

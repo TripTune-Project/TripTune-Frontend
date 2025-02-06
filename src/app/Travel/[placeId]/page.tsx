@@ -399,7 +399,6 @@ const TravelDetailPage = () => {
         />
       </div>
       {isLoading && <DataLoading />}
-      {showLoginModal && <LoginModal />}
       {isModalOpen && (
         <MyScheduleEditModal
           isOpen={isModalOpen}
