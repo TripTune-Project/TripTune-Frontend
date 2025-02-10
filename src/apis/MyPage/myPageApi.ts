@@ -32,13 +32,25 @@ export const nickNameChange = async (nickname: string) => {
 // 마이페이지 - 계정 관리
 // 이메일 인증, 검증은 Verify 파일에서 관리
 
+// 이메일 변경 (PATCH)
+export const changeEmail = async (
+  email: string,
+) => {
+  const url = '/api/members/change-email';
+  return await patch<{ success: boolean; message: string }>(
+    url,
+    { email },
+    { requiresAuth: true }
+  );
+};
+
 // 비밀번호 변경 (PATCH)
 export const changePassword = async (
   nowPassword: string,
   newPassword: string,
   rePassword: string
 ) => {
-  const url = '/api/members/account/change-password';
+  const url = '/api/members/change-password';
   return await patch<{ success: boolean; message: string }>(
     url,
     { nowPassword, newPassword, rePassword },
