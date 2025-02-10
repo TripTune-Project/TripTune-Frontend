@@ -4,7 +4,7 @@ import styles from '@/styles/Mypage.module.css';
 import DeleteUserModal from '@/components/Common/DeleteUserModal';
 import { useRouter } from 'next/navigation';
 import { useMyPage } from '@/hooks/useMyPage';
-import { changePassword, deactivateAccount } from '@/apis/MyPage/myPageApi';
+import { changeEmail, changePassword, deactivateAccount } from '@/apis/MyPage/myPageApi';
 import {
   requestEmailVerification,
   verifyEmail,
@@ -21,8 +21,7 @@ const Account = () => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingPwd, setIsEditingPwd] = useState(false);
-  const [emailRequestError, setEmailRequestError] = useState<string>('');
-
+  
   const {
     register,
     handleSubmit,
@@ -34,34 +33,41 @@ const Account = () => {
       email: userData?.email || '',
     },
   });
-
-  const handleEmailSave = async (data: AccountFormData) => {
-    if (!data.verificationCode) {
-      try {
-        const response = await requestEmailVerification(data.email);
-        alert('이메일 인증 요청이 성공적으로 완료되었습니다.');
-        setEmailRequestError('');
-      } catch (error: any) {
-        console.error('이메일 인증 요청 실패:', error.message);
-        setEmailRequestError(
-          error.message || '이메일 인증 요청에 실패했습니다.'
-        );
-      }
-    } else {
-      try {
-        const response = await verifyEmail(data.email, data.verificationCode);
-        alert('이메일 인증이 성공적으로 완료되었습니다.');
-        setEmailRequestError('');
-      } catch (error: any) {
-        console.error('이메일 인증 확인 실패:', error.message);
-        setEmailRequestError(
-          error.message || '이메일 인증 확인에 실패했습니다.'
-        );
-      }
+  
+  const handleEmailVerification = async (data: AccountFormData) => {
+    try {
+      const response = await requestEmailVerification(data.email);
+      alert('인증 요청이 성공적으로 완료되었습니다.');
+      console.log('인증 요청 응답:', response);
+    } catch (error: any) {
+      console.error('이메일 인증 요청 실패:', error.message);
+      alert('이메일 인증 요청에 실패했습니다.');
     }
   };
-
-  const handlePasswordSave = async (data: AccountFormData) => {
+  
+  const handleEmailVerificationConfirm = async (data: AccountFormData) => {
+    try {
+      const response = await verifyEmail(data.email, data.verificationCode);
+      alert('이메일 인증이 성공적으로 완료되었습니다.');
+      console.log('인증 확인 응답:', response);
+    } catch (error: any) {
+      console.error('이메일 인증 확인 실패:', error.message);
+      alert('이메일 인증 확인에 실패했습니다.');
+    }
+  };
+  
+  const handleEmailSave = async (data: AccountFormData) => {
+    try {
+      await changeEmail(data.email);
+      alert('이메일이 성공적으로 변경되었습니다.');
+      setIsEditingPwd(false);
+    } catch (error: any) {
+      console.error('이메일 변경 실패:', error.message);
+      alert('이메일 변경에 실패했습니다.');
+    }
+  };
+  
+  const handlePasswordChange = async (data: AccountFormData) => {
     try {
       await changePassword(data.nowPassword, data.newPassword, data.rePassword);
       alert('비밀번호가 성공적으로 변경되었습니다.');
@@ -71,7 +77,7 @@ const Account = () => {
       alert('비밀번호 변경에 실패했습니다.');
     }
   };
-
+  
   const handleDeleteUser = async (password: string) => {
     try {
       await deactivateAccount(password);
@@ -82,7 +88,7 @@ const Account = () => {
       alert('회원 탈퇴에 실패했습니다. 다시 시도해주세요.');
     }
   };
-
+  
   return (
     <div className={styles.flexColumnC}>
       <div className={styles.accountManagementTitle}>계정 관리</div>
@@ -114,7 +120,7 @@ const Account = () => {
                   <button
                     type='button'
                     className={styles.requestBtn}
-                    onClick={handleSubmit(handleEmailSave)}
+                    onClick={handleSubmit(handleEmailVerification)}
                   >
                     인증 요청
                   </button>
@@ -136,7 +142,7 @@ const Account = () => {
                   <button
                     type='button'
                     className={styles.verifyBtn}
-                    onClick={handleSubmit(handleEmailSave)}
+                    onClick={handleSubmit(handleEmailVerificationConfirm)}
                   >
                     인증 확인
                   </button>
@@ -145,9 +151,6 @@ const Account = () => {
                   <p className={styles.errorText}>
                     {errors.verificationCode.message}
                   </p>
-                )}
-                {emailRequestError && (
-                  <p className={styles.errorText}>{emailRequestError}</p>
                 )}
                 <div className={styles.actionRow}>
                   <button
@@ -236,7 +239,7 @@ const Account = () => {
                 <div className={styles.actionRow}>
                   <button
                     className={styles.saveBtn}
-                    onClick={handleSubmit(handlePasswordSave)}
+                    onClick={handleSubmit(handlePasswordChange)}
                   >
                     저장
                   </button>
