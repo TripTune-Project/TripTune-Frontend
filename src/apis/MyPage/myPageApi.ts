@@ -72,13 +72,13 @@ export const deactivateAccount = async (password: string) => {
 // 북마크 조회 (GET)
 export const getBookmarks = async (
   page: number = 1,
-  orderBy: 'newest' | 'oldest' | 'name' = 'newest'
+  sort: 'newest' | 'oldest' | 'name' = 'newest'
 ): Promise<{
   success: boolean;
   data?: BookmarkResponse;
   message: string;
 }> => {
-  const url = `/api/members/bookmarks?page=${page}&orderBy=${orderBy}`;
+  const url = `/api/members/bookmark?page=${page}&sort=${sort}`;
   return await get<{
     success: boolean;
     data: BookmarkResponse;
