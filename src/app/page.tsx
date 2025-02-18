@@ -243,7 +243,6 @@ const Home = () => {
         </h2>
         <button className={styles.onBoardChooseBtn}>전체</button>
         <button className={styles.onBoardNoChooseBtn}>국내</button>
-        <button className={styles.onBoardNoChooseBtn}>해외</button>
         <button className={styles.onBoardChooseBtnMore}>더보기</button>
         <StyledSwiperContainer>
           <Swiper

@@ -1,5 +1,8 @@
 import { create } from 'zustand';
-import { getMyPage } from '@/apis/MyPage/myPageApi';
+import { getBookmarks, getMyPage } from '@/apis/MyPage/myPageApi';
+import { Coordinates } from '@/types';
+import { useQuery } from '@tanstack/react-query';
+import { fetchTravelListByLocation } from '@/apis/Travel/travelApi';
 
 type UserData = {
   userId: string;
@@ -30,3 +33,14 @@ export const useMyPage = create<MyPageState>((set) => ({
     }
   },
 }));
+
+// 북마크 조회
+export const useMyPageBookMarkList = (
+  page: number = 1,
+  sort: 'newest' | 'oldest' | 'name' = 'newest'
+) => {
+  return useQuery({
+    queryKey: ['travelList', page, sort],
+    queryFn: () => getBookmarks(page, sort),
+  });
+};

@@ -180,9 +180,9 @@ const EmailVerification = ({
             onClick={handleEmailVerification}
             className={styles.verifyButton}
             disabled={
-              !getValues('authCode') ||
-              isNaN(Number(getValues('authCode'))) ||
-              loading
+              !getValues('authCode')
+              // || isNaN(Number(getValues('authCode')))
+              || loading
             }
           >
             {loading ? <VerificationLoading /> : '인증 확인'}
