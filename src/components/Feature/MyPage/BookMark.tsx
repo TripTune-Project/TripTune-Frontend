@@ -43,7 +43,7 @@ const BookMark = () => {
       <div className={styles.headerContainer}>
         <div className={styles.leftHeader}>
           <div className={styles.pageTitle}>북마크</div>
-          <div className={styles.totalCount}>전체 개수 5</div>
+          <div className={styles.totalCount}>전체 개수 {places.length}</div>
         </div>
         <div className={styles.rightHeader}>
           <select

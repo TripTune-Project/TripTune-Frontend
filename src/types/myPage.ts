@@ -8,9 +8,12 @@ export interface FormData {
   nickname: string;
 }
 
-export interface AccountFormData {
+export interface AccountEmailFormData {
   email: string;
   verificationCode: string;
+}
+
+export interface AccountPasswordFormData {
   nowPassword: string;
   newPassword: string;
   rePassword: string;
