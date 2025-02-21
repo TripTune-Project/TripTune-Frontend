@@ -182,12 +182,14 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
             {allUsers.map((user) => (
               <UserListItem key={user.email}>
                 <UserDetails>
-                  <Image
-                    src={user.profileUrl}
-                    alt={`${user.nickname}님의 프로필`}
-                    width={38}
-                    height={38}
-                  />
+                  <ProfileImageWrapper>
+                    <Image
+                      src={user.profileUrl}
+                      alt={`${user.nickname}님의 프로필`}
+                      width={38}
+                      height={38}
+                    />
+                  </ProfileImageWrapper>
                   <span>{user.nickname}</span>
                   <UserEmail>{user.email}</UserEmail>
                 </UserDetails>
@@ -394,6 +396,16 @@ const UserDetails = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
+`;
+
+const ProfileImageWrapper = styled.div`
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const UserEmail = styled.span`
