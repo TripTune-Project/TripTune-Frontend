@@ -12,6 +12,7 @@ import {
 import { validateEmail, validatePassword } from '@/utils/validation';
 import { AccountPasswordFormData, AccountEmailFormData } from '@/types/myPage';
 import VerificationLoading from '@/components/Common/VerificationLoading';
+import { logoutApi } from '@/apis/Login/logoutApi';
 
 type AccountFormData = AccountEmailFormData & AccountPasswordFormData;
 
@@ -127,6 +128,7 @@ const Account = () => {
     try {
       await deactivateAccount(password);
       alert('회원 탈퇴가 완료되었습니다.');
+      await logoutApi();
       router.push('/');
     } catch (error: any) {
       console.error('회원 탈퇴 실패:', error.message);
