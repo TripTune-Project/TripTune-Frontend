@@ -255,7 +255,7 @@ const Account = () => {
                   readOnly
                   className={styles.input}
                 />
-                <button
+                {!isEditingPwd && <button
                   className={styles.editBtn}
                   onClick={() => {
                     if (!isEditingPwd) setIsEditing(true);
@@ -263,7 +263,8 @@ const Account = () => {
                   disabled={isEditingPwd}
                 >
                   변경
-                </button>
+                </button>}
+              
               </>
             )}
           </div>
@@ -340,7 +341,7 @@ const Account = () => {
                   readOnly
                   className={styles.input}
                 />
-                <button
+                {!isEditing && <button
                   className={styles.editBtn}
                   onClick={() => {
                     if (!isEditing) setIsEditingPwd(true);
@@ -348,7 +349,8 @@ const Account = () => {
                   disabled={isEditing}
                 >
                   변경
-                </button>
+                </button>}
+               
               </>
             )}
           </div>
