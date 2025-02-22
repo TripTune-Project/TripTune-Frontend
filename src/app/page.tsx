@@ -12,7 +12,6 @@ import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
 import styles from '../styles/onBoard.module.css';
 import HomeImage from '../../public/assets/images/메인화면/ocean_title.png';
-import searchIcon from '../../public/assets/images/메인화면/main_searchIcon.png';
 import locationIcon from '../../public/assets/images/메인화면/main_slideMapIcon.png';
 import mainLinkBtn from '../../public/assets/images/메인화면/main_LinkBtn.png';
 import pictureImage1 from '../../public/assets/images/메인화면/광화문.jpg';
@@ -21,6 +20,7 @@ import pictureImage3 from '../../public/assets/images/메인화면/에펠탑.jpg
 import pictureImage4 from '../../public/assets/images/메인화면/타워브릿지.jpg';
 import pictureImage5 from '../../public/assets/images/메인화면/seoul.png';
 import triptuneIcon from '../../public/assets/images/로고/triptuneIcon-removebg.png';
+import HomePageSearch from '@/components/Feature/Home/HomePageSearch';
 
 const StyledSwiperContainer = styled.div`
   overflow: hidden;
@@ -83,10 +83,6 @@ const Home = () => {
 
   const handleTravelClick = () => {
     router.push('/Travel');
-  };
-
-  const handleSearch = () => {
-    router.push('/Search');
   };
 
   const images = [
@@ -172,22 +168,7 @@ const Home = () => {
               </p>
             </div>
             <div className={styles.onBoardingShow}>
-              <div className={styles.onBoardingSearch}>
-                <input
-                  type='text'
-                  placeholder='원하는 여행지를 검색하세요'
-                  className={styles.searchInput}
-                />
-                <button className={styles.searchButton} onClick={handleSearch}>
-                  <Image
-                    src={searchIcon}
-                    alt='돋보기 아이콘'
-                    width={20}
-                    height={20}
-                    style={{ marginLeft: '25px' }}
-                  />
-                </button>
-              </div>
+              <HomePageSearch />
               <div className={styles.buttonContainer}>
                 <div className={styles.viewBtn} onClick={handleScheduleClick}>
                   <div className={styles.viewTitle}>일정 만들기</div>
