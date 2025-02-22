@@ -16,7 +16,7 @@ import {
 import { validateEmail, validatePassword } from '@/utils/validation';
 import { AccountPasswordFormData, AccountEmailFormData } from '@/types/myPage';
 import VerificationLoading from '@/components/Common/VerificationLoading';
-import { logoutApi } from '@/apis/Login/logoutApi';
+import Cookies from 'js-cookie';
 
 type AccountFormData = AccountEmailFormData & AccountPasswordFormData;
 
@@ -132,7 +132,9 @@ const Account = () => {
     try {
       await deactivateAccount(password);
       alert('회원 탈퇴가 완료되었습니다.');
-      await logoutApi();
+      Cookies.remove('trip-tune_at');
+      Cookies.remove('trip-tune_rt');
+      Cookies.remove('nickname');
       router.push('/');
     } catch (error: any) {
       console.error('회원 탈퇴 실패:', error.message);
