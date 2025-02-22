@@ -13,26 +13,29 @@ import { BookmarkPlace } from '@/types/myPage';
 const BookMark = () => {
   const router = useRouter();
   const { currentPage, setCurrentPage } = useMyPageBookMarkStore();
-  
+
   const [sort, setSort] = useState<'newest' | 'oldest' | 'name'>('newest');
-  const { data: myPageBookMarkData, isLoading } = useMyPageBookMarkList(currentPage, sort);
-  
+  const { data: myPageBookMarkData, isLoading } = useMyPageBookMarkList(
+    currentPage,
+    sort
+  );
+
   const handleDetailClick = (placeId: number) => {
     router.push(`/Travel/${placeId}`);
   };
-  
+
   if (isLoading) {
     return <DataLoading />;
   }
-  
+
   const places: BookmarkPlace[] = myPageBookMarkData?.data?.content || [];
   const totalPages = myPageBookMarkData?.data?.totalPages ?? 0;
-  
+
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo(0, 0);
   };
-  
+
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSort(e.target.value as 'newest' | 'oldest' | 'name');
     setCurrentPage(1);
@@ -87,7 +90,7 @@ const BookMark = () => {
                 </p>
                 <p className={styles.placeDetailAddress}>
                   <Image src={locationIcon} alt='장소' width={15} height={21} />
-                  {` ${place.address} ${place.detailAddress ?? ""}`}
+                  {` ${place.address} ${place.detailAddress ?? ''}`}
                 </p>
               </div>
             </div>

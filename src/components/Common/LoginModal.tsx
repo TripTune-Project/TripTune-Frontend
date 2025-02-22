@@ -19,13 +19,13 @@ const LoginModal = () => {
       router.push('/');
     }
   };
-  
+
   useEffect(() => {
     document.body.style.overflow = 'hidden';
   }, []);
-  
+
   return (
-    <ModalOverlay style={{ marginTop: '-93px'}}>
+    <ModalOverlay style={{ marginTop: '-93px' }}>
       <Modal>
         <h2>{MODAL_MESSAGES.loginRequired.title}</h2>
         <p>{MODAL_MESSAGES.loginRequired.description}</p>

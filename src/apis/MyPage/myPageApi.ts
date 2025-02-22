@@ -33,9 +33,7 @@ export const nickNameChange = async (nickname: string) => {
 // 이메일 인증, 검증은 Verify 파일에서 관리
 
 // 이메일 변경 (PATCH)
-export const changeEmail = async (
-  email: string,
-) => {
+export const changeEmail = async (email: string) => {
   const url = '/api/members/change-email';
   return await patch<{ success: boolean; message: string }>(
     url,
