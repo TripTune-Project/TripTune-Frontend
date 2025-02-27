@@ -94,9 +94,6 @@ const Chatting = () => {
           }
         );
       },
-      onStompError: (frame) => {
-        console.log('STOMP 오류:', frame);
-      }
     });
 
     stompClient.activate();
@@ -173,7 +170,8 @@ const Chatting = () => {
           message,
         }),
       });
-      setMessage('');
+      console.log(clientRef, "clientRef: ")
+      // setMessage('');
     }
   };
 
