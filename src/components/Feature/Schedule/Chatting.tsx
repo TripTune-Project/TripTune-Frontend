@@ -42,7 +42,7 @@ const Chatting = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
   
-  const brokerUrl = "wss://www.triptune.site/ws";
+  const brokerUrl = process.env.NEXT_PUBLIC_BROKER_URL;
 
   // 스크롤 맨 위로 이동
   const scrollToTop = () => {
@@ -98,7 +98,8 @@ const Chatting = () => {
           }
         );
         stompClient.subscribe('/user/queue/errors', (message:any) => {
-          alert(`${message.body.message}`);
+          const errorMessage = JSON.parse(message.body);
+          alert(errorMessage.message);
         });
       },
       onDisconnect: () => {
