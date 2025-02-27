@@ -13,7 +13,8 @@ const HomePageSearch = () => {
     if (searchTerm.trim()) {
       router.push(`/Travel?keyword=${encodeURIComponent(searchTerm.trim())}`);
     } else {
-      router.push('/Travel');
+      // router.push('/Travel');
+      alert('검색어를 입력해 주세요.');
     }
   };
 
