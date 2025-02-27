@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState, Suspense } from 'react';
+import React, { Suspense, useEffect, useRef, useState } from 'react';
 import Head from 'next/head';
 import Pagination from '@/components/Common/Pagination';
 import SearchPlacesMap from '@/components/Feature/Travel/SearchPlacesMap';
@@ -29,8 +29,7 @@ const TravelPageContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const keyword = searchParams.get('keyword');
-  console.log(keyword,"keyword: ")
-  
+
   const {
     currentPage,
     searchTerm,
@@ -49,7 +48,6 @@ const TravelPageContent = () => {
     errorMessage: geoErrorMessage,
     permissionState,
   } = useGeolocation();
-  
   const [coordinates, setCoordinates] = useState<{
     latitude: number;
     longitude: number;
@@ -81,7 +79,7 @@ const TravelPageContent = () => {
     refetch: refetchSearch,
   } = useTravelListSearch(
     {
-      keyword: searchTerm,
+      keyword: searchTerm ?? keyword,
       latitude: coordinates?.latitude ?? defaultCoordinates.latitude,
       longitude: coordinates?.longitude ?? defaultCoordinates.longitude,
     },
@@ -89,6 +87,15 @@ const TravelPageContent = () => {
     requiresAuth,
     isSearching
   );
+  
+  useEffect(() => {
+    if (keyword) {
+      setSearchTerm(keyword);
+      setIsSearching(true);
+      setCurrentPage(1);
+      refetchSearch();
+    }
+  }, [keyword, setSearchTerm, setIsSearching, setCurrentPage, refetchSearch]);
   
   const debouncedSearchTerm = useDebounce(searchTerm, 800);
   
