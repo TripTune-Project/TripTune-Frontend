@@ -19,12 +19,12 @@ interface CalendarLayoutProps {
 }
 
 const CalendarLayout = ({
-                          mode,
-                          initialStartDate,
-                          initialEndDate,
-                          travelName = '',
-                          onClose,
-                        }: CalendarLayoutProps) => {
+  mode,
+  initialStartDate,
+  initialEndDate,
+  travelName = '',
+  onClose,
+}: CalendarLayoutProps) => {
   const today = new Date();
   const { updateScheduleDetail } = useTravelStore();
   const [startDate, setStartDate] = useState<Date | null>(
@@ -35,14 +35,16 @@ const CalendarLayout = ({
   );
   const [scheduleName, setScheduleName] = useState<string>(travelName);
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
-  
+
   useEffect(() => {
-    setIsFormValid(scheduleName.trim() !== '' && startDate !== null && endDate !== null);
+    setIsFormValid(
+      scheduleName.trim() !== '' && startDate !== null && endDate !== null
+    );
   }, [startDate, endDate, scheduleName]);
-  
+
   const handleConfirm = async () => {
     if (!isFormValid) return;
-    
+
     if (mode === 'create') {
       const scheduleData = {
         scheduleName,
@@ -66,11 +68,13 @@ const CalendarLayout = ({
       onClose();
     }
   };
-  
+
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContainer}>
-        <button className={styles.closeButton} onClick={onClose}>&times;</button>
+        <button className={styles.closeButton} onClick={onClose}>
+          &times;
+        </button>
         <h2 className={styles.detailTitle}>
           <Image src={triptuneIcon} alt='일정만들기' width={40} priority />
           &nbsp; {mode === 'create' ? '일정 만들기' : '일정 수정'}
@@ -89,7 +93,8 @@ const CalendarLayout = ({
         )}
         <div className={styles.inputGroup}>
           <label>여행 날짜</label>&nbsp;&nbsp;
-          {startDate?.toLocaleDateString('ko-KR')} ~ {endDate?.toLocaleDateString('ko-KR')}
+          {startDate?.toLocaleDateString('ko-KR')} ~{' '}
+          {endDate?.toLocaleDateString('ko-KR')}
         </div>
         <div className={styles.datePickerContainer}>
           <DatePicker
