@@ -97,9 +97,8 @@ const Chatting = () => {
             });
           }
         );
-        // TODO : ERROR
-        stompClient.subscribe('/user/queue/errors', (message) => {
-          alert(`서버 오류: ${message.body}`);
+        stompClient.subscribe('/user/queue/errors', (message:any) => {
+          alert(`${message.body.message}`);
         });
       },
       onDisconnect: () => {
