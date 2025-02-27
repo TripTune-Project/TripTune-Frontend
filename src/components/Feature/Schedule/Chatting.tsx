@@ -170,8 +170,7 @@ const Chatting = () => {
           message,
         }),
       });
-      console.log(clientRef, "clientRef: ")
-      // setMessage('');
+      setMessage('');
     }
   };
 
