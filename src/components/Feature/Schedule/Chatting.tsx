@@ -42,7 +42,7 @@ const Chatting = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
   
-  const brokerUrl = process.env.NEXT_PUBLIC_BROKER_URL;
+  const brokerUrl = "wss://www.triptune.site/ws";
 
   // 스크롤 맨 위로 이동
   const scrollToTop = () => {
@@ -63,9 +63,12 @@ const Chatting = () => {
 
           // 스크롤 맨 위로 강제 이동
           setTimeout(scrollToTop, 0);
+        } else {
+          alert(response.message);
         }
       } catch (error) {
         console.error('메시지 로드 실패:', error);
+        alert('메시지 로드에 실패했습니다.');
       }
     };
 
@@ -77,6 +80,7 @@ const Chatting = () => {
       reconnectDelay: 5000,
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
+      debug: (msg) => console.log('[STOMP DEBUG]:', msg),
       onConnect: () => {
         stompClient.subscribe(
           `/sub/schedules/${scheduleId}/chats`,
@@ -93,17 +97,18 @@ const Chatting = () => {
             });
           }
         );
+        // TODO : ERROR
+        stompClient.subscribe('/user/queue/errors', (message) => {
+          alert(`서버 오류: ${message.body}`);
+        });
       },
       onDisconnect: () => {
         console.log('[STOMP] 연결 해제');
       },
       onStompError: (frame) => {
-        console.error(
-          '[STOMP]에서 에러가 발생했습니다:',
-          frame.headers['message']
-        );
+        console.error('[STOMP] 에러:', frame.headers['message']);
         console.error('[STOMP] 추가 정보:', frame.body);
-        alert(frame.headers['message']);
+        alert(frame.headers['message'] || 'STOMP 에러가 발생했습니다.');
       },
     });
 
@@ -143,8 +148,12 @@ const Chatting = () => {
           }
         }, 0);
       }
+      else {
+        alert(response.message);
+      }
     } catch (error) {
       console.error('다음 메시지 로드 실패:', error);
+      alert('다음 메시지 로드에 실패했습니다.');
     } finally {
       setLoading(false);
     }
@@ -171,16 +180,21 @@ const Chatting = () => {
       alert('전송 제한: 메시지는 3줄 이하 및 1000자 이하로 작성하세요.');
       return;
     }
-
+    
     if (message.trim() && clientRef.current?.connected) {
-      clientRef.current?.publish({
-        destination: '/pub/chats',
-        body: JSON.stringify({
-          scheduleId,
-          nickname: userNickname,
-          message,
-        }),
-      });
+      try {
+        clientRef.current?.publish({
+          destination: '/pub/chats',
+          body: JSON.stringify({
+            scheduleId,
+            nickname: userNickname,
+            message,
+          }),
+        });
+      } catch (error) {
+        console.error('[메시지 전송 오류]', error);
+        alert('메시지 전송에 실패했습니다.');
+      }
       setMessage('');
     }
   };
