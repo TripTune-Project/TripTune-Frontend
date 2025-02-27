@@ -41,7 +41,7 @@ const Chatting = () => {
   const [currentPage, setCurrentPage] = useState<number | null>(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
-
+  
   const brokerUrl = process.env.NEXT_PUBLIC_BROKER_URL;
 
   // 스크롤 맨 위로 이동
@@ -93,6 +93,17 @@ const Chatting = () => {
             });
           }
         );
+      },
+      onDisconnect: () => {
+        console.log('[STOMP] 연결 해제');
+      },
+      onStompError: (frame) => {
+        console.error(
+          '[STOMP]에서 에러가 발생했습니다:',
+          frame.headers['message']
+        );
+        console.error('[STOMP] 추가 정보:', frame.body);
+        alert(frame.headers['message']);
       },
     });
 
