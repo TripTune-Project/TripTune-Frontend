@@ -78,8 +78,8 @@ const TravelPageContent = () => {
   } = useTravelListSearch(
     {
       keyword: searchTerm ? searchTerm : "",
-      latitude: coordinates?.latitude ?? 0,
-      longitude: coordinates?.longitude ?? 0,
+      latitude: coordinates?.latitude ?? defaultCoordinates.latitude,
+      longitude: coordinates?.longitude ?? defaultCoordinates.longitude,
     },
     currentPage,
     requiresAuth,
