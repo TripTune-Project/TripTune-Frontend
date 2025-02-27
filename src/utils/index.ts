@@ -9,18 +9,18 @@ export const truncateText = (text: string, maxLength: number = 100): string => {
 };
 
 // 날짜 유효성 검사 -> 생성
-export const isValidDateForCreation = (
-  startDate: string | Date | null,
-  endDate: string | Date | null
-): boolean => {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0); // 오늘 날짜 기준으로 시간 제거
-
-  const start = new Date(startDate ?? today);
-  const end = new Date(endDate ?? today);
-
-  return start > today && end > today; // 생성일 조건: startDate와 endDate가 오늘 이후
-};
+// export const isValidDateForCreation = (
+//   startDate: string | Date | null,
+//   endDate: string | Date | null
+// ): boolean => {
+//   const today = new Date();
+//   today.setHours(0, 0, 0, 0); // 오늘 날짜 기준으로 시간 제거
+//
+//   const start = new Date(startDate ?? today);
+//   const end = new Date(endDate ?? today);
+//
+//   return start > today && end > today; // 생성일 조건: startDate와 endDate가 오늘 이후
+// };
 
 // 날짜 유효성 검사 -> 수정
 // export const isValidDateForUpdate = (
