@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import styled from 'styled-components';
 import { Attendee } from '@/types/scheduleType';
 import {
   fetchScheduleAttendees,
+  leaveSchedule,
   shareSchedule,
   updatePermission,
 } from '@/apis/Schedule/attendeeApi';
 import { useParams } from 'next/navigation';
 import triptuneIcon from '../../../../public/assets/images/로고/triptuneIcon-removebg.png';
+import saveLocalContent from '@/utils/saveLocalContent';
 
 interface InviteModalProps {
   isOpen: boolean;
@@ -20,11 +22,14 @@ const permissions = [
   { value: 'EDIT', label: '편집 허용', description: '편집 허용, 채팅 불가' },
   { value: 'CHAT', label: '채팅 허용', description: '편집 불가, 채팅 허용' },
   { value: 'READ', label: '읽기 허용', description: '편집 및 채팅 불가' },
+  { value: 'QUIT', label: '내보내기', description: '' },
+  { value: 'LEAVE', label: '일정나가기', description: '' },
 ];
 
 const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
   const { scheduleId } = useParams();
   const [email, setEmail] = useState<string>('');
+  const { getDecryptedCookie } = saveLocalContent();
   const [selectedPermission, setSelectedPermission] = useState<string>('EDIT');
   const [isMainDropdownOpen, setIsMainDropdownOpen] = useState<boolean>(false);
   const [dropdownStates, setDropdownStates] = useState<{
@@ -32,6 +37,24 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
   }>({});
   const [allUsers, setAllUsers] = useState<Attendee[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const loggedInNickname = getDecryptedCookie('nickname');
+
+  const loggedInIsAuthor = useMemo(() => {
+    const author = allUsers.find((user) => user.role === 'AUTHOR');
+    return author && author.nickname === loggedInNickname;
+  }, [allUsers, loggedInNickname]);
+
+  // loggedInNickname과 동일한 사용자를 최상단에 노출
+  const sortedUsers = useMemo(() => {
+    return [...allUsers].sort((a, b) => {
+      if (a.nickname === loggedInNickname && b.nickname !== loggedInNickname)
+        return -1;
+      if (b.nickname === loggedInNickname && a.nickname !== loggedInNickname)
+        return 1;
+      return 0;
+    });
+  }, [allUsers, loggedInNickname]);
 
   useEffect(() => {
     const loadAttendees = async () => {
@@ -55,11 +78,16 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
     loadAttendees();
   }, [isOpen, scheduleId]);
 
-  const toggleDropdown = (email: string) => {
+  const toggleDropdown = (userEmail: string) => {
+    setIsMainDropdownOpen(false);
     setDropdownStates((prev) => ({
-      ...prev,
-      [email]: !prev[email],
+      [userEmail]: !prev[userEmail],
     }));
+  };
+
+  const toggleMainDropdown = () => {
+    setDropdownStates({});
+    setIsMainDropdownOpen((prev) => !prev);
   };
 
   const handleShareClick = async () => {
@@ -90,6 +118,10 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
     attendeeId: number,
     newPermission: string
   ) => {
+    if (newPermission === 'QUIT' || newPermission === 'LEAVE') {
+      await handleLeaveSchedule();
+      return;
+    }
     try {
       const response = await updatePermission(
         Number(scheduleId),
@@ -107,15 +139,24 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
               : user
           )
         );
-        setDropdownStates((prev) => ({
-          ...prev,
-          [attendeeId]: false,
-        }));
+        setDropdownStates({});
       } else {
         alert('권한 변경에 실패했습니다.');
       }
     } catch (error) {
       console.error('권한 변경 중 오류 발생:', error);
+    }
+  };
+
+  // TODO : API 받은 후 수정 필요
+  const handleLeaveSchedule = async () => {
+    const response = await leaveSchedule(Number(scheduleId));
+    if (response.success) {
+      alert('일정에서 나갔습니다.');
+      setAllUsers((prevUsers) =>
+        prevUsers.filter((user) => user.role === 'AUTHOR')
+      );
+      onClose();
     }
   };
 
@@ -129,47 +170,45 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
           <ModalTitle>공유하기</ModalTitle>
           <CloseButton onClick={onClose}>✕</CloseButton>
         </Header>
-
-        <EmailInputContainer>
-          <EmailInput
-            type='email'
-            placeholder='공유할 사용자의 이메일을 입력하세요.'
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <DropdownWrapper>
-            <DropdownButton
-              onClick={() => setIsMainDropdownOpen((prev) => !prev)}
-            >
-              {permissions.find((p) => p.value === selectedPermission)?.label ||
-                '모두 허용'}
-              <DropdownIcon>▼</DropdownIcon>
-            </DropdownButton>
-            {isMainDropdownOpen && (
-              <DropdownMenu>
-                {permissions.map((permission) => (
-                  <DropdownItem
-                    key={permission.value}
-                    onClick={() => {
-                      setSelectedPermission(permission.value);
-                      setIsMainDropdownOpen(false);
-                    }}
-                  >
-                    <strong>{permission.label}</strong>
-                    <DropdownDescription>
-                      {permission.description}
-                    </DropdownDescription>
-                    {selectedPermission === permission.value && (
-                      <CheckMark>✔</CheckMark>
-                    )}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            )}
-          </DropdownWrapper>
-          <ShareButton onClick={handleShareClick}>공유</ShareButton>
-        </EmailInputContainer>
-
+        {loggedInIsAuthor && (
+          <EmailInputContainer>
+            <EmailInput
+              type='email'
+              placeholder='공유할 사용자의 이메일을 입력하세요.'
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <DropdownWrapper>
+              <DropdownButton onClick={toggleMainDropdown}>
+                {permissions.find((p) => p.value === selectedPermission)
+                  ?.label || '모두 허용'}
+                <DropdownIcon>▼</DropdownIcon>
+              </DropdownButton>
+              {isMainDropdownOpen && (
+                <DropdownMenu>
+                  {permissions.slice(0, 4).map((permission) => (
+                    <DropdownItem
+                      key={permission.value}
+                      onClick={() => {
+                        setSelectedPermission(permission.value);
+                        setIsMainDropdownOpen(false);
+                      }}
+                    >
+                      <strong>{permission.label}</strong>
+                      <DropdownDescription>
+                        {permission.description}
+                      </DropdownDescription>
+                      {selectedPermission === permission.value && (
+                        <CheckMark>✔</CheckMark>
+                      )}
+                    </DropdownItem>
+                  ))}
+                </DropdownMenu>
+              )}
+            </DropdownWrapper>
+            <ShareButton onClick={handleShareClick}>공유</ShareButton>
+          </EmailInputContainer>
+        )}
         <UserListHeader>
           <UserListTitle>공유중인 사용자</UserListTitle>
           <NoticeText>※ 사용자는 최대 5명까지 공유 가능합니다.</NoticeText>
@@ -179,7 +218,7 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
           <p>로딩 중...</p>
         ) : (
           <UserList>
-            {allUsers.map((user) => (
+            {sortedUsers.map((user) => (
               <UserListItem key={user.email}>
                 <UserDetails>
                   <ProfileImageWrapper>
@@ -190,42 +229,123 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
                       height={38}
                     />
                   </ProfileImageWrapper>
-                  <span>{user.nickname}</span>
+                  <span>
+                    {user.nickname}
+                    {user.nickname === loggedInNickname ? ' (나)' : ''}
+                  </span>
                   <UserEmail>{user.email}</UserEmail>
                 </UserDetails>
                 {user.role === 'AUTHOR' ? (
                   <AuthorLabel>작성자</AuthorLabel>
                 ) : (
-                  <DropdownWrapper>
-                    <DropdownButton onClick={() => toggleDropdown(user.email)}>
-                      {permissions.find((p) => p.value === user.permission)
-                        ?.label || '모두 허용'}
-                      <DropdownIcon>▼</DropdownIcon>
-                    </DropdownButton>
-                    {dropdownStates[user.email] && (
-                      <DropdownMenu>
-                        {permissions.map((permission) => (
-                          <DropdownItem
-                            key={permission.value}
-                            onClick={() =>
-                              handlePermissionChange(
-                                user.attendeeId,
-                                permission.value
-                              )
-                            }
-                          >
-                            <strong>{permission.label}</strong>
-                            <DropdownDescription>
-                              {permission.description}
-                            </DropdownDescription>
-                            {user.permission === permission.value && (
-                              <CheckMark>✔</CheckMark>
-                            )}
-                          </DropdownItem>
-                        ))}
-                      </DropdownMenu>
-                    )}
-                  </DropdownWrapper>
+                  (loggedInIsAuthor || loggedInNickname === user.nickname) && (
+                    <DropdownWrapper>
+                      <DropdownButton
+                        onClick={() => toggleDropdown(user.email)}
+                      >
+                        {
+                          permissions.find((p) => p.value === user.permission)
+                            ?.label
+                        }
+                        <DropdownIcon>▼</DropdownIcon>
+                      </DropdownButton>
+                      {dropdownStates[user.email] && (
+                        <DropdownMenu>
+                          {loggedInIsAuthor ? (
+                            <>
+                              {permissions.slice(0, 4).map((permission) => (
+                                <DropdownItem
+                                  key={permission.value}
+                                  onClick={() =>
+                                    handlePermissionChange(
+                                      user.attendeeId,
+                                      permission.value
+                                    )
+                                  }
+                                >
+                                  <strong>{permission.label}</strong>
+                                  <DropdownDescription>
+                                    {permission.description}
+                                  </DropdownDescription>
+                                  {user.permission === permission.value && (
+                                    <CheckMark>✔</CheckMark>
+                                  )}
+                                </DropdownItem>
+                              ))}
+                              <hr />
+                              {permissions.slice(4, 5).map((permission) => (
+                                <DropdownItem
+                                  key={permission.value}
+                                  onClick={() =>
+                                    handlePermissionChange(
+                                      user.attendeeId,
+                                      permission.value
+                                    )
+                                  }
+                                >
+                                  <strong>{permission.label}</strong>
+                                  <DropdownDescription>
+                                    {permission.description}
+                                  </DropdownDescription>
+                                </DropdownItem>
+                              ))}
+                            </>
+                          ) : (
+                            <>
+                              <DropdownItem
+                                key='CHAT'
+                                onClick={() =>
+                                  handlePermissionChange(
+                                    user.attendeeId,
+                                    'CHAT'
+                                  )
+                                }
+                              >
+                                <strong>
+                                  {
+                                    permissions.find((p) => p.value === 'CHAT')
+                                      ?.label
+                                  }
+                                </strong>
+                                <DropdownDescription>
+                                  {
+                                    permissions.find((p) => p.value === 'CHAT')
+                                      ?.description
+                                  }
+                                </DropdownDescription>
+                                {user.permission === 'CHAT' && (
+                                  <CheckMark>✔</CheckMark>
+                                )}
+                              </DropdownItem>
+                              <hr />
+                              <DropdownItem
+                                key='LEAVE'
+                                onClick={() =>
+                                  handlePermissionChange(
+                                    user.attendeeId,
+                                    'LEAVE'
+                                  )
+                                }
+                              >
+                                <strong>
+                                  {
+                                    permissions.find((p) => p.value === 'LEAVE')
+                                      ?.label
+                                  }
+                                </strong>
+                                <DropdownDescription>
+                                  {
+                                    permissions.find((p) => p.value === 'LEAVE')
+                                      ?.description
+                                  }
+                                </DropdownDescription>
+                              </DropdownItem>
+                            </>
+                          )}
+                        </DropdownMenu>
+                      )}
+                    </DropdownWrapper>
+                  )
                 )}
               </UserListItem>
             ))}
@@ -243,8 +363,8 @@ const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
@@ -253,10 +373,11 @@ const ModalOverlay = styled.div`
 `;
 
 const ModalContainer = styled.div`
+  margin-bottom: 200px;
   background: #fff;
   width: 591px;
-  border-radius: 30px 0px;
-  box-shadow: 0px 8px 24px 0px rgba(0, 0, 0, 0.3);
+  border-radius: 30px 0;
+  box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.3);
   padding: 20px;
 `;
 
