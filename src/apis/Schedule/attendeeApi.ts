@@ -6,7 +6,7 @@ import {
   ShareSchedule,
 } from '@/types/scheduleType';
 
-// 일정 참석자 조회
+// 1. 참석자 목록 조회 (GET)
 export const fetchScheduleAttendees = async (
   scheduleId: number
 ): Promise<ApiResponse<Attendee[]>> => {
@@ -16,7 +16,7 @@ export const fetchScheduleAttendees = async (
   });
 };
 
-// 일정 공유하기 (POST)
+// 2. 일정 공유하기 (POST)
 export const shareSchedule = async (
   scheduleId: number,
   email: string,
@@ -30,7 +30,28 @@ export const shareSchedule = async (
   );
 };
 
-// 일정 접근 권한 수정하기 (PATCH)
+// 3. 일정 나가기 (DELETE)
+export const leaveSchedule = async (
+  scheduleId: number
+): Promise<ApiResponse<LeaveSchedule>> => {
+  const url = `/api/schedules/${scheduleId}/attendees`;
+  return await remove<ApiResponse<LeaveSchedule>>(url, {
+    requiresAuth: true,
+  });
+};
+
+// 4. 일정 내보내기 (DELETE)
+export const quitSchedule = async (
+  scheduleId: number,
+  attendeeId: number,
+): Promise<ApiResponse<LeaveSchedule>> => {
+  const url = `/api/schedules/${scheduleId}/attendees/${attendeeId}`;
+  return await remove<ApiResponse<LeaveSchedule>>(url, {
+    requiresAuth: true,
+  });
+};
+
+// 5. 일정 접근 권한 수정하기 (PATCH)
 export const updatePermission = async (
   scheduleId: number,
   attendeeId: number,
@@ -44,12 +65,3 @@ export const updatePermission = async (
   );
 };
 
-// 일정 나가기 (DELETE)
-export const leaveSchedule = async (
-  scheduleId: number
-): Promise<ApiResponse<LeaveSchedule>> => {
-  const url = `/api/schedules/${scheduleId}/attendees`;
-  return await remove<ApiResponse<LeaveSchedule>>(url, {
-    requiresAuth: true,
-  });
-};

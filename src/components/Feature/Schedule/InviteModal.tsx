@@ -5,6 +5,7 @@ import { Attendee } from '@/types/scheduleType';
 import {
   fetchScheduleAttendees,
   leaveSchedule,
+  quitSchedule,
   shareSchedule,
   updatePermission,
 } from '@/apis/Schedule/attendeeApi';
@@ -89,26 +90,27 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
     setDropdownStates({});
     setIsMainDropdownOpen((prev) => !prev);
   };
-
+  
   const handleShareClick = async () => {
     const response = await shareSchedule(
       Number(scheduleId),
       email,
       selectedPermission as 'ALL' | 'EDIT' | 'CHAT' | 'READ'
     );
-
+    
     if (response.success) {
       alert('공유가 완료되었습니다.');
-      setAllUsers((prevUsers) => [
-        ...prevUsers,
-        {
-          email,
-          nickname: email.split('@')[0],
-          profileUrl: '/default-profile.png',
-          permission: selectedPermission,
-          attendeeId: Math.random(),
-        } as Attendee,
-      ]);
+      
+      try {
+        const updatedResponse = await fetchScheduleAttendees(Number(scheduleId));
+        if (updatedResponse.success) {
+          setAllUsers(updatedResponse.data || []);
+        } else {
+          console.error('참석자 정보 업데이트 실패:', updatedResponse.message);
+        }
+      } catch (error) {
+        console.error('참석자 정보 갱신 중 오류 발생:', error);
+      }
       setEmail('');
       setSelectedPermission('EDIT');
     }
@@ -118,9 +120,10 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
     attendeeId: number,
     newPermission: string
   ) => {
-    if (newPermission === 'QUIT' || newPermission === 'LEAVE') {
+    if (newPermission === 'QUIT' ) {
+      await handleQuitSchedule(attendeeId);
+    } else if (newPermission === 'LEAVE') {
       await handleLeaveSchedule();
-      return;
     }
     try {
       const response = await updatePermission(
@@ -148,7 +151,19 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
     }
   };
 
-  // TODO : API 받은 후 수정 필요
+  // 일정 내보내기
+  const handleQuitSchedule = async (attendeeId:number) => {
+    const response = await quitSchedule(Number(scheduleId), attendeeId);
+    if (response.success) {
+      alert('일정에서 내보내졌습니다.');
+      setAllUsers((prevUsers) =>
+        prevUsers.filter((user) => user.role === 'AUTHOR')
+      );
+      onClose();
+    }
+  }
+  
+  // 일정 나가기
   const handleLeaveSchedule = async () => {
     const response = await leaveSchedule(Number(scheduleId));
     if (response.success) {
