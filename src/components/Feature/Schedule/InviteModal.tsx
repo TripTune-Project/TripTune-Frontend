@@ -30,7 +30,7 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
   const { scheduleId } = useParams();
   const [email, setEmail] = useState<string>('');
   const { getDecryptedCookie } = saveLocalContent();
-  const [selectedPermission, setSelectedPermission] = useState<string>('EDIT');
+  const [selectedPermission, setSelectedPermission] = useState<string>('');
   const [isMainDropdownOpen, setIsMainDropdownOpen] = useState<boolean>(false);
   const [dropdownStates, setDropdownStates] = useState<{
     [key: string]: boolean;
@@ -293,29 +293,27 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
                           ) : (
                             <>
                               <DropdownItem
-                                key='CHAT'
+                                key={user.permission}
                                 onClick={() =>
                                   handlePermissionChange(
                                     user.attendeeId,
-                                    'CHAT'
+                                    user.permission
                                   )
                                 }
                               >
                                 <strong>
                                   {
-                                    permissions.find((p) => p.value === 'CHAT')
+                                    permissions.find((p) => p.value === user.permission)
                                       ?.label
                                   }
                                 </strong>
                                 <DropdownDescription>
                                   {
-                                    permissions.find((p) => p.value === 'CHAT')
+                                    permissions.find((p) => p.value === user.permission)
                                       ?.description
                                   }
                                 </DropdownDescription>
-                                {user.permission === 'CHAT' && (
                                   <CheckMark>✔</CheckMark>
-                                )}
                               </DropdownItem>
                               <hr />
                               <DropdownItem
