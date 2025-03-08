@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useMyScheduleList } from '@/hooks/useSchedule';
 import { addPlaceToSchedule } from '@/apis/Schedule/scheduleApi';
 import triptuneIcon from '../../../../public/assets/images/로고/triptuneIcon-removebg.png';
-import AlertIcon from '../../../../public/assets/images/여행지 탐색/홈화면/alertIcon.png';
+import emtpyScheduleIcon from '../../../../public/assets/images/여행지 탐색/상세화면/emtpyScheduleIcon.png';
 
 interface MyScheduleEditModalProps {
   isOpen: boolean;
@@ -122,7 +122,7 @@ const MyScheduleEditModal = ({
             <EmptyMessage>
               <EmptyMessageIcon>
                 <Image
-                  src={AlertIcon}
+                  src={emtpyScheduleIcon}
                   alt={'no-schedule-root'}
                   width={80}
                   height={80}

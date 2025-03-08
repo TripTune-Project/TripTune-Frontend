@@ -81,6 +81,7 @@
   line-height: 18px;
   text-align: center;
   white-space: nowrap;
+  cursor: pointer;
 }
 
 .logoutIcon {
@@ -91,6 +92,7 @@
   left: 41px;
   background: url('/assets/images/마이페이지/logoutIcon.png');
   background-size: cover;
+  cursor: pointer;
 }
 
 /* 마이페이지 프로필 관리 */
@@ -600,6 +602,7 @@
   line-height: 21.784px;
   text-align: center;
   white-space: nowrap;
+  cursor: pointer;
 }
 
 .deleteUserVector {
@@ -610,6 +613,7 @@
   left: 98%;
   background: url('/assets/images/마이페이지/Vector.png') no-repeat center;
   background-size: contain;
+  cursor: pointer;
 }
 
 .authentication {
@@ -749,17 +753,6 @@
   border-radius: 5px;
   cursor: pointer;
   border: none;
-}
-
-.accountTermination {
-  position: absolute;
-  width: 72px;
-  height: 22px;
-  top: 585px;
-  left: 850px;
-  color: #666666;
-  font-size: 18px;
-  text-align: center;
 }
 
 .flexColumnC {
@@ -917,17 +910,6 @@
   display: flex;
   gap: 10px;
   margin-left: 490px;
-}
-
-.accountTermination {
-  position: absolute;
-  width: 72px;
-  height: 22px;
-  top: 585px;
-  left: 850px;
-  color: #666666;
-  font-size: 18px;
-  text-align: center;
 }
 
 .fixedText {

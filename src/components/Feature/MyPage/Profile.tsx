@@ -122,9 +122,9 @@ const Profile = () => {
             height={95}
             onClick={handleFileClick}
           />
-          <div className={styles.change} onClick={handleFileClick}>
+          <button type='button' className={styles.change} onClick={handleFileClick}>
             변경
-          </div>
+          </button>
           <span className={styles.fileUploadMessage}>
             • PNG, JPG, JPEG의 확장자 파일만 업로드 가능합니다.
             <br />• 이미지는 5MB 이하만 업로드 가능합니다.
