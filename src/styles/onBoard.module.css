@@ -183,7 +183,6 @@
   margin-bottom: 20px;
 }
 
-.onBoardChooseBtnMore,
 .onBoardNoChooseBtn,
 .onBoardChooseBtn {
   width: 90px;
@@ -202,14 +201,8 @@
   color: #ffffff;
 }
 
-.onBoardChooseBtnMore {
-  float: right;
-  margin-right: 85px;
-}
-
 .onBoardChooseBtn:hover,
-.onBoardNoChooseBtn:hover,
-.onBoardChooseBtnMore:hover {
+.onBoardNoChooseBtn:hover {
   background-color: #d0d0d0;
 }
 

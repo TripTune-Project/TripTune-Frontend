@@ -39,12 +39,6 @@ export interface TravelPlaceDetail extends TravelPlace {
   homepage?: string;
   bookmarkStatus?: boolean;
   imageList: { imageName: string; imageUrl: string }[];
-  // TODO : 추천 여행지 추후 개발 시
-  recommandedTravelList?: {
-    address: string; // 주소
-    placeName: string; // 장소 이름
-    ThumbnailUrl: string; // 이미지
-  }[];
 }
 
 export interface TravelListSearchParams extends Coordinates {
