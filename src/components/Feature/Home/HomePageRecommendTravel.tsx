@@ -168,7 +168,7 @@ const HomePageRecommendTravel = () => {
     <div className={styles.recommendedDestinations}>
       <h2 className={styles.chooseRecomend}>
         <Image src={triptuneIcon} alt='홈화면' width='30' priority />
-        인기 여행지
+        추천 여행 테마
       </h2>
       <div>
         {Object.keys(categoryMapping).map((category) => (

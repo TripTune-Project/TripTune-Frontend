@@ -73,13 +73,19 @@ const Home = () => {
               <p className={styles.onBoardingExplainP}>
                 TripTune과 함께 즐겁고 새로운 여행 계획을 세워보세요.
               </p>
+              <div className={styles.homepageSearchLayout}>
+                <HomePageSearch />
+              </div>
             </div>
-            <div className={styles.onBoardingShow}>
-              <HomePageSearch />
+          </div>
+          <div className={styles.onBoardingButtonLayout}>
+            <div className={styles.textContent}>
+              <span className={styles.textSchedule}>일정</span>을 직접 만들고<br/>
+              여러 <span className={styles.textTravel}>여행지</span>를 만나보세요!
               <div className={styles.buttonContainer}>
-                <div className={styles.viewBtn} onClick={handleScheduleClick}>
+                <div className={styles.viewBtnSchedule} onClick={handleScheduleClick}>
                   <div className={styles.viewTitle}>일정 만들기</div>
-                  <br />
+                  <p className={styles.viewTitleSmall}>직접 일정을 만들어보세요!</p>
                   <div className={styles.iconContainer}>
                     <div className={styles.goLink}>
                       <Image
@@ -98,9 +104,9 @@ const Home = () => {
                     />
                   </div>
                 </div>
-                <div className={styles.viewBtn} onClick={handleTravelClick}>
+                <div className={styles.viewBtnTravel} onClick={handleTravelClick}>
                   <div className={styles.viewTitle}>여행지 탐색</div>
-                  <br />
+                  <p className={styles.viewTitleSmall}>여행지 탐색을 통해 여러 여행지를 만나보세요.</p>
                   <div className={styles.iconContainer}>
                     <div className={styles.goLink}>
                       <Image

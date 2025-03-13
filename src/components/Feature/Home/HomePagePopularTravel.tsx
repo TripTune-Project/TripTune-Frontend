@@ -83,7 +83,7 @@ const StyledSwiperButtonNext = styled.div`
     }
 `;
 
-const HomePagePopularTravel: React.FC = () => {
+const HomePagePopularTravel = () => {
   const images: TravelItem[] = [
     {
       placeId: 162,
