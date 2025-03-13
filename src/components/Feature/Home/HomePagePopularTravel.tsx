@@ -10,18 +10,18 @@ import { Navigation, Pagination } from 'swiper/modules';
 import styles from '@/styles/onBoard.module.css';
 import locationIcon from '../../../../public/assets/images/메인화면/main_slideMapIcon.png';
 import triptuneIcon from '../../../../public/assets/images/로고/triptuneIcon-removebg.png';
-import { homeRecommendTravelList } from '@/apis/Home/homeApi';
+import { homePopularTravelList } from '@/apis/Home/homeApi';
 import Loading from '@/components/Common/DataLoading';
 
 interface TravelItem {
   placeId: number;
   address: string;
-  detailAddress: string | null;
+  detailAddress: string;
   placeName: string;
   thumbnailUrl: string | null;
 }
 
-interface HomeRecommendTravelResponse {
+interface HomePopularTravelResponse {
   success: boolean;
   data: {
     content: TravelItem[];
@@ -30,123 +30,124 @@ interface HomeRecommendTravelResponse {
 }
 
 const StyledSwiperContainer = styled.div`
-  overflow: hidden;
-  position: relative;
-  width: 100%;
-  max-width: 1850px;
-  margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    max-width: 1850px;
+    margin: 0 auto;
 `;
 
 const StyledSwiperButtonPrev = styled.div`
-  position: absolute;
-  top: 50%;
-  width: 60px;
-  height: 60px;
-  left: 10px;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  cursor: pointer;
-  z-index: 10;
-  user-select: none;
-
-  &::after {
-    content: '';
-    display: block;
+    position: absolute;
+    top: 50%;
     width: 60px;
     height: 60px;
-    background-size: cover;
-    background-image: url('/assets/images/메인화면/main_slideLeftBtn.png');
-  }
+    left: 10px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+    user-select: none;
+
+    &::after {
+        content: '';
+        display: block;
+        width: 60px;
+        height: 60px;
+        background-size: cover;
+        background-image: url('/assets/images/메인화면/main_slideLeftBtn.png');
+    }
 `;
 
 const StyledSwiperButtonNext = styled.div`
-  position: absolute;
-  top: 50%;
-  width: 60px;
-  height: 60px;
-  right: 10px;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  cursor: pointer;
-  z-index: 10;
-  user-select: none;
-
-  &::after {
-    content: '';
-    display: block;
+    position: absolute;
+    top: 50%;
     width: 60px;
     height: 60px;
-    background-size: cover;
-    background-image: url('/assets/images/메인화면/main_slideRightBtn.png');
-  }
+    right: 10px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+    user-select: none;
+
+    &::after {
+        content: '';
+        display: block;
+        width: 60px;
+        height: 60px;
+        background-size: cover;
+        background-image: url('/assets/images/메인화면/main_slideRightBtn.png');
+    }
 `;
 
-const HomePageRecommendTravel = () => {
+const HomePagePopularTravel: React.FC = () => {
   const images: TravelItem[] = [
     {
-      placeId: 6,
-      address: '서울특별시 강남구 광평로10길 30-71',
-      detailAddress: '(일원동)',
-      placeName: '대모산도시자연공원',
+      placeId: 162,
+      address: '서울특별시 중구 동호로31길 21',
+      detailAddress: '(충무로5가)',
+      placeName: '묵정어린이공원',
       thumbnailUrl: null,
     },
     {
-      placeId: 8,
-      address: '서울특별시 강남구 역삼로90길 43',
-      detailAddress: '(대치동)',
-      placeName: '대치유수지체육공원',
+      placeId: 207,
+      address: '서울특별시 중구 을지로 227',
+      detailAddress: '(을지로5가)',
+      placeName: '훈련원공원',
       thumbnailUrl:
-        'https://triptune.s3.ap-northeast-2.amazonaws.com/img/korea/01/240827212046_tourapi_firstimage_86c47da1.jpg',
+        'https://triptune.s3.ap-northeast-2.amazonaws.com/img/korea/24/240827212433_tourapi_firstimage_3e260cf2.jpg',
     },
     {
-      placeId: 9,
-      address: '서울특별시 강남구 도산대로45길 20',
-      detailAddress: null,
-      placeName: '도산공원',
-      thumbnailUrl: null,
-    },
-    {
-      placeId: 11,
-      address: '서울특별시 강남구 개포로109길 74',
-      detailAddress: '(개포동)',
-      placeName: '마루공원',
-      thumbnailUrl: null,
-    },
-    {
-      placeId: 17,
-      address: '서울특별시 강남구 삼성동 82',
-      detailAddress: null,
-      placeName: '삼성해맞이공원',
+      placeId: 259,
+      address: '서울특별시 중구 을지로4가',
+      detailAddress: '261-4',
+      placeName: '푸르지오아트홀',
       thumbnailUrl:
-        'https://triptune.s3.ap-northeast-2.amazonaws.com/img/korea/01/240827212052_tourapi_firstimage_b1f617b1.jpg',
+        'https://triptune.s3.ap-northeast-2.amazonaws.com/img/korea/24/240827212600_tourapi_firstimage_0ea71823.jpg',
+    },
+    {
+      placeId: 197,
+      address: '서울특별시 중구 장충단로 176',
+      detailAddress: '(장충동1가)',
+      placeName: '장충동 족발 골목',
+      thumbnailUrl:
+        'https://triptune.s3.ap-northeast-2.amazonaws.com/img/korea/24/240827212425_tourapi_firstimage_5c53d786.jpg',
+    },
+    {
+      placeId: 248,
+      address: '서울특별시 중구 창경궁로5다길 18',
+      detailAddress: '3층, 4층',
+      placeName: '을지예술센터',
+      thumbnailUrl:
+        'https://triptune.s3.ap-northeast-2.amazonaws.com/img/korea/24/240827212549_tourapi_firstimage_bc6a7eff.jpg',
     },
   ];
   
   const router = useRouter();
-  const [selectedCategory, setSelectedCategory] = useState<string>('전체');
+  const [selectedCity, setSelectedCity] = useState<string>('전체');
   const [travelList, setTravelList] = useState<TravelItem[]>(images);
   const [loading, setLoading] = useState<boolean>(false);
-
-  const categoryMapping: Record<string, string> = {
+  
+  const cityMapping: Record<string, string> = {
     '전체': 'all',
-    '관광지': 'attractions',
-    '문화시설': 'culture',
-    '레포츠': 'sports',
-    '숙박': 'lodging',
-    '쇼핑': 'shopping',
-    '음식점': 'food',
+    '서울': 'seoul',
+    '부산': 'busan',
+    '제주': 'jeju',
+    '경기': 'gyeonggi',
+    '강원': 'gangwon',
+    '경상': 'gyongsang',
+    '전라': 'jeolla',
+    '충청': 'chungcheong',
   };
-
-  const handleCategoryClick = async (category: string) => {
-    setSelectedCategory(category);
-    const categoryCode = categoryMapping[category] || 'all';
+  
+  const handleCityClick = async (city: string) => {
+    setSelectedCity(city);
+    const cityCode = cityMapping[city] || 'all';
     setLoading(true);
-    const response: HomeRecommendTravelResponse =
-      (await homeRecommendTravelList(
-        categoryCode
-      )) as HomeRecommendTravelResponse;
+    const response: HomePopularTravelResponse = await homePopularTravelList(cityCode) as HomePopularTravelResponse;
     setLoading(false);
     if (response.success) {
       setTravelList(response.data.content);
@@ -155,33 +156,33 @@ const HomePageRecommendTravel = () => {
       setTravelList(images);
     }
   };
-
+  
   useEffect(() => {
-    handleCategoryClick('전체');
+    handleCityClick('전체');
   }, []);
   
   const handleDetailClick = (placeId: number) => {
     router.push(`/Travel/${placeId}`);
   };
-
+  
   return (
     <div className={styles.recommendedDestinations}>
       <h2 className={styles.chooseRecomend}>
-        <Image src={triptuneIcon} alt='홈화면' width='30' priority />
+        <Image src={triptuneIcon} alt="홈화면" width="30" priority />
         인기 여행지
       </h2>
       <div>
-        {Object.keys(categoryMapping).map((category) => (
+        {Object.keys(cityMapping).map((city) => (
           <button
-            key={category}
+            key={city}
             className={
-              selectedCategory === category
+              selectedCity === city
                 ? styles.onBoardChooseBtn
                 : styles.onBoardNoChooseBtn
             }
-            onClick={() => handleCategoryClick(category)}
+            onClick={() => handleCityClick(city)}
           >
-            {category}
+            {city}
           </button>
         ))}
       </div>
@@ -218,7 +219,7 @@ const HomePageRecommendTravel = () => {
                   <p className={styles.sliderTextPDetail}>
                     <Image
                       src={locationIcon}
-                      alt='장소'
+                      alt="장소"
                       width={15}
                       height={21}
                     />
@@ -227,8 +228,8 @@ const HomePageRecommendTravel = () => {
                 </div>
               </SwiperSlide>
             ))}
-            <StyledSwiperButtonPrev className='swiper-button-prev' />
-            <StyledSwiperButtonNext className='swiper-button-next' />
+            <StyledSwiperButtonPrev className="swiper-button-prev" />
+            <StyledSwiperButtonNext className="swiper-button-next" />
           </Swiper>
         </StyledSwiperContainer>
       ) : (
@@ -238,4 +239,4 @@ const HomePageRecommendTravel = () => {
   );
 };
 
-export default HomePageRecommendTravel;
+export default HomePagePopularTravel;

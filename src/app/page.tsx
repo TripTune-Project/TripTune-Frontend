@@ -11,7 +11,7 @@ import styles from '../styles/onBoard.module.css';
 import mainLinkBtn from '../../public/assets/images/메인화면/main_LinkBtn.png';
 import HomeImage from '../../public/assets/images/메인화면/ocean_title.png';
 import HomePageSearch from '@/components/Feature/Home/HomePageSearch';
-import HomePageBestTravel from '@/components/Feature/Home/HomePageBestTravel';
+import HomePagePopularTravel from '@/components/Feature/Home/HomePagePopularTravel';
 import HomePageRecommendTravel from '@/components/Feature/Home/HomePageRecommendTravel';
 
 const Home = () => {
@@ -124,7 +124,7 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <HomePageBestTravel/>
+      <HomePagePopularTravel/>
       <HomePageRecommendTravel/>
     </div>
   );
