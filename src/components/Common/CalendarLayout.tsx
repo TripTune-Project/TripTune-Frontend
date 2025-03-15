@@ -37,9 +37,15 @@ const CalendarLayout = ({
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
 
   useEffect(() => {
-    setIsFormValid(
-      scheduleName.trim() !== '' && startDate !== null && endDate !== null
-    );
+    if (mode === "create") {
+      setIsFormValid(
+        scheduleName.trim() !== '' && startDate !== null && endDate !== null
+      );
+    } else {
+      setIsFormValid(
+        startDate !== null && endDate !== null
+      );
+    }
   }, [startDate, endDate, scheduleName]);
 
   const handleConfirm = async () => {
