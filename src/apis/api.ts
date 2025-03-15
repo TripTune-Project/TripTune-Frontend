@@ -86,11 +86,11 @@ const fetchData = async <T>(
       // 1. 유효하지 않은 JWT 토큰이면 로그인 페이지로 이동
       if (
         errorData.message ===
-        '유효하지 않은 JWT 토큰입니다. 로그인 후 이용해주세요.'
+        '유효하지 않은 인증 정보입니다. 로그인 후 이용해주세요.'
       ) {
         clearCookies();
         handleRedirectToLogin(
-          '토큰 갱신 시도 후에도 실패했습니다. 다시 로그인 해주세요.'
+          ' 인증 정보가 만료 되었습니다. '
         );
         return undefined as unknown as T;
       }
@@ -108,7 +108,7 @@ const fetchData = async <T>(
             if (!response.ok) {
               clearCookies();
               handleRedirectToLogin(
-                '토큰 갱신 시도 후에도 실패했습니다. 다시 로그인 해주세요.'
+                ' 인증 정보가 만료 되었습니다. '
               );
               return undefined as unknown as T;
             }
@@ -122,7 +122,7 @@ const fetchData = async <T>(
         } else {
           clearCookies();
           handleRedirectToLogin(
-            '토큰 갱신 시도 후에도 실패했습니다. 다시 로그인 해주세요.'
+            ' 인증 정보가 만료 되었습니다. '
           );
           return undefined as unknown as T;
         }
