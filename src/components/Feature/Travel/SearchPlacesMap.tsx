@@ -22,7 +22,7 @@ const SearchPlacesMap = ({ places }: MapProps) => {
   const [zoom, setZoom] = useState(16);
   const [center, setCenter] = useState(defaultCenter);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
-
+  
   const loadGoogleMapsScript = () => {
     const existingScript = document.getElementById('google-maps-script');
     if (!existingScript) {
@@ -43,7 +43,7 @@ const SearchPlacesMap = ({ places }: MapProps) => {
       initializeMap();
     }
   };
-
+  
   const initializeMap = () => {
     if (mapContainerRef.current && !mapRef.current && window.google) {
       mapRef.current = new google.maps.Map(mapContainerRef.current, {
@@ -53,10 +53,10 @@ const SearchPlacesMap = ({ places }: MapProps) => {
       });
     }
   };
-
+  
   useEffect(() => {
     loadGoogleMapsScript();
-
+    
     return () => {
       if (mapRef.current) {
         google.maps.event.clearInstanceListeners(mapRef.current);
@@ -64,13 +64,13 @@ const SearchPlacesMap = ({ places }: MapProps) => {
       }
     };
   }, []);
-
+  
   useEffect(() => {
     if (isMapLoaded) {
       initializeMap();
     }
   }, [isMapLoaded]);
-
+  
   useEffect(() => {
     const map = mapRef.current;
     if (map && isMapLoaded) {
@@ -84,9 +84,14 @@ const SearchPlacesMap = ({ places }: MapProps) => {
         bounds.extend(marker.getPosition() as google.maps.LatLng);
       });
       map.fitBounds(bounds);
+      
+      // bounds가 변경된 후, zoom을 16으로 강제 설정
+      google.maps.event.addListenerOnce(map, 'bounds_changed', () => {
+        map.setZoom(16);
+      });
     }
   }, [places, isMapLoaded]);
-
+  
   useEffect(() => {
     const map = mapRef.current;
     if (map) {
@@ -96,27 +101,24 @@ const SearchPlacesMap = ({ places }: MapProps) => {
           setZoom(newZoom);
         }
       };
-
+      
       const handleCenterChange = () => {
         const newCenter = map.getCenter();
         if (newCenter) {
           setCenter({ lat: newCenter.lat(), lng: newCenter.lng() });
         }
       };
-
+      
       const zoomListener = map.addListener('zoom_changed', handleZoomChange);
-      const centerListener = map.addListener(
-        'center_changed',
-        handleCenterChange
-      );
-
+      const centerListener = map.addListener('center_changed', handleCenterChange);
+      
       return () => {
         google.maps.event.removeListener(zoomListener);
         google.maps.event.removeListener(centerListener);
       };
     }
   }, []);
-
+  
   return <div ref={mapContainerRef} style={containerStyle} />;
 };
 
