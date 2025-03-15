@@ -80,7 +80,6 @@ const Chatting = () => {
       reconnectDelay: 5000,
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
-      debug: (msg) => console.log('[STOMP DEBUG]:', msg),
       onConnect: () => {
         stompClient.subscribe(
           `/sub/schedules/${scheduleId}/chats`,
@@ -102,12 +101,7 @@ const Chatting = () => {
           alert(errorMessage.message);
         });
       },
-      onDisconnect: () => {
-        console.log('[STOMP] 연결 해제');
-      },
       onStompError: (frame) => {
-        console.error('[STOMP] 에러:', frame.headers['message']);
-        console.error('[STOMP] 추가 정보:', frame.body);
         alert(frame.headers['message'] || 'STOMP 에러가 발생했습니다.');
       },
     });
@@ -177,7 +171,7 @@ const Chatting = () => {
 
     // 메시지 전송 제한 조건
     if (messageLines > 3 || message.length > 1000) {
-      alert('전송 제한: 메시지는 3줄 이하 및 1000자 이하로 작성하세요.');
+      alert('메시지는 3줄 이하 및 1000자 이하로 작성하세요.');
       return;
     }
     
