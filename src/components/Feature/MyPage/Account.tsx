@@ -60,9 +60,8 @@ const Account = () => {
     }
     setEmailRequestLoading(true);
     try {
-      const response = await requestEmailVerification(data.email);
+      await requestEmailVerification(data.email);
       alert('인증 요청이 성공적으로 완료되었습니다.');
-      console.log('인증 요청 응답:', response);
       setEmailRequestSuccess(true);
     } catch (error: any) {
       console.error('이메일 인증 요청 실패:', error.message);
@@ -79,9 +78,8 @@ const Account = () => {
     }
     setEmailConfirmLoading(true);
     try {
-      const response = await verifyEmail(data.email, data.verificationCode);
+      await verifyEmail(data.email, data.verificationCode);
       alert('이메일 인증이 성공적으로 완료되었습니다.');
-      console.log('인증 확인 응답:', response);
     } catch (error: any) {
       console.error('이메일 인증 확인 실패:', error.message);
       alert('이메일 인증 확인에 실패했습니다.');
