@@ -81,7 +81,7 @@ const Home = () => {
           <div className={styles.onBoardingButtonLayout}>
             <div className={styles.textContent}>
               <span className={styles.textSchedule}>일정</span>을 직접 만들고<br/>
-              여러 <span className={styles.textTravel}>여행지</span>를 만나보세요!
+              <span className={styles.textEtc}>여러</span> <span className={styles.textTravel}>여행지</span>를 만나보세요!
               <div className={styles.buttonContainer}>
                 <div className={styles.viewBtnSchedule} onClick={handleScheduleClick}>
                   <div className={styles.viewTitle}>일정 만들기</div>

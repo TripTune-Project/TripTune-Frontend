@@ -36,12 +36,14 @@
   font-size: 37px;
   font-weight: 800;
   margin-top:-360px;
+  margin-left:200px;
 }
 
 .onBoardingExplainP {
   bottom:85px;
   font-size: 25px;
   font-weight: 500;
+  margin-left:200px;
 }
 
 .onBoardingView {
@@ -198,10 +200,10 @@
 }
 
 .recommendedDestinations {
-  width:1296px;
+  width:1366px;
   text-align: left;
   margin-top: 76px;
-  margin-left: 20%;
+  margin-left: 12%;
 }
 
 .chooseRecomend {
@@ -241,32 +243,27 @@
 .imgSliderContainer {
   margin-top: 39px;
   flex: 1;
-  width: 90%;
-  max-width: 400px;
-  height:350px;
+  width:295px;
+  height:351px;
   border-radius: 0 0 30px 0;
   background: #ffffff;
   text-align: center;
-  margin-left: auto;
-  margin-right: auto;
+  margin-left: 40px;
   border: 1px solid #e0e0e0;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .sliderImg {
-  width: 100%;
-  max-width: 400px;
-  height: auto;
+  width:295px;
+  height:203px;
   object-fit: cover;
   border-radius: 30px 0 0 0;
 }
 
 .noImage {
   position: relative;
-  width: 100%;
-  max-width: 400px;
-  height:auto;
-  min-height: 195px;
+  width: 295px;
+  height:203px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -420,10 +417,14 @@
   /*margin-left:25px;*/
 }
 
-.textSchedule {
+.textSchedule, .textEtc {
   width: 51px;
   height: 30px;
   flex-shrink: 0;
+  margin-left:270px;
+}
+
+.textSchedule {
   background: rgba(150, 200, 199, 0.50);
 }
 
@@ -432,4 +433,5 @@
   height: 30px;
   flex-shrink: 0;
   background: rgba(158, 199, 244, 0.50);
+  margin-left:10px;
 }

@@ -35,6 +35,7 @@ const StyledSwiperContainer = styled.div`
     width: 100%;
     max-width: 1850px;
     margin: 0 auto;
+    padding: 0 30px;
 `;
 
 const StyledSwiperButtonPrev = styled.div`
@@ -65,7 +66,7 @@ const StyledSwiperButtonNext = styled.div`
     top: 50%;
     width: 60px;
     height: 60px;
-    right: 10px;
+    right: -20px;
     transform: translateY(-50%);
     background: none;
     border: none;
@@ -208,8 +209,8 @@ const HomePagePopularTravel = () => {
                         className={styles.sliderImg}
                         src={item.thumbnailUrl}
                         alt={item.placeName}
-                        width={400}
-                        height={280}
+                        width={295}
+                        height={203}
                       />
                     </>
                   ) : (
