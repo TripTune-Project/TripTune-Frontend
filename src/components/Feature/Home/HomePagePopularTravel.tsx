@@ -12,6 +12,7 @@ import locationIcon from '../../../../public/assets/images/메인화면/main_sli
 import triptuneIcon from '../../../../public/assets/images/로고/triptuneIcon-removebg.png';
 import { homePopularTravelList } from '@/apis/Home/homeApi';
 import Loading from '@/components/Common/DataLoading';
+import { truncateText } from '@/utils';
 
 interface TravelItem {
   placeId: number;
@@ -23,9 +24,7 @@ interface TravelItem {
 
 interface HomePopularTravelResponse {
   success: boolean;
-  data: {
-    content: TravelItem[];
-  };
+  data: TravelItem[];
   message?: string;
 }
 
@@ -85,51 +84,9 @@ const StyledSwiperButtonNext = styled.div`
 `;
 
 const HomePagePopularTravel = () => {
-  const images: TravelItem[] = [
-    {
-      placeId: 162,
-      address: '서울특별시 중구 동호로31길 21',
-      detailAddress: '(충무로5가)',
-      placeName: '묵정어린이공원',
-      thumbnailUrl: null,
-    },
-    {
-      placeId: 207,
-      address: '서울특별시 중구 을지로 227',
-      detailAddress: '(을지로5가)',
-      placeName: '훈련원공원',
-      thumbnailUrl:
-        'https://triptune.s3.ap-northeast-2.amazonaws.com/img/korea/24/240827212433_tourapi_firstimage_3e260cf2.jpg',
-    },
-    {
-      placeId: 259,
-      address: '서울특별시 중구 을지로4가',
-      detailAddress: '261-4',
-      placeName: '푸르지오아트홀',
-      thumbnailUrl:
-        'https://triptune.s3.ap-northeast-2.amazonaws.com/img/korea/24/240827212600_tourapi_firstimage_0ea71823.jpg',
-    },
-    {
-      placeId: 197,
-      address: '서울특별시 중구 장충단로 176',
-      detailAddress: '(장충동1가)',
-      placeName: '장충동 족발 골목',
-      thumbnailUrl:
-        'https://triptune.s3.ap-northeast-2.amazonaws.com/img/korea/24/240827212425_tourapi_firstimage_5c53d786.jpg',
-    },
-    {
-      placeId: 248,
-      address: '서울특별시 중구 창경궁로5다길 18',
-      detailAddress: '3층, 4층',
-      placeName: '을지예술센터',
-      thumbnailUrl:
-        'https://triptune.s3.ap-northeast-2.amazonaws.com/img/korea/24/240827212549_tourapi_firstimage_bc6a7eff.jpg',
-    },
-  ];
-  
   const router = useRouter();
   const [selectedCity, setSelectedCity] = useState<string>('전체');
-  const [travelList, setTravelList] = useState<TravelItem[]>(images);
+  const [travelList, setTravelList] = useState<TravelItem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   
   const cityMapping: Record<string, string> = {
@@ -139,7 +96,7 @@ const HomePagePopularTravel = () => {
     '제주': 'jeju',
     '경기': 'gyeonggi',
     '강원': 'gangwon',
-    '경상': 'gyongsang',
+    '경상': 'gyeongsang',
     '전라': 'jeolla',
     '충청': 'chungcheong',
   };
@@ -151,10 +108,10 @@ const HomePagePopularTravel = () => {
     const response: HomePopularTravelResponse = await homePopularTravelList(cityCode) as HomePopularTravelResponse;
     setLoading(false);
     if (response.success) {
-      setTravelList(response.data.content);
+      setTravelList(response.data);
     } else {
       console.error(response.message);
-      setTravelList(images);
+      setTravelList([]);
     }
   };
   
@@ -172,7 +129,7 @@ const HomePagePopularTravel = () => {
         <Image src={triptuneIcon} alt="홈화면" width="30" priority />
         인기 여행지
       </h2>
-      <div>
+      <div className={styles.onBoardChips}>
         {Object.keys(cityMapping).map((city) => (
           <button
             key={city}
@@ -216,7 +173,7 @@ const HomePagePopularTravel = () => {
                   ) : (
                     <div className={styles.noImage}>이미지 없음</div>
                   )}
-                  <p className={styles.sliderTextP}>{item.placeName}</p>
+                  <p className={styles.sliderTextP}>{truncateText(item.placeName, 10)}</p>
                   <p className={styles.sliderTextPDetail}>
                     <Image
                       src={locationIcon}
@@ -234,7 +191,7 @@ const HomePagePopularTravel = () => {
           </Swiper>
         </StyledSwiperContainer>
       ) : (
-        <p>데이터가 없습니다.</p>
+        <p className={styles.noData}>데이터가 없습니다.</p>
       )}
     </div>
   );

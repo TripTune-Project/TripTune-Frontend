@@ -12,6 +12,7 @@ import locationIcon from '../../../../public/assets/images/메인화면/main_sli
 import triptuneIcon from '../../../../public/assets/images/로고/triptuneIcon-removebg.png';
 import { homeRecommendTravelList } from '@/apis/Home/homeApi';
 import Loading from '@/components/Common/DataLoading';
+import { truncateText } from '@/utils';
 
 interface TravelItem {
   placeId: number;
@@ -23,9 +24,7 @@ interface TravelItem {
 
 interface HomeRecommendTravelResponse {
   success: boolean;
-  data: {
-    content: TravelItem[];
-  };
+  data: TravelItem[];
   message?: string;
 }
 
@@ -85,52 +84,12 @@ const StyledSwiperButtonNext = styled.div`
 `;
 
 const HomePageRecommendTravel = () => {
-  const images: TravelItem[] = [
-    {
-      placeId: 6,
-      address: '서울특별시 강남구 광평로10길 30-71',
-      detailAddress: '(일원동)',
-      placeName: '대모산도시자연공원',
-      thumbnailUrl: null,
-    },
-    {
-      placeId: 8,
-      address: '서울특별시 강남구 역삼로90길 43',
-      detailAddress: '(대치동)',
-      placeName: '대치유수지체육공원',
-      thumbnailUrl:
-        'https://triptune.s3.ap-northeast-2.amazonaws.com/img/korea/01/240827212046_tourapi_firstimage_86c47da1.jpg',
-    },
-    {
-      placeId: 9,
-      address: '서울특별시 강남구 도산대로45길 20',
-      detailAddress: null,
-      placeName: '도산공원',
-      thumbnailUrl: null,
-    },
-    {
-      placeId: 11,
-      address: '서울특별시 강남구 개포로109길 74',
-      detailAddress: '(개포동)',
-      placeName: '마루공원',
-      thumbnailUrl: null,
-    },
-    {
-      placeId: 17,
-      address: '서울특별시 강남구 삼성동 82',
-      detailAddress: null,
-      placeName: '삼성해맞이공원',
-      thumbnailUrl:
-        'https://triptune.s3.ap-northeast-2.amazonaws.com/img/korea/01/240827212052_tourapi_firstimage_b1f617b1.jpg',
-    },
-  ];
-  
   const router = useRouter();
-  const [selectedCategory, setSelectedCategory] = useState<string>('전체');
-  const [travelList, setTravelList] = useState<TravelItem[]>(images);
+  const [selectedTheme, setSelectedTheme] = useState<string>('전체');
+  const [travelList, setTravelList] = useState<TravelItem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const categoryMapping: Record<string, string> = {
+  const themeMapping: Record<string, string> = {
     '전체': 'all',
     '관광지': 'attractions',
     '문화시설': 'culture',
@@ -140,25 +99,25 @@ const HomePageRecommendTravel = () => {
     '음식점': 'food',
   };
 
-  const handleCategoryClick = async (category: string) => {
-    setSelectedCategory(category);
-    const categoryCode = categoryMapping[category] || 'all';
+  const handleThemeClick = async (theme: string) => {
+    setSelectedTheme(theme);
+    const themeCode = themeMapping[theme] || 'all';
     setLoading(true);
     const response: HomeRecommendTravelResponse =
       (await homeRecommendTravelList(
-        categoryCode
+        themeCode
       )) as HomeRecommendTravelResponse;
     setLoading(false);
     if (response.success) {
-      setTravelList(response.data.content);
+      setTravelList(response.data);
     } else {
       console.error(response.message);
-      setTravelList(images);
+      setTravelList([]);
     }
   };
 
   useEffect(() => {
-    handleCategoryClick('전체');
+    handleThemeClick('전체');
   }, []);
   
   const handleDetailClick = (placeId: number) => {
@@ -171,18 +130,18 @@ const HomePageRecommendTravel = () => {
         <Image src={triptuneIcon} alt='홈화면' width='30' priority />
         추천 여행 테마
       </h2>
-      <div>
-        {Object.keys(categoryMapping).map((category) => (
+      <div className={styles.onBoardChips}>
+        {Object.keys(themeMapping).map((theme) => (
           <button
-            key={category}
+            key={theme}
             className={
-              selectedCategory === category
+              selectedTheme === theme
                 ? styles.onBoardChooseBtn
                 : styles.onBoardNoChooseBtn
             }
-            onClick={() => handleCategoryClick(category)}
+            onClick={() => handleThemeClick(theme)}
           >
-            {category}
+            {theme}
           </button>
         ))}
       </div>
@@ -215,7 +174,7 @@ const HomePageRecommendTravel = () => {
                   ) : (
                     <div className={styles.noImage}>이미지 없음</div>
                   )}
-                  <p className={styles.sliderTextP}>{item.placeName}</p>
+                  <p className={styles.sliderTextP}>{truncateText(item.placeName, 10)}</p>
                   <p className={styles.sliderTextPDetail}>
                     <Image
                       src={locationIcon}

@@ -7,7 +7,7 @@ export const homePopularTravelList = async (
 ) => {
   try {
     return await get(
-      `/api/travels/popular/${city}`,
+      `/api/travels/popular?city=${city}`,
       { requiresAuth } // 인증 필요 여부 전달
     );
   } catch (error) {
@@ -22,12 +22,12 @@ export const homePopularTravelList = async (
 
 // 추천 테마 여행지
 export const homeRecommendTravelList = async (
-  category: string = "all",
+  theme: string = "all",
   requiresAuth: boolean = false // 기본값 false
 ) => {
   try {
     return await get(
-      `/api/travels/${category}`,
+      `/api/travels/recommend?theme=${theme}`,
       { requiresAuth } // 인증 필요 여부 전달
     );
   } catch (error) {
