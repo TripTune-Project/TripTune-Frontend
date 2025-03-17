@@ -192,7 +192,7 @@ const HomePageRecommendTravel = () => {
           </Swiper>
         </StyledSwiperContainer>
       ) : (
-        <p>데이터가 없습니다.</p>
+        !loading && <p className={styles.noData}>데이터가 없습니다.</p>
       )}
     </div>
   );
