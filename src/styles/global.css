@@ -131,7 +131,3 @@ body::-webkit-scrollbar {
     border-radius: 50% !important;
     color: #ffffff !important;
 }
-
-.swiper {
-    overflow: visible!important;
-}

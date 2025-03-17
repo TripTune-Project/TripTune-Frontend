@@ -149,6 +149,7 @@ const HomePagePopularTravel = () => {
       ) : travelList.length > 0 ? (
         <StyledSwiperContainer>
           <Swiper
+            style={{overflow: 'visible' }}
             modules={[Navigation, Pagination]}
             slidesPerView={4}
             navigation={{
