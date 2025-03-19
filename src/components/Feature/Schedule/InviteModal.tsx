@@ -34,7 +34,7 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
   const { scheduleId } = useParams();
   const [email, setEmail] = useState<string>('');
   const { getDecryptedCookie } = saveLocalContent();
-  const [selectedPermission, setSelectedPermission] = useState<string>('');
+  const [selectedPermission, setSelectedPermission] = useState<string>('EDIT');
   const [isMainDropdownOpen, setIsMainDropdownOpen] = useState<boolean>(false);
   const [dropdownStates, setDropdownStates] = useState<{
     [key: string]: boolean;
