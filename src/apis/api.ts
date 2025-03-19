@@ -127,16 +127,8 @@ const fetchData = async <T>(
           return undefined as unknown as T;
         }
       }
-
-      // 3. /Schedule 포함 & 404 또는 403 상태 코드일 경우 undefined 반환
-      if (
-        window.location.pathname.includes('/Schedule') &&
-        (response.status === 404 || response.status === 403)
-      ) {
-        return undefined as unknown as T;
-      }
-
-      // 4. 기타 에러 메시지 처리
+      
+      // 3. 기타 에러 메시지 처리
       alert(errorData.message || '알 수 없는 오류가 발생했습니다.');
     } catch {
       alert('서버 응답을 처리할 수 없습니다.');

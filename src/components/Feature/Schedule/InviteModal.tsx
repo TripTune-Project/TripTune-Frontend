@@ -13,6 +13,7 @@ import { useParams } from 'next/navigation';
 import triptuneIcon from '../../../../public/assets/images/로고/triptuneIcon-removebg.png';
 import saveLocalContent from '@/utils/saveLocalContent';
 import DataLoading from '@/components/Common/DataLoading';
+import { useRouter } from 'next/navigation';
 
 interface InviteModalProps {
   isOpen: boolean;
@@ -29,6 +30,7 @@ const permissions = [
 ];
 
 const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
+  const router = useRouter();
   const { scheduleId } = useParams();
   const [email, setEmail] = useState<string>('');
   const { getDecryptedCookie } = saveLocalContent();
@@ -162,6 +164,7 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
       );
       onClose();
     }
+    router.push("/Schedule");
   }
   
   // 일정 나가기
@@ -174,6 +177,7 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
       );
       onClose();
     }
+    router.push("/Schedule");
   };
 
   if (!isOpen) return null;
