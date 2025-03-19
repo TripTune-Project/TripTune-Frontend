@@ -73,11 +73,7 @@ const FindPage = () => {
         router.push(`/Find/Complete?userId=${responseMessage.data.userId}`);
       }
     } catch (error) {
-      if (error instanceof Error) {
-        setErrorMessage(error.message);
-      } else {
-        setErrorMessage('아이디 찾기 요청에 실패했습니다. 다시 시도해주세요.');
-      }
+      setErrorMessage('아이디 찾기 요청에 실패했습니다. 다시 시도해주세요.');
       setAlertSeverity('error');
       setAlertOpen(true);
     } finally {
