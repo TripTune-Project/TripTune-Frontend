@@ -24,8 +24,8 @@
 .loginTitle {
   color: #000;
   font-family:
-    Noto Sans KR,
-    serif;
+          Noto Sans KR,
+          serif;
   font-size: 40px;
   font-style: normal;
   font-weight: 400;
@@ -38,14 +38,14 @@
 .errorText {
   color: red;
   font-family:
-    Noto Sans KR,
-    sans-serif;
+          Noto Sans KR,
+          sans-serif;
   font-size: 14px;
   margin-top: 5px;
 }
 
 .inputGroup {
-  width: 100%;
+  width: 480px;
   max-width: 480px;
   height: auto;
   flex-shrink: 0;
@@ -56,54 +56,43 @@
 .input {
   width: 480px;
   max-width: 480px;
-  height: 60px;
-  flex-shrink: 0;
+  height: 55px;
   border: 1px solid #848282;
   border-radius: 5px;
-  font-family:
-    Noto Sans KR,
-    sans-serif;
-  font-size: 16px;
   background: #ffffff;
+  font-size: 16px;
   padding-left: 15px;
-  padding-right: 15px;
-  box-sizing: border-box;
 }
 
 .inputError {
-  width: 100%;
-  max-width: 480px;
-  height: 60px;
+  width: 480px;
   font-family:
-    Noto Sans KR,
-    sans-serif;
+          Noto Sans KR,
+          sans-serif;
   font-size: 16px;
+  max-width: 480px;
+  height: 55px;
   border: 1px solid red;
   padding-left: 15px;
-  padding-right: 15px;
-  box-sizing: border-box;
 }
 
 .submitButton {
   width: 100%;
-  max-width: 480px;
-  height: 60px;
-  flex-shrink: 0;
-  padding: 15px;
-  color: #ffffff;
+  height: 55px;
   background-color: #a7cdcc;
-  border: none;
-  font-family:
-    Noto Sans KR,
-    sans-serif;
+  color: #ffffff;
   font-size: 18px;
-  font-weight: 700;
+  border: none;
   cursor: pointer;
-  margin-bottom: 15px;
+  margin-top: 20px;
+  font-weight: 700;
 }
 
 .submitButton:disabled {
-  background: #ccc;
+  background-color: #cccccc;
+  color: #666666;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .linkContainer {
@@ -120,8 +109,8 @@
 .join {
   color: #333;
   font-family:
-    Noto Sans KR,
-    sans-serif;
+          Noto Sans KR,
+          sans-serif;
   font-size: 14px;
   cursor: pointer;
   margin: 0 5px;
@@ -175,8 +164,8 @@
   color: #363636;
   border: none;
   font-family:
-    Noto Sans KR,
-    sans-serif;
+          Noto Sans KR,
+          sans-serif;
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
