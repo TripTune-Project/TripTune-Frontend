@@ -20,11 +20,10 @@ const clearCookies = () => {
 const getAuthHeaders = (): HeadersInit => {
   const { getDecryptedCookie } = saveLocalContent();
   const accessToken = getDecryptedCookie('trip-tune_at'); // 복호화된 토큰 가져오기
-
+  
   if (!accessToken) {
     throw new Error('액세스 토큰이 없습니다. 다시 로그인 해주세요.');
   }
-
   return {
     Authorization: `Bearer ${accessToken}`,
   };
@@ -33,14 +32,16 @@ const getAuthHeaders = (): HeadersInit => {
 let isRetrying = false;
 let isRedirectingToLogin = false;
 
-const handleRedirectToLogin = (message: string) => {
+const handleRedirectToLogin = (message: string, silent = false) => {
   if (!isRedirectingToLogin && window.location.pathname !== '/Login') {
     isRedirectingToLogin = true;
     const currentPath = window.location.pathname;
     localStorage.setItem('redirectAfterLogin', currentPath);
-
-    alert(message);
-
+    
+    if (!silent) {
+      alert(message);
+    }
+    
     clearCookies();
     window.location.href = '/Login';
   }
@@ -55,7 +56,7 @@ const fetchData = async <T>(
     ...DEFAULT_HEADERS,
     ...options.headers,
   };
-
+  
   if (options.requiresAuth) {
     try {
       headers = { ...headers, ...getAuthHeaders() };
@@ -64,38 +65,32 @@ const fetchData = async <T>(
       if (newAccessToken) {
         headers = { ...headers, Authorization: `Bearer ${newAccessToken}` };
       } else {
-        handleRedirectToLogin('액세스 토큰이 없습니다. 다시 로그인 해주세요.');
+        handleRedirectToLogin('액세스 토큰이 없습니다. 다시 로그인 해주세요.', true);
         return Promise.reject('Unauthorized');
       }
     }
   }
-
+  
   const requestConfig: FetchOptions = {
     ...options,
     headers,
     credentials: 'include',
   };
-
+  
   let response = await fetch(url, requestConfig);
-
-  // 실패한 경우 서버의 에러 메시지를 처리
+  
   if (!response.ok) {
     try {
       const errorData = await response.json();
-
-      // 1. 유효하지 않은 JWT 토큰이면 로그인 페이지로 이동
-      if (
-        errorData.message ===
-        '유효하지 않은 인증 정보입니다. 로그인 후 이용해주세요.'
-      ) {
+      
+      // 인증 정보 관련 에러 처리
+      if (errorData.message === '유효하지 않은 인증 정보입니다. 로그인 후 이용해주세요.') {
         clearCookies();
-        handleRedirectToLogin(
-          ' 인증 정보가 만료 되었습니다. '
-        );
+        handleRedirectToLogin('인증 정보가 만료 되었습니다.', true);
         return undefined as unknown as T;
       }
-
-      // 2. 401 (토큰 만료) 시 갱신 시도
+      
+      // 401 에러: 토큰 만료 상황 처리
       if (response.status === 401) {
         if (!isRetrying) {
           isRetrying = true;
@@ -103,38 +98,36 @@ const fetchData = async <T>(
           if (newAccessToken) {
             headers = { ...headers, Authorization: `Bearer ${newAccessToken}` };
             response = await fetch(url, { ...requestConfig, headers });
-
-            // 새로운 요청도 실패하면 로그인 페이지로 이동
+            
             if (!response.ok) {
               clearCookies();
-              handleRedirectToLogin(
-                ' 인증 정보가 만료 되었습니다. '
-              );
+              handleRedirectToLogin('인증 정보가 만료 되었습니다.', true);
               return undefined as unknown as T;
             }
           } else {
             clearCookies();
-            handleRedirectToLogin(
-              '토큰 갱신에 실패했습니다. 다시 로그인 해주세요.'
-            );
+            handleRedirectToLogin('토큰 갱신에 실패했습니다. 다시 로그인 해주세요.', true);
             return undefined as unknown as T;
           }
         } else {
           clearCookies();
-          handleRedirectToLogin(
-            ' 인증 정보가 만료 되었습니다. '
-          );
+          handleRedirectToLogin('인증 정보가 만료 되었습니다.', true);
           return undefined as unknown as T;
         }
       }
       
-      // 3. 기타 에러 메시지 처리
-      alert(errorData.message);
+      // 그 외 기타 에러 처리: 일정 접근 권한 없음일 경우 뒤로 가기
+      if (errorData.message === '해당 일정에 접근 권한이 없는 사용자 입니다.') {
+        alert(errorData.message);
+        window.history.back();
+      } else if (errorData.message !== undefined) {
+        alert(errorData.message);
+      }
     } catch {
       alert('서버 응답을 처리할 수 없습니다.');
     }
   }
-
+  
   isRetrying = false;
   return response.json();
 };

@@ -201,7 +201,7 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
             <DropdownWrapper>
               <DropdownButton onClick={toggleMainDropdown}>
                 {permissions.find((p) => p.value === selectedPermission)
-                  ?.label || '모두 허용'}
+                  ?.label}
                 <DropdownIcon>▼</DropdownIcon>
               </DropdownButton>
               {isMainDropdownOpen && (
