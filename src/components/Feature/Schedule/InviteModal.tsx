@@ -12,6 +12,7 @@ import {
 import { useParams } from 'next/navigation';
 import triptuneIcon from '../../../../public/assets/images/로고/triptuneIcon-removebg.png';
 import saveLocalContent from '@/utils/saveLocalContent';
+import DataLoading from '@/components/Common/DataLoading';
 
 interface InviteModalProps {
   isOpen: boolean;
@@ -230,7 +231,7 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
         </UserListHeader>
         <Divider />
         {isLoading ? (
-          <p>로딩 중...</p>
+          <DataLoading/>
         ) : (
           <UserList>
             {sortedUsers.map((user) => (
@@ -245,120 +246,99 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
                     />
                   </ProfileImageWrapper>
                   <span>
-                    {user.nickname}
+        {user.nickname}
                     {user.nickname === loggedInNickname ? ' (나)' : ''}
-                  </span>
+      </span>
                   <UserEmail>{user.email}</UserEmail>
                 </UserDetails>
                 {user.role === 'AUTHOR' ? (
                   <AuthorLabel>작성자</AuthorLabel>
-                ) : (
-                  (loggedInIsAuthor || loggedInNickname === user.nickname) && (
-                    <DropdownWrapper>
-                      <DropdownButton
-                        onClick={() => toggleDropdown(user.email)}
-                      >
-                        {
-                          permissions.find((p) => p.value === user.permission)
-                            ?.label
-                        }
-                        <DropdownIcon>▼</DropdownIcon>
-                      </DropdownButton>
-                      {dropdownStates[user.email] && (
-                        <DropdownMenu>
-                          {loggedInIsAuthor ? (
-                            <>
-                              {permissions.slice(0, 4).map((permission) => (
-                                <DropdownItem
-                                  key={permission.value}
-                                  onClick={() =>
-                                    handlePermissionChange(
-                                      user.attendeeId,
-                                      permission.value
-                                    )
-                                  }
-                                >
-                                  <strong>{permission.label}</strong>
-                                  <DropdownDescription>
-                                    {permission.description}
-                                  </DropdownDescription>
-                                  {user.permission === permission.value && (
-                                    <CheckMark>✔</CheckMark>
-                                  )}
-                                </DropdownItem>
-                              ))}
-                              <hr />
-                              {permissions.slice(4, 5).map((permission) => (
-                                <DropdownItem
-                                  key={permission.value}
-                                  onClick={() =>
-                                    handlePermissionChange(
-                                      user.attendeeId,
-                                      permission.value
-                                    )
-                                  }
-                                >
-                                  <strong>{permission.label}</strong>
-                                  <DropdownDescription>
-                                    {permission.description}
-                                  </DropdownDescription>
-                                </DropdownItem>
-                              ))}
-                            </>
-                          ) : (
-                            <>
+                ) : loggedInIsAuthor || loggedInNickname === user.nickname ? (
+                  <DropdownWrapper>
+                    <DropdownButton onClick={() => toggleDropdown(user.email)}>
+                      {permissions.find((p) => p.value === user.permission)?.label}
+                      <DropdownIcon>▼</DropdownIcon>
+                    </DropdownButton>
+                    {dropdownStates[user.email] && (
+                      <DropdownMenu>
+                        {loggedInIsAuthor ? (
+                          <>
+                            {permissions.slice(0, 4).map((permission) => (
                               <DropdownItem
-                                key={user.permission}
+                                key={permission.value}
                                 onClick={() =>
-                                  handlePermissionChange(
-                                    user.attendeeId,
-                                    user.permission
-                                  )
+                                  handlePermissionChange(user.attendeeId, permission.value)
                                 }
                               >
-                                <strong>
-                                  {
-                                    permissions.find((p) => p.value === user.permission)
-                                      ?.label
-                                  }
-                                </strong>
+                                <strong>{permission.label}</strong>
                                 <DropdownDescription>
-                                  {
-                                    permissions.find((p) => p.value === user.permission)
-                                      ?.description
-                                  }
+                                  {permission.description}
                                 </DropdownDescription>
+                                {user.permission === permission.value && (
                                   <CheckMark>✔</CheckMark>
+                                )}
                               </DropdownItem>
-                              <hr />
+                            ))}
+                            <hr />
+                            {permissions.slice(4, 5).map((permission) => (
                               <DropdownItem
-                                key='LEAVE'
+                                key={permission.value}
                                 onClick={() =>
-                                  handlePermissionChange(
-                                    user.attendeeId,
-                                    'LEAVE'
-                                  )
+                                  handlePermissionChange(user.attendeeId, permission.value)
                                 }
                               >
-                                <strong>
-                                  {
-                                    permissions.find((p) => p.value === 'LEAVE')
-                                      ?.label
-                                  }
-                                </strong>
+                                <strong>{permission.label}</strong>
                                 <DropdownDescription>
-                                  {
-                                    permissions.find((p) => p.value === 'LEAVE')
-                                      ?.description
-                                  }
+                                  {permission.description}
                                 </DropdownDescription>
                               </DropdownItem>
-                            </>
-                          )}
-                        </DropdownMenu>
-                      )}
-                    </DropdownWrapper>
-                  )
+                            ))}
+                          </>
+                        ) : (
+                          <>
+                            <DropdownItem
+                              key={user.permission}
+                              onClick={() =>
+                                handlePermissionChange(user.attendeeId, user.permission)
+                              }
+                            >
+                              <strong>
+                                {
+                                  permissions.find((p) => p.value === user.permission)
+                                    ?.label
+                                }
+                              </strong>
+                              <DropdownDescription>
+                                {
+                                  permissions.find((p) => p.value === user.permission)
+                                    ?.description
+                                }
+                              </DropdownDescription>
+                              <CheckMark>✔</CheckMark>
+                            </DropdownItem>
+                            <hr />
+                            <DropdownItem
+                              key="LEAVE"
+                              onClick={() =>
+                                handlePermissionChange(user.attendeeId, 'LEAVE')
+                              }
+                            >
+                              <strong>
+                                {permissions.find((p) => p.value === 'LEAVE')?.label}
+                              </strong>
+                              <DropdownDescription>
+                                {permissions.find((p) => p.value === 'LEAVE')?.description}
+                              </DropdownDescription>
+                            </DropdownItem>
+                          </>
+                        )}
+                      </DropdownMenu>
+                    )}
+                  </DropdownWrapper>
+                ) : (
+                  <span>
+        {permissions.find((p) => p.value === user.permission)?.label}
+      </span>
                 )}
               </UserListItem>
             ))}
