@@ -156,6 +156,7 @@
   position: absolute;
   width: 95px;
   height: 95px;
+  object-fit: contain;
   top: 0;
   left: 165px;
   background: #ffffff;
