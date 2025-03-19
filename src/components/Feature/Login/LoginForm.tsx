@@ -37,12 +37,10 @@ const LoginForm = () => {
       await loginUser(data);
 
       const redirectPath = localStorage.getItem('redirectAfterLogin') || '/';
-      localStorage.removeItem('redirectAfterLogin'); // 사용 후 제거
+      localStorage.removeItem('redirectAfterLogin');
       router.push(redirectPath);
     } catch (error) {
       console.error('로그인 에러:', error);
-      setErrorMessage('아이디 또는 비밀번호가 잘못되었습니다.');
-      setOpenSnackbar(true);
     }
   };
 
