@@ -59,7 +59,19 @@ const LoginForm = () => {
     window.location.href =
       'https://nid.naver.com/oauth2.0/authorize?client_id=YOUR_NAVER_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&response_type=code';
   };
-
+  
+  const handleFindId = () => {
+    window.open('/Find?tab=findId', 'FindId', 'width=619,height=673');
+  };
+  
+  const handleFindPassword = () => {
+    window.open(
+      '/Find?tab=findPassword',
+      'FindPassword',
+      'width=619,height=673'
+    );
+  };
+  
   return (
     <Suspense fallback={<VerificationLoading />}>
       <div className={styles.loginBackground}>
@@ -106,14 +118,14 @@ const LoginForm = () => {
           <div className={styles.linkContainer}>
             <span
               className={styles.findId}
-              onClick={() => router.push('/Find?tab=findId')}
+              onClick={handleFindId}
             >
               아이디 찾기
             </span>{' '}
             |{' '}
             <span
               className={styles.findPassword}
-              onClick={() => router.push('/Find?tab=findPassword')}
+              onClick={handleFindPassword}
             >
               비밀번호 찾기
             </span>{' '}
