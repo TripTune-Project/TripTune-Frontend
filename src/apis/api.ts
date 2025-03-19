@@ -129,7 +129,7 @@ const fetchData = async <T>(
       }
       
       // 3. 기타 에러 메시지 처리
-      alert(errorData.message || '알 수 없는 오류가 발생했습니다.');
+      alert(errorData.message);
     } catch {
       alert('서버 응답을 처리할 수 없습니다.');
     }
