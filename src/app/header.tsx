@@ -63,14 +63,10 @@ const Header = () => {
   };
 
   const isActive = (path: string): string =>
-    `${styles.navLink} ${pathname === path ? styles.active : ''} ${
-      pathname === '/' ? styles.homeNavLink : styles.otherNavLink
-    }`;
-
-  const headerClassName = `${styles.header} ${pathname === '/' ? styles.homeHeader : ''}`;
-
+    `${styles.navLink} ${pathname === path ? styles.active : ''} ${styles.homeNavLink}`;
+  
   return (
-    <header className={headerClassName}>
+    <header className={styles.header}>
       <div className={styles.headerContent}>
         <Link href='/'>
           <Image
@@ -112,7 +108,6 @@ const Header = () => {
             ) : (
               <div
                 className={styles.navLogin}
-                style={{ color: pathname === '/' ? 'white' : 'black' }}
               >
                 {nickName} 님
                 <Button onClick={openModal} variant='text' size='large'>
