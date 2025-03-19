@@ -96,10 +96,10 @@ const EmailVerification = ({
   const handleEmailVerification = async () => {
     const { email, authCode } = getValues();
 
-    if (!authCode || !/^\d+$/.test(authCode)) {
-      setErrorMessage('인증 코드는 숫자로만 입력해주세요.');
+    if (!authCode) {
+      setErrorMessage('인증 코드를 입력해주세요.');
       setAlertSeverity('error');
-      setNotificationMessage('인증 코드는 숫자로만 입력해주세요.');
+      setNotificationMessage('인증 코드를 입력해주세요.');
       setOpenSnackbar(true);
       return;
     }
