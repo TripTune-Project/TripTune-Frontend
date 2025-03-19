@@ -68,9 +68,9 @@ const FindPage = () => {
     setLoading(true);
     try {
       const responseMessage = await requestFindId(email);
-      if (responseMessage.id) {
+      if (responseMessage.data.userId) {
         setAlertSeverity('success');
-        router.push(`/Find/Complete?userId=${responseMessage.id}`);
+        router.push(`/Find/Complete?userId=${responseMessage.data.userId}`);
       }
     } catch (error) {
       if (error instanceof Error) {

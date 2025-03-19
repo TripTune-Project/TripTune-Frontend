@@ -1,7 +1,11 @@
 import { post } from '../api';
 
 interface FindIdResponse {
-  id: string;
+  data: {
+    userId: string;
+  }
+  success: boolean;
+  message: string;
 }
 
 interface FindPasswordResponse {
