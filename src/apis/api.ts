@@ -32,7 +32,7 @@ const getAuthHeaders = (): HeadersInit => {
 let isRetrying = false;
 let isRedirectingToLogin = false;
 
-const handleRedirectToLogin = (message: string, silent = false) => {
+const handleRedirectToLogin = (message:string, silent = false) => {
   if (!isRedirectingToLogin && window.location.pathname !== '/Login') {
     isRedirectingToLogin = true;
     const currentPath = window.location.pathname;
@@ -57,6 +57,7 @@ const fetchData = async <T>(
     ...options.headers,
   };
   
+  // 1) 요청 시 인증이 필요한 경우
   if (options.requiresAuth) {
     try {
       headers = { ...headers, ...getAuthHeaders() };
@@ -78,32 +79,36 @@ const fetchData = async <T>(
   };
   
   let response = await fetch(url, requestConfig);
-  
   if (!response.ok) {
     try {
       const errorData = await response.json();
       
-      // 인증 정보 관련 에러 처리
+      // 2) "유효하지 않은 인증 정보" 메시지
       if (errorData.message === '유효하지 않은 인증 정보입니다. 로그인 후 이용해주세요.') {
         clearCookies();
         handleRedirectToLogin('인증 정보가 만료 되었습니다.', true);
         return undefined as unknown as T;
       }
       
-      // 401 에러: 토큰 만료 상황 처리
+      // 3) 401 에러: 토큰 만료 -> 토큰 재발급 후 재요청
       if (response.status === 401) {
         if (!isRetrying) {
           isRetrying = true;
           const newAccessToken = await refreshApi();
           if (newAccessToken) {
             headers = { ...headers, Authorization: `Bearer ${newAccessToken}` };
-            response = await fetch(url, { ...requestConfig, headers });
+            const retryResponse = await fetch(url, { ...requestConfig, headers });
             
-            if (!response.ok) {
+            // 재요청도 실패하면 로그인 화면으로 이동
+            if (!retryResponse.ok) {
               clearCookies();
               handleRedirectToLogin('인증 정보가 만료 되었습니다.', true);
               return undefined as unknown as T;
             }
+            
+            // 재요청이 성공하면 여기서 바로 반환
+            isRetrying = false;
+            return retryResponse.json();
           } else {
             clearCookies();
             handleRedirectToLogin('토큰 갱신에 실패했습니다. 다시 로그인 해주세요.', true);
@@ -116,7 +121,7 @@ const fetchData = async <T>(
         }
       }
       
-      // 그 외 기타 에러 처리: 일정 접근 권한 없음일 경우 뒤로 가기
+      // 4) 그 외 에러
       if (errorData.message === '해당 일정에 접근 권한이 없는 사용자 입니다.') {
         alert(errorData.message);
         window.history.back();
@@ -126,8 +131,11 @@ const fetchData = async <T>(
     } catch {
       alert('서버 응답을 처리할 수 없습니다.');
     }
+    // 에러가 있는 경우 반환값이 없으므로 함수 종료
+    return undefined as unknown as T;
   }
   
+  // 요청이 정상이라면 응답 반환
   isRetrying = false;
   return response.json();
 };
