@@ -26,18 +26,22 @@ const LoginModal = () => {
 
   return (
     <ModalOverlay style={{ marginTop: '-93px' }}>
-      <Modal>
-        <h2>{MODAL_MESSAGES.loginRequired.title}</h2>
-        <p>{MODAL_MESSAGES.loginRequired.description}</p>
+      <ModalContent>
+        <Title>{MODAL_MESSAGES.loginRequired.title}</Title>
+        <Description>
+          {MODAL_MESSAGES.loginRequired.description1}
+          <br />
+          {MODAL_MESSAGES.loginRequired.description2}
+        </Description>
         <ButtonContainer>
-          <ConfirmButton onClick={handleLinkTogoLogin}>
-            {MODAL_MESSAGES.loginRequired.confirmButton}
-          </ConfirmButton>
           <CancelButton onClick={handleCancel}>
             {MODAL_MESSAGES.loginRequired.cancelButton}
           </CancelButton>
+          <ConfirmButton onClick={handleLinkTogoLogin}>
+            {MODAL_MESSAGES.loginRequired.confirmButton}
+          </ConfirmButton>
         </ButtonContainer>
-      </Modal>
+      </ModalContent>
     </ModalOverlay>
   );
 };
@@ -57,37 +61,69 @@ const ModalOverlay = styled.div`
   overflow: hidden;
 `;
 
-const Modal = styled.div`
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 8px;
-  width: 400px;
-  height: 200px;
-  max-width: 90%;
+const ModalContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0px 8px 24px 0px rgba(0, 0, 0, 0.3);
+  width: 414px;
+  height: 252px;
+`;
+
+const Title = styled.h2`
+  margin-top: 25px;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+`;
+
+const Description = styled.p`
+  color: #666;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin-bottom: 40px;
 `;
 
 const ButtonContainer = styled.div`
   display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
+  justify-content: center;
+  gap: 10px;
 `;
 
-const ConfirmButton = styled.button`
-  background-color: #4caf50;
-  border: none;
-  padding: 10px 20px;
-  color: #ffffff;
-  border-radius: 4px;
+const BaseButton = styled.button`
+  font-size: 14px;
+  font-weight: bold;
   cursor: pointer;
+  transition: background 0.3s ease;
 `;
 
-const CancelButton = styled.button`
-  background-color: #f44336;
+const CancelButton = styled(BaseButton)`
+  height: 40px;
+  width: 153px;
+  background: #f0f0f0;
+  color: #333;
+  border: 1px solid #ccc;
+
+  &:hover {
+    background: #e0e0e0;
+  }
+`;
+
+const ConfirmButton = styled(BaseButton)`
+  height: 40px;
+  width: 153px;
+  background: #76adac;
+  color: #fff;
   border: none;
-  padding: 10px 20px;
-  color: #ffffff;
-  border-radius: 4px;
-  cursor: pointer;
+
+  &:hover {
+    background: #5a8f8e;
+  }
 `;
