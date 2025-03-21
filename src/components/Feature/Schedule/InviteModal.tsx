@@ -162,9 +162,9 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
       setAllUsers((prevUsers) =>
         prevUsers.filter((user) => user.role === 'AUTHOR')
       );
-      onClose();
+      // onClose();
     }
-    router.push("/Schedule");
+    // router.push("/Schedule");
   }
   
   // 일정 나가기
