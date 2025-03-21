@@ -24,7 +24,7 @@ export const requestFindPassword = async (
   email: string,
   userId: string
 ): Promise<FindPasswordResponse> => {
-  const url = '/api/emails/find-password';
+  const url = '/api/members/find-password';
   return await post<FindPasswordResponse>(url, {
     email,
     userId,
