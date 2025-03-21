@@ -265,13 +265,13 @@ export default function SchedulePage() {
           <div className={styles.scheduleDates}>
             수정일 : {schedule.sinceUpdate}
           </div>
-          <Image
-            src={schedule.author?.profileUrl ?? ''}
-            alt='프로필 이미지'
-            className={styles.scheduleImageProfile}
-            width={38}
-            height={38}
-          />
+            <Image
+              src={schedule.author?.profileUrl ?? ''}
+              alt='프로필 이미지'
+              className={styles.scheduleImageProfile}
+              width={38}
+              height={38}
+            />
         </div>
       </div>
     ));
