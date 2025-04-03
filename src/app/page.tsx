@@ -8,7 +8,6 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import styles from '../styles/onBoard.module.css';
-import mainLinkBtn from '../../public/assets/images/메인화면/main_LinkBtn.png';
 import HomeImage from '../../public/assets/images/메인화면/ocean_title.png';
 import HomePageSearch from '@/components/Feature/Home/HomePageSearch';
 import HomePagePopularTravel from '@/components/Feature/Home/HomePagePopularTravel';
@@ -94,14 +93,6 @@ const Home = () => {
                   <div className={styles.viewTitle}>일정 만들기</div>
                   <p className={styles.viewTitleSmall}>직접 일정을 만들어보세요!</p>
                   <div className={styles.iconContainer}>
-                    <div className={styles.goLink}>
-                      <Image
-                        src={mainLinkBtn}
-                        alt='바로가기'
-                        width={50}
-                        height={50}
-                      />
-                    </div>
                     <Image
                       src={scheduleIcon}
                       className={styles.time}
@@ -121,14 +112,6 @@ const Home = () => {
                   <div className={styles.viewTitle}>여행지 탐색</div>
                   <p className={styles.viewTitleSmall}>여행지 탐색을 통해 여러 여행지를 만나보세요.</p>
                   <div className={styles.iconContainer}>
-                    <div className={styles.goLink}>
-                      <Image
-                        src={mainLinkBtn}
-                        alt='바로가기'
-                        width={50}
-                        height={50}
-                      />
-                    </div>
                     <Image
                       src={travelIcon}
                       className={styles.travel}
