@@ -4,7 +4,7 @@ import { useEffect, Suspense } from 'react';
 import Head from 'next/head';
 import LoginForm from '@/components/Feature/Login/LoginForm';
 import { useRouter } from 'next/navigation';
-import VerificationLoading from '../../components/Common/VerificationLoading';
+import VerificationLoading from '@/components/Common/VerificationLoading';
 import saveLocalContent from '@/utils/saveLocalContent';
 
 export default function LoginPage() {

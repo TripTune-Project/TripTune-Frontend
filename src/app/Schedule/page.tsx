@@ -21,14 +21,16 @@ import { deleteSchedule } from '@/apis/Schedule/scheduleApi';
 import { leaveSchedule } from '@/apis/Schedule/attendeeApi';
 import DeleteModal from '@/components/Feature/Schedule/DeleteModal';
 import moreBtn from '../../../public/assets/images/일정 만들기/일정 목록 조회/moreBtn.png';
-import NoResultLayout from '../../components/Common/NoResult';
+import NoResultLayout from '@/components/Common/NoResult';
 import LoginModal from '@/components/Common/LoginModal';
 import CalendarLayout from '@/components/Common/CalendarLayout';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 export default function SchedulePage() {
   const router = useRouter();
   const { isAuthenticated, isLoading } = useAuth();
-
+  
   useEffect(() => {
     if (!isAuthenticated) {
       document.body.style.overflow = 'hidden';
@@ -37,7 +39,7 @@ export default function SchedulePage() {
       document.body.style.overflow = 'auto';
     };
   }, [isAuthenticated]);
-
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeDeleteMenu, setActiveDeleteMenu] = useState<number | null>(null);
   const [selectedScheduleId, setSelectedScheduleId] = useState<number | null>(
@@ -47,9 +49,14 @@ export default function SchedulePage() {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const [selectedTab, setSelectedTab] = useState<'all' | 'share'>('all');
-
+  
+  // Snackbar 상태 관리
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertSeverity, setAlertSeverity] = useState<'success' | 'error' | 'warning' | 'info'>('info');
+  
   const debouncedSearchKeyword = useDebounce(searchKeyword, 800);
-
+  
   const {
     data: allScheduleData,
     isLoading: isAllScheduleLoading,
@@ -58,7 +65,7 @@ export default function SchedulePage() {
     hasNextPage: hasNextAllPage,
     isFetchingNextPage: isFetchingNextAllPage,
   } = useScheduleList(selectedTab === 'all' && !isSearching);
-
+  
   const {
     data: sharedScheduleData,
     isLoading: isSharedScheduleLoading,
@@ -67,20 +74,20 @@ export default function SchedulePage() {
     hasNextPage: hasNextSharedPage,
     isFetchingNextPage: isFetchingNextSharedPage,
   } = useSharedScheduleList(selectedTab === 'share' && !isSearching);
-
+  
   const {
     data: searchData,
     fetchNextPage: fetchNextSearchPage,
     hasNextPage: hasNextSearchPage,
     isFetchingNextPage: isFetchingNextSearchPage,
   } = useScheduleListSearch(debouncedSearchKeyword, selectedTab, isSearching);
-
+  
   const observerRef = useRef<HTMLDivElement | null>(null);
-
+  
   const handleOpenModal = () => {
     setIsModalOpen(true);
   };
-
+  
   const handleToggleDeleteMenu = (
     scheduleId: number,
     event: React.MouseEvent
@@ -90,69 +97,81 @@ export default function SchedulePage() {
       prevId === scheduleId ? null : scheduleId
     );
   };
-
+  
   const handleDeleteConfirmation = async () => {
     if (selectedScheduleId) {
       try {
         const response = await deleteSchedule(selectedScheduleId);
         if (response.success) {
-          alert('일정이 성공적으로 삭제되었습니다.');
+          setAlertMessage('일정이 성공적으로 삭제되었습니다.');
+          setAlertSeverity('success');
+          setAlertOpen(true);
           window.location.reload();
         } else {
-          alert('일정 삭제 중 오류가 발생했습니다.');
+          setAlertMessage('일정 삭제 중 오류가 발생했습니다.');
+          setAlertSeverity('error');
+          setAlertOpen(true);
         }
       } catch (error) {
-        alert('서버 내부 오류가 발생하였습니다.');
+        setAlertMessage('서버 내부 오류가 발생하였습니다.');
+        setAlertSeverity('error');
+        setAlertOpen(true);
       }
     }
   };
-
+  
   const handleDeleteSchedule = (event: React.MouseEvent) => {
     event.stopPropagation();
     setIsDeleteModalOpen(true);
   };
-
+  
   const handleLeaveSchedule = async (scheduleId: number) => {
     if (!scheduleId) return;
-
+    
     try {
       const response = await leaveSchedule(scheduleId);
       if (response.success) {
-        alert('일정에서 성공적으로 나갔습니다.');
+        setAlertMessage('일정에서 성공적으로 나갔습니다.');
+        setAlertSeverity('success');
+        setAlertOpen(true);
         window.location.reload();
       } else {
-        alert('일정 나가기 중 오류가 발생했습니다.');
+        setAlertMessage('일정 나가기 중 오류가 발생했습니다.');
+        setAlertSeverity('error');
+        setAlertOpen(true);
       }
     } catch (error) {
-      alert('서버 내부 오류가 발생하였습니다.');
+      setAlertMessage('서버 내부 오류가 발생하였습니다.');
+      setAlertSeverity('error');
+      setAlertOpen(true);
     }
   };
-
+  
   const fetchNextPage = isSearching
     ? fetchNextSearchPage
     : selectedTab === 'all'
       ? fetchNextAllPage
       : fetchNextSharedPage;
-
+  
   const hasNextPage = isSearching
     ? hasNextSearchPage
     : selectedTab === 'all'
       ? hasNextAllPage
       : hasNextSharedPage;
-
+  
   const isFetchingNextPage = isSearching
     ? isFetchingNextSearchPage
     : selectedTab === 'all'
       ? isFetchingNextAllPage
       : isFetchingNextSharedPage;
-
+  
   const handleObserver = (entries: IntersectionObserverEntry[]) => {
     const target = entries[0];
     if (target.isIntersecting && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
   };
-
+  
   useEffect(() => {
     const observerNode = observerRef.current;
     const option = {
@@ -160,25 +179,30 @@ export default function SchedulePage() {
       rootMargin: '20px',
       threshold: 1.0,
     };
-
+    
     const observer = new IntersectionObserver(handleObserver, option);
     if (observerNode) observer.observe(observerNode);
-
+    
     return () => {
       if (observerNode) observer.unobserve(observerNode);
     };
   }, [hasNextPage, fetchNextPage]);
-
+  
   useEffect(() => {
     setIsSearching(!!debouncedSearchKeyword);
   }, [debouncedSearchKeyword]);
-
-  const handleDetailClick = (e: React.MouseEvent, scheduleId: number) => {
+  
+  const handleDetailClick = (event: React.MouseEvent, scheduleId: number) => {
     if (!activeDeleteMenu) {
       router.push(`/Schedule/${scheduleId}`);
     }
   };
-
+  
+  const handleAlertClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') return;
+    setAlertOpen(false);
+  };
+  
   const renderSchedules = (
     scheduleListData: ApiResponse<ScheduleList> | undefined,
     isSearching: boolean
@@ -187,7 +211,7 @@ export default function SchedulePage() {
       if (isSearching) {
         return <NoResultLayout />;
       }
-
+      
       return (
         <div className={styles.noScheduleContainer}>
           <Image
@@ -203,7 +227,7 @@ export default function SchedulePage() {
         </div>
       );
     }
-
+    
     return scheduleListData.data.content.map((schedule: Schedule) => (
       <div
         key={schedule.scheduleId}
@@ -395,6 +419,16 @@ export default function SchedulePage() {
           <CalendarLayout mode='create' onClose={() => setIsModalOpen(false)} />
         )}
       </div>
+      <Snackbar
+        open={alertOpen}
+        autoHideDuration={3000}
+        onClose={handleAlertClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={handleAlertClose} severity={alertSeverity} sx={{ width: '100%' }}>
+          {alertMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

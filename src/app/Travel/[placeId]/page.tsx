@@ -8,7 +8,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
-import styles from '../../../styles/Travel.module.css';
+import styles from '@/styles/Travel.module.css';
 import DataLoading from '@/components/Common/DataLoading';
 import SearchDetailPlaceMap from '@/components/Feature/Travel/SearchDetailPlaceMap';
 import { BookMarkApi, BookMarkDeleteApi } from '@/apis/BookMark/bookMarkApi';

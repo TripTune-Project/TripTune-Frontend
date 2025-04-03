@@ -7,6 +7,8 @@ import { useMyPage } from '@/hooks/useMyPage';
 import { nickNameChange } from '@/apis/MyPage/myPageApi';
 import saveLocalContent from '@/utils/saveLocalContent';
 import ProfileBasicImg from '../../../../public/assets/images/마이페이지/profileImage.png';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 const Profile = () => {
   const { setEncryptedCookie } = saveLocalContent();
@@ -14,7 +16,17 @@ const Profile = () => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [tempNickname, setTempNickname] = useState(userData?.nickname || '');
-
+  
+  // Snackbar 상태 관리
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertSeverity, setAlertSeverity] = useState<'success' | 'error' | 'warning' | 'info'>('info');
+  
+  const handleAlertClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') return;
+    setAlertOpen(false);
+  };
+  
   const {
     register,
     handleSubmit,
@@ -27,13 +39,13 @@ const Profile = () => {
       profileImage: userData?.profileImage || ProfileBasicImg,
     },
   });
-
+  
   useEffect(() => {
     if (userData?.nickname) {
       setValue('nickname', userData.nickname);
     }
   }, [userData, setValue]);
-
+  
   const handleFileClick = () => {
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
@@ -43,7 +55,9 @@ const Profile = () => {
       if (file) {
         const maxSizeInBytes = 5 * 1024 * 1024; // 5MB
         if (file.size > maxSizeInBytes) {
-          alert('파일 크기는 5MB 이하로 업로드해 주세요.');
+          setAlertMessage('파일 크기는 5MB 이하로 업로드해 주세요.');
+          setAlertSeverity('warning');
+          setAlertOpen(true);
           return;
         }
         setSelectedImage(file);
@@ -66,48 +80,60 @@ const Profile = () => {
 
           const data = await response.json();
           if (data.success) {
-            alert('프로필 이미지가 성공적으로 변경되었습니다.');
+            setAlertMessage('프로필 이미지가 성공적으로 변경되었습니다.');
+            setAlertSeverity('success');
+            setAlertOpen(true);
             await fetchUserData();
           } else {
-            alert(data.message || '이미지 변경에 실패했습니다.');
+            setAlertMessage(data.message || '이미지 변경에 실패했습니다.');
+            setAlertSeverity('error');
+            setAlertOpen(true);
           }
         } catch (error) {
           console.error('이미지 변경 중 오류 발생:', error);
-          alert('오류가 발생했습니다. 다시 시도해주세요.');
+          setAlertMessage('오류가 발생했습니다. 다시 시도해주세요.');
+          setAlertSeverity('error');
+          setAlertOpen(true);
         }
       }
     };
     fileInput.click();
   };
-
+  
   const handleEdit = () => {
     setTempNickname(userData?.nickname || '');
     setIsEditing(true);
   };
-
+  
   const handleCancel = () => {
     setIsEditing(false);
     setValue('nickname', tempNickname);
   };
-
+  
   const handleSave = async (data: { nickname: string }) => {
     try {
       const response = await nickNameChange(data.nickname);
       if (response.success) {
         setEncryptedCookie('nickname', data.nickname, 7);
-        alert('닉네임이 성공적으로 변경되었습니다.');
+        setAlertMessage('닉네임이 성공적으로 변경되었습니다.');
+        setAlertSeverity('success');
+        setAlertOpen(true);
         await fetchUserData();
         window.history.go(0);
         setIsEditing(false);
       } else {
-        alert(response.message || '닉네임 변경에 실패했습니다.');
+        setAlertMessage(response.message || '닉네임 변경에 실패했습니다.');
+        setAlertSeverity('error');
+        setAlertOpen(true);
       }
     } catch (error) {
       console.error('닉네임 변경 중 오류 발생:', error);
-      alert('오류가 발생했습니다. 다시 시도해주세요.');
+      setAlertMessage('오류가 발생했습니다. 다시 시도해주세요.');
+      setAlertSeverity('error');
+      setAlertOpen(true);
     }
   };
-
+  
   return (
     <div className={styles.flexColumnF}>
       <span className={styles.profileManagement4}>프로필 관리</span>
@@ -117,12 +143,12 @@ const Profile = () => {
           <Image
             className={styles.rectangle7}
             src={userData?.profileImage ?? ProfileBasicImg}
-            alt='프로필 이미지'
+            alt="프로필 이미지"
             width={95}
             height={95}
             onClick={handleFileClick}
           />
-          <button type='button' className={styles.change} onClick={handleFileClick}>
+          <button type="button" className={styles.change} onClick={handleFileClick}>
             변경
           </button>
           <span className={styles.fileUploadMessage}>
@@ -142,43 +168,39 @@ const Profile = () => {
                   required: '닉네임을 입력해주세요.',
                   validate: validateNickname,
                 })}
-                placeholder='닉네임 (영문 대/소문자, 숫자 조합 4 ~ 15자리)'
-                className={
-                  errors.nickname
-                    ? styles.inputProfileError
-                    : styles.inputProfile
-                }
+                placeholder="닉네임 (영문 대/소문자, 숫자 조합 4 ~ 15자리)"
+                className={errors.nickname ? styles.inputProfileError : styles.inputProfile}
               />
               {errors.nickname && (
-                <p className={styles.inputErrorText}>
-                  {errors.nickname.message}
-                </p>
+                <p className={styles.inputErrorText}>{errors.nickname.message}</p>
               )}
-              <button
-                type='button'
-                className={styles.cancelBtn}
-                onClick={handleCancel}
-              >
+              <button type="button" className={styles.cancelBtn} onClick={handleCancel}>
                 취소
               </button>
-              <button type='submit' className={styles.saveBtn}>
+              <button type="submit" className={styles.saveBtn}>
                 저장
               </button>
             </form>
           ) : (
             <div className={styles.nicknameDisplay}>
               <span className={styles.testUser}>{userData?.nickname}</span>
-              <button
-                type='button'
-                className={styles.change3}
-                onClick={handleEdit}
-              >
+              <button type="button" className={styles.change3} onClick={handleEdit}>
                 변경
               </button>
             </div>
           )}
         </div>
       </div>
+      <Snackbar
+        open={alertOpen}
+        autoHideDuration={3000}
+        onClose={handleAlertClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={handleAlertClose} severity={alertSeverity} sx={{ width: '100%' }}>
+          {alertMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
