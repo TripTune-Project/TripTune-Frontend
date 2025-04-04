@@ -3,30 +3,49 @@ import Image from 'next/image';
 import AlertIcon from '../../../public/assets/images/여행지 탐색/홈화면/alertIcon.png';
 
 export default function NoResultLayout() {
-  const isTravelPage = window.location.pathname.includes('/Travel');
-
-  const styles: { [key: string]: React.CSSProperties } = {
+  const pathname = window.location.pathname;
+  const isTravelPage = pathname.includes('/Travel');
+  const isBookmarkPage = pathname.includes('/MyPage');
+  const isSchedulePage = pathname.includes('/Schedule') || (!isTravelPage && !isBookmarkPage);
+  
+  let containerStyles: React.CSSProperties = {};
+  
+  if (isTravelPage) {
+    containerStyles = {
+      width: '35vw',
+      height: '75vh',
+    };
+  } else if (isBookmarkPage) {
+    containerStyles = {
+      width: '948px',
+      height: '524px',
+    };
+  } else if (isSchedulePage) {
+    containerStyles = {
+      width: '1297px',
+      height: '600px',
+      marginLeft: '-208px',
+    };
+  }
+  
+  const styles = {
     noScheduleContainer: {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      marginTop: '30px',
       color: '#555',
-      width: isTravelPage ? '35vw' : '78vw',
-      height: isTravelPage ? '75vh' : '43vw',
-      marginLeft: isTravelPage ? '' : '-58px',
-      flexShrink: 0,
       border: '1px solid #d9d9d9',
       backgroundColor: '#ffffff',
-    },
+      ...containerStyles,
+    } as React.CSSProperties,
     noResults: {
       color: '#555',
       fontSize: '16px',
       textAlign: 'center',
       margin: '20px 0',
       padding: '10px',
-    },
+    } as React.CSSProperties,
     noText: {
       marginTop: '60px',
       color: '#666',
@@ -35,15 +54,15 @@ export default function NoResultLayout() {
       fontStyle: 'normal',
       fontWeight: 600,
       lineHeight: 'normal',
-    },
+    } as React.CSSProperties,
   };
-
+  
   return (
     <div style={styles.noScheduleContainer}>
       <p style={styles.noResults}>
         <Image
           src={AlertIcon}
-          alt={'no-schedule-root'}
+          alt="no-schedule-root"
           width={80}
           height={80}
           style={{ marginLeft: '120px' }}

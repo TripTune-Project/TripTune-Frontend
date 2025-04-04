@@ -53,6 +53,12 @@
   position: relative;
 }
 
+.textPlain {
+  margin-left:40px;
+  margin-top: -25px;
+  width:100vw;
+}
+
 .input {
   width: 480px;
   max-width: 480px;

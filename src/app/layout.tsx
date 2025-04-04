@@ -32,7 +32,6 @@ interface LayoutProps {
 
 const Layout = ({ children }: LayoutProps) => {
   const pathname = usePathname();
-  const isFindPage = pathname.includes('Find');
   const isSchedulePage = pathname.includes('/Schedule/');
 
   return (
@@ -67,7 +66,7 @@ const Layout = ({ children }: LayoutProps) => {
       </Head>
       <body>
         <QueryClientProvider client={queryClient}>
-          {isFindPage || isSchedulePage ? (
+          {isSchedulePage ? (
             <>{children}</>
           ) : (
             <div className={styles.main}>
