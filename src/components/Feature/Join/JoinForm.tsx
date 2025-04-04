@@ -55,7 +55,22 @@ const JoinForm = () => {
     
     try {
       const { authCode, ...submitData } = data;
-      await joinMember(submitData);
+      const response = await joinMember(submitData);
+      if (!response.success) {
+        setNotificationMessage(response.message);
+        if (response.message.includes("아이디")) {
+          setFocus('userId');
+        } else if (response.message.includes("닉네임")) {
+          setFocus('nickname');
+        } else if (response.message.includes("비밀번호")) {
+          setFocus('password');
+        } else if (response.message.includes("이메일")) {
+          setFocus('email');
+        }
+        setAlertSeverity('error');
+        setOpenSnackbar(true);
+        return;
+      }
       setNotificationMessage(`${data.nickname} 고객님 회원가입을 축하드립니다!`);
       setAlertSeverity('success');
       setOpenSnackbar(true);
@@ -65,7 +80,6 @@ const JoinForm = () => {
     } catch (error) {
       if (error instanceof Error) {
         setNotificationMessage(error.message);
-        // 에러 메시지에 따라 포커스를 이동
         if (error.message.includes("아이디")) {
           setFocus('userId');
         } else if (error.message.includes("닉네임")) {
