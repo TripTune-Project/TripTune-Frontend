@@ -1,33 +1,40 @@
 'use client';
 
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
+import { useForm } from 'react-hook-form';
 import Head from 'next/head';
 import { useSearchParams, useRouter } from 'next/navigation';
-import styles from '@/styles/Find.module.css';
 import Image from 'next/image';
+import { Snackbar, Alert } from '@mui/material';
+import styles from '@/styles/Login.module.css';
 import triptuneIcon from '../../../../public/assets/images/로고/triptuneIcon-removebg.png';
 import VerificationLoading from '@/components/Common/VerificationLoading';
 import { validatePassword } from '@/utils/validation';
 import saveLocalContent from '@/utils/saveLocalContent';
-import { Snackbar, Alert } from '@mui/material';
-import { AlertColor } from '@mui/material/Alert';
 import DataLoading from '@/components/Common/DataLoading';
+import { AlertColor } from '@mui/material/Alert';
+
+interface IFormInput {
+  password: string;
+  rePassword: string;
+}
 
 const ChangePassword = () => {
-  const searchParams = useSearchParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const passwordToken = searchParams.get('passwordToken');
-  const [password, setPassword] = useState('');
-  const [rePassword, setRepassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [isPasswordValid, setIsPasswordValid] = useState(false);
-  const [isRepasswordValid, setIsRepasswordValid] = useState(false);
-  const [isFormValid, setIsFormValid] = useState(false);
-  
-  // Snackbar 알림 상태 추가
+  const {
+    register,
+    handleSubmit,
+    watch,
+    trigger,
+    formState: { errors, isValid },
+  } = useForm<IFormInput>({ mode: 'onChange' });
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertSeverity, setAlertSeverity] = useState<AlertColor>('error');
+  const [loading, setLoading] = useState(false);
+  const password = watch('password', '');
   
   useEffect(() => {
     if (!passwordToken) {
@@ -36,37 +43,26 @@ const ChangePassword = () => {
   }, [passwordToken]);
   
   useEffect(() => {
-    const passwordValid = validatePassword(password) === true;
-    const rePasswordValid = password === rePassword;
-    setIsPasswordValid(passwordValid);
-    setIsRepasswordValid(rePasswordValid);
-    setIsFormValid(passwordValid && rePasswordValid);
-  }, [password, rePassword]);
+    trigger('rePassword');
+  }, [password, trigger]);
   
-  const handleAlertClose = () => {
-    setAlertOpen(false);
-  };
+  const validateRePassword = (value: string) =>
+    value === password || '비밀번호가 일치하지 않습니다.';
   
-  const handlePasswordChange = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    
+  const onSubmit = async (data: IFormInput) => {
     if (!passwordToken) {
       setAlertMessage('유효하지 않은 토큰입니다.');
       setAlertSeverity('error');
       setAlertOpen(true);
-      setLoading(false);
       return;
     }
-    
-    if (password !== rePassword) {
+    if (data.password !== data.rePassword) {
       setAlertMessage('비밀번호가 일치하지 않습니다.');
       setAlertSeverity('error');
       setAlertOpen(true);
-      setLoading(false);
       return;
     }
-    
+    setLoading(true);
     try {
       const { getDecryptedCookie } = saveLocalContent();
       const accessToken = getDecryptedCookie('trip-tune_at');
@@ -74,21 +70,23 @@ const ChangePassword = () => {
         'https://www.triptune.site/api/members/reset-password',
         {
           method: 'PATCH',
-          body: JSON.stringify({ passwordToken, password, rePassword }),
+          body: JSON.stringify({
+            passwordToken,
+            password: data.password,
+            rePassword: data.rePassword,
+          }),
           credentials: 'include',
           headers: {
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${accessToken}`,
           },
         }
       );
-      
-      const data = await response.json();
-      
-      if (data.success) {
+      const resData = await response.json();
+      if (resData.success) {
         setAlertMessage('비밀번호가 성공적으로 변경되었습니다.');
         setAlertSeverity('success');
         setAlertOpen(true);
-        // 알림 후 페이지 이동 (1.5초 딜레이)
         setTimeout(() => {
           router.push('/Login');
         }, 1500);
@@ -132,64 +130,86 @@ const ChangePassword = () => {
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/public/assets/favicon.ico' />
       </Head>
-      <div className={styles.pageContainer}>
-        <h1 className={styles.FindTitle}>비밀번호 재설정</h1>
-        <div className={styles.completeText}>
-          <Image
-            src={triptuneIcon}
-            alt='파비콘'
-            width={31}
-            height={20}
-            priority
-          />
-          새롭게 설정할 비밀번호를 입력해 주세요.
+      <div className={styles.loginBackground}>
+        <div className={styles.loginContainer}>
+          <div className={styles.loginTitle}>비밀번호 재설정</div>
+          <div
+            className={styles.inputGroup}
+            style={{ borderBottom: '2px solid #76ADAC' }}
+          >
+            <Image
+              src={triptuneIcon}
+              alt='로고'
+              width={31}
+              height={20}
+              priority
+            />
+            <p className={styles.textPlain}>
+              새롭게 설정할 비밀번호를 입력해 주세요.
+            </p>
+          </div>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className={styles.inputGroup}>
+              <div>새로운 비밀번호</div>
+              <input
+                type='password'
+                placeholder='새로운 비밀번호 (영문 대/소문자, 숫자, 특수문자 조합 8~15자리)'
+                {...register('password', {
+                  required: '비밀번호를 입력해주세요.',
+                  validate: (value) =>
+                    validatePassword(value) || '유효한 비밀번호 형식이 아닙니다.',
+                })}
+                className={errors.password ? styles.inputError : styles.input}
+              />
+              {errors.password && (
+                <p className={styles.errorText}>
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
+            <br />
+            <div>비밀번호 재입력</div>
+            <div className={styles.inputGroup}>
+              <input
+                type='password'
+                placeholder='비밀번호 재입력'
+                {...register('rePassword', {
+                  required: '비밀번호 재입력을 해주세요.',
+                  validate: validateRePassword,
+                })}
+                className={errors.rePassword ? styles.inputError : styles.input}
+              />
+              {errors.rePassword && (
+                <p className={styles.errorText}>
+                  {errors.rePassword.message}
+                </p>
+              )}
+            </div>
+            <div style={{ paddingBottom: '150px' }} />
+            <button
+              type='submit'
+              className={styles.submitButton}
+              disabled={!isValid || loading}
+            >
+              {loading ? <VerificationLoading /> : '비밀번호 변경'}
+            </button>
+          </form>
+          <Snackbar
+            open={alertOpen}
+            autoHideDuration={3000}
+            onClose={() => setAlertOpen(false)}
+            anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+          >
+            <Alert
+              onClose={() => setAlertOpen(false)}
+              severity={alertSeverity}
+              sx={{ width: '100%' }}
+            >
+              {alertMessage}
+            </Alert>
+          </Snackbar>
         </div>
-        <hr className={styles.hrStyle} />
-        <p>새로운 비밀번호</p>
-        <input
-          type='password'
-          id='password'
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          placeholder='비밀번호 (영문 대/소문자, 숫자, 특수문자 조합 8~15자리)'
-          className={styles.input}
-        />
-        {!isPasswordValid && password && (
-          <div className={styles.errorText}>유효한 비밀번호 형식이 아닙니다.</div>
-        )}
-        <p>비밀번호 재입력</p>
-        <input
-          type='password'
-          id='rePassword'
-          value={rePassword}
-          onChange={(e) => setRepassword(e.target.value)}
-          required
-          placeholder='비밀번호 재입력'
-          className={styles.input}
-        />
-        {!isRepasswordValid && rePassword && (
-          <div className={styles.errorText}>비밀번호가 일치하지 않습니다.</div>
-        )}
-        <button
-          type='submit'
-          className={styles.submitButton}
-          onClick={handlePasswordChange}
-          disabled={!isFormValid || loading}
-        >
-          {loading ? <VerificationLoading /> : '비밀번호 변경'}
-        </button>
       </div>
-      <Snackbar
-        open={alertOpen}
-        autoHideDuration={3000}
-        onClose={handleAlertClose}
-        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-      >
-        <Alert onClose={handleAlertClose} severity={alertSeverity}>
-          {alertMessage}
-        </Alert>
-      </Snackbar>
     </>
   );
 };
