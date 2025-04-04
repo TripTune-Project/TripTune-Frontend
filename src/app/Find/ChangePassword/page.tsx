@@ -3,12 +3,15 @@
 import React, { Suspense, useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useSearchParams, useRouter } from 'next/navigation';
-import styles from '../../../styles/Find.module.css';
+import styles from '@/styles/Find.module.css';
 import Image from 'next/image';
 import triptuneIcon from '../../../../public/assets/images/로고/triptuneIcon-removebg.png';
-import VerificationLoading from '../../../components/Common/VerificationLoading';
+import VerificationLoading from '@/components/Common/VerificationLoading';
 import { validatePassword } from '@/utils/validation';
 import saveLocalContent from '@/utils/saveLocalContent';
+import { Snackbar, Alert } from '@mui/material';
+import { AlertColor } from '@mui/material/Alert';
+import DataLoading from '@/components/Common/DataLoading';
 
 const ChangePassword = () => {
   const searchParams = useSearchParams();
@@ -20,13 +23,18 @@ const ChangePassword = () => {
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [isRepasswordValid, setIsRepasswordValid] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
-
+  
+  // Snackbar 알림 상태 추가
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertSeverity, setAlertSeverity] = useState<AlertColor>('error');
+  
   useEffect(() => {
     if (!passwordToken) {
       console.error('passwordToken을 찾을 수 없습니다.');
     }
   }, [passwordToken]);
-
+  
   useEffect(() => {
     const passwordValid = validatePassword(password) === true;
     const rePasswordValid = password === rePassword;
@@ -34,23 +42,31 @@ const ChangePassword = () => {
     setIsRepasswordValid(rePasswordValid);
     setIsFormValid(passwordValid && rePasswordValid);
   }, [password, rePassword]);
-
+  
+  const handleAlertClose = () => {
+    setAlertOpen(false);
+  };
+  
   const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
+    
     if (!passwordToken) {
-      alert('유효하지 않은 토큰입니다.');
+      setAlertMessage('유효하지 않은 토큰입니다.');
+      setAlertSeverity('error');
+      setAlertOpen(true);
       setLoading(false);
       return;
     }
-
+    
     if (password !== rePassword) {
-      alert('비밀번호가 일치하지 않습니다.');
+      setAlertMessage('비밀번호가 일치하지 않습니다.');
+      setAlertSeverity('error');
+      setAlertOpen(true);
       setLoading(false);
       return;
     }
-
+    
     try {
       const { getDecryptedCookie } = saveLocalContent();
       const accessToken = getDecryptedCookie('trip-tune_at');
@@ -61,28 +77,36 @@ const ChangePassword = () => {
           body: JSON.stringify({ passwordToken, password, rePassword }),
           credentials: 'include',
           headers: {
-            // 'Content-Type': 'application/json',
             Authorization: `Bearer ${accessToken}`,
           },
         }
       );
-
+      
       const data = await response.json();
-
+      
       if (data.success) {
-        alert('비밀번호가 성공적으로 변경되었습니다.');
-        router.push('/Login');
+        setAlertMessage('비밀번호가 성공적으로 변경되었습니다.');
+        setAlertSeverity('success');
+        setAlertOpen(true);
+        // 알림 후 페이지 이동 (1.5초 딜레이)
+        setTimeout(() => {
+          router.push('/Login');
+        }, 1500);
       } else {
-        alert('비밀번호 변경에 실패했습니다.');
+        setAlertMessage('비밀번호 변경에 실패했습니다.');
+        setAlertSeverity('error');
+        setAlertOpen(true);
       }
     } catch (error) {
       console.error('에러 발생:', error);
-      alert('비밀번호 변경에 실패했습니다.');
+      setAlertMessage('비밀번호 변경에 실패했습니다.');
+      setAlertSeverity('error');
+      setAlertOpen(true);
     } finally {
       setLoading(false);
     }
   };
-
+  
   return (
     <>
       <Head>
@@ -113,7 +137,7 @@ const ChangePassword = () => {
         <div className={styles.completeText}>
           <Image
             src={triptuneIcon}
-            alt={'파비콘'}
+            alt='파비콘'
             width={31}
             height={20}
             priority
@@ -128,24 +152,20 @@ const ChangePassword = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          placeholder={
-            '비밀번호 (영문 대/소문자, 숫자, 특수문자 조합 8~15자리)'
-          }
+          placeholder='비밀번호 (영문 대/소문자, 숫자, 특수문자 조합 8~15자리)'
           className={styles.input}
         />
         {!isPasswordValid && password && (
-          <div className={styles.errorText}>
-            유효한 비밀번호 형식이 아닙니다.
-          </div>
+          <div className={styles.errorText}>유효한 비밀번호 형식이 아닙니다.</div>
         )}
-        <p> 비밀번호 재입력 </p>
+        <p>비밀번호 재입력</p>
         <input
           type='password'
           id='rePassword'
           value={rePassword}
           onChange={(e) => setRepassword(e.target.value)}
           required
-          placeholder={'비밀번호 재입력'}
+          placeholder='비밀번호 재입력'
           className={styles.input}
         />
         {!isRepasswordValid && rePassword && (
@@ -160,12 +180,22 @@ const ChangePassword = () => {
           {loading ? <VerificationLoading /> : '비밀번호 변경'}
         </button>
       </div>
+      <Snackbar
+        open={alertOpen}
+        autoHideDuration={3000}
+        onClose={handleAlertClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+      >
+        <Alert onClose={handleAlertClose} severity={alertSeverity}>
+          {alertMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 };
 
 const ChangePasswordPage = () => (
-  <Suspense fallback={<div>Loading...</div>}>
+  <Suspense fallback={<DataLoading />}>
     <ChangePassword />
   </Suspense>
 );

@@ -5,7 +5,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
-import styles from '../../../styles/Schedule.module.css';
+import styles from '@/styles/Schedule.module.css';
 import MainLogoImage from '../../../../public/assets/images/로고/triptuneLogo.png';
 import ScheduleMake from '@/components/Feature/Schedule/ScheduleMake';
 import SchedulePlacesMap from '@/components/Feature/Schedule/SchedulePlacesMap';

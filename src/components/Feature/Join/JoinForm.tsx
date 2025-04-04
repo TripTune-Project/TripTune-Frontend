@@ -7,7 +7,7 @@ import {
   validateUserId,
   validatePassword,
 } from '@/utils/validation';
-import styles from '../../../styles/Join.module.css';
+import styles from '@/styles/Join.module.css';
 import { useRouter } from 'next/navigation';
 import { joinMember } from '@/apis/Join/joinApi';
 import EmailVerification from './EmailVerification';

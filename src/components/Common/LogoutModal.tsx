@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import AlertModal from '../Common/AlertModal';
+import AlertModal from '@/components/Common/AlertModal';
 import { MODAL_MESSAGES } from '@/components/Common/ConfirmationModalMessage';
 
 interface LogoutModalProps {

@@ -123,13 +123,13 @@ const fetchData = async <T>(
       
       // 4) 그 외 에러
       if (errorData.message === '해당 일정에 접근 권한이 없는 사용자 입니다.') {
-        alert(errorData.message);
         window.history.back();
+        throw new Error(errorData.message);
       } else if (errorData.message !== undefined) {
-        alert(errorData.message);
+        throw new Error(errorData.message);
       }
-    } catch {
-      alert('서버 응답을 처리할 수 없습니다.');
+    } catch(error: any) {
+      throw new Error(error.message);
     }
     // 에러가 있는 경우 반환값이 없으므로 함수 종료
     return undefined as unknown as T;

@@ -17,26 +17,38 @@ import { validateEmail, validatePassword } from '@/utils/validation';
 import { AccountPasswordFormData, AccountEmailFormData } from '@/types/myPage';
 import VerificationLoading from '@/components/Common/VerificationLoading';
 import Cookies from 'js-cookie';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 type AccountFormData = AccountEmailFormData & AccountPasswordFormData;
 
 const Account = () => {
   const router = useRouter();
   const { userData } = useMyPage();
-
+  
   // 로딩 상태 분리
   const [emailRequestLoading, setEmailRequestLoading] = useState(false);
   const [emailConfirmLoading, setEmailConfirmLoading] = useState(false);
   // 인증 요청 성공 여부 (요청 성공 시 요청 버튼 비활성화)
   const [emailRequestSuccess, setEmailRequestSuccess] = useState(false);
-
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-
+  
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingPwd, setIsEditingPwd] = useState(false);
-
+  
+  // Snackbar 상태 관리
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertSeverity, setAlertSeverity] = useState<'success' | 'error' | 'warning' | 'info'>('info');
+  
+  const handleAlertClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') return;
+    setAlertOpen(false);
+  };
+  
   const {
     register,
     handleSubmit,
@@ -52,104 +64,135 @@ const Account = () => {
       rePassword: '',
     },
   });
-
+  
   const handleEmailVerification = async (data: AccountEmailFormData) => {
     if (!data.email) {
-      alert('이메일을 입력해주세요.');
+      setAlertMessage('이메일을 입력해주세요.');
+      setAlertSeverity('warning');
+      setAlertOpen(true);
       return;
     }
     setEmailRequestLoading(true);
     try {
       await requestEmailVerification(data.email);
-      alert('인증 요청이 성공적으로 완료되었습니다.');
+      setAlertMessage('인증 요청이 성공적으로 완료되었습니다.');
+      setAlertSeverity('success');
+      setAlertOpen(true);
       setEmailRequestSuccess(true);
     } catch (error: any) {
       console.error('이메일 인증 요청 실패:', error.message);
-      alert('이메일 인증 요청에 실패했습니다.');
+      setAlertMessage('이메일 인증 요청에 실패했습니다.');
+      setAlertSeverity('error');
+      setAlertOpen(true);
     } finally {
       setEmailRequestLoading(false);
     }
   };
-
+  
   const handleEmailVerificationConfirm = async (data: AccountEmailFormData) => {
     if (!data.verificationCode) {
-      alert('인증 코드를 입력해주세요.');
+      setAlertMessage('인증 코드를 입력해주세요.');
+      setAlertSeverity('warning');
+      setAlertOpen(true);
       return;
     }
     setEmailConfirmLoading(true);
     try {
       await verifyEmail(data.email, data.verificationCode);
-      alert('이메일 인증이 성공적으로 완료되었습니다.');
+      setAlertMessage('이메일 인증이 성공적으로 완료되었습니다.');
+      setAlertSeverity('success');
+      setAlertOpen(true);
     } catch (error: any) {
       console.error('이메일 인증 확인 실패:', error.message);
-      alert('이메일 인증 확인에 실패했습니다.');
+      setAlertMessage('이메일 인증 확인에 실패했습니다.');
+      setAlertSeverity('error');
+      setAlertOpen(true);
     } finally {
       setEmailConfirmLoading(false);
     }
   };
-
+  
   const handleEmailSave = async (data: AccountEmailFormData) => {
     if (!data.email) {
-      alert('이메일을 입력해주세요.');
+      setAlertMessage('이메일을 입력해주세요.');
+      setAlertSeverity('warning');
+      setAlertOpen(true);
       return;
     }
     if (!data.verificationCode) {
-      alert('이메일 인증을 확인해주세요.');
+      setAlertMessage('이메일 인증을 확인해주세요.');
+      setAlertSeverity('warning');
+      setAlertOpen(true);
       return;
     }
     try {
       await changeEmail(data.email);
-      alert('이메일이 성공적으로 변경되었습니다.');
+      setAlertMessage('이메일이 성공적으로 변경되었습니다.');
+      setAlertSeverity('success');
+      setAlertOpen(true);
       setIsEditing(false);
     } catch (error: any) {
       console.error('이메일 변경 실패:', error.message);
-      alert('이메일 변경에 실패했습니다.');
+      setAlertMessage('이메일 변경에 실패했습니다.');
+      setAlertSeverity('error');
+      setAlertOpen(true);
     }
   };
-
+  
   const handlePasswordChange = async (data: AccountPasswordFormData) => {
     if (!data.nowPassword || !data.newPassword || !data.rePassword) {
-      alert('모든 비밀번호 필드를 입력해주세요.');
+      setAlertMessage('모든 비밀번호 필드를 입력해주세요.');
+      setAlertSeverity('warning');
+      setAlertOpen(true);
       return;
     }
     try {
       await changePassword(data.nowPassword, data.newPassword, data.rePassword);
-      alert('비밀번호가 성공적으로 변경되었습니다.');
+      setAlertMessage('비밀번호가 성공적으로 변경되었습니다.');
+      setAlertSeverity('success');
+      setAlertOpen(true);
       setIsEditingPwd(false);
     } catch (error: any) {
       console.error('비밀번호 변경 실패:', error.message);
-      alert('비밀번호 변경에 실패했습니다.');
+      setAlertMessage('비밀번호 변경에 실패했습니다.');
+      setAlertSeverity('error');
+      setAlertOpen(true);
     }
   };
-
+  
   const handleDeleteUser = async (password: string) => {
     if (!password) {
-      alert('패스워드를 입력 해야 탈퇴가 가능합니다.');
+      setAlertMessage('패스워드를 입력 해야 탈퇴가 가능합니다.');
+      setAlertSeverity('warning');
+      setAlertOpen(true);
       return;
     }
     try {
       await deactivateAccount(password);
-      alert('회원 탈퇴가 완료되었습니다.');
+      setAlertMessage('회원 탈퇴가 완료되었습니다.');
+      setAlertSeverity('success');
+      setAlertOpen(true);
       Cookies.remove('trip-tune_at');
       Cookies.remove('trip-tune_rt');
       Cookies.remove('nickname');
       router.push('/');
     } catch (error: any) {
       console.error('회원 탈퇴 실패:', error.message);
-      alert('회원 탈퇴에 실패했습니다. 다시 시도해주세요.');
+      setAlertMessage('회원 탈퇴에 실패했습니다. 다시 시도해주세요.');
+      setAlertSeverity('error');
+      setAlertOpen(true);
     }
   };
-
-  // 필수 입력값 확인
+  
   const email = watch('email');
   const verificationCode = watch('verificationCode');
   const nowPassword = watch('nowPassword');
   const newPassword = watch('newPassword');
   const rePassword = watch('rePassword');
-
+  
   const isEmailSaveDisabled = !email || !verificationCode;
   const isPasswordSaveDisabled = !nowPassword || !newPassword || !rePassword;
-
+  
   return (
     <div className={styles.flexColumnC}>
       <div className={styles.accountManagementTitle}>계정 관리</div>
@@ -158,7 +201,7 @@ const Account = () => {
           <div className={styles.rowLabel}>아이디</div>
           <div className={styles.rowField}>
             <input
-              type='text'
+              type="text"
               value={userData?.userId || ''}
               readOnly
               className={styles.input}
@@ -172,14 +215,14 @@ const Account = () => {
               <div className={styles.emailEditingContainer}>
                 <div className={styles.emailRow}>
                   <input
-                    type='text'
-                    placeholder='이메일'
+                    type="text"
+                    placeholder="이메일"
                     defaultValue={userData?.email || ''}
                     {...register('email', { validate: validateEmail })}
                     className={errors.email ? styles.inputError : styles.input}
                   />
                   <button
-                    type='button'
+                    type="button"
                     className={styles.requestBtn}
                     onClick={() => {
                       const emailData: AccountEmailFormData = {
@@ -204,8 +247,8 @@ const Account = () => {
                 )}
                 <div className={styles.emailRow}>
                   <input
-                    type='text'
-                    placeholder='인증 코드 입력'
+                    type="text"
+                    placeholder="인증 코드 입력"
                     {...register('verificationCode', {
                       required: '인증 코드를 입력해주세요.',
                     })}
@@ -214,7 +257,7 @@ const Account = () => {
                     }
                   />
                   <button
-                    type='button'
+                    type="button"
                     className={styles.verifyBtn}
                     onClick={handleSubmit((data) => {
                       const emailData: AccountEmailFormData = {
@@ -262,7 +305,7 @@ const Account = () => {
             ) : (
               <>
                 <input
-                  type='text'
+                  type="text"
                   value={userData?.email || ''}
                   readOnly
                   className={styles.input}
@@ -288,12 +331,10 @@ const Account = () => {
             {isEditingPwd ? (
               <div className={styles.passwordEditingContainer}>
                 <input
-                  type='password'
-                  placeholder='현재 비밀번호'
+                  type="password"
+                  placeholder="현재 비밀번호"
                   {...register('nowPassword', { validate: validatePassword })}
-                  className={
-                    errors.nowPassword ? styles.inputError : styles.input
-                  }
+                  className={errors.nowPassword ? styles.inputError : styles.input}
                 />
                 {errors.nowPassword && (
                   <p className={styles.errorText}>
@@ -301,12 +342,10 @@ const Account = () => {
                   </p>
                 )}
                 <input
-                  type='password'
-                  placeholder='새 비밀번호 (영문 대/소문자, 숫자, 특수문자 8-15자리)'
+                  type="password"
+                  placeholder="새 비밀번호 (영문 대/소문자, 숫자, 특수문자 8-15자리)"
                   {...register('newPassword', { validate: validatePassword })}
-                  className={
-                    errors.newPassword ? styles.inputError : styles.input
-                  }
+                  className={errors.newPassword ? styles.inputError : styles.input}
                 />
                 {errors.newPassword && (
                   <p className={styles.errorText}>
@@ -314,16 +353,14 @@ const Account = () => {
                   </p>
                 )}
                 <input
-                  type='password'
-                  placeholder='비밀번호 재입력'
+                  type="password"
+                  placeholder="비밀번호 재입력"
                   {...register('rePassword', {
                     validate: (value) =>
                       value === watch('newPassword') ||
                       '비밀번호가 일치하지 않습니다.',
                   })}
-                  className={
-                    errors.rePassword ? styles.inputError : styles.input
-                  }
+                  className={errors.rePassword ? styles.inputError : styles.input}
                 />
                 {errors.rePassword && (
                   <p className={styles.errorText}>
@@ -356,8 +393,8 @@ const Account = () => {
             ) : (
               <>
                 <input
-                  type='text'
-                  value='비밀번호 입력'
+                  type="text"
+                  value="비밀번호 입력"
                   readOnly
                   className={styles.input}
                 />
@@ -386,6 +423,16 @@ const Account = () => {
         onClose={closeModal}
         onConfirm={handleDeleteUser}
       />
+      <Snackbar
+        open={alertOpen}
+        autoHideDuration={3000}
+        onClose={handleAlertClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={handleAlertClose} severity={alertSeverity} sx={{ width: '100%' }}>
+          {alertMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

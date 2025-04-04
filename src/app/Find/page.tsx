@@ -4,9 +4,10 @@ import React, { useEffect, useState, Suspense } from 'react';
 import Head from 'next/head';
 import { requestFindId, requestFindPassword } from '@/apis/Login/findApi';
 import { useRouter, useSearchParams } from 'next/navigation';
-import VerificationLoading from '../../components/Common/VerificationLoading';
-import styles from '../../styles/Find.module.css';
+import VerificationLoading from '@/components/Common/VerificationLoading';
+import styles from '@/styles/Find.module.css';
 import { validateEmail, validateUserId } from '@/utils/validation';
+import DataLoading from '@/components/Common/DataLoading';
 
 const FindPage = () => {
   const router = useRouter();
@@ -236,7 +237,7 @@ const FindPage = () => {
 };
 
 const WrappedFindPage = () => (
-  <Suspense fallback={<div>Loading...</div>}>
+  <Suspense fallback={<DataLoading />}>
     <FindPage />
   </Suspense>
 );
