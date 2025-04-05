@@ -35,6 +35,7 @@ const ChangePassword = () => {
   const [alertSeverity, setAlertSeverity] = useState<AlertColor>('error');
   const [loading, setLoading] = useState(false);
   const password = watch('password', '');
+  const rePassword = watch('rePassword', '');
   
   useEffect(() => {
     if (!passwordToken) {
@@ -42,9 +43,12 @@ const ChangePassword = () => {
     }
   }, [passwordToken]);
   
+  // rePassword 필드에 값이 있을 때만 rePassword 검증을 트리거합니다.
   useEffect(() => {
-    trigger('rePassword');
-  }, [password, trigger]);
+    if (rePassword) {
+      trigger('rePassword');
+    }
+  }, [password, rePassword, trigger]);
   
   const validateRePassword = (value: string) =>
     value === password || '비밀번호가 일치하지 않습니다.';

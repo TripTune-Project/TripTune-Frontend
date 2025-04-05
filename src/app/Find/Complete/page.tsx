@@ -4,11 +4,11 @@ import React, { Suspense, useEffect, useState } from 'react';
 import Head from 'next/head';
 import styles from '@/styles/Find.module.css';
 import Image from 'next/image';
-import triptuneIcon from '../../../../../public/assets/images/로고/triptuneIcon-removebg.png';
+import triptuneIcon from '../../../../public/assets/images/로고/triptuneIcon-removebg.png';
 import { useSearchParams, useRouter } from 'next/navigation';
 import DataLoading from '@/components/Common/DataLoading';
 
-const FindIdComplete = () => {
+const FindComplete = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const userId = searchParams.get('userId');
@@ -107,7 +107,7 @@ const FindIdComplete = () => {
 
 const WrappedFindCompletePage = () => (
   <Suspense fallback={<DataLoading />}>
-    <FindIdComplete />
+    <FindComplete />
   </Suspense>
 );
 export default WrappedFindCompletePage;
