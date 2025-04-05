@@ -14,12 +14,17 @@ const FindPage = () => {
   const searchParams = useSearchParams();
   const initialTab = searchParams.get('tab') || 'findId';
   
-  const [tab, setTab] = useState<'findId' | 'findPassword'>(initialTab as 'findId' | 'findPassword');
+  const [tab, setTab] = useState<'findId' | 'findPassword'>(
+    initialTab as 'findId' | 'findPassword'
+  );
   const [email, setEmail] = useState('');
   const [userId, setUserId] = useState('');
+  const [message, setMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [alertOpen, setAlertOpen] = useState(false);
-  const [alertSeverity, setAlertSeverity] = useState<'success' | 'error'>('success');
+  const [alertSeverity, setAlertSeverity] = useState<'success' | 'error'>(
+    'success'
+  );
   const [loading, setLoading] = useState(false);
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [isUserIdValid, setIsUserIdValid] = useState(false);
@@ -37,6 +42,7 @@ const FindPage = () => {
     setTab(tab);
     setEmail('');
     setUserId('');
+    setMessage('');
     setErrorMessage('');
     setAlertOpen(false);
   };
@@ -56,7 +62,7 @@ const FindPage = () => {
       setErrorMessage('유효한 이메일을 입력해주세요.');
       setAlertSeverity('error');
       setAlertOpen(true);
-      setTimeout(() => setAlertOpen(false), 3000);
+      setTimeout(() => setAlertOpen(false), 5000);
       return;
     }
     
@@ -64,14 +70,12 @@ const FindPage = () => {
     try {
       const responseMessage = await requestFindId(email);
       if (responseMessage.data.userId) {
-        router.push(`/Find/Complete/UserId?userId=${responseMessage.data.userId}`);
+        router.push(`/Find/Complete?userId=${responseMessage.data.userId}`);
       }
-    } catch (error) {
-      router.push(
-        `/Find/Complete/UserId?tab=findId&success=false&message=${encodeURIComponent(
-          '아이디 찾기 요청에 실패했습니다. 다시 시도해주세요.'
-        )}`
-      );
+    } catch (error:any) {
+      setErrorMessage(error.message as string);
+      setAlertSeverity('error');
+      setAlertOpen(true);
     } finally {
       setLoading(false);
     }
@@ -92,28 +96,25 @@ const FindPage = () => {
     try {
       const responseMessage = await requestFindPassword(email, userId);
       if (responseMessage.success) {
-        router.push(
-          `/Find/Complete/UserPwd?tab=findPassword&success=true&message=${encodeURIComponent(
-            '이메일을 확인한 후 비밀번호를 재설정해 주시기 바랍니다.'
-          )}`
-        );
+        setMessage('이메일을 확인한 후 비밀번호를 재설정해 주시기 바랍니다.');
+        setErrorMessage('');
+        setAlertSeverity('success');
       } else {
-        router.push(
-          `/Find/Complete/UserPwd?tab=findPassword&success=false&message=${encodeURIComponent(
-            responseMessage.message || '가입 정보가 존재하지 않습니다.'
-          )}`
+        throw new Error(
+          responseMessage.message || '비밀번호 찾기 요청에 실패했습니다.'
         );
       }
     } catch (error) {
-      const errorMsg =
-        error instanceof Error
-          ? error.message
-          : '비밀번호 찾기 요청에 실패했습니다. 다시 시도해주세요.';
-      router.push(
-        `/Find/Complete/UserPwd?tab=findPassword&success=false&message=${encodeURIComponent(
-          errorMsg
-        )}`
-      );
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage(
+          '비밀번호 찾기 요청에 실패했습니다. 다시 시도해주세요.'
+        );
+      }
+      setMessage('');
+      setAlertSeverity('error');
+      setAlertOpen(true);
     } finally {
       setLoading(false);
     }
@@ -123,15 +124,20 @@ const FindPage = () => {
     <>
       <Head>
         <title>아이디 / 비밀번호 찾기</title>
-        <meta name='description' content='아이디 및 비밀번호 찾기 페이지입니다. 이메일과 아이디를 입력하여 정보를 찾으세요.' />
+        <meta
+          name='description'
+          content='아이디 및 비밀번호 찾기 페이지입니다. 이메일과 아이디를 입력하여 정보를 찾으세요.'
+        />
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <meta property='og:title' content='아이디 / 비밀번호 찾기' />
-        <meta property='og:description' content='아이디와 비밀번호를 찾는 페이지입니다.' />
+        <meta
+          property='og:description'
+          content='아이디와 비밀번호를 찾는 페이지입니다.'
+        />
         <meta property='og:type' content='website' />
         <meta property='og:url' content='https://www.triptune.site/Find' />
         <meta name='robots' content='noindex, nofollow' />
       </Head>
-      
       <div className={styles.pageContainer}>
         <h1 className={styles.FindTitle}>아이디 / 비밀번호 찾기</h1>
         <div className={styles.tabContainer}>
@@ -211,8 +217,10 @@ const FindPage = () => {
           </div>
         )}
         {alertOpen && (
-          <div className={`${styles.alert} ${alertSeverity === 'success' ? styles.alertSuccess : styles.alertError}`}>
-            {alertSeverity === 'success' ? '' : errorMessage}
+          <div
+            className={`${styles.alert} ${alertSeverity === 'success' ? styles.alertSuccess : styles.alertError}`}
+          >
+            {alertSeverity === 'success' ? message : errorMessage}
           </div>
         )}
       </div>
