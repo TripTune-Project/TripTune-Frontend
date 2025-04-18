@@ -49,15 +49,15 @@ const LoginForm = () => {
   const closeSnackbar = () => {
     setOpenSnackbar(false);
   };
-
+  
   const handleKakaoLogin = () => {
     window.location.href =
-      'https://kauth.kakao.com/oauth/authorize?client_id=YOUR_KAKAO_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&response_type=code';
+      'https://kauth.kakao.com/oauth2/authorization/kakao';
   };
-
+  
   const handleNaverLogin = () => {
     window.location.href =
-      'https://nid.naver.com/oauth2.0/authorize?client_id=YOUR_NAVER_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&response_type=code';
+      'https://nid.naver.com/oauth2/authorization/naver';
   };
   
   const handleFindId = () => {
