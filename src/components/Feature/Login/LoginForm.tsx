@@ -52,12 +52,12 @@ const LoginForm = () => {
   
   const handleKakaoLogin = () => {
     window.location.href =
-      'https://kauth.kakao.com/oauth2/authorization/kakao';
+      'https://www.triptune.site/oauth2/authorization/kakao';
   };
   
   const handleNaverLogin = () => {
     window.location.href =
-      'https://nid.naver.com/oauth2/authorization/naver';
+      'https://www.triptune.site/oauth2/authorization/naver';
   };
   
   const handleFindId = () => {
