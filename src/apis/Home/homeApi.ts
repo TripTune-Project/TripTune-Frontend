@@ -23,10 +23,7 @@ export const homeRecommendTravelList = async (
   requiresAuth: boolean = false
 ) => {
   try {
-    return await get(
-      `/api/travels/recommend?theme=${theme}`,
-      { requiresAuth } // 인증 필요 여부 전달
-    );
+    return await get(`/api/travels/recommend?theme=${theme}`, { requiresAuth });
   } catch (error) {
     console.error('예기치 않은 오류:', error);
     return {

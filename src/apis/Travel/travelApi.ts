@@ -54,7 +54,7 @@ export const fetchTravelListSearch = async (
     const data = await post<TravelListSearchSuccessResponse>(
       `/api/travels/search?page=${pageNum}`,
       params,
-      { requiresAuth } // 인증 필요 여부 전달
+      { requiresAuth }
     );
     if (!data.data || data.data.content.length === 0) {
       return {

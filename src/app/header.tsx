@@ -14,41 +14,33 @@ import saveLocalContent from '@/utils/saveLocalContent';
 const Header = () => {
   const router = useRouter();
   const pathname = usePathname();
-  
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [nickName, setNickName] = useState('');
-  const [isAuthChecked, setIsAuthChecked] = useState(false);
-  
+
   const { isAuthenticated, isLoading } = useAuth();
   const { getDecryptedCookie } = saveLocalContent();
-  
+
   useEffect(() => {
-    // 인증 체크가 아직 로딩 중이면 아무 것도 하지 않음
     if (isLoading) return;
-    
-    if (isAuthenticated) {
-      setIsLoggedIn(true);
-      // nickname 쿠키는 JS에서 읽을 수 있으므로 꺼내서 표시
-      setNickName(getDecryptedCookie('nickname') || '');
+
+    const storedNickname = getDecryptedCookie('nickname');
+    if (isAuthenticated && storedNickname) {
+      setNickName(storedNickname);
     } else {
-      setIsLoggedIn(false);
       setNickName('');
     }
-    
-    setIsAuthChecked(true);
   }, [isLoading, isAuthenticated, getDecryptedCookie]);
-  
+
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-  
+
   const handleLogout = async () => {
     closeModal();
     try {
       await logoutApi();
-      setIsLoggedIn(false);
       setNickName('');
       router.push('/');
     } catch {
@@ -56,58 +48,74 @@ const Header = () => {
       setAlertOpen(true);
     }
   };
-  
+
   const handleAlertClose = () => setAlertOpen(false);
   const handleLogin = () => {
     router.push(`/Login?next=${encodeURIComponent(pathname)}`);
   };
-  
+
   const isActive = (path: string) =>
     `${styles.navLink} ${pathname === path ? styles.active : ''} ${styles.homeNavLink}`;
-  
+
   return (
     <header className={styles.header}>
       <div className={styles.headerContent}>
         <Link href='/'>
-          <Image src={MainLogoImage} alt='로고' width={184} height={58} priority />
+          <Image
+            src={MainLogoImage}
+            alt='로고'
+            width={184}
+            height={58}
+            priority
+          />
         </Link>
         <nav className={styles.navMenu}>
-          <Link href='/' className={isActive('/')}>홈 화면</Link>
-          <Link href='/Schedule' className={isActive('/Schedule')}>일정 만들기</Link>
-          <Link href='/Travel' className={isActive('/Travel')}>여행지 탐색</Link>
-          <Link href='/MyPage' className={isActive('/MyPage')}>마이 페이지</Link>
-          
-          { !isAuthChecked
-            ? <div>로딩 중...</div>
-            : !isLoggedIn
-              ? (
-                <div className={styles.headerLinkLogin} onClick={handleLogin}>
-                  로그인
-                  <Image src={LoginIcon} alt='>' width={8} height={8} priority />
-                </div>
-              ) : (
-                <div className={styles.navLogin}>
-                  {nickName} 님
-                  <Button onClick={openModal} variant='text' size='large'>
-                    로그아웃
-                  </Button>
-                  <LogoutModal
-                    isOpen={isModalOpen}
-                    onClose={closeModal}
-                    onConfirm={handleLogout}
-                  />
-                </div>
-              )
-          }
+          <Link href='/' className={isActive('/')}>
+            홈 화면
+          </Link>
+          <Link href='/Schedule' className={isActive('/Schedule')}>
+            일정 만들기
+          </Link>
+          <Link href='/Travel' className={isActive('/Travel')}>
+            여행지 탐색
+          </Link>
+          <Link href='/MyPage' className={isActive('/MyPage')}>
+            마이 페이지
+          </Link>
+
+          {isLoading ? (
+            <div>로딩 중...</div>
+          ) : !isAuthenticated ? (
+            <div className={styles.headerLinkLogin} onClick={handleLogin}>
+              로그인
+              <Image src={LoginIcon} alt='>' width={8} height={8} priority />
+            </div>
+          ) : (
+            <div className={styles.navLogin}>
+              {nickName} 님
+              <Button onClick={openModal} variant='text' size='large'>
+                로그아웃
+              </Button>
+              <LogoutModal
+                isOpen={isModalOpen}
+                onClose={closeModal}
+                onConfirm={handleLogout}
+              />
+            </div>
+          )}
         </nav>
       </div>
-      
+
       <Snackbar
         open={alertOpen}
         autoHideDuration={3000}
         onClose={handleAlertClose}
       >
-        <Alert onClose={handleAlertClose} severity='error' sx={{ width: '100%' }}>
+        <Alert
+          onClose={handleAlertClose}
+          severity='error'
+          sx={{ width: '100%' }}
+        >
           {alertMessage}
         </Alert>
       </Snackbar>
