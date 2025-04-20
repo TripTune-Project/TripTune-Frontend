@@ -42,7 +42,13 @@ export const fetchScheduleDetail = async (
   page: number = 1
 ): Promise<ApiResponse<ScheduleDetail>> => {
   const url = `/api/schedules/${scheduleId}?page=${page}`;
-  return await get(url, { requiresAuth: true });
+  const response: ApiResponse<ScheduleDetail> = await get(url, {
+    requiresAuth: true,
+  });
+  if (!response.success && response.message === '일정이 존재하지 않습니다.') {
+    throw new Error('일정이 존재하지 않습니다.');
+  }
+  return response;
 };
 
 // 5. 일정 만들기 생성 (POST)

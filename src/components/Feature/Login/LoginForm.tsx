@@ -13,6 +13,7 @@ import naver from '../../../../public/assets/icons/ic_naver_vector.png';
 import VerificationLoading from '@/components/Common/VerificationLoading';
 import { loginUser } from '@/apis/Login/loginApi';
 import saveLocalContent from '@/utils/saveLocalContent';
+import useAuth from '@/hooks/useAuth';
 
 interface LoginFormData {
   email: string;
@@ -22,6 +23,7 @@ interface LoginFormData {
 const LoginForm = () => {
   const router = useRouter();
   const { setEncryptedCookie } = saveLocalContent();
+  const { updateAuthStatus } = useAuth();
 
   const [errorMessage, setErrorMessage] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -41,6 +43,8 @@ const LoginForm = () => {
 
       setEncryptedCookie('trip-tune_at', accessToken, 5 / (24 * 60));
       setEncryptedCookie('nickname', nickname, 7);
+
+      updateAuthStatus(true);
 
       const redirectPath = localStorage.getItem('redirectAfterLogin') || '/';
       localStorage.removeItem('redirectAfterLogin');

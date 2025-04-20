@@ -26,14 +26,21 @@ export default function ScheduleDetailPage() {
 
   const { travelRoute, scheduleDetail, fetchScheduleDetailById } =
     useTravelStore();
+  const [scheduleError, setScheduleError] = useState<string | null>(null);
 
   useEffect(() => {}, [isAuthenticated, router]);
 
   useEffect(() => {
     if (scheduleId) {
-      fetchScheduleDetailById(scheduleId as string, 1);
+      fetchScheduleDetailById(scheduleId as string, 1).catch((error) => {
+        if (error.message === '일정이 존재하지 않습니다.') {
+          setScheduleError('일정이 존재하지 않습니다.');
+          alert('일정이 존재하지 않습니다.');
+          router.back();
+        }
+      });
     }
-  }, [scheduleId, fetchScheduleDetailById]);
+  }, [scheduleId, fetchScheduleDetailById, router]);
 
   const handleShareClick = () => setIsInviteModalOpen(true);
   const handleCloseModal = () => setIsInviteModalOpen(false);
@@ -68,6 +75,10 @@ export default function ScheduleDetailPage() {
 
   if (!isAuthenticated) {
     return <LoginModal />;
+  }
+
+  if (scheduleError) {
+    return null; // 에러 발생 시 아무것도 렌더링하지 않음
   }
 
   return (
@@ -113,9 +124,11 @@ export default function ScheduleDetailPage() {
         <div className={styles.centerSection}>
           <SchedulePlacesMap />
         </div>
-        <div className={styles.rightSection}>
-          <Chatting />
-        </div>
+        {scheduleDetail && (
+          <div className={styles.rightSection}>
+            <Chatting />
+          </div>
+        )}
       </div>
     </>
   );

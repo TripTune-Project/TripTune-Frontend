@@ -36,13 +36,22 @@ const useAuth = () => {
     }
   };
 
+  // 로그인 성공 시 즉시 인증 상태를 업데이트하는 함수
+  const updateAuthStatus = (status: boolean) => {
+    setIsAuthenticated(status);
+  };
+
   useEffect(() => {
     checkAuth();
     const id = setInterval(checkAuth, 4 * 60 * 1000);
     return () => clearInterval(id);
   }, []);
 
-  return { isAuthenticated, isLoading: isAuthenticated === null };
+  return {
+    isAuthenticated,
+    isLoading: isAuthenticated === null,
+    updateAuthStatus,
+  };
 };
 
 export default useAuth;

@@ -15,6 +15,7 @@ interface TravelStore {
   addedPlaces: Makers[]; // 추가된 장소들의 리스트
   travelRoute: Place[]; // 여행 경로에 추가된 장소들의 리스트
   scheduleDetail: Schedule; // 일정 상세 정보
+  deletedPlaces: number[]; // 삭제된 장소들의 ID 리스트
 
   // 장소 추가 및 제거
   addPlace: (place: Makers) => void;
@@ -34,15 +35,14 @@ interface TravelStore {
 
   // 과거 데이터와 새로운 데이터를 병합
   fetchAndMergeRoutes: (scheduleId: number) => Promise<void>;
-  deletedPlaces: any;
 }
 
-// Zustand로 TravelStore 상태를 생성
+// Zustand로 여행 상태 저장소 생성
 export const useTravelStore = create<TravelStore>((set) => ({
   addedPlaces: [], // 초기 추가된 장소 리스트
   travelRoute: [], // 초기 여행 경로 리스트
   scheduleDetail: {}, // 초기 일정 세부 정보
-  deletedPlaces: [], // 삭제된 장소를 저장
+  deletedPlaces: [], // 삭제된 장소 ID 리스트
 
   // 장소 추가
   addPlace: (place: Makers) =>
@@ -113,6 +113,9 @@ export const useTravelStore = create<TravelStore>((set) => ({
         return { scheduleDetail: response.data };
       });
     } else {
+      if (response.message === '일정이 존재하지 않습니다.') {
+        throw new Error('일정이 존재하지 않습니다.');
+      }
       console.error(
         '일정 세부 정보를 가져오는데 실패했습니다:',
         response.message
@@ -134,48 +137,60 @@ export const useTravelStore = create<TravelStore>((set) => ({
   // 과거 데이터와 새로운 데이터를 병합
   fetchAndMergeRoutes: async (scheduleId: number) => {
     try {
-      let currentPage = 1; // 현재 페이지
-      let totalPages = 1; // 총 페이지 수
-      let allRoutes: Place[] = []; // 모든 페이지 데이터를 담을 배열
+      let currentPage = 1;
+      let totalPages = 1;
+      let allRoutes: Place[] = [];
 
+      // 모든 페이지의 데이터를 가져옴
       while (currentPage <= totalPages) {
         const response = await fetchTravelRoute(scheduleId, currentPage);
 
         if (response.success) {
           const { data } = response;
-          totalPages = data.totalPages; // 총 페이지 수 업데이트
-          allRoutes = [...allRoutes, ...data.content];
-          currentPage++; // 다음 페이지로 이동
-        } else {
-          console.error(
-            `[fetchAndMergeRoutes] 페이지 ${currentPage} 조회 실패`
+          totalPages = data.totalPages;
+          // 여행 순서를 기준으로 정렬하여 추가
+          allRoutes = [...allRoutes, ...data.content].sort(
+            (a, b) => (a.routeOrder ?? 0) - (b.routeOrder ?? 0)
           );
-          break; // 실패 시 반복 중단
+          currentPage++;
+        } else {
+          console.error(`[여행 경로 가져오기] ${currentPage}페이지 조회 실패`);
+          break;
         }
       }
 
       set((state) => {
-        const mergedRoutes = [
-          ...allRoutes.filter(
-            (newRoute) =>
-              !state.travelRoute.some(
-                (route) => route.placeId === newRoute.placeId
-              ) && !state.deletedPlaces.includes(newRoute.placeId) // 삭제된 장소 제외
-          ),
-          ...state.travelRoute,
-        ];
+        // 1. 현재 상태의 여행 경로에서 삭제되지 않은 항목들을 유지
+        const currentRoutes = state.travelRoute.filter(
+          (route) => !state.deletedPlaces.includes(route.placeId)
+        );
+
+        // 2. 서버에서 가져온 새로운 데이터 중 삭제되지 않고 현재 상태에 없는 항목들을 추가
+        const newRoutes = allRoutes.filter(
+          (newRoute) =>
+            !state.deletedPlaces.includes(newRoute.placeId) &&
+            !currentRoutes.some((route) => route.placeId === newRoute.placeId)
+        );
+
+        // 3. 현재 상태와 새로운 데이터를 여행 순서 기준으로 병합하고 정렬
+        const mergedRoutes = [...currentRoutes, ...newRoutes].sort(
+          (a, b) => (a.routeOrder ?? 0) - (b.routeOrder ?? 0)
+        );
+
+        // 4. 추가된 장소들도 동일한 순서로 업데이트
+        const updatedAddedPlaces = mergedRoutes.map((route) => ({
+          placeId: route.placeId,
+          lat: route.latitude,
+          lng: route.longitude,
+        }));
 
         return {
           travelRoute: mergedRoutes,
-          addedPlaces: mergedRoutes.map((route) => ({
-            placeId: route.placeId,
-            lat: route.latitude,
-            lng: route.longitude,
-          })),
+          addedPlaces: updatedAddedPlaces,
         };
       });
     } catch (error) {
-      console.error('%c[fetchAndMergeRoutes] 오류 발생:', 'color: red;', error);
+      console.error('[여행 경로 가져오기] 오류 발생:', error);
     }
   },
 }));

@@ -18,13 +18,9 @@ export const useScheduleList = (enabled = true) => {
     enabled,
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
-      const currentPage = lastPage?.data?.currentPage ?? 0;
-      const totalPages = lastPage?.data?.totalPages ?? 0;
-
-      if (currentPage < totalPages) {
-        return currentPage + 1;
-      }
-      return undefined;
+      if (!lastPage?.data) return undefined;
+      const { currentPage, totalPages } = lastPage.data;
+      return currentPage < totalPages ? currentPage + 1 : undefined;
     },
   });
 };
@@ -37,13 +33,9 @@ export const useSharedScheduleList = (enabled = true) => {
     enabled,
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
-      const currentPage = lastPage?.data?.currentPage ?? 0;
-      const totalPages = lastPage?.data?.totalPages ?? 0;
-
-      if (currentPage < totalPages) {
-        return currentPage + 1;
-      }
-      return undefined;
+      if (!lastPage?.data) return undefined;
+      const { currentPage, totalPages } = lastPage.data;
+      return currentPage < totalPages ? currentPage + 1 : undefined;
     },
   });
 };
@@ -62,13 +54,9 @@ export const useScheduleListSearch = (
     enabled: !!keyword && enabled,
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
-      const currentPage = lastPage?.data?.currentPage ?? 0;
-      const totalPages = lastPage?.data?.totalPages ?? 0;
-
-      if (currentPage < totalPages) {
-        return currentPage + 1;
-      }
-      return undefined;
+      if (!lastPage?.data) return undefined;
+      const { currentPage, totalPages } = lastPage.data;
+      return currentPage < totalPages ? currentPage + 1 : undefined;
     },
   });
 };
@@ -108,14 +96,9 @@ export const useMyScheduleList = (enabled = true) => {
     enabled,
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
-      const currentPage = lastPage?.data?.currentPage ?? 0;
-      const totalPages = lastPage?.data?.totalPages ?? 0;
-
-      // 다음 페이지가 있으면 페이지 번호를 반환, 없으면 undefined 반환
-      if (currentPage < totalPages) {
-        return currentPage + 1;
-      }
-      return undefined;
+      if (!lastPage?.data) return undefined;
+      const { currentPage, totalPages } = lastPage.data;
+      return currentPage < totalPages ? currentPage + 1 : undefined;
     },
   });
 };

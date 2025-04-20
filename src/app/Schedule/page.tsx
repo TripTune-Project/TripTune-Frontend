@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Head from 'next/head';
 import styles from '@/styles/Schedule.module.css';
 import DataLoading from '@/components/Common/DataLoading';
@@ -30,6 +30,8 @@ import Alert from '@mui/material/Alert';
 export default function SchedulePage() {
   const router = useRouter();
   const { isAuthenticated, isLoading } = useAuth();
+  const observerRef = useRef<HTMLDivElement | null>(null);
+  const [isIntersecting, setIsIntersecting] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -83,7 +85,48 @@ export default function SchedulePage() {
     isFetchingNextPage: isFetchingNextSearchPage,
   } = useScheduleListSearch(debouncedSearchKeyword, selectedTab, isSearching);
 
-  const observerRef = useRef<HTMLDivElement | null>(null);
+  const fetchNextPage = isSearching
+    ? fetchNextSearchPage
+    : selectedTab === 'all'
+      ? fetchNextAllPage
+      : fetchNextSharedPage;
+
+  const hasNextPage = isSearching
+    ? hasNextSearchPage
+    : selectedTab === 'all'
+      ? hasNextAllPage
+      : hasNextSharedPage;
+
+  const isFetchingNextPage = isSearching
+    ? isFetchingNextSearchPage
+    : selectedTab === 'all'
+      ? isFetchingNextAllPage
+      : isFetchingNextSharedPage;
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsIntersecting(entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+
+    if (observerRef.current) {
+      observer.observe(observerRef.current);
+    }
+
+    return () => {
+      if (observerRef.current) {
+        observer.unobserve(observerRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isIntersecting && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [isIntersecting, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -147,51 +190,6 @@ export default function SchedulePage() {
       setAlertOpen(true);
     }
   };
-
-  const fetchNextPage = isSearching
-    ? fetchNextSearchPage
-    : selectedTab === 'all'
-      ? fetchNextAllPage
-      : fetchNextSharedPage;
-
-  const hasNextPage = isSearching
-    ? hasNextSearchPage
-    : selectedTab === 'all'
-      ? hasNextAllPage
-      : hasNextSharedPage;
-
-  const isFetchingNextPage = isSearching
-    ? isFetchingNextSearchPage
-    : selectedTab === 'all'
-      ? isFetchingNextAllPage
-      : isFetchingNextSharedPage;
-
-  const handleObserver = (entries: IntersectionObserverEntry[]) => {
-    const target = entries[0];
-    if (target.isIntersecting && hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
-    }
-  };
-
-  useEffect(() => {
-    const observerNode = observerRef.current;
-    const option = {
-      root: null,
-      rootMargin: '20px',
-      threshold: 1.0,
-    };
-
-    const observer = new IntersectionObserver(handleObserver, option);
-    if (observerNode) observer.observe(observerNode);
-
-    return () => {
-      if (observerNode) observer.unobserve(observerNode);
-    };
-  }, [hasNextPage, fetchNextPage]);
-
-  useEffect(() => {
-    setIsSearching(!!debouncedSearchKeyword);
-  }, [debouncedSearchKeyword]);
 
   const handleDetailClick = (event: React.MouseEvent, scheduleId: number) => {
     if (!activeDeleteMenu) {

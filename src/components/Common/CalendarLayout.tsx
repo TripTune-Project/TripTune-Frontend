@@ -73,6 +73,34 @@ const CalendarLayout = ({
     }
   };
 
+  const handleDateChange = (dates: [Date | null, Date | null]) => {
+    const [start, end] = dates;
+
+    // 시작 날짜와 종료 날짜가 모두 선택된 경우
+    if (start && end) {
+      // 시작 날짜가 종료 날짜보다 이후인 경우 스왑
+      if (start > end) {
+        setStartDate(end);
+        setEndDate(start);
+      } else {
+        setStartDate(start);
+        setEndDate(end);
+      }
+    } else if (start) {
+      // 시작 날짜만 선택된 경우
+      setStartDate(start);
+      setEndDate(null);
+    } else if (end) {
+      // 종료 날짜만 선택된 경우
+      if (!startDate || end > startDate) {
+        setEndDate(end);
+      } else {
+        setStartDate(end);
+        setEndDate(startDate);
+      }
+    }
+  };
+
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContainer}>
@@ -104,11 +132,7 @@ const CalendarLayout = ({
           <DatePicker
             locale='ko'
             selected={startDate || undefined}
-            onChange={(dates: [Date | null, Date | null]) => {
-              const [start, end] = dates;
-              setStartDate(start);
-              setEndDate(end);
-            }}
+            onChange={handleDateChange}
             startDate={startDate || undefined}
             endDate={endDate || undefined}
             minDate={today}
