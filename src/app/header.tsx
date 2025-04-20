@@ -125,7 +125,7 @@ const Header = () => {
       </div>
       <Snackbar
         open={alertOpen}
-        autoHideDuration={6000}
+        autoHideDuration={3000}
         onClose={handleAlertClose}
       >
         <Alert

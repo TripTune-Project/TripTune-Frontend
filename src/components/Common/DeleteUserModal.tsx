@@ -183,7 +183,7 @@ const DeleteUserModal = ({
   onConfirm,
 }: DeleteUserModalProps) => {
   const [password, setPassword] = useState('');
-  // Snackbar 상태
+
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertSeverity, setAlertSeverity] = useState<
