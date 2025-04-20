@@ -29,7 +29,11 @@ const formatTimestamp = (timestamp: string) => {
   return `${ampm} ${formattedHours}시 ${minutes}분`;
 };
 
-const Chatting = () => {
+interface ChattingProps {
+  onError?: (error: string) => void;
+}
+
+const Chatting = ({ onError }: ChattingProps) => {
   const { scheduleId } = useParams();
   const { getDecryptedCookie } = saveLocalContent();
   const token = getDecryptedCookie('trip-tune_at');
@@ -82,12 +86,14 @@ const Chatting = () => {
           setAlertMessage(response.message as string);
           setAlertSeverity('error');
           setAlertOpen(true);
+          onError?.(response.message as string);
         }
       } catch (error) {
         console.error('메시지 로드 실패:', error);
         setAlertMessage('메시지 로드에 실패했습니다.');
         setAlertSeverity('error');
         setAlertOpen(true);
+        onError?.('메시지 로드에 실패했습니다.');
       }
     };
 
@@ -170,12 +176,14 @@ const Chatting = () => {
         setAlertMessage(response.message as string);
         setAlertSeverity('error');
         setAlertOpen(true);
+        onError?.(response.message as string);
       }
     } catch (error) {
       console.error('다음 메시지 로드 실패:', error);
       setAlertMessage('다음 메시지 로드에 실패했습니다.');
       setAlertSeverity('error');
       setAlertOpen(true);
+      onError?.('다음 메시지 로드에 실패했습니다.');
     } finally {
       setLoading(false);
     }
@@ -218,6 +226,7 @@ const Chatting = () => {
         setAlertMessage('메시지 전송에 실패했습니다.');
         setAlertSeverity('error');
         setAlertOpen(true);
+        onError?.('메시지 전송에 실패했습니다.');
       }
       setMessage('');
     }

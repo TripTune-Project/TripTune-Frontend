@@ -16,6 +16,8 @@ import { useTravelStore } from '@/store/scheduleStore';
 import useAuth from '@/hooks/useAuth';
 import LoginModal from '@/components/Common/LoginModal';
 import DataLoading from '@/components/Common/DataLoading';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 export default function ScheduleDetailPage() {
   const { scheduleId } = useParams();
@@ -23,27 +25,63 @@ export default function ScheduleDetailPage() {
 
   const { isAuthenticated, isLoading } = useAuth();
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+  const [isLoadingData, setIsLoadingData] = useState(true);
+  const [isChatLoading, setIsChatLoading] = useState(false);
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertSeverity, setAlertSeverity] = useState<
+    'error' | 'success' | 'info' | 'warning'
+  >('error');
 
   const { travelRoute, scheduleDetail, fetchScheduleDetailById } =
     useTravelStore();
-  const [scheduleError, setScheduleError] = useState<string | null>(null);
-
-  useEffect(() => {}, [isAuthenticated, router]);
 
   useEffect(() => {
-    if (scheduleId) {
-      fetchScheduleDetailById(scheduleId as string, 1).catch((error) => {
-        if (error.message === '일정이 존재하지 않습니다.') {
-          setScheduleError('일정이 존재하지 않습니다.');
-          alert('일정이 존재하지 않습니다.');
-          router.back();
+    const fetchScheduleData = async () => {
+      if (scheduleId) {
+        try {
+          setIsLoadingData(true);
+          await fetchScheduleDetailById(scheduleId as string, 1);
+          // 일정 데이터 로드 성공 후 채팅 데이터 로드 시작
+          setIsChatLoading(true);
+        } catch (error) {
+          if (
+            error instanceof Error &&
+            error.message === '일정이 존재하지 않습니다.'
+          ) {
+            setAlertMessage('일정이 존재하지 않습니다.');
+            setAlertSeverity('error');
+            setAlertOpen(true);
+            setTimeout(() => {
+              router.back();
+            }, 1500);
+          } else {
+            setAlertMessage('일정을 불러오는 중 오류가 발생했습니다.');
+            setAlertSeverity('error');
+            setAlertOpen(true);
+            setTimeout(() => {
+              router.back();
+            }, 1500);
+          }
+        } finally {
+          setIsLoadingData(false);
         }
-      });
-    }
+      }
+    };
+
+    fetchScheduleData();
   }, [scheduleId, fetchScheduleDetailById, router]);
 
   const handleShareClick = () => setIsInviteModalOpen(true);
   const handleCloseModal = () => setIsInviteModalOpen(false);
+
+  const handleAlertClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === 'clickaway') return;
+    setAlertOpen(false);
+  };
 
   const handleSaveSchedule = async () => {
     if (!scheduleDetail) return;
@@ -77,8 +115,8 @@ export default function ScheduleDetailPage() {
     return <LoginModal />;
   }
 
-  if (scheduleError) {
-    return null; // 에러 발생 시 아무것도 렌더링하지 않음
+  if (isLoadingData) {
+    return <DataLoading />;
   }
 
   return (
@@ -124,12 +162,36 @@ export default function ScheduleDetailPage() {
         <div className={styles.centerSection}>
           <SchedulePlacesMap />
         </div>
-        {scheduleDetail && (
-          <div className={styles.rightSection}>
-            <Chatting />
-          </div>
-        )}
+        <div className={styles.rightSection}>
+          {isChatLoading ? (
+            <Chatting
+              onError={(error) => {
+                setAlertMessage(error);
+                setAlertSeverity('error');
+                setAlertOpen(true);
+              }}
+            />
+          ) : (
+            <div className={styles.chatLoading}>
+              <DataLoading />
+            </div>
+          )}
+        </div>
       </div>
+      <Snackbar
+        open={alertOpen}
+        autoHideDuration={1500}
+        onClose={handleAlertClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert
+          onClose={handleAlertClose}
+          severity={alertSeverity}
+          sx={{ width: '100%' }}
+        >
+          {alertMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 }
