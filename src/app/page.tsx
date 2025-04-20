@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import styles from '../styles/onBoard.module.css';
+import styles from '@/styles/onBoard.module.css';
 import HomeImage from '../../public/assets/images/메인화면/ocean_title.png';
 import HomePageSearch from '@/components/Feature/Home/HomePageSearch';
 import HomePagePopularTravel from '@/components/Feature/Home/HomePagePopularTravel';

@@ -1,41 +1,24 @@
 import { useState, useEffect } from 'react';
 import { refreshApi } from '@/apis/Login/refreshApi';
-import saveLocalContent from '@/utils/saveLocalContent';
 
 const useAuth = () => {
-  // null: 아직 체크 중, true/false: 체크 완료 결과
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-  const { getDecryptedCookie } = saveLocalContent();
-
+  
   const checkAuth = async () => {
     try {
-      // refreshToken이 없으면 바로 인증 실패 처리
-      const refreshToken = getDecryptedCookie('trip-tune_rt');
-      if (!refreshToken) {
-        setIsAuthenticated(false);
-        return;
-      }
-      // refreshToken이 있으므로 refreshApi를 호출해 access token 갱신 시도
-      const newAccessToken = await refreshApi();
-      if (!newAccessToken) {
-        setIsAuthenticated(false);
-        return;
-      }
+      await refreshApi();
       setIsAuthenticated(true);
-    } catch (error) {
-      console.error('인증 체크 중 오류 발생:', error);
+    } catch {
       setIsAuthenticated(false);
     }
   };
-
+  
   useEffect(() => {
-    // 최초 인증 체크
     checkAuth();
-    // 이후 60초마다 주기적으로 체크
-    const intervalId = setInterval(checkAuth, 60000);
-    return () => clearInterval(intervalId);
-  }, [getDecryptedCookie]);
-
+    const id = setInterval(checkAuth, 60_000);
+    return () => clearInterval(id);
+  }, []);
+  
   return { isAuthenticated, isLoading: isAuthenticated === null };
 };
 

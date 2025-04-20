@@ -1,27 +1,24 @@
 'use client';
 
-import { useEffect, Suspense } from 'react';
+import { useEffect } from 'react';
 import Head from 'next/head';
 import LoginForm from '@/components/Feature/Login/LoginForm';
 import { useRouter } from 'next/navigation';
 import VerificationLoading from '@/components/Common/VerificationLoading';
-import saveLocalContent from '@/utils/saveLocalContent';
+import useAuth from '@/hooks/useAuth';
 
 export default function LoginPage() {
   const router = useRouter();
-
+  const { isAuthenticated, isLoading } = useAuth();
+  
   useEffect(() => {
-    const { getDecryptedCookie } = saveLocalContent();
-    const accessToken = getDecryptedCookie('trip-tune_at');
-    const refreshToken = getDecryptedCookie('trip-tune_rt');
-
-    if (accessToken && refreshToken) {
+    if (!isLoading && isAuthenticated) {
       const redirectPath = localStorage.getItem('redirectAfterLogin') || '/';
       localStorage.removeItem('redirectAfterLogin');
       router.push(redirectPath);
     }
-  }, [router]);
-
+  }, [isLoading, isAuthenticated, router]);
+  
   return (
     <>
       <Head>
@@ -44,9 +41,12 @@ export default function LoginPage() {
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <Suspense fallback={<VerificationLoading />}>
+      
+      {isLoading ? (
+        <VerificationLoading />
+      ) : (
         <LoginForm />
-      </Suspense>
+      )}
     </>
   );
 }

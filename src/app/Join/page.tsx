@@ -4,24 +4,18 @@ import { useEffect } from 'react';
 import Head from 'next/head';
 import JoinForm from '@/components/Feature/Join/JoinForm';
 import { useRouter } from 'next/navigation';
-import saveLocalContent from '@/utils/saveLocalContent';
+import useAuth from '@/hooks/useAuth';
 
 export default function JoinPage() {
   const router = useRouter();
-
+  const { isAuthenticated, isLoading } = useAuth();
+  
   useEffect(() => {
-    const checkAuthStatus = () => {
-      const { getDecryptedCookie } = saveLocalContent();
-      const accessToken = getDecryptedCookie('trip-tune_at');
-      const refreshToken = getDecryptedCookie('trip-tune_rt');
-      if (accessToken && refreshToken) {
-        router.push('/');
-      }
-    };
-
-    checkAuthStatus();
-  }, [router]);
-
+    if (!isLoading && isAuthenticated) {
+      router.push('/');
+    }
+  }, [isLoading, isAuthenticated, router]);
+  
   return (
     <>
       <Head>
@@ -34,10 +28,7 @@ export default function JoinPage() {
           name='keywords'
           content='join, sign up, TripTune, travel planning, create account'
         />
-        <meta
-          property='og:title'
-          content='Join TripTune | Create Your Account'
-        />
+        <meta property='og:title' content='Join TripTune | Create Your Account' />
         <meta
           property='og:description'
           content='Sign up for TripTune to start planning your trips and exploring new destinations. Join now to create your personalized travel experience.'
