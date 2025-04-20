@@ -10,7 +10,7 @@ import useAuth from '@/hooks/useAuth';
 export default function LoginPage() {
   const router = useRouter();
   const { isAuthenticated, isLoading } = useAuth();
-  
+
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
       const redirectPath = localStorage.getItem('redirectAfterLogin') || '/';
@@ -18,7 +18,7 @@ export default function LoginPage() {
       router.push(redirectPath);
     }
   }, [isLoading, isAuthenticated, router]);
-  
+
   return (
     <>
       <Head>
@@ -41,12 +41,8 @@ export default function LoginPage() {
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      
-      {isLoading ? (
-        <VerificationLoading />
-      ) : (
-        <LoginForm />
-      )}
+
+      {isLoading ? <VerificationLoading /> : <LoginForm />}
     </>
   );
 }

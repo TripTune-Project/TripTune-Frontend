@@ -9,13 +9,13 @@ import useAuth from '@/hooks/useAuth';
 export default function JoinPage() {
   const router = useRouter();
   const { isAuthenticated, isLoading } = useAuth();
-  
+
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
       router.push('/');
     }
   }, [isLoading, isAuthenticated, router]);
-  
+
   return (
     <>
       <Head>
@@ -28,7 +28,10 @@ export default function JoinPage() {
           name='keywords'
           content='join, sign up, TripTune, travel planning, create account'
         />
-        <meta property='og:title' content='Join TripTune | Create Your Account' />
+        <meta
+          property='og:title'
+          content='Join TripTune | Create Your Account'
+        />
         <meta
           property='og:description'
           content='Sign up for TripTune to start planning your trips and exploring new destinations. Join now to create your personalized travel experience.'

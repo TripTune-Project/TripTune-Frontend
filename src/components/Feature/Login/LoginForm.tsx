@@ -12,6 +12,7 @@ import kakao from '../../../../public/assets/icons/ic_kakao_vector.png';
 import naver from '../../../../public/assets/icons/ic_naver_vector.png';
 import VerificationLoading from '@/components/Common/VerificationLoading';
 import { loginUser } from '@/apis/Login/loginApi';
+import saveLocalContent from '@/utils/saveLocalContent';
 
 interface LoginFormData {
   email: string;
@@ -20,6 +21,7 @@ interface LoginFormData {
 
 const LoginForm = () => {
   const router = useRouter();
+  const { setEncryptedCookie } = saveLocalContent();
 
   const [errorMessage, setErrorMessage] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -34,7 +36,11 @@ const LoginForm = () => {
 
   const onSubmit = async (data: LoginFormData) => {
     try {
-      await loginUser(data);
+      const response = await loginUser(data);
+      const { accessToken, nickname } = response.data;
+
+      setEncryptedCookie('trip-tune_at', accessToken, 5 / (24 * 60));
+      setEncryptedCookie('nickname', nickname, 7);
 
       const redirectPath = localStorage.getItem('redirectAfterLogin') || '/';
       localStorage.removeItem('redirectAfterLogin');
