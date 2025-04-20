@@ -319,8 +319,8 @@
 }
 
 .scheduleImageProfile {
-  height:38px;
-  width:38px;
+  height: 38px;
+  width: 38px;
   margin-top: -40px;
   margin-right: 15px;
   border-radius: 50%;
@@ -539,33 +539,6 @@
   color: #ffffff;
 }
 
-.userIdText {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  flex-shrink: 0;
-  color: #000;
-  text-align: center;
-  font-family:
-    Noto Sans KR,
-    sans-serif;
-  font-size: 15px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-}
-
-.userIdExplain {
-  color: #848282;
-  font-family:
-    Noto Sans KR,
-    sans-serif;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-}
-
 .noPlaces {
   margin-left: 8%;
 }
@@ -691,7 +664,7 @@
   height: 95px;
   width: 400px;
   border: 1px solid #e8e8e8;
-  cursor:pointer;
+  cursor: pointer;
 }
 
 .placeItem:after,

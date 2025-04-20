@@ -2,7 +2,7 @@
 
 import React, { useState, Suspense } from 'react';
 import { useForm } from 'react-hook-form';
-import { validatePassword, validateUserId } from '@/utils/validation';
+import { validatePassword, validateEmail } from '@/utils/validation';
 import styles from '@/styles/Login.module.css';
 import { useRouter } from 'next/navigation';
 import Alert from '@mui/material/Alert';
@@ -14,7 +14,7 @@ import VerificationLoading from '@/components/Common/VerificationLoading';
 import { loginUser } from '@/apis/Login/loginApi';
 
 interface LoginFormData {
-  userId: string;
+  email: string;
   password: string;
 }
 
@@ -39,7 +39,7 @@ const LoginForm = () => {
       const redirectPath = localStorage.getItem('redirectAfterLogin') || '/';
       localStorage.removeItem('redirectAfterLogin');
       router.push(redirectPath);
-    } catch (error:any) {
+    } catch (error: any) {
       setErrorMessage(error.message);
       setOpenSnackbar(true);
       console.error('로그인 에러:', error);
@@ -49,29 +49,21 @@ const LoginForm = () => {
   const closeSnackbar = () => {
     setOpenSnackbar(false);
   };
-  
+
   const handleKakaoLogin = () => {
     window.location.href =
       'https://www.triptune.site/oauth2/authorization/kakao';
   };
-  
+
   const handleNaverLogin = () => {
     window.location.href =
       'https://www.triptune.site/oauth2/authorization/naver';
   };
-  
-  const handleFindId = () => {
-    window.open('/Find?tab=findId', 'FindId', 'width=619,height=673');
-  };
-  
+
   const handleFindPassword = () => {
-    window.open(
-      '/Find?tab=findPassword',
-      'FindPassword',
-      'width=619,height=673'
-    );
+    router.push('/Find');
   };
-  
+
   return (
     <Suspense fallback={<VerificationLoading />}>
       <div className={styles.loginBackground}>
@@ -80,15 +72,15 @@ const LoginForm = () => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className={styles.inputGroup}>
               <input
-                placeholder='아이디'
-                {...register('userId', {
-                  required: '아이디를 입력해주세요.',
-                  validate: validateUserId,
+                placeholder='이메일'
+                {...register('email', {
+                  required: '이메일를 입력해주세요.',
+                  validate: validateEmail,
                 })}
-                className={errors.userId ? styles.inputError : styles.input}
+                className={errors.email ? styles.inputError : styles.input}
               />
-              {errors.userId && (
-                <p className={styles.errorText}>{errors.userId.message}</p>
+              {errors.email && (
+                <p className={styles.errorText}>{errors.email.message}</p>
               )}
             </div>
             <div className={styles.inputGroup}>
@@ -116,17 +108,7 @@ const LoginForm = () => {
           </form>
 
           <div className={styles.linkContainer}>
-            <span
-              className={styles.findId}
-              onClick={handleFindId}
-            >
-              아이디 찾기
-            </span>{' '}
-            |{' '}
-            <span
-              className={styles.findPassword}
-              onClick={handleFindPassword}
-            >
+            <span className={styles.findPassword} onClick={handleFindPassword}>
               비밀번호 찾기
             </span>{' '}
             |{' '}

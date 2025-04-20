@@ -2,11 +2,7 @@
 
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import {
-  validateNickname,
-  validateUserId,
-  validatePassword,
-} from '@/utils/validation';
+import { validateNickname, validatePassword } from '@/utils/validation';
 import styles from '@/styles/Join.module.css';
 import { useRouter } from 'next/navigation';
 import { joinMember } from '@/apis/Join/joinApi';
@@ -16,7 +12,6 @@ import Alert from '@mui/material/Alert';
 
 interface JoinFormData {
   nickname: string;
-  userId: string;
   password: string;
   rePassword: string;
   email: string;
@@ -32,19 +27,21 @@ const JoinForm = () => {
     setFocus,
     formState: { errors, isValid },
   } = useForm<JoinFormData>({ mode: 'onChange' });
-  
+
   const [isVerificationComplete, setIsVerificationComplete] = useState(false);
   const [isAgreed, setIsAgreed] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [alertSeverity, setAlertSeverity] = useState<'success' | 'error'>('success');
-  
+  const [alertSeverity, setAlertSeverity] = useState<'success' | 'error'>(
+    'success'
+  );
+
   const router = useRouter();
-  
+
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
   };
-  
+
   const onSubmit = async (data: JoinFormData) => {
     if (!isVerificationComplete) {
       setNotificationMessage('이메일 인증을 완료해주세요.');
@@ -52,26 +49,26 @@ const JoinForm = () => {
       setOpenSnackbar(true);
       return;
     }
-    
+
     try {
       const { authCode, ...submitData } = data;
       const response = await joinMember(submitData);
       if (!response.success) {
         setNotificationMessage(response.message);
-        if (response.message.includes("아이디")) {
-          setFocus('userId');
-        } else if (response.message.includes("닉네임")) {
+        if (response.message.includes('닉네임')) {
           setFocus('nickname');
-        } else if (response.message.includes("비밀번호")) {
+        } else if (response.message.includes('비밀번호')) {
           setFocus('password');
-        } else if (response.message.includes("이메일")) {
+        } else if (response.message.includes('이메일')) {
           setFocus('email');
         }
         setAlertSeverity('error');
         setOpenSnackbar(true);
         return;
       }
-      setNotificationMessage(`${data.nickname} 고객님 회원가입을 축하드립니다!`);
+      setNotificationMessage(
+        `${data.nickname} 고객님 회원가입을 축하드립니다!`
+      );
       setAlertSeverity('success');
       setOpenSnackbar(true);
       setTimeout(() => {
@@ -80,13 +77,11 @@ const JoinForm = () => {
     } catch (error) {
       if (error instanceof Error) {
         setNotificationMessage(error.message);
-        if (error.message.includes("아이디")) {
-          setFocus('userId');
-        } else if (error.message.includes("닉네임")) {
+        if (error.message.includes('닉네임')) {
           setFocus('nickname');
-        } else if (error.message.includes("비밀번호")) {
+        } else if (error.message.includes('비밀번호')) {
           setFocus('password');
-        } else if (error.message.includes("이메일")) {
+        } else if (error.message.includes('이메일')) {
           setFocus('email');
         }
       } else {
@@ -96,35 +91,30 @@ const JoinForm = () => {
       setOpenSnackbar(true);
     }
   };
-  
+
   const onError = () => {
     setNotificationMessage('입력값을 확인해주세요.');
     setAlertSeverity('error');
     setOpenSnackbar(true);
   };
-  
+
   const handleAgreementChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsAgreed(e.target.checked);
   };
-  
+
   return (
     <div className={styles.joinBackground}>
       <div className={styles.joinContainer}>
         <h3 className={styles.joinTitle}>회원가입</h3>
         <form onSubmit={handleSubmit(onSubmit, onError)}>
-          <div className={styles.inputGroup}>
-            <input
-              placeholder='아이디 (영문 대/소문자, 숫자 조합 4 ~ 15자리)'
-              {...register('userId', {
-                required: '아이디를 입력해주세요.',
-                validate: validateUserId,
-              })}
-              className={errors.userId ? styles.inputError : styles.input}
-            />
-            {errors.userId && (
-              <p className={styles.errorText}>{errors.userId.message}</p>
-            )}
-          </div>
+          <EmailVerification
+            register={register}
+            getValues={getValues}
+            setIsVerificationComplete={setIsVerificationComplete}
+            isVerificationComplete={isVerificationComplete}
+            errors={errors}
+            errorMessage={''}
+          />
           <div className={styles.inputGroup}>
             <input
               placeholder='닉네임 (영문 대/소문자, 숫자 조합 4 ~ 15자리)'
@@ -167,14 +157,6 @@ const JoinForm = () => {
               <p className={styles.errorText}>{errors.rePassword.message}</p>
             )}
           </div>
-          <EmailVerification
-            register={register}
-            getValues={getValues}
-            setIsVerificationComplete={setIsVerificationComplete}
-            isVerificationComplete={isVerificationComplete}
-            errors={errors}
-            errorMessage={''}
-          />
           <div className={styles.checkboxGroup}>
             <input
               type='checkbox'
@@ -188,7 +170,7 @@ const JoinForm = () => {
             className={styles.submitButton}
             disabled={!isValid || !isAgreed || !isVerificationComplete}
           >
-            회원가입하기
+            회원가입 하기
           </button>
         </form>
       </div>

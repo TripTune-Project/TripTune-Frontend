@@ -29,12 +29,14 @@ const MyScheduleEditModal = ({
     hasNextPage,
     isFetchingNextPage,
   } = useMyScheduleList(isOpen);
-  
+
   // Snackbar 상태
   const [alertOpen, setAlertOpen] = useState<boolean>(false);
   const [alertMessage, setAlertMessage] = useState<string>('');
-  const [alertSeverity, setAlertSeverity] = useState<'info' | 'success' | 'error' | 'warning'>('info');
-  
+  const [alertSeverity, setAlertSeverity] = useState<
+    'info' | 'success' | 'error' | 'warning'
+  >('info');
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden'; // 스크롤 비활성화
@@ -45,11 +47,12 @@ const MyScheduleEditModal = ({
       document.body.style.overflow = 'auto'; // 컴포넌트 언마운트 시 복원
     };
   }, [isOpen]);
-  
+
   if (!isOpen) return null;
-  
-  const schedules = schedulePages?.pages.flatMap((page) => page.data?.content) || [];
-  
+
+  const schedules =
+    schedulePages?.pages.flatMap((page) => page.data?.content) || [];
+
   const handleAddPlace = async () => {
     if (!selectedScheduleId) {
       setAlertMessage('일정을 선택해주세요.');
@@ -57,7 +60,7 @@ const MyScheduleEditModal = ({
       setAlertOpen(true);
       return;
     }
-    
+
     try {
       const response = await addPlaceToSchedule(selectedScheduleId, placeId);
       if (response.success) {
@@ -75,7 +78,7 @@ const MyScheduleEditModal = ({
       setAlertOpen(true);
     }
   };
-  
+
   const handleCheckboxChange = (scheduleId: number) => {
     // 동일한 ID가 클릭되면 선택 해제
     if (selectedScheduleId === scheduleId) {
@@ -85,7 +88,7 @@ const MyScheduleEditModal = ({
       setSelectedScheduleId(scheduleId);
     }
   };
-  
+
   const handleAlertClose = (
     event?: React.SyntheticEvent | Event,
     reason?: string
@@ -93,7 +96,7 @@ const MyScheduleEditModal = ({
     if (reason === 'clickaway') return;
     setAlertOpen(false);
   };
-  
+
   return (
     <ModalOverlay>
       <ModalContainer>
@@ -111,7 +114,11 @@ const MyScheduleEditModal = ({
         <ScrollableContainer
           onScroll={(e) => {
             const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
-            if (scrollHeight - scrollTop === clientHeight && hasNextPage && !isFetchingNextPage) {
+            if (
+              scrollHeight - scrollTop === clientHeight &&
+              hasNextPage &&
+              !isFetchingNextPage
+            ) {
               fetchNextPage();
             }
           }}
@@ -167,7 +174,11 @@ const MyScheduleEditModal = ({
         onClose={handleAlertClose}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
-        <Alert onClose={handleAlertClose} severity={alertSeverity} sx={{ width: '100%' }}>
+        <Alert
+          onClose={handleAlertClose}
+          severity={alertSeverity}
+          sx={{ width: '100%' }}
+        >
           {alertMessage}
         </Alert>
       </Snackbar>
@@ -177,170 +188,169 @@ const MyScheduleEditModal = ({
 
 export default MyScheduleEditModal;
 
-
 // 스타일 컴포넌트
 const ModalOverlay = styled.div`
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
 `;
 
 const ModalContainer = styled.div`
-    background: #fff;
-    border-radius: 30px 0px;
-    box-shadow: 0px 8px 24px 0px rgba(0, 0, 0, 0.3);
-    width: 90%;
-    max-width: 500px;
-    padding: 16px;
-    position: relative;
+  background: #fff;
+  border-radius: 30px 0px;
+  box-shadow: 0px 8px 24px 0px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 500px;
+  padding: 16px;
+  position: relative;
 `;
 
 const CloseButton = styled.button`
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    position: absolute;
-    top: 16px;
-    right: 16px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  position: absolute;
+  top: 16px;
+  right: 16px;
 `;
 
 const Header = styled.div`
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 `;
 
 const ModalTitle = styled.h1`
-    color: #000;
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 20px;
-    font-weight: 400;
+  color: #000;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
 `;
 
 const Divider = styled.hr`
-    border: none;
-    border-top: 1px solid #ddd;
-    margin: 16px 0;
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 16px 0;
 `;
 
 const ModalSubtitle = styled.p`
-    color: #000;
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 15px;
-    font-weight: 500;
+  color: #000;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
 `;
 
 const Notice = styled.p`
-    color: #f86c6c;
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 10px;
-    margin-top: 8px;
+  color: #f86c6c;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 10px;
+  margin-top: 8px;
 `;
 
 const ScrollableContainer = styled.div`
-    max-height: 400px;
-    overflow-y: auto;
-    padding-right: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-bottom: 16px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 16px;
 `;
 
 const ScheduleItemContainer = styled.div`
-    border-bottom: 1px solid #ddd;
-    padding: 8px 22px;
+  border-bottom: 1px solid #ddd;
+  padding: 8px 22px;
 `;
 
 const ScheduleItem = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `;
 
 const ScheduleName = styled.h3`
-    font-size: 16px;
-    font-weight: bold;
+  font-size: 16px;
+  font-weight: bold;
 `;
 
 const ScheduleDate = styled.p`
-    font-size: 14px;
-    color: #555;
+  font-size: 14px;
+  color: #555;
 `;
 
 const ScheduleAuthor = styled.p`
-    font-size: 14px;
-    color: #555;
+  font-size: 14px;
+  color: #555;
 `;
 
 const StyledCheckbox = styled.input`
-    width: 24px;
-    height: 24px;
-    border: 2px solid #76adac;
-    border-radius: 50%;
-    appearance: none;
-    outline: none;
-    cursor: pointer;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #76adac;
+  border-radius: 50%;
+  appearance: none;
+  outline: none;
+  cursor: pointer;
 
-    &:checked {
-        background-color: #76adac;
-        border: none;
-        position: relative;
-    }
+  &:checked {
+    background-color: #76adac;
+    border: none;
+    position: relative;
+  }
 
-    &:checked::after {
-        content: 'V';
-        color: white;
-        font-size: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: absolute;
-        top: 0;
-        left: 7px;
-    }
+  &:checked::after {
+    content: 'V';
+    color: white;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 7px;
+  }
 `;
 
 const EmptyMessage = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    text-align: center;
-    color: #999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  text-align: center;
+  color: #999;
 `;
 
 const EmptyMessageText = styled.p`
-    font-size: 14px;
-    margin-top: 10px;
-    color: #666;
+  font-size: 14px;
+  margin-top: 10px;
+  color: #666;
 `;
 
 const EmptyMessageIcon = styled.div`
-    font-size: 36px;
-    color: #76adac;
+  font-size: 36px;
+  color: #76adac;
 `;
 
 const LoadingMessage = styled.p`
-    text-align: center;
-    font-size: 14px;
-    color: #666;
+  text-align: center;
+  font-size: 14px;
+  color: #666;
 `;
 
 const SelectButton = styled.button`
-    background: ${({ disabled }) => (disabled ? '#ccc' : '#76adac')};
-    color: ${({ disabled }) => (disabled ? '#888' : '#ffffff')};
-    border: none;
-    padding: 10px 20px;
-    cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
-    font-size: 16px;
-    width: 100%;
+  background: ${({ disabled }) => (disabled ? '#ccc' : '#76adac')};
+  color: ${({ disabled }) => (disabled ? '#888' : '#ffffff')};
+  border: none;
+  padding: 10px 20px;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+  font-size: 16px;
+  width: 100%;
 `;

@@ -64,7 +64,7 @@ const Header = () => {
 
   const isActive = (path: string): string =>
     `${styles.navLink} ${pathname === path ? styles.active : ''} ${styles.homeNavLink}`;
-  
+
   return (
     <header className={styles.header}>
       <div className={styles.headerContent}>
@@ -106,9 +106,7 @@ const Header = () => {
                 <Image src={LoginIcon} alt='>' width={8} height={8} priority />
               </div>
             ) : (
-              <div
-                className={styles.navLogin}
-              >
+              <div className={styles.navLogin}>
                 {nickName} 님
                 <Button onClick={openModal} variant='text' size='large'>
                   로그아웃
@@ -127,7 +125,7 @@ const Header = () => {
       </div>
       <Snackbar
         open={alertOpen}
-        autoHideDuration={6000}
+        autoHideDuration={3000}
         onClose={handleAlertClose}
       >
         <Alert

@@ -8,7 +8,6 @@ export const getMyPage = async () => {
   return await get<{
     success: boolean;
     data: {
-      userId: string;
       email: string;
       nickname: string;
       profileImage: string;

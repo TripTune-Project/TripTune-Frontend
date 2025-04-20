@@ -1,5 +1,3 @@
-// styled-components 설치가 필요합니다: `npm install styled-components`
-
 import Link from 'next/link';
 import Head from 'next/head';
 import styled from 'styled-components';

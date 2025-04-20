@@ -15,26 +15,29 @@ import HomePageRecommendTravel from '@/components/Feature/Home/HomePageRecommend
 
 const Home = () => {
   const router = useRouter();
-  
+
   const handleScheduleClick = () => {
     router.push('/Schedule');
   };
-  
+
   const handleTravelClick = () => {
     router.push('/Travel');
   };
-  
-  // 기본 아이콘과 hover 시 변경할 아이콘 경로를 useState로 관리
-  const [scheduleIcon, setScheduleIcon] = useState('/assets/images/메인화면/scheduleIcon.png');
-  const [travelIcon, setTravelIcon] = useState('/assets/images/메인화면/travelIcon.png');
-  
+
+  const [scheduleIcon, setScheduleIcon] = useState(
+    '/assets/images/메인화면/scheduleIcon.png'
+  );
+  const [travelIcon, setTravelIcon] = useState(
+    '/assets/images/메인화면/travelIcon.png'
+  );
+
   useEffect(() => {
     document.body.style.overflow = 'auto';
     return () => {
       document.body.style.overflow = 'hidden';
     };
   }, []);
-  
+
   return (
     <div className={styles.onBoard}>
       <Head>
@@ -47,7 +50,10 @@ const Home = () => {
           name='keywords'
           content='travel, trip planning, explore destinations, TripTune, travel ideas, itinerary'
         />
-        <meta property='og:title' content='TripTune - Explore and Plan Your Travel' />
+        <meta
+          property='og:title'
+          content='TripTune - Explore and Plan Your Travel'
+        />
         <meta
           property='og:description'
           content='Discover top travel destinations and plan your trips with TripTune. Start your journey with personalized travel plans and recommendations.'
@@ -80,18 +86,28 @@ const Home = () => {
           </div>
           <div className={styles.onBoardingButtonLayout}>
             <div className={styles.textContent}>
-              <span className={styles.textSchedule}>일정</span>을 직접 만들고<br/>
-              <span className={styles.textEtc}>여러</span> <span className={styles.textTravel}>여행지</span>를 만나보세요!
+              <span className={styles.textSchedule}>일정</span>을 직접 만들고
+              <br />
+              <span className={styles.textEtc}>여러</span>{' '}
+              <span className={styles.textTravel}>여행지</span>를 만나보세요!
               <div className={styles.buttonContainer}>
                 {/* 일정 만들기 버튼 */}
                 <div
                   className={styles.viewBtnSchedule}
                   onClick={handleScheduleClick}
-                  onMouseEnter={() => setScheduleIcon('/assets/images/메인화면/selectScheduleIcon.png')}
-                  onMouseLeave={() => setScheduleIcon('/assets/images/메인화면/scheduleIcon.png')}
+                  onMouseEnter={() =>
+                    setScheduleIcon(
+                      '/assets/images/메인화면/selectScheduleIcon.png'
+                    )
+                  }
+                  onMouseLeave={() =>
+                    setScheduleIcon('/assets/images/메인화면/scheduleIcon.png')
+                  }
                 >
                   <div className={styles.viewTitle}>일정 만들기</div>
-                  <p className={styles.viewTitleSmall}>직접 일정을 만들어보세요!</p>
+                  <p className={styles.viewTitleSmall}>
+                    직접 일정을 만들어보세요!
+                  </p>
                   <div className={styles.iconContainer}>
                     <Image
                       src={scheduleIcon}
@@ -106,11 +122,19 @@ const Home = () => {
                 <div
                   className={styles.viewBtnTravel}
                   onClick={handleTravelClick}
-                  onMouseEnter={() => setTravelIcon('/assets/images/메인화면/selectTravelIcon.png')}
-                  onMouseLeave={() => setTravelIcon('/assets/images/메인화면/travelIcon.png')}
+                  onMouseEnter={() =>
+                    setTravelIcon(
+                      '/assets/images/메인화면/selectTravelIcon.png'
+                    )
+                  }
+                  onMouseLeave={() =>
+                    setTravelIcon('/assets/images/메인화면/travelIcon.png')
+                  }
                 >
                   <div className={styles.viewTitle}>여행지 탐색</div>
-                  <p className={styles.viewTitleSmall}>여행지 탐색을 통해 여러 여행지를 만나보세요.</p>
+                  <p className={styles.viewTitleSmall}>
+                    여행지 탐색을 통해 여러 여행지를 만나보세요.
+                  </p>
                   <div className={styles.iconContainer}>
                     <Image
                       src={travelIcon}
@@ -126,8 +150,8 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <HomePagePopularTravel/>
-      <HomePageRecommendTravel/>
+      <HomePagePopularTravel />
+      <HomePageRecommendTravel />
     </div>
   );
 };

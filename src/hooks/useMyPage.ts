@@ -1,11 +1,8 @@
 import { create } from 'zustand';
 import { getBookmarks, getMyPage } from '@/apis/MyPage/myPageApi';
-import { Coordinates } from '@/types';
 import { useQuery } from '@tanstack/react-query';
-import { fetchTravelListByLocation } from '@/apis/Travel/travelApi';
 
 type UserData = {
-  userId: string;
   nickname: string;
   profileImage: string;
   email: string;

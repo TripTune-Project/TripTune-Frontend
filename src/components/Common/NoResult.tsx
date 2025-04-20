@@ -6,10 +6,11 @@ export default function NoResultLayout() {
   const pathname = window.location.pathname;
   const isTravelPage = pathname.includes('/Travel');
   const isBookmarkPage = pathname.includes('/MyPage');
-  const isSchedulePage = pathname.includes('/Schedule') || (!isTravelPage && !isBookmarkPage);
-  
+  const isSchedulePage =
+    pathname.includes('/Schedule') || (!isTravelPage && !isBookmarkPage);
+
   let containerStyles: React.CSSProperties = {};
-  
+
   if (isTravelPage) {
     containerStyles = {
       width: '35vw',
@@ -27,7 +28,7 @@ export default function NoResultLayout() {
       marginLeft: '-208px',
     };
   }
-  
+
   const styles = {
     noScheduleContainer: {
       display: 'flex',
@@ -56,13 +57,13 @@ export default function NoResultLayout() {
       lineHeight: 'normal',
     } as React.CSSProperties,
   };
-  
+
   return (
     <div style={styles.noScheduleContainer}>
       <p style={styles.noResults}>
         <Image
           src={AlertIcon}
-          alt="no-schedule-root"
+          alt='no-schedule-root'
           width={80}
           height={80}
           style={{ marginLeft: '120px' }}

@@ -7,11 +7,7 @@ interface AlertModalProps {
   children: React.ReactNode;
 }
 
-const AlertModal = ({
-  isOpen,
-  onClose,
-  children,
-}: AlertModalProps) => {
+const AlertModal = ({ isOpen, onClose, children }: AlertModalProps) => {
   return (
     <Modal open={isOpen} onClose={onClose}>
       <Box
@@ -24,7 +20,7 @@ const AlertModal = ({
           left: '50%',
           transform: 'translate(-50%, -50%)',
           width: '414px',
-          height:'230px',
+          height: '230px',
           textAlign: 'center',
           outline: 'none',
         }}

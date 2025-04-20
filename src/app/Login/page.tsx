@@ -16,8 +16,8 @@ export default function LoginPage() {
     const refreshToken = getDecryptedCookie('trip-tune_rt');
 
     if (accessToken && refreshToken) {
-      const redirectPath = localStorage.getItem('redirectAfterLogin') || '/'; // 이전 경로 또는 홈
-      localStorage.removeItem('redirectAfterLogin'); // 사용 후 제거
+      const redirectPath = localStorage.getItem('redirectAfterLogin') || '/';
+      localStorage.removeItem('redirectAfterLogin');
       router.push(redirectPath);
     }
   }, [router]);

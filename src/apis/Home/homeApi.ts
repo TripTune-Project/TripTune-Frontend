@@ -2,14 +2,11 @@ import { get } from '@/apis/api';
 
 // 인기 여행지
 export const homePopularTravelList = async (
-  city: string = "all",
-  requiresAuth: boolean = false // 기본값 false
+  city: string = 'all',
+  requiresAuth: boolean = false
 ) => {
   try {
-    return await get(
-      `/api/travels/popular?city=${city}`,
-      { requiresAuth } // 인증 필요 여부 전달
-    );
+    return await get(`/api/travels/popular?city=${city}`, { requiresAuth });
   } catch (error) {
     console.error('예기치 않은 오류:', error);
     return {
@@ -22,8 +19,8 @@ export const homePopularTravelList = async (
 
 // 추천 테마 여행지
 export const homeRecommendTravelList = async (
-  theme: string = "all",
-  requiresAuth: boolean = false // 기본값 false
+  theme: string = 'all',
+  requiresAuth: boolean = false
 ) => {
   try {
     return await get(

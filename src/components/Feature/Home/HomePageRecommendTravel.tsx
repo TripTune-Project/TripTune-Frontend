@@ -29,12 +29,12 @@ interface HomeRecommendTravelResponse {
 }
 
 const StyledSwiperContainer = styled.div`
-    overflow: hidden;
-    position: relative;
-    width: 100%;
-    max-width: 1850px;
-    margin: 0 auto;
-    padding: 0 30px;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  max-width: 1850px;
+  margin: 0 auto;
+  padding: 0 30px;
 `;
 
 const StyledSwiperButtonPrev = styled.div`
@@ -90,13 +90,13 @@ const HomePageRecommendTravel = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const themeMapping: Record<string, string> = {
-    '전체': 'all',
-    '관광지': 'attractions',
-    '문화시설': 'culture',
-    '레포츠': 'sports',
-    '숙박': 'lodging',
-    '쇼핑': 'shopping',
-    '음식점': 'food',
+    전체: 'all',
+    관광지: 'attractions',
+    문화시설: 'culture',
+    레포츠: 'sports',
+    숙박: 'lodging',
+    쇼핑: 'shopping',
+    음식점: 'food',
   };
 
   const handleThemeClick = async (theme: string) => {
@@ -104,9 +104,7 @@ const HomePageRecommendTravel = () => {
     const themeCode = themeMapping[theme] || 'all';
     setLoading(true);
     const response: HomeRecommendTravelResponse =
-      (await homeRecommendTravelList(
-        themeCode
-      )) as HomeRecommendTravelResponse;
+      (await homeRecommendTravelList(themeCode)) as HomeRecommendTravelResponse;
     setLoading(false);
     if (response.success) {
       setTravelList(response.data);
@@ -119,7 +117,7 @@ const HomePageRecommendTravel = () => {
   useEffect(() => {
     handleThemeClick('전체');
   }, []);
-  
+
   const handleDetailClick = (placeId: number) => {
     router.push(`/Travel/${placeId}`);
   };
@@ -150,7 +148,7 @@ const HomePageRecommendTravel = () => {
       ) : travelList.length > 0 ? (
         <StyledSwiperContainer>
           <Swiper
-            style={{overflow: 'visible' }}
+            style={{ overflow: 'visible' }}
             modules={[Navigation, Pagination]}
             slidesPerView={4}
             navigation={{
@@ -161,7 +159,10 @@ const HomePageRecommendTravel = () => {
           >
             {travelList.map((item) => (
               <SwiperSlide key={item.placeId}>
-                <div className={styles.imgSliderContainer} onClick={() => handleDetailClick(item.placeId)}>
+                <div
+                  className={styles.imgSliderContainer}
+                  onClick={() => handleDetailClick(item.placeId)}
+                >
                   {item.thumbnailUrl ? (
                     <>
                       <Image
@@ -175,7 +176,9 @@ const HomePageRecommendTravel = () => {
                   ) : (
                     <div className={styles.noImage}>이미지 없음</div>
                   )}
-                  <p className={styles.sliderTextP}>{truncateText(item.placeName, 10)}</p>
+                  <p className={styles.sliderTextP}>
+                    {truncateText(item.placeName, 10)}
+                  </p>
                   <p className={styles.sliderTextPDetail}>
                     <Image
                       src={locationIcon}

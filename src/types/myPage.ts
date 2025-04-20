@@ -1,13 +1,3 @@
-export interface UserData {
-  userId: string;
-  nickname: string;
-  profileImage: string;
-}
-
-export interface FormData {
-  nickname: string;
-}
-
 export interface AccountEmailFormData {
   email: string;
   verificationCode: string;

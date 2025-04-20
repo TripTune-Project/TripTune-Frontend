@@ -43,7 +43,7 @@ export const leaveSchedule = async (
 // 4. 일정 내보내기 (DELETE)
 export const quitSchedule = async (
   scheduleId: number,
-  attendeeId: number,
+  attendeeId: number
 ): Promise<ApiResponse<LeaveSchedule>> => {
   const url = `/api/schedules/${scheduleId}/attendees/${attendeeId}`;
   return await remove<ApiResponse<LeaveSchedule>>(url, {
@@ -64,4 +64,3 @@ export const updatePermission = async (
     { requiresAuth: true }
   );
 };
-
