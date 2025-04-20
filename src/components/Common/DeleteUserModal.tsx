@@ -5,171 +5,170 @@ import Image from 'next/image';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 
-
 const ModalOverlay = styled.div`
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
 `;
 
 const ModalContent = styled.div`
-    position: relative;
-    width: 503px;
-    height: 550px;
-    background: #ffffff;
-    border-radius: 30px 0 30px 0;
-    box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.3);
-    overflow: hidden;
+  position: relative;
+  width: 503px;
+  height: 550px;
+  background: #ffffff;
+  border-radius: 30px 0 30px 0;
+  box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.3);
+  overflow: hidden;
 `;
 
 const DeactivateHeader = styled.div`
-    position: relative;
-    width: 503px;
-    height: 72px;
-    z-index: 16;
+  position: relative;
+  width: 503px;
+  height: 72px;
+  z-index: 16;
 `;
 
 const Rectangle = styled.div`
-    position: absolute;
-    width: 503px;
-    height: 72px;
-    top: 0;
-    left: 0;
-    background: #ffffff;
-    border-radius: 30px 0 0 0;
+  position: absolute;
+  width: 503px;
+  height: 72px;
+  top: 0;
+  left: 0;
+  background: #ffffff;
+  border-radius: 30px 0 0 0;
 `;
 
 const Title = styled.div`
-    position: absolute;
-    top: 50%;
-    left: 37px;
-    transform: translate(0, -50%);
-    display: flex;
-    align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 37px;
+  transform: translate(0, -50%);
+  display: flex;
+  align-items: center;
 `;
 
 const AccountWithdraw = styled.span`
-    margin-left: 10px;
-    font-size: 20px;
-    font-weight: 400;
-    color: #000000;
+  margin-left: 10px;
+  font-size: 20px;
+  font-weight: 400;
+  color: #000000;
 `;
 
 const CloseButton = styled.button`
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    color: #000;
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #000;
 `;
 
 const Divider = styled.hr`
-    border: none;
-    border-top: 1px solid #e0e0e0;
-    margin: 0;
+  border: none;
+  border-top: 1px solid #e0e0e0;
+  margin: 0;
 `;
 
 const Info = styled.div`
-    position: relative;
-    width: 429px;
-    margin: 26px auto;
-    font-size: 15px;
-    line-height: 18px;
-    color: #000000;
+  position: relative;
+  width: 429px;
+  margin: 26px auto;
+  font-size: 15px;
+  line-height: 18px;
+  color: #000000;
 `;
 
 const Card = styled.div`
-    position: relative;
-    width: 429px;
-    height: 155px;
-    margin: 14px 0;
-    background: rgba(237, 249, 247, 0.3);
-    border: 2px solid #76adac;
-    border-radius: 10px;
-    color: #333333;
-    font-size: 11px;
-    line-height: 23px;
+  position: relative;
+  width: 429px;
+  height: 155px;
+  margin: 14px 0;
+  background: rgba(237, 249, 247, 0.3);
+  border: 2px solid #76adac;
+  border-radius: 10px;
+  color: #333333;
+  font-size: 11px;
+  line-height: 23px;
 `;
 
 const PasswordSection = styled.div`
-    position: relative;
-    width: 429px;
-    margin: 29px auto;
+  position: relative;
+  width: 429px;
+  margin: 29px auto;
 `;
 
 const PasswordLabel = styled.div`
-    font-size: 14px;
-    font-weight: 600;
-    color: #000000;
-    margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000000;
+  margin-bottom: 8px;
 `;
 
 const PasswordNotice = styled.div`
-    font-size: 10px;
-    color: #f86c6c;
-    margin-bottom: 10px;
+  font-size: 10px;
+  color: #f86c6c;
+  margin-bottom: 10px;
 `;
 
 const PasswordInput = styled.div`
-    position: relative;
-    width: 429px;
-    height: 40px;
-    margin-top: 9px;
-    border: 1px solid #838282;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    padding: 0 10px;
+  position: relative;
+  width: 429px;
+  height: 40px;
+  margin-top: 9px;
+  border: 1px solid #838282;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
 `;
 
 const InputField = styled.input`
-    width: 100%;
-    border: none;
-    outline: none;
-    font-size: 14px;
+  width: 100%;
+  border: none;
+  outline: none;
+  font-size: 14px;
 `;
 
 const DeactivateButton = styled.button`
-    position: relative;
-    width: 429px;
-    height: 40px;
-    margin: 15px auto;
-    cursor: pointer;
-    background: #76adac;
-    color: #ffffff;
-    font-size: 15px;
-    font-weight: 700;
-    border: none;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  position: relative;
+  width: 429px;
+  height: 40px;
+  margin: 15px auto;
+  cursor: pointer;
+  background: #76adac;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  border: none;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    &:hover {
-        background: #5d8c8b;
-    }
+  &:hover {
+    background: #5d8c8b;
+  }
 `;
 
 const LitsItem = styled.li`
-    margin-top: 12px;
-    margin-left: 20px;
-    line-height: 1.6;
+  margin-top: 12px;
+  margin-left: 20px;
+  line-height: 1.6;
 `;
 
 const LitsItemLast = styled.div`
-    margin-top: 12px;
-    margin-left: 35px;
-    line-height: 1.6;
+  margin-top: 12px;
+  margin-left: 35px;
+  line-height: 1.6;
 `;
 
 interface DeleteUserModalProps {
@@ -187,13 +186,18 @@ const DeleteUserModal = ({
   // Snackbar 상태
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
-  const [alertSeverity, setAlertSeverity] = useState<'success' | 'error' | 'warning' | 'info'>('warning');
-  
-  const handleAlertClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+  const [alertSeverity, setAlertSeverity] = useState<
+    'success' | 'error' | 'warning' | 'info'
+  >('warning');
+
+  const handleAlertClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
     if (reason === 'clickaway') return;
     setAlertOpen(false);
   };
-  
+
   const handleConfirm = () => {
     if (!password.trim()) {
       setAlertMessage('비밀번호를 입력하세요.');
@@ -203,9 +207,9 @@ const DeleteUserModal = ({
     }
     onConfirm(password);
   };
-  
+
   if (!isOpen) return null;
-  
+
   return (
     <ModalOverlay>
       <ModalContent>
@@ -229,7 +233,7 @@ const DeleteUserModal = ({
               계정 탈퇴 진행 시 삭제한 데이터를 복구할 수 없습니다.
             </LitsItem>
             <LitsItem>
-              계정 탈퇴 처리 후에는 계정을 되돌릴 수 없으며, 해당 아이디는
+              계정 탈퇴 처리 후에는 계정을 되돌릴 수 없으며, 해당 이메일은
               영구적으로 삭제되어
             </LitsItem>
             <LitsItemLast>재가입이 불가됩니다.</LitsItemLast>
@@ -258,7 +262,11 @@ const DeleteUserModal = ({
         onClose={handleAlertClose}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
-        <Alert onClose={handleAlertClose} severity={alertSeverity} sx={{ width: '100%' }}>
+        <Alert
+          onClose={handleAlertClose}
+          severity={alertSeverity}
+          sx={{ width: '100%' }}
+        >
           {alertMessage}
         </Alert>
       </Snackbar>

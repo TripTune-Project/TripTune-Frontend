@@ -115,7 +115,7 @@
   padding: 7px;
   border: 1px solid #e8e8e8;
   box-shadow: 4px 4px 24px 0px rgba(217, 217, 217, 0.57);
-  cursor:pointer;
+  cursor: pointer;
 }
 
 .placeItem:hover {

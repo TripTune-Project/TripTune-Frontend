@@ -2,7 +2,7 @@ import { post } from '../api';
 import saveLocalContent from '../../utils/saveLocalContent';
 
 interface LoginData {
-  userId: string;
+  email: string;
   password: string;
 }
 

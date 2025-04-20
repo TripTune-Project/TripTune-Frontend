@@ -16,14 +16,6 @@ export const validatePassword = (password: string): string | true => {
   return true;
 };
 
-export const validateUserId = (userId: string): string | true => {
-  const regex = /^[a-zA-Z\d]{4,15}$/;
-  if (!regex.test(userId)) {
-    return '아이디는 4자 이상 15자 이하의 영문 대/소문자, 숫자만 사용 가능합니다.';
-  }
-  return true;
-};
-
 export const validateNickname = (nickname: string): string | true => {
   const regex = /^[A-Za-z가-힣\d]{4,15}$/;
   if (!regex.test(nickname)) {

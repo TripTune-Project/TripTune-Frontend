@@ -36,23 +36,22 @@ const ChangePassword = () => {
   const [loading, setLoading] = useState(false);
   const password = watch('password', '');
   const rePassword = watch('rePassword', '');
-  
+
   useEffect(() => {
     if (!passwordToken) {
       console.error('passwordToken을 찾을 수 없습니다.');
     }
   }, [passwordToken]);
-  
-  // rePassword 필드에 값이 있을 때만 rePassword 검증을 트리거합니다.
+
   useEffect(() => {
     if (rePassword) {
       trigger('rePassword');
     }
   }, [password, rePassword, trigger]);
-  
+
   const validateRePassword = (value: string) =>
     value === password || '비밀번호가 일치하지 않습니다.';
-  
+
   const onSubmit = async (data: IFormInput) => {
     if (!passwordToken) {
       setAlertMessage('유효하지 않은 토큰입니다.');
@@ -82,7 +81,7 @@ const ChangePassword = () => {
           credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${accessToken}`,
+            'Authorization': `Bearer ${accessToken}`,
           },
         }
       );
@@ -108,7 +107,7 @@ const ChangePassword = () => {
       setLoading(false);
     }
   };
-  
+
   return (
     <>
       <Head>
@@ -161,14 +160,13 @@ const ChangePassword = () => {
                 {...register('password', {
                   required: '비밀번호를 입력해주세요.',
                   validate: (value) =>
-                    validatePassword(value) || '유효한 비밀번호 형식이 아닙니다.',
+                    validatePassword(value) ||
+                    '유효한 비밀번호 형식이 아닙니다.',
                 })}
                 className={errors.password ? styles.inputError : styles.input}
               />
               {errors.password && (
-                <p className={styles.errorText}>
-                  {errors.password.message}
-                </p>
+                <p className={styles.errorText}>{errors.password.message}</p>
               )}
             </div>
             <br />
@@ -184,9 +182,7 @@ const ChangePassword = () => {
                 className={errors.rePassword ? styles.inputError : styles.input}
               />
               {errors.rePassword && (
-                <p className={styles.errorText}>
-                  {errors.rePassword.message}
-                </p>
+                <p className={styles.errorText}>{errors.rePassword.message}</p>
               )}
             </div>
             <div style={{ paddingBottom: '150px' }} />

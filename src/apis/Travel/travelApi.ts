@@ -12,7 +12,7 @@ import { Coordinates } from '@/types';
 export const fetchTravelListByLocation = async (
   params: Coordinates,
   page: number = 1,
-  requiresAuth: boolean = false // 기본값 false
+  requiresAuth: boolean = false
 ): Promise<
   TravelApiResponse | TravelApiEmptyResponse | TravelApiErrorResponse
 > => {
@@ -21,7 +21,7 @@ export const fetchTravelListByLocation = async (
     const data = await post<TravelApiResponse>(
       `/api/travels?page=${pageNum}`,
       params,
-      { requiresAuth } // 인증 필요 여부 전달
+      { requiresAuth }
     );
     if (!data.data || data.data.content.length === 0) {
       return {
@@ -43,7 +43,7 @@ export const fetchTravelListByLocation = async (
 export const fetchTravelListSearch = async (
   params: TravelListSearchParams,
   page: number = 1,
-  requiresAuth: boolean = false // 기본값 false
+  requiresAuth: boolean = false
 ): Promise<
   | TravelListSearchSuccessResponse
   | TravelApiEmptyResponse
@@ -75,13 +75,12 @@ export const fetchTravelListSearch = async (
 
 export const fetchTravelDetail = async (
   placeId: number,
-  requiresAuth: boolean = false // 기본값 false
+  requiresAuth: boolean = false
 ): Promise<TravelDetailSuccessResponse | TravelApiErrorResponse> => {
   try {
-    return await get<TravelDetailSuccessResponse>(
-      `/api/travels/${placeId}`,
-      { requiresAuth } // 인증 필요 여부 전달
-    );
+    return await get<TravelDetailSuccessResponse>(`/api/travels/${placeId}`, {
+      requiresAuth,
+    });
   } catch (error) {
     console.error('예기치 않은 오류:', error);
     return {

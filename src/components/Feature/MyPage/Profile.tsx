@@ -16,17 +16,22 @@ const Profile = () => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [tempNickname, setTempNickname] = useState(userData?.nickname || '');
-  
+
   // Snackbar 상태 관리
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
-  const [alertSeverity, setAlertSeverity] = useState<'success' | 'error' | 'warning' | 'info'>('info');
-  
-  const handleAlertClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+  const [alertSeverity, setAlertSeverity] = useState<
+    'success' | 'error' | 'warning' | 'info'
+  >('info');
+
+  const handleAlertClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
     if (reason === 'clickaway') return;
     setAlertOpen(false);
   };
-  
+
   const {
     register,
     handleSubmit,
@@ -39,13 +44,13 @@ const Profile = () => {
       profileImage: userData?.profileImage || ProfileBasicImg,
     },
   });
-  
+
   useEffect(() => {
     if (userData?.nickname) {
       setValue('nickname', userData.nickname);
     }
   }, [userData, setValue]);
-  
+
   const handleFileClick = () => {
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
@@ -99,17 +104,17 @@ const Profile = () => {
     };
     fileInput.click();
   };
-  
+
   const handleEdit = () => {
     setTempNickname(userData?.nickname || '');
     setIsEditing(true);
   };
-  
+
   const handleCancel = () => {
     setIsEditing(false);
     setValue('nickname', tempNickname);
   };
-  
+
   const handleSave = async (data: { nickname: string }) => {
     try {
       const response = await nickNameChange(data.nickname);
@@ -133,7 +138,7 @@ const Profile = () => {
       setAlertOpen(true);
     }
   };
-  
+
   return (
     <div className={styles.flexColumnF}>
       <span className={styles.profileManagement4}>프로필 관리</span>
@@ -143,12 +148,16 @@ const Profile = () => {
           <Image
             className={styles.rectangle7}
             src={userData?.profileImage ?? ProfileBasicImg}
-            alt="프로필 이미지"
+            alt='프로필 이미지'
             width={95}
             height={95}
             onClick={handleFileClick}
           />
-          <button type="button" className={styles.change} onClick={handleFileClick}>
+          <button
+            type='button'
+            className={styles.change}
+            onClick={handleFileClick}
+          >
             변경
           </button>
           <span className={styles.fileUploadMessage}>
@@ -168,23 +177,37 @@ const Profile = () => {
                   required: '닉네임을 입력해주세요.',
                   validate: validateNickname,
                 })}
-                placeholder="닉네임 (영문 대/소문자, 숫자 조합 4 ~ 15자리)"
-                className={errors.nickname ? styles.inputProfileError : styles.inputProfile}
+                placeholder='닉네임 (영문 대/소문자, 숫자 조합 4 ~ 15자리)'
+                className={
+                  errors.nickname
+                    ? styles.inputProfileError
+                    : styles.inputProfile
+                }
               />
               {errors.nickname && (
-                <p className={styles.inputErrorText}>{errors.nickname.message}</p>
+                <p className={styles.inputErrorText}>
+                  {errors.nickname.message}
+                </p>
               )}
-              <button type="button" className={styles.cancelBtn} onClick={handleCancel}>
+              <button
+                type='button'
+                className={styles.cancelBtn}
+                onClick={handleCancel}
+              >
                 취소
               </button>
-              <button type="submit" className={styles.saveBtn}>
+              <button type='submit' className={styles.saveBtn}>
                 저장
               </button>
             </form>
           ) : (
             <div className={styles.nicknameDisplay}>
               <span className={styles.testUser}>{userData?.nickname}</span>
-              <button type="button" className={styles.change3} onClick={handleEdit}>
+              <button
+                type='button'
+                className={styles.change3}
+                onClick={handleEdit}
+              >
                 변경
               </button>
             </div>
@@ -197,7 +220,11 @@ const Profile = () => {
         onClose={handleAlertClose}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
-        <Alert onClose={handleAlertClose} severity={alertSeverity} sx={{ width: '100%' }}>
+        <Alert
+          onClose={handleAlertClose}
+          severity={alertSeverity}
+          sx={{ width: '100%' }}
+        >
           {alertMessage}
         </Alert>
       </Snackbar>

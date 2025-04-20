@@ -24,8 +24,8 @@
 .loginTitle {
   color: #000;
   font-family:
-          Noto Sans KR,
-          serif;
+    Noto Sans KR,
+    serif;
   font-size: 40px;
   font-style: normal;
   font-weight: 400;
@@ -38,8 +38,8 @@
 .errorText {
   color: red;
   font-family:
-          Noto Sans KR,
-          sans-serif;
+    Noto Sans KR,
+    sans-serif;
   font-size: 14px;
   margin-top: 5px;
 }
@@ -54,9 +54,9 @@
 }
 
 .textPlain {
-  margin-left:40px;
+  margin-left: 40px;
   margin-top: -25px;
-  width:100vw;
+  width: 100vw;
 }
 
 .input {
@@ -73,8 +73,8 @@
 .inputError {
   width: 480px;
   font-family:
-          Noto Sans KR,
-          sans-serif;
+    Noto Sans KR,
+    sans-serif;
   font-size: 16px;
   max-width: 480px;
   height: 55px;
@@ -103,7 +103,7 @@
 
 .linkContainer {
   display: flex;
-  justify-content: center;
+  justify-content: right;
   align-items: center;
   width: 100%;
   max-width: 480px;
@@ -115,8 +115,8 @@
 .join {
   color: #333;
   font-family:
-          Noto Sans KR,
-          sans-serif;
+    Noto Sans KR,
+    sans-serif;
   font-size: 14px;
   cursor: pointer;
   margin: 0 5px;
@@ -170,8 +170,8 @@
   color: #363636;
   border: none;
   font-family:
-          Noto Sans KR,
-          sans-serif;
+    Noto Sans KR,
+    sans-serif;
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;

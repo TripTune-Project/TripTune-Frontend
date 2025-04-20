@@ -2,7 +2,6 @@ import { post } from '../api';
 
 interface JoinMemberData {
   nickname: string;
-  userId: string;
   password: string;
   email: string;
 }
@@ -10,7 +9,6 @@ interface JoinMemberData {
 interface JoinMemberResponse {
   success: boolean;
   message: string;
-  userId: string;
 }
 
 export const joinMember = async (

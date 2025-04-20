@@ -30,7 +30,7 @@ import Alert from '@mui/material/Alert';
 export default function SchedulePage() {
   const router = useRouter();
   const { isAuthenticated, isLoading } = useAuth();
-  
+
   useEffect(() => {
     if (!isAuthenticated) {
       document.body.style.overflow = 'hidden';
@@ -39,7 +39,7 @@ export default function SchedulePage() {
       document.body.style.overflow = 'auto';
     };
   }, [isAuthenticated]);
-  
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeDeleteMenu, setActiveDeleteMenu] = useState<number | null>(null);
   const [selectedScheduleId, setSelectedScheduleId] = useState<number | null>(
@@ -49,14 +49,15 @@ export default function SchedulePage() {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const [selectedTab, setSelectedTab] = useState<'all' | 'share'>('all');
-  
-  // Snackbar 상태 관리
+
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
-  const [alertSeverity, setAlertSeverity] = useState<'success' | 'error' | 'warning' | 'info'>('info');
-  
+  const [alertSeverity, setAlertSeverity] = useState<
+    'success' | 'error' | 'warning' | 'info'
+  >('info');
+
   const debouncedSearchKeyword = useDebounce(searchKeyword, 800);
-  
+
   const {
     data: allScheduleData,
     isLoading: isAllScheduleLoading,
@@ -65,7 +66,7 @@ export default function SchedulePage() {
     hasNextPage: hasNextAllPage,
     isFetchingNextPage: isFetchingNextAllPage,
   } = useScheduleList(selectedTab === 'all' && !isSearching);
-  
+
   const {
     data: sharedScheduleData,
     isLoading: isSharedScheduleLoading,
@@ -74,20 +75,20 @@ export default function SchedulePage() {
     hasNextPage: hasNextSharedPage,
     isFetchingNextPage: isFetchingNextSharedPage,
   } = useSharedScheduleList(selectedTab === 'share' && !isSearching);
-  
+
   const {
     data: searchData,
     fetchNextPage: fetchNextSearchPage,
     hasNextPage: hasNextSearchPage,
     isFetchingNextPage: isFetchingNextSearchPage,
   } = useScheduleListSearch(debouncedSearchKeyword, selectedTab, isSearching);
-  
+
   const observerRef = useRef<HTMLDivElement | null>(null);
-  
+
   const handleOpenModal = () => {
     setIsModalOpen(true);
   };
-  
+
   const handleToggleDeleteMenu = (
     scheduleId: number,
     event: React.MouseEvent
@@ -97,7 +98,7 @@ export default function SchedulePage() {
       prevId === scheduleId ? null : scheduleId
     );
   };
-  
+
   const handleDeleteConfirmation = async () => {
     if (selectedScheduleId) {
       try {
@@ -119,15 +120,15 @@ export default function SchedulePage() {
       }
     }
   };
-  
+
   const handleDeleteSchedule = (event: React.MouseEvent) => {
     event.stopPropagation();
     setIsDeleteModalOpen(true);
   };
-  
+
   const handleLeaveSchedule = async (scheduleId: number) => {
     if (!scheduleId) return;
-    
+
     try {
       const response = await leaveSchedule(scheduleId);
       if (response.success) {
@@ -146,32 +147,32 @@ export default function SchedulePage() {
       setAlertOpen(true);
     }
   };
-  
+
   const fetchNextPage = isSearching
     ? fetchNextSearchPage
     : selectedTab === 'all'
       ? fetchNextAllPage
       : fetchNextSharedPage;
-  
+
   const hasNextPage = isSearching
     ? hasNextSearchPage
     : selectedTab === 'all'
       ? hasNextAllPage
       : hasNextSharedPage;
-  
+
   const isFetchingNextPage = isSearching
     ? isFetchingNextSearchPage
     : selectedTab === 'all'
       ? isFetchingNextAllPage
       : isFetchingNextSharedPage;
-  
+
   const handleObserver = (entries: IntersectionObserverEntry[]) => {
     const target = entries[0];
     if (target.isIntersecting && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
   };
-  
+
   useEffect(() => {
     const observerNode = observerRef.current;
     const option = {
@@ -179,30 +180,33 @@ export default function SchedulePage() {
       rootMargin: '20px',
       threshold: 1.0,
     };
-    
+
     const observer = new IntersectionObserver(handleObserver, option);
     if (observerNode) observer.observe(observerNode);
-    
+
     return () => {
       if (observerNode) observer.unobserve(observerNode);
     };
   }, [hasNextPage, fetchNextPage]);
-  
+
   useEffect(() => {
     setIsSearching(!!debouncedSearchKeyword);
   }, [debouncedSearchKeyword]);
-  
+
   const handleDetailClick = (event: React.MouseEvent, scheduleId: number) => {
     if (!activeDeleteMenu) {
       router.push(`/Schedule/${scheduleId}`);
     }
   };
-  
-  const handleAlertClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+
+  const handleAlertClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
     if (reason === 'clickaway') return;
     setAlertOpen(false);
   };
-  
+
   const renderSchedules = (
     scheduleListData: ApiResponse<ScheduleList> | undefined,
     isSearching: boolean
@@ -211,7 +215,7 @@ export default function SchedulePage() {
       if (isSearching) {
         return <NoResultLayout />;
       }
-      
+
       return (
         <div className={styles.noScheduleContainer}>
           <Image
@@ -227,7 +231,7 @@ export default function SchedulePage() {
         </div>
       );
     }
-    
+
     return scheduleListData.data.content.map((schedule: Schedule) => (
       <div
         key={schedule.scheduleId}
@@ -289,13 +293,13 @@ export default function SchedulePage() {
           <div className={styles.scheduleDates}>
             수정일 : {schedule.sinceUpdate}
           </div>
-            <Image
-              src={schedule.author?.profileUrl ?? ''}
-              alt='프로필 이미지'
-              className={styles.scheduleImageProfile}
-              width={38}
-              height={38}
-            />
+          <Image
+            src={schedule.author?.profileUrl ?? ''}
+            alt='프로필 이미지'
+            className={styles.scheduleImageProfile}
+            width={38}
+            height={38}
+          />
         </div>
       </div>
     ));
@@ -425,7 +429,11 @@ export default function SchedulePage() {
         onClose={handleAlertClose}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
-        <Alert onClose={handleAlertClose} severity={alertSeverity} sx={{ width: '100%' }}>
+        <Alert
+          onClose={handleAlertClose}
+          severity={alertSeverity}
+          sx={{ width: '100%' }}
+        >
           {alertMessage}
         </Alert>
       </Snackbar>
