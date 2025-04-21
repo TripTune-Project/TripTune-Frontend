@@ -2,6 +2,8 @@ import Cookies from 'js-cookie';
 import { refreshApi } from './Login/refreshApi';
 import saveLocalContent from '@/utils/saveLocalContent';
 
+const { setEncryptedCookie } = saveLocalContent();
+
 const DEFAULT_HEADERS = {
   'Content-Type': 'application/json',
 };
@@ -12,9 +14,9 @@ interface FetchOptions extends RequestInit {
 }
 
 const clearCookies = () => {
-  Cookies.remove('trip-tune_at');
-  Cookies.remove('trip-tune_rt');
-  Cookies.remove('nickname');
+  setEncryptedCookie('trip-tune_at', '', -1);
+  setEncryptedCookie('trip-tune_rt', '', -1);
+  setEncryptedCookie('nickname', '', -1);
 };
 
 const getAuthHeaders = (): HeadersInit => {
@@ -69,7 +71,7 @@ const fetchData = async <T>(
           '액세스 토큰이 만료되었습니다. 다시 로그인 해주세요.',
           true
         );
-        return Promise.reject('Unauthorized');
+        return Promise.reject('인증 실패');
       }
     }
   }

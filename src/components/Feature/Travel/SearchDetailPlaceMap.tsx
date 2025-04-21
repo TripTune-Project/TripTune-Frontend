@@ -16,6 +16,22 @@ const SearchDetailPlaceMap = ({ latitude, longitude }: MapProps) => {
   const mapRef = useRef<google.maps.Map | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
 
+  const initializeMap = useCallback(() => {
+    if (mapContainerRef.current && !mapRef.current && window.google) {
+      mapRef.current = new google.maps.Map(mapContainerRef.current, {
+        center: { lat: latitude, lng: longitude },
+        zoom: 16,
+        mapId: process.env.NEXT_PUBLIC_GOOGLE_MAPS_STYLE_ID,
+      });
+
+      new google.maps.Marker({
+        position: { lat: latitude, lng: longitude },
+        map: mapRef.current,
+        title: '현재 위치',
+      });
+    }
+  }, [latitude, longitude]);
+
   const loadGoogleMapsScript = useCallback(() => {
     const existingScript = document.getElementById('google-maps-script');
     if (!existingScript) {
@@ -35,23 +51,7 @@ const SearchDetailPlaceMap = ({ latitude, longitude }: MapProps) => {
       setIsMapLoaded(true);
       initializeMap();
     }
-  }, []);
-
-  const initializeMap = useCallback(() => {
-    if (mapContainerRef.current && !mapRef.current && window.google) {
-      mapRef.current = new google.maps.Map(mapContainerRef.current, {
-        center: { lat: latitude, lng: longitude },
-        zoom: 16,
-        mapId: process.env.NEXT_PUBLIC_GOOGLE_MAPS_STYLE_ID,
-      });
-
-      new google.maps.Marker({
-        position: { lat: latitude, lng: longitude },
-        map: mapRef.current,
-        title: '현재 위치',
-      });
-    }
-  }, [latitude, longitude]);
+  }, [initializeMap]);
 
   useEffect(() => {
     loadGoogleMapsScript();

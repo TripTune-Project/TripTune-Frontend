@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import styles from '@/styles/Header.module.css';
@@ -20,7 +22,7 @@ const Header = () => {
   const [alertMessage, setAlertMessage] = useState('');
   const [nickName, setNickName] = useState('');
 
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, handleTokenRefresh } = useAuth();
   const { getDecryptedCookie } = saveLocalContent();
 
   useEffect(() => {
@@ -33,6 +35,24 @@ const Header = () => {
       setNickName('');
     }
   }, [isLoading, isAuthenticated, getDecryptedCookie]);
+
+  // 토큰 갱신 주기 설정
+  useEffect(() => {
+    if (isAuthenticated) {
+      const interval = setInterval(
+        async () => {
+          try {
+            await handleTokenRefresh();
+          } catch (error) {
+            console.error('토큰 갱신 실패:', error);
+          }
+        },
+        4 * 60 * 1000
+      ); // 4분마다 토큰 갱신
+
+      return () => clearInterval(interval);
+    }
+  }, [isAuthenticated, handleTokenRefresh]);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);

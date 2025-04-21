@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState, Suspense } from 'react';
+import React, { useEffect, useRef, useState, Suspense, useMemo } from 'react';
 import Head from 'next/head';
 import Pagination from '@/components/Common/Pagination';
 import SearchPlacesMap from '@/components/Feature/Travel/SearchPlacesMap';
@@ -53,10 +53,13 @@ const TravelPageContent = () => {
     longitude: number;
   } | null>(null);
 
-  const defaultCoordinates = {
-    latitude: 37.5642135,
-    longitude: 127.0016985,
-  };
+  const defaultCoordinates = useMemo(
+    () => ({
+      latitude: 37.5642135,
+      longitude: 127.0016985,
+    }),
+    []
+  );
 
   const { isAuthenticated } = useAuth();
   const requiresAuth = !!isAuthenticated;
@@ -135,7 +138,7 @@ const TravelPageContent = () => {
         setAlertOpen(true);
       }
     }
-  }, [permissionState, userCoordinates, geoErrorMessage]);
+  }, [permissionState, userCoordinates, geoErrorMessage, defaultCoordinates]);
 
   const handleSearch = () => {
     if (searchTerm.trim()) {

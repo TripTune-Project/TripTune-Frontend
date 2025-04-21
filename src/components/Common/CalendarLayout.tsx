@@ -44,7 +44,7 @@ const CalendarLayout = ({
     } else {
       setIsFormValid(startDate !== null && endDate !== null);
     }
-  }, [startDate, endDate, scheduleName]);
+  }, [startDate, endDate, scheduleName, mode]);
 
   const handleConfirm = async () => {
     if (!isFormValid) return;

@@ -143,7 +143,7 @@ const Chatting = ({ onError }: ChattingProps) => {
     return () => {
       clientRef.current?.deactivate();
     };
-  }, [scheduleId]);
+  }, [scheduleId, brokerUrl, token, onError]);
 
   // 추가 메시지 로드
   const loadNextMessages = async () => {

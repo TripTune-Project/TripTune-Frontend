@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { TravelPlace } from '@/types/travelType';
 
 const containerStyle = {
@@ -23,7 +23,17 @@ const SearchPlacesMap = ({ places }: MapProps) => {
   const [center, setCenter] = useState(defaultCenter);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
 
-  const loadGoogleMapsScript = () => {
+  const initializeMap = useCallback(() => {
+    if (mapContainerRef.current && !mapRef.current && window.google) {
+      mapRef.current = new google.maps.Map(mapContainerRef.current, {
+        center: defaultCenter,
+        zoom: 16,
+        mapId: process.env.NEXT_PUBLIC_GOOGLE_MAPS_STYLE_ID,
+      });
+    }
+  }, []);
+
+  const loadGoogleMapsScript = useCallback(() => {
     const existingScript = document.getElementById('google-maps-script');
     if (!existingScript) {
       const script = document.createElement('script');
@@ -42,17 +52,7 @@ const SearchPlacesMap = ({ places }: MapProps) => {
       setIsMapLoaded(true);
       initializeMap();
     }
-  };
-
-  const initializeMap = () => {
-    if (mapContainerRef.current && !mapRef.current && window.google) {
-      mapRef.current = new google.maps.Map(mapContainerRef.current, {
-        center: defaultCenter,
-        zoom: 16,
-        mapId: process.env.NEXT_PUBLIC_GOOGLE_MAPS_STYLE_ID,
-      });
-    }
-  };
+  }, [initializeMap]);
 
   useEffect(() => {
     loadGoogleMapsScript();
@@ -63,13 +63,13 @@ const SearchPlacesMap = ({ places }: MapProps) => {
         mapRef.current = null;
       }
     };
-  }, []);
+  }, [loadGoogleMapsScript]);
 
   useEffect(() => {
     if (isMapLoaded) {
       initializeMap();
     }
-  }, [isMapLoaded]);
+  }, [isMapLoaded, initializeMap]);
 
   useEffect(() => {
     const map = mapRef.current;
