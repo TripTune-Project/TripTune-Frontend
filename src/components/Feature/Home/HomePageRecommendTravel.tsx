@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import styled from 'styled-components';
@@ -99,24 +99,29 @@ const HomePageRecommendTravel = () => {
     음식점: 'food',
   };
 
-  const handleThemeClick = async (theme: string) => {
-    setSelectedTheme(theme);
-    const themeCode = themeMapping[theme] || 'all';
-    setLoading(true);
-    const response: HomeRecommendTravelResponse =
-      (await homeRecommendTravelList(themeCode)) as HomeRecommendTravelResponse;
-    setLoading(false);
-    if (response.success) {
-      setTravelList(response.data);
-    } else {
-      console.error(response.message);
-      setTravelList([]);
-    }
-  };
+  const handleThemeClick = useCallback(
+    async (theme: string) => {
+      setSelectedTheme(theme);
+      const themeCode = themeMapping[theme] || 'all';
+      setLoading(true);
+      const response: HomeRecommendTravelResponse =
+        (await homeRecommendTravelList(
+          themeCode
+        )) as HomeRecommendTravelResponse;
+      setLoading(false);
+      if (response.success) {
+        setTravelList(response.data);
+      } else {
+        console.error(response.message);
+        setTravelList([]);
+      }
+    },
+    [themeMapping]
+  );
 
   useEffect(() => {
     handleThemeClick('전체');
-  }, []);
+  }, [handleThemeClick]);
 
   const handleDetailClick = (placeId: number) => {
     router.push(`/Travel/${placeId}`);

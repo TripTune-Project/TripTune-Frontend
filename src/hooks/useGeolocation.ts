@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Coordinates } from '@/types';
 
 const useGeolocation = () => {
@@ -10,7 +10,7 @@ const useGeolocation = () => {
     'granted' | 'prompt' | 'denied' | null
   >(null);
 
-  const requestUserLocation = () => {
+  const requestUserLocation = useCallback(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -36,9 +36,9 @@ const useGeolocation = () => {
         '현재 브라우저에서는 위치 정보를 지원하지 않습니다. 다른 브라우저를 사용해보세요.'
       );
     }
-  };
+  }, []);
 
-  const checkGeolocationPermission = async () => {
+  const checkGeolocationPermission = useCallback(async () => {
     try {
       const result = await navigator.permissions.query({ name: 'geolocation' });
       setPermissionState(result.state);
@@ -65,11 +65,11 @@ const useGeolocation = () => {
       console.error('위치 권한 상태 확인 오류:', error);
       setErrorMessage('위치 권한 상태 확인 중 오류가 발생했습니다.');
     }
-  };
+  }, [requestUserLocation]);
 
   useEffect(() => {
     checkGeolocationPermission();
-  }, []);
+  }, [checkGeolocationPermission]);
 
   return { userCoordinates, errorMessage, permissionState };
 };

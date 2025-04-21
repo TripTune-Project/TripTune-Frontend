@@ -1,9 +1,8 @@
 import { patch } from '@/apis/api';
-import Cookies from 'js-cookie';
 import saveLocalContent from '@/utils/saveLocalContent';
 
 export const logoutApi = async () => {
-  const { getDecryptedCookie } = saveLocalContent();
+  const { getDecryptedCookie, setEncryptedCookie } = saveLocalContent();
   const accessToken = getDecryptedCookie('trip-tune_at');
   const nickname = getDecryptedCookie('nickname');
 
@@ -17,8 +16,9 @@ export const logoutApi = async () => {
       }
     );
 
-    Cookies.remove('trip-tune_at');
-    Cookies.remove('trip-tune_rt');
-    Cookies.remove('nickname');
+    // 쿠키 만료 시간을 과거로 설정하여 삭제
+    setEncryptedCookie('trip-tune_at', '', -1);
+    setEncryptedCookie('trip-tune_rt', '', -1);
+    setEncryptedCookie('nickname', '', -1);
   }
 };

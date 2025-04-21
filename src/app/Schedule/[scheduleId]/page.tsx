@@ -32,6 +32,7 @@ export default function ScheduleDetailPage() {
   const [alertSeverity, setAlertSeverity] = useState<
     'error' | 'success' | 'info' | 'warning'
   >('error');
+  const [isError, setIsError] = useState(false);
 
   const { travelRoute, scheduleDetail, fetchScheduleDetailById } =
     useTravelStore();
@@ -45,23 +46,28 @@ export default function ScheduleDetailPage() {
           // 일정 데이터 로드 성공 후 채팅 데이터 로드 시작
           setIsChatLoading(true);
         } catch (error) {
+          setIsError(true);
           if (
             error instanceof Error &&
             error.message === '일정이 존재하지 않습니다.'
           ) {
-            setAlertMessage('일정이 존재하지 않습니다.');
+            setAlertMessage(
+              '일정이 존재하지 않습니다. 이전 페이지로 이동합니다.'
+            );
             setAlertSeverity('error');
             setAlertOpen(true);
             setTimeout(() => {
               router.back();
-            }, 1500);
+            }, 3000);
           } else {
-            setAlertMessage('일정을 불러오는 중 오류가 발생했습니다.');
+            setAlertMessage(
+              '일정을 불러오는 중 오류가 발생했습니다. 이전 페이지로 이동합니다.'
+            );
             setAlertSeverity('error');
             setAlertOpen(true);
             setTimeout(() => {
               router.back();
-            }, 1500);
+            }, 3000);
           }
         } finally {
           setIsLoadingData(false);
@@ -113,6 +119,28 @@ export default function ScheduleDetailPage() {
 
   if (!isAuthenticated) {
     return <LoginModal />;
+  }
+
+  if (isError) {
+    return (
+      <div className={styles.errorContainer}>
+        <DataLoading />
+        <Snackbar
+          open={alertOpen}
+          autoHideDuration={3000}
+          onClose={handleAlertClose}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+          <Alert
+            onClose={handleAlertClose}
+            severity={alertSeverity}
+            sx={{ width: '100%' }}
+          >
+            {alertMessage}
+          </Alert>
+        </Snackbar>
+      </div>
+    );
   }
 
   if (isLoadingData) {
@@ -178,20 +206,6 @@ export default function ScheduleDetailPage() {
           )}
         </div>
       </div>
-      <Snackbar
-        open={alertOpen}
-        autoHideDuration={1500}
-        onClose={handleAlertClose}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <Alert
-          onClose={handleAlertClose}
-          severity={alertSeverity}
-          sx={{ width: '100%' }}
-        >
-          {alertMessage}
-        </Alert>
-      </Snackbar>
     </>
   );
 }

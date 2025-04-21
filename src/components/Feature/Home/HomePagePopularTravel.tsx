@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import styled from 'styled-components';
@@ -101,25 +101,28 @@ const HomePagePopularTravel = () => {
     충청: 'chungcheong',
   };
 
-  const handleCityClick = async (city: string) => {
-    setSelectedCity(city);
-    const cityCode = cityMapping[city] || 'all';
-    setLoading(true);
-    const response: HomePopularTravelResponse = (await homePopularTravelList(
-      cityCode
-    )) as HomePopularTravelResponse;
-    setLoading(false);
-    if (response.success) {
-      setTravelList(response.data);
-    } else {
-      console.error(response.message);
-      setTravelList([]);
-    }
-  };
+  const handleCityClick = useCallback(
+    async (city: string) => {
+      setSelectedCity(city);
+      const cityCode = cityMapping[city] || 'all';
+      setLoading(true);
+      const response: HomePopularTravelResponse = (await homePopularTravelList(
+        cityCode
+      )) as HomePopularTravelResponse;
+      setLoading(false);
+      if (response.success) {
+        setTravelList(response.data);
+      } else {
+        console.error(response.message);
+        setTravelList([]);
+      }
+    },
+    [cityMapping]
+  );
 
   useEffect(() => {
     handleCityClick('전체');
-  }, []);
+  }, [handleCityClick]);
 
   const handleDetailClick = (placeId: number) => {
     router.push(`/Travel/${placeId}`);
