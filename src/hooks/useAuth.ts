@@ -11,17 +11,21 @@ const useAuth = () => {
   const checkAuth = useCallback(async () => {
     try {
       const accessToken = getDecryptedCookie('trip-tune_at');
+      const refreshToken = getDecryptedCookie('trip-tune_rt');
 
       if (!accessToken) {
-        // 액세스 토큰이 없으면 리프레시 토큰으로 갱신 시도
-        try {
-          await refreshApi();
-          setIsAuthenticated(true);
-        } catch (refreshError) {
-          // 리프레시 실패 시 로그아웃 처리
-          console.error('토큰 갱신 실패:', refreshError);
+        // 액세스 토큰이 없으면 리프레시 토큰 존재 시에만 갱신 시도
+        if (refreshToken) {
+          try {
+            await refreshApi();
+            setIsAuthenticated(true);
+          } catch (refreshError) {
+            // 리프레시 실패 시 인증 실패 처리
+            console.error('토큰 갱신 실패:', refreshError);
+            setIsAuthenticated(false);
+          }
+        } else {
           setIsAuthenticated(false);
-          throw new Error('토큰 갱신에 실패했습니다');
         }
       } else {
         setIsAuthenticated(true);
@@ -29,13 +33,8 @@ const useAuth = () => {
     } catch (error) {
       console.error('인증 확인 실패:', error);
       setIsAuthenticated(false);
-      const currentPath = window.location.pathname;
-      if (currentPath !== '/Login') {
-        localStorage.setItem('redirectAfterLogin', currentPath);
-        router.push('/Login');
-      }
     }
-  }, [getDecryptedCookie, router]);
+  }, [getDecryptedCookie]);
 
   // 로그인 성공 시 즉시 인증 상태를 업데이트하는 함수
   const updateAuthStatus = (status: boolean) => {
@@ -44,6 +43,11 @@ const useAuth = () => {
 
   // 토큰 갱신 시 인증 상태를 업데이트하는 함수
   const handleTokenRefresh = async () => {
+    const refreshToken = getDecryptedCookie('trip-tune_rt');
+    if (!refreshToken) {
+      setIsAuthenticated(false);
+      return;
+    }
     try {
       await refreshApi();
       setIsAuthenticated(true);
@@ -57,7 +61,7 @@ const useAuth = () => {
     checkAuth();
     const id = setInterval(checkAuth, 4 * 60 * 1000);
     return () => clearInterval(id);
-  }, [checkAuth]);
+  }, []);
 
   return {
     isAuthenticated,

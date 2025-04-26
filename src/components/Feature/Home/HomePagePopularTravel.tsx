@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import styled from 'styled-components';
@@ -89,7 +89,7 @@ const HomePagePopularTravel = () => {
   const [travelList, setTravelList] = useState<TravelItem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const cityMapping: Record<string, string> = {
+  const cityMapping = useMemo(() => ({
     전체: 'all',
     서울: 'seoul',
     부산: 'busan',
@@ -99,7 +99,7 @@ const HomePagePopularTravel = () => {
     경상: 'gyeongsang',
     전라: 'jeolla',
     충청: 'chungcheong',
-  };
+  }), []) as Record<string, string>;
 
   const handleCityClick = useCallback(
     async (city: string) => {

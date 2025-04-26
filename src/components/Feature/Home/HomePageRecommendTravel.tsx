@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import styled from 'styled-components';
@@ -89,7 +89,7 @@ const HomePageRecommendTravel = () => {
   const [travelList, setTravelList] = useState<TravelItem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const themeMapping: Record<string, string> = {
+  const themeMapping = useMemo(() => ({
     전체: 'all',
     관광지: 'attractions',
     문화시설: 'culture',
@@ -97,7 +97,7 @@ const HomePageRecommendTravel = () => {
     숙박: 'lodging',
     쇼핑: 'shopping',
     음식점: 'food',
-  };
+  }), []) as Record<string, string>;
 
   const handleThemeClick = useCallback(
     async (theme: string) => {

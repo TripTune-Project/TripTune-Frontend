@@ -22,37 +22,33 @@ const Header = () => {
   const [alertMessage, setAlertMessage] = useState('');
   const [nickName, setNickName] = useState('');
 
-  const { isAuthenticated, isLoading, handleTokenRefresh } = useAuth();
+  const { isAuthenticated, isLoading, handleTokenRefresh, updateAuthStatus } = useAuth();
   const { getDecryptedCookie } = saveLocalContent();
 
   useEffect(() => {
     if (isLoading) return;
 
     const storedNickname = getDecryptedCookie('nickname');
-    if (isAuthenticated && storedNickname) {
-      setNickName(storedNickname);
-    } else {
-      setNickName('');
-    }
-  }, [isLoading, isAuthenticated, getDecryptedCookie]);
+    setNickName(isAuthenticated && storedNickname ? storedNickname : '');
+  }, [isLoading, isAuthenticated]);
 
   // 토큰 갱신 주기 설정
   useEffect(() => {
-    if (isAuthenticated) {
-      const interval = setInterval(
-        async () => {
-          try {
-            await handleTokenRefresh();
-          } catch (error) {
-            console.error('토큰 갱신 실패:', error);
-          }
-        },
-        4 * 60 * 1000
-      ); // 4분마다 토큰 갱신
+    if (!isAuthenticated) return;
 
-      return () => clearInterval(interval);
-    }
-  }, [isAuthenticated, handleTokenRefresh]);
+    const interval = setInterval(
+      async () => {
+        try {
+          await handleTokenRefresh();
+        } catch (error) {
+          console.error('토큰 갱신 실패:', error);
+        }
+      },
+      4 * 60 * 1000
+    );
+
+    return () => clearInterval(interval);
+  }, [isAuthenticated]);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -62,6 +58,7 @@ const Header = () => {
     try {
       await logoutApi();
       setNickName('');
+      updateAuthStatus(false);
       router.push('/');
     } catch {
       setAlertMessage('로그아웃에 실패했습니다. 다시 시도해 주세요.');

@@ -35,24 +35,28 @@ let isRetrying = false;
 let isRedirectingToLogin = false;
 
 const handleRedirectToLogin = (message: string, silent = false) => {
-  if (!isRedirectingToLogin && window.location.pathname !== '/Login') {
-    isRedirectingToLogin = true;
-    const currentPath = window.location.pathname;
-    localStorage.setItem('redirectAfterLogin', currentPath);
+  if (isRedirectingToLogin || window.location.pathname === '/Login') return;
+  
+  isRedirectingToLogin = true;
+  const currentPath = window.location.pathname;
+  localStorage.setItem('redirectAfterLogin', currentPath);
 
-    if (!silent) {
-      alert(message);
-    }
-
-    clearCookies();
-    window.location.href = '/Login';
+  if (!silent) {
+    alert(message);
   }
+
+  clearCookies();
+  window.location.href = '/Login';
 };
 
 const fetchData = async <T>(
   endpoint: string,
   options: FetchOptions = {}
 ): Promise<T> => {
+  if (isRedirectingToLogin) {
+    return Promise.reject('리다이렉션 중');
+  }
+
   const url = `https://triptune.site${endpoint}`;
   let headers: HeadersInit = {
     ...DEFAULT_HEADERS,
@@ -63,6 +67,12 @@ const fetchData = async <T>(
     try {
       headers = { ...headers, ...getAuthHeaders() };
     } catch {
+      const { getDecryptedCookie } = saveLocalContent();
+      const refreshToken = getDecryptedCookie('trip-tune_rt');
+      if (!refreshToken) {
+        handleRedirectToLogin('인증 정보가 없습니다. 다시 로그인 해주세요.', true);
+        return Promise.reject('인증 실패');
+      }
       try {
         const newAccessToken = await refreshApi();
         headers = { ...headers, Authorization: `Bearer ${newAccessToken}` };
@@ -91,6 +101,12 @@ const fetchData = async <T>(
       if (response.status === 401 && !isRetrying) {
         isRetrying = true;
         try {
+          const { getDecryptedCookie } = saveLocalContent();
+          const refreshToken = getDecryptedCookie('trip-tune_rt');
+          if (!refreshToken) {
+            handleRedirectToLogin('인증 정보가 만료 되었습니다.', true);
+            return undefined as unknown as T;
+          }
           const newAccessToken = await refreshApi();
           headers = { ...headers, Authorization: `Bearer ${newAccessToken}` };
           const retryResponse = await fetch(url, {
@@ -105,7 +121,6 @@ const fetchData = async <T>(
           isRetrying = false;
           return retryResponse.json();
         } catch {
-          clearCookies();
           handleRedirectToLogin('인증 정보가 만료 되었습니다.', true);
           return undefined as unknown as T;
         }
