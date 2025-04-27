@@ -1,7 +1,7 @@
 import { post } from '../api';
 import saveLocalContent from '@/utils/saveLocalContent';
 
-export const refreshApi = async (): Promise<string> => {
+export const refreshApi = async (): Promise<{ accessToken: string; nickname: string }> => {
   const { getDecryptedCookie } = saveLocalContent();
   const refreshToken = getDecryptedCookie('trip-tune_rt');
   if (!refreshToken) {
@@ -11,6 +11,7 @@ export const refreshApi = async (): Promise<string> => {
     const response = await post<{
       data: {
         accessToken: string;
+        nickname: string;
       };
     }>(
       '/api/members/refresh',
@@ -21,12 +22,13 @@ export const refreshApi = async (): Promise<string> => {
       }
     );
 
-    const { accessToken } = response.data;
+    const { accessToken, nickname } = response.data;
 
     const { setEncryptedCookie } = saveLocalContent();
     setEncryptedCookie('trip-tune_at', accessToken, 5 / (24 * 60));
+    setEncryptedCookie('nickname', nickname, 7);
 
-    return accessToken;
+    return { accessToken, nickname };
   } catch (error: unknown) {
     console.error('리프레시 중 오류 발생:', error);
     if (error instanceof Error) {

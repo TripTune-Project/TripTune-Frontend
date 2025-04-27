@@ -18,6 +18,14 @@ export default function OAuthCallbackClient() {
         // URL 파라미터 전체 확인
         console.log('전체 URL 파라미터:', Object.fromEntries(searchParams.entries()));
         
+        // 백엔드에서 보내주는 모든 데이터 확인
+        const response = await fetch('/api/members/oauth/callback', {
+          method: 'GET',
+          credentials: 'include',
+        });
+        const data = await response.json();
+        console.log('백엔드 응답 데이터:', data);
+
         const accessToken = searchParams.get('accessToken');
         const refreshToken = searchParams.get('refreshToken');
         const nickname = searchParams.get('nickname');
