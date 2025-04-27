@@ -25,8 +25,8 @@ export const refreshApi = async (): Promise<{ accessToken: string; nickname: str
     const { accessToken, nickname } = response.data;
 
     const { setEncryptedCookie } = saveLocalContent();
-    setEncryptedCookie('trip-tune_at', accessToken, 5 / (24 * 60));
-    setEncryptedCookie('nickname', nickname, 7);
+    setEncryptedCookie('trip-tune_at', accessToken);
+    setEncryptedCookie('nickname', nickname);
 
     return { accessToken, nickname };
   } catch (error: unknown) {

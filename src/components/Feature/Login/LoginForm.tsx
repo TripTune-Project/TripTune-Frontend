@@ -13,7 +13,6 @@ import naver from '../../../../public/assets/icons/ic_naver_vector.png';
 import VerificationLoading from '@/components/Common/VerificationLoading';
 import { loginUser } from '@/apis/Login/loginApi';
 import useAuth from '@/hooks/useAuth';
-import { refreshApi } from '@/apis/Login/refreshApi';
 import saveLocalContent from '@/utils/saveLocalContent';
 
 interface LoginFormData {
@@ -23,7 +22,7 @@ interface LoginFormData {
 
 const LoginForm = () => {
   const router = useRouter();
-  const { setEncryptedCookie, getDecryptedCookie } = saveLocalContent();
+  const { setEncryptedCookie } = saveLocalContent();
   const { updateAuthStatus } = useAuth();
 
   const [errorMessage, setErrorMessage] = useState('');
@@ -36,43 +35,14 @@ const LoginForm = () => {
   } = useForm<LoginFormData>({
     mode: 'onChange',
   });
-
-  // 네이버 로그인 성공 후 처리
-  useEffect(() => {
-    const checkNaverLogin = async () => {
-      try {
-        const refreshToken = getDecryptedCookie('refreshToken');
-        const nickname = getDecryptedCookie('nickname');
-
-        if (refreshToken && !nickname) {
-          const { nickname: newNickname } = await refreshApi();
-          if (newNickname) {
-            setEncryptedCookie('nickname', newNickname, 7);
-            updateAuthStatus(true);
-
-            const redirectPath =
-              localStorage.getItem('redirectAfterLogin') || '/';
-            localStorage.removeItem('redirectAfterLogin');
-            router.push(redirectPath);
-          }
-        }
-      } catch (error) {
-        console.error('네이버 로그인 처리 실패:', error);
-        setErrorMessage('로그인에 실패했습니다. 다시 시도해주세요.');
-        setOpenSnackbar(true);
-      }
-    };
-
-    checkNaverLogin();
-  }, [getDecryptedCookie, setEncryptedCookie, updateAuthStatus, router]);
-
+  
   const onSubmit = async (data: LoginFormData) => {
     try {
       const response = await loginUser(data);
       const { accessToken, nickname } = response.data;
 
-      setEncryptedCookie('trip-tune_at', accessToken, 5 / (24 * 60));
-      setEncryptedCookie('nickname', nickname, 7);
+      setEncryptedCookie('trip-tune_at', accessToken);
+      setEncryptedCookie('nickname', nickname);
 
       updateAuthStatus(true);
 

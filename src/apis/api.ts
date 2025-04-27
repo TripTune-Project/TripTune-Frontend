@@ -1,8 +1,6 @@
-import Cookies from 'js-cookie';
 import { refreshApi } from './Login/refreshApi';
 import saveLocalContent from '@/utils/saveLocalContent';
-
-const { setEncryptedCookie } = saveLocalContent();
+import Cookies from 'js-cookie';
 
 const DEFAULT_HEADERS = {
   'Content-Type': 'application/json',
@@ -14,9 +12,9 @@ interface FetchOptions extends RequestInit {
 }
 
 const clearCookies = () => {
-  setEncryptedCookie('trip-tune_at', '', -1);
-  setEncryptedCookie('trip-tune_rt', '', -1);
-  setEncryptedCookie('nickname', '', -1);
+  Cookies.remove('trip-tune_at');
+  Cookies.remove('refreshToken');
+  Cookies.remove('nickname');
 };
 
 const getAuthHeaders = (): HeadersInit => {

@@ -33,7 +33,7 @@ const Home = () => {
           console.log('소셜 로그인 후 사용자 정보 가져오기 시도');
           const { nickname: newNickname } = await refreshApi();
           if (newNickname) {
-            setEncryptedCookie('nickname', newNickname, 7);
+            setEncryptedCookie('nickname', newNickname);
             updateAuthStatus(true);
           }
         }

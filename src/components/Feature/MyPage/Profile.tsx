@@ -119,7 +119,7 @@ const Profile = () => {
     try {
       const response = await nickNameChange(data.nickname);
       if (response.success) {
-        setEncryptedCookie('nickname', data.nickname, 7);
+        setEncryptedCookie('nickname', data.nickname);
         setAlertMessage('닉네임이 성공적으로 변경되었습니다.');
         setAlertSeverity('success');
         setAlertOpen(true);

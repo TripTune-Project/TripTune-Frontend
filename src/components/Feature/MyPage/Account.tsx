@@ -179,7 +179,7 @@ const Account = () => {
       setAlertSeverity('success');
       setAlertOpen(true);
       Cookies.remove('trip-tune_at');
-      Cookies.remove('trip-tune_rt');
+      Cookies.remove('refreshToken');
       Cookies.remove('nickname');
       router.push('/');
     } catch (error: any) {
