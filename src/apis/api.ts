@@ -68,7 +68,7 @@ const fetchData = async <T>(
       headers = { ...headers, ...getAuthHeaders() };
     } catch {
       const { getDecryptedCookie } = saveLocalContent();
-      const refreshToken = getDecryptedCookie('trip-tune_rt');
+      const refreshToken = getDecryptedCookie('refreshToken');
       if (!refreshToken) {
         handleRedirectToLogin('인증 정보가 없습니다. 다시 로그인 해주세요.', true);
         return Promise.reject('인증 실패');
@@ -102,7 +102,7 @@ const fetchData = async <T>(
         isRetrying = true;
         try {
           const { getDecryptedCookie } = saveLocalContent();
-          const refreshToken = getDecryptedCookie('trip-tune_rt');
+          const refreshToken = getDecryptedCookie('refreshToken');
           if (!refreshToken) {
             handleRedirectToLogin('인증 정보가 만료 되었습니다.', true);
             return undefined as unknown as T;

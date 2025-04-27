@@ -16,7 +16,7 @@ const useAuth = () => {
 
       if (!accessToken) {
         // 액세스 토큰이 없으면 리프레시 토큰 존재 시에만 갱신 시도
-        const refreshToken = getDecryptedCookie('trip-tune_rt');
+        const refreshToken = getDecryptedCookie('refreshToken');
         if (refreshToken) {
           try {
             await refreshApi();
@@ -56,7 +56,7 @@ const useAuth = () => {
 
   // 토큰 갱신 시 인증 상태를 업데이트하는 함수
   const handleTokenRefresh = async () => {
-    const refreshToken = getDecryptedCookie('trip-tune_rt');
+    const refreshToken = getDecryptedCookie('refreshToken');
     if (!refreshToken) {
       setIsAuthenticated(false);
       setNickname('');

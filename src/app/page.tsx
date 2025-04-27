@@ -25,7 +25,7 @@ const Home = () => {
   useEffect(() => {
     const checkSocialLogin = async () => {
       try {
-        const refreshToken = getDecryptedCookie('trip-tune_rt');
+        const refreshToken = getDecryptedCookie('refreshToken');
         const nickname = getDecryptedCookie('nickname');
 
         // TODO : 리프레시 토큰은 있지만 닉네임이 없는 경우 (소셜 로그인 직후)

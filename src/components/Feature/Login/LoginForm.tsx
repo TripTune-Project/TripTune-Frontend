@@ -41,7 +41,7 @@ const LoginForm = () => {
   useEffect(() => {
     const checkNaverLogin = async () => {
       try {
-        const refreshToken = getDecryptedCookie('trip-tune_rt');
+        const refreshToken = getDecryptedCookie('refreshToken');
         const nickname = getDecryptedCookie('nickname');
 
         if (refreshToken && !nickname) {
