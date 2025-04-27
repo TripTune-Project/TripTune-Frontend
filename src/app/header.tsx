@@ -20,17 +20,9 @@ const Header = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
-  const [nickName, setNickName] = useState('');
 
-  const { isAuthenticated, isLoading, handleTokenRefresh, updateAuthStatus } = useAuth();
+  const { isAuthenticated, isLoading, handleTokenRefresh, updateAuthStatus, nickname } = useAuth();
   const { getDecryptedCookie } = saveLocalContent();
-
-  useEffect(() => {
-    if (isLoading) return;
-
-    const storedNickname = getDecryptedCookie('nickname');
-    setNickName(isAuthenticated && storedNickname ? storedNickname : '');
-  }, [isLoading, isAuthenticated]);
 
   // 토큰 갱신 주기 설정
   useEffect(() => {
@@ -57,7 +49,6 @@ const Header = () => {
     closeModal();
     try {
       await logoutApi();
-      setNickName('');
       updateAuthStatus(false);
       router.push('/');
     } catch {
@@ -109,7 +100,7 @@ const Header = () => {
             </div>
           ) : (
             <div className={styles.navLogin}>
-              {nickName} 님
+              {nickname} 님
               <Button onClick={openModal} variant='text' size='large'>
                 로그아웃
               </Button>
