@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, Suspense } from 'react';
+import React, { useState, Suspense, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { validatePassword, validateEmail } from '@/utils/validation';
 import styles from '@/styles/Login.module.css';
@@ -12,8 +12,9 @@ import kakao from '../../../../public/assets/icons/ic_kakao_vector.png';
 import naver from '../../../../public/assets/icons/ic_naver_vector.png';
 import VerificationLoading from '@/components/Common/VerificationLoading';
 import { loginUser } from '@/apis/Login/loginApi';
-import saveLocalContent from '@/utils/saveLocalContent';
 import useAuth from '@/hooks/useAuth';
+import { refreshApi } from '@/apis/Login/refreshApi';
+import saveLocalContent from '@/utils/saveLocalContent';
 
 interface LoginFormData {
   email: string;
@@ -22,7 +23,7 @@ interface LoginFormData {
 
 const LoginForm = () => {
   const router = useRouter();
-  const { setEncryptedCookie } = saveLocalContent();
+  const { setEncryptedCookie, getDecryptedCookie } = saveLocalContent();
   const { updateAuthStatus } = useAuth();
 
   const [errorMessage, setErrorMessage] = useState('');
@@ -35,6 +36,35 @@ const LoginForm = () => {
   } = useForm<LoginFormData>({
     mode: 'onChange',
   });
+
+  // 네이버 로그인 성공 후 처리
+  useEffect(() => {
+    const checkNaverLogin = async () => {
+      try {
+        const refreshToken = getDecryptedCookie('trip-tune_rt');
+        const nickname = getDecryptedCookie('nickname');
+
+        if (refreshToken && !nickname) {
+          const { nickname: newNickname } = await refreshApi();
+          if (newNickname) {
+            setEncryptedCookie('nickname', newNickname, 7);
+            updateAuthStatus(true);
+
+            const redirectPath =
+              localStorage.getItem('redirectAfterLogin') || '/';
+            localStorage.removeItem('redirectAfterLogin');
+            router.push(redirectPath);
+          }
+        }
+      } catch (error) {
+        console.error('네이버 로그인 처리 실패:', error);
+        setErrorMessage('로그인에 실패했습니다. 다시 시도해주세요.');
+        setOpenSnackbar(true);
+      }
+    };
+
+    checkNaverLogin();
+  }, [getDecryptedCookie, setEncryptedCookie, updateAuthStatus, router]);
 
   const onSubmit = async (data: LoginFormData) => {
     try {
@@ -66,6 +96,8 @@ const LoginForm = () => {
   };
 
   const handleNaverLogin = () => {
+    const currentPath = window.location.pathname;
+    localStorage.setItem('redirectAfterLogin', currentPath);
     window.location.href =
       'https://www.triptune.site/oauth2/authorization/naver';
   };
