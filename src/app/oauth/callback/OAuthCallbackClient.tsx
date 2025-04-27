@@ -16,14 +16,16 @@ export default function OAuthCallbackClient() {
     const handleOAuthCallback = async () => {
       try {
         const accessToken = searchParams.get('accessToken');
+        const refreshToken = searchParams.get('refreshToken');
         const nickname = searchParams.get('nickname');
 
-        if (!accessToken || !nickname) {
+        if (!accessToken || !refreshToken || !nickname) {
           throw new Error('소셜 로그인에 실패했습니다.');
         }
 
         // 토큰과 닉네임을 쿠키에 저장
         setEncryptedCookie('trip-tune_at', accessToken, 5 / (24 * 60));
+        setEncryptedCookie('trip-tune_rt', refreshToken, 7); // 리프레시 토큰 저장
         setEncryptedCookie('nickname', nickname, 7);
 
         // 인증 상태 업데이트
