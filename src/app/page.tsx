@@ -28,7 +28,7 @@ const Home = () => {
         const refreshToken = getDecryptedCookie('trip-tune_rt');
         const nickname = getDecryptedCookie('nickname');
 
-        // 리프레시 토큰은 있지만 닉네임이 없는 경우 (소셜 로그인 직후)
+        // TODO : 리프레시 토큰은 있지만 닉네임이 없는 경우 (소셜 로그인 직후)
         if (refreshToken && !nickname) {
           console.log('소셜 로그인 후 사용자 정보 가져오기 시도');
           const { nickname: newNickname } = await refreshApi();
