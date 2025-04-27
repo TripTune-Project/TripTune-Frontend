@@ -91,15 +91,11 @@ const LoginForm = () => {
   };
 
   const handleKakaoLogin = () => {
-    window.location.href =
-      'https://www.triptune.site/oauth2/authorization/kakao';
+    router.push('https://www.triptune.site/oauth2/authorization/kakao');
   };
 
   const handleNaverLogin = () => {
-    const currentPath = window.location.pathname;
-    localStorage.setItem('redirectAfterLogin', currentPath);
-    window.location.href =
-      'https://www.triptune.site/oauth2/authorization/naver';
+    router.push('https://www.triptune.site/oauth2/authorization/naver');
   };
 
   const handleFindPassword = () => {
