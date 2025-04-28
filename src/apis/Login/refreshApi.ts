@@ -1,9 +1,9 @@
 import { post } from '../api';
 import saveLocalContent from '@/utils/saveLocalContent';
+import Cookies from 'js-cookie';
 
 export const refreshApi = async (): Promise<{ accessToken: string; nickname: string }> => {
-  const { getDecryptedCookie } = saveLocalContent();
-  const refreshToken = getDecryptedCookie('refreshToken');
+  const refreshToken = Cookies.get('refreshToken');
   if (!refreshToken) {
     throw new Error('리프레시 토큰이 없습니다.');
   }

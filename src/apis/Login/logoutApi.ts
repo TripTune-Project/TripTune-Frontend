@@ -18,7 +18,9 @@ export const logoutApi = async () => {
     );
     
     Cookies.remove('trip-tune_at');
-    Cookies.remove('refreshToken');
     Cookies.remove('nickname');
+
+    //TODO : 리프레시 토큰을 프론트가 지울 수 있나요?
+    Cookies.remove('refreshToken');
   }
 };

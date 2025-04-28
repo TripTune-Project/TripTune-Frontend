@@ -179,8 +179,11 @@ const Account = () => {
       setAlertSeverity('success');
       setAlertOpen(true);
       Cookies.remove('trip-tune_at');
-      Cookies.remove('refreshToken');
       Cookies.remove('nickname');
+
+      //TODO : 리프레시 토큰을 프론트가 지울 수 있나요?
+      Cookies.remove('refreshToken');
+
       router.push('/');
     } catch (error: any) {
       console.error('회원 탈퇴 실패:', error.message);

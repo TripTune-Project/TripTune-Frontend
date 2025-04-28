@@ -12,38 +12,9 @@ import HomeImage from '../../public/assets/images/메인화면/ocean_title.png';
 import HomePageSearch from '@/components/Feature/Home/HomePageSearch';
 import HomePagePopularTravel from '@/components/Feature/Home/HomePagePopularTravel';
 import HomePageRecommendTravel from '@/components/Feature/Home/HomePageRecommendTravel';
-import { refreshApi } from '@/apis/Login/refreshApi';
-import saveLocalContent from '@/utils/saveLocalContent';
-import useAuth from '@/hooks/useAuth';
 
 const Home = () => {
   const router = useRouter();
-  const { updateAuthStatus } = useAuth();
-  const { getDecryptedCookie, setEncryptedCookie } = saveLocalContent();
-
-  // 소셜 로그인 후 사용자 정보 가져오기
-  useEffect(() => {
-    const checkSocialLogin = async () => {
-      try {
-        const refreshToken = getDecryptedCookie('refreshToken');
-        const nickname = getDecryptedCookie('nickname');
-
-        // TODO : 리프레시 토큰은 있지만 닉네임이 없는 경우 (소셜 로그인 직후)
-        if (refreshToken && !nickname) {
-          console.log('소셜 로그인 후 사용자 정보 가져오기 시도');
-          const { nickname: newNickname } = await refreshApi();
-          if (newNickname) {
-            setEncryptedCookie('nickname', newNickname);
-            updateAuthStatus(true);
-          }
-        }
-      } catch (error) {
-        console.error('사용자 정보 가져오기 실패:', error);
-      }
-    };
-
-    checkSocialLogin();
-  }, [getDecryptedCookie, setEncryptedCookie, updateAuthStatus]);
 
   const handleScheduleClick = () => {
     router.push('/Schedule');

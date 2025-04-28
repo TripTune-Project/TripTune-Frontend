@@ -13,8 +13,10 @@ interface FetchOptions extends RequestInit {
 
 const clearCookies = () => {
   Cookies.remove('trip-tune_at');
-  Cookies.remove('refreshToken');
   Cookies.remove('nickname');
+
+  //TODO : 리프레시 토큰을 프론트가 지울 수 있나요?
+  Cookies.remove('refreshToken');
 };
 
 const getAuthHeaders = (): HeadersInit => {
@@ -65,8 +67,7 @@ const fetchData = async <T>(
     try {
       headers = { ...headers, ...getAuthHeaders() };
     } catch {
-      const { getDecryptedCookie } = saveLocalContent();
-      const refreshToken = getDecryptedCookie('refreshToken');
+      const refreshToken = Cookies.get('refreshToken');
       if (!refreshToken) {
         handleRedirectToLogin('인증 정보가 없습니다. 다시 로그인 해주세요.', true);
         return Promise.reject('인증 실패');
@@ -99,8 +100,7 @@ const fetchData = async <T>(
       if (response.status === 401 && !isRetrying) {
         isRetrying = true;
         try {
-          const { getDecryptedCookie } = saveLocalContent();
-          const refreshToken = getDecryptedCookie('refreshToken');
+          const refreshToken = Cookies.get('refreshToken');
           if (!refreshToken) {
             handleRedirectToLogin('인증 정보가 만료 되었습니다.', true);
             return undefined as unknown as T;

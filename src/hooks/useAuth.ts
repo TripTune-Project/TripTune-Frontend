@@ -1,12 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { refreshApi } from '@/apis/Login/refreshApi';
 import saveLocalContent from '@/utils/saveLocalContent';
-import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 
 const useAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [nickname, setNickname] = useState<string>('');
-  const router = useRouter();
   const { getDecryptedCookie } = saveLocalContent();
 
   const checkAuth = useCallback(async () => {
@@ -16,7 +15,7 @@ const useAuth = () => {
 
       if (!accessToken) {
         // 액세스 토큰이 없으면 리프레시 토큰 존재 시에만 갱신 시도
-        const refreshToken = getDecryptedCookie('refreshToken');
+        const refreshToken = Cookies.get('refreshToken');
         if (refreshToken) {
           try {
             await refreshApi();
@@ -56,7 +55,7 @@ const useAuth = () => {
 
   // 토큰 갱신 시 인증 상태를 업데이트하는 함수
   const handleTokenRefresh = async () => {
-    const refreshToken = getDecryptedCookie('refreshToken');
+    const refreshToken = Cookies.get('refreshToken');
     if (!refreshToken) {
       setIsAuthenticated(false);
       setNickname('');
