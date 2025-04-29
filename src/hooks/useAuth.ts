@@ -10,7 +10,7 @@ const useAuth = () => {
 
   const checkAuth = useCallback(async () => {
     try {
-      const accessToken = getDecryptedCookie('trip-tune_at');
+      const accessToken = getDecryptedCookie('accessToken');
       const storedNickname = getDecryptedCookie('nickname');
 
       if (!accessToken) {

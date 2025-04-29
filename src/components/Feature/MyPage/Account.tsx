@@ -178,7 +178,7 @@ const Account = () => {
       setAlertMessage('회원 탈퇴가 완료되었습니다.');
       setAlertSeverity('success');
       setAlertOpen(true);
-      Cookies.remove('trip-tune_at');
+      Cookies.remove('accessToken');
       Cookies.remove('nickname');
 
       //TODO : 리프레시 토큰을 프론트가 지울 수 있나요?

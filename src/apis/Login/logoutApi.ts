@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 
 export const logoutApi = async () => {
   const { getDecryptedCookie, setEncryptedCookie } = saveLocalContent();
-  const accessToken = getDecryptedCookie('trip-tune_at');
+  const accessToken = getDecryptedCookie('accessToken');
   const nickname = getDecryptedCookie('nickname');
 
   const url = '/api/members/logout';
@@ -17,7 +17,7 @@ export const logoutApi = async () => {
       }
     );
     
-    Cookies.remove('trip-tune_at');
+    Cookies.remove('accessToken');
     Cookies.remove('nickname');
 
     //TODO : 리프레시 토큰을 프론트가 지울 수 있나요?

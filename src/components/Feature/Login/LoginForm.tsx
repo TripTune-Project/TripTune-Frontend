@@ -41,7 +41,7 @@ const LoginForm = () => {
       const response = await loginUser(data);
       const { accessToken, nickname } = response.data;
 
-      setEncryptedCookie('trip-tune_at', accessToken);
+      setEncryptedCookie('accessToken', accessToken);
       setEncryptedCookie('nickname', nickname);
 
       updateAuthStatus(true);

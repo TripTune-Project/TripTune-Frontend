@@ -68,7 +68,7 @@ const ChangePassword = () => {
     setLoading(true);
     try {
       const { getDecryptedCookie } = saveLocalContent();
-      const accessToken = getDecryptedCookie('trip-tune_at');
+      const accessToken = getDecryptedCookie('accessToken');
       const response = await fetch(
         'https://www.triptune.site/api/members/reset-password',
         {

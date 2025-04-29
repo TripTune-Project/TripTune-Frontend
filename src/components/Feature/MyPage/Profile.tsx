@@ -70,7 +70,7 @@ const Profile = () => {
           const formData = new FormData();
           formData.append('profileImage', file);
           const { getDecryptedCookie } = saveLocalContent();
-          const accessToken = getDecryptedCookie('trip-tune_at');
+          const accessToken = getDecryptedCookie('accessToken');
           const response = await fetch(
             'https://www.triptune.site/api/profiles',
             {

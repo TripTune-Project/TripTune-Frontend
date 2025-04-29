@@ -36,7 +36,7 @@ interface ChattingProps {
 const Chatting = ({ onError }: ChattingProps) => {
   const { scheduleId } = useParams();
   const { getDecryptedCookie } = saveLocalContent();
-  const token = getDecryptedCookie('trip-tune_at');
+  const token = getDecryptedCookie('accessToken');
   const userNickname = getDecryptedCookie('nickname');
 
   const clientRef = useRef<Client | null>(null);

@@ -95,7 +95,7 @@ const TravelDetailPage = () => {
     queryKey: ['travelDetail', placeIdNumber],
     queryFn: async () => {
       const { getDecryptedCookie } = saveLocalContent();
-      const accessToken = getDecryptedCookie('trip-tune_at');
+      const accessToken = getDecryptedCookie('accessToken');
       const requiresAuth = !!accessToken;
       const result = await fetchTravelDetailData(placeIdNumber, requiresAuth);
       if (result.success) {

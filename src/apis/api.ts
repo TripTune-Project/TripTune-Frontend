@@ -12,7 +12,7 @@ interface FetchOptions extends RequestInit {
 }
 
 const clearCookies = () => {
-  Cookies.remove('trip-tune_at');
+  Cookies.remove('accessToken');
   Cookies.remove('nickname');
 
   //TODO : 리프레시 토큰을 프론트가 지울 수 있나요?
@@ -21,7 +21,7 @@ const clearCookies = () => {
 
 const getAuthHeaders = (): HeadersInit => {
   const { getDecryptedCookie } = saveLocalContent();
-  const accessToken = getDecryptedCookie('trip-tune_at');
+  const accessToken = getDecryptedCookie('accessToken');
 
   if (!accessToken) {
     throw new Error('액세스 토큰이 없습니다. 다시 로그인 해주세요.');
