@@ -11,7 +11,6 @@ import LoginIcon from '../../public/assets/images/메인화면/main_loginBtn.png
 import MainLogoImage from '../../public/assets/images/로고/triptuneLogo-removebg.png';
 import { logoutApi } from '@/apis/Login/logoutApi';
 import useAuth from '@/hooks/useAuth';
-import saveLocalContent from '@/utils/saveLocalContent';
 
 const Header = () => {
   const router = useRouter();
@@ -22,7 +21,6 @@ const Header = () => {
   const [alertMessage, setAlertMessage] = useState('');
 
   const { isAuthenticated, isLoading, handleTokenRefresh, updateAuthStatus, nickname } = useAuth();
-  const { getDecryptedCookie } = saveLocalContent();
 
   // 토큰 갱신 주기 설정
   useEffect(() => {
