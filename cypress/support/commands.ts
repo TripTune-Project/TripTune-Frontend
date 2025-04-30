@@ -25,8 +25,8 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 //
 
-import { User } from '@/types/user';
-import { Travel } from '@/types/travel';
+import type { User } from '@/types/user';
+import type { TestTravel } from '@/types/travel';
 
 declare global {
   namespace Cypress {
@@ -36,8 +36,8 @@ declare global {
       getByTestId(testId: string): Chainable<JQuery<HTMLElement>>;
       resetDatabase(): Chainable<void>;
       createTestUser(userData: Partial<User>): Chainable<User>;
-      createTestTravel(travelData: Partial<Travel>): Chainable<Travel>;
-      deleteTestTravel(travelId: number): Chainable<void>;
+      createTestTravel(travelData: Partial<TestTravel>): Chainable<TestTravel>;
+      deleteTestTravel(travelId: number): Chainable;
       handleApiError(error: any): Chainable<void>;
     }
   }
@@ -72,7 +72,7 @@ Cypress.Commands.add('createTestUser', (userData: Partial<User>) => {
 });
 
 // 테스트 여행 생성
-Cypress.Commands.add('createTestTravel', (travelData: Partial<Travel>) => {
+Cypress.Commands.add('createTestTravel', (travelData: Partial<TestTravel>) => {
   return cy.request({
     method: 'POST',
     url: `${Cypress.env('apiUrl')}/test/travels`,
@@ -88,9 +88,6 @@ Cypress.Commands.add('deleteTestTravel', (travelId: number) => {
   return cy.request({
     method: 'DELETE',
     url: `${Cypress.env('apiUrl')}/test/travels/${travelId}`,
-    headers: {
-      'X-Test-Key': Cypress.env('testApiKey')
-    }
   });
 });
 

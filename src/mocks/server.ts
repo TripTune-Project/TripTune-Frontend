@@ -1,60 +1,59 @@
 import { setupServer } from 'msw/node';
-import { rest } from 'msw';
+import { http, HttpResponse } from 'msw';
+
+interface TravelBody {
+  title: string;
+  location: string;
+  startDate: string;
+  endDate: string;
+  status: string;
+}
 
 // API 핸들러 정의
 const handlers = [
   // 여행 목록 조회
-  rest.get(`${process.env.NEXT_PUBLIC_API_URL}/travels`, (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json([
-        {
-          id: 1,
-          title: '제주도 여행',
-          location: '제주시',
-          startDate: '2024-03-01',
-          endDate: '2024-03-03',
-          status: 'PLANNED'
-        }
-      ])
-    );
+  http.get(`${process.env.NEXT_PUBLIC_API_URL}/travels`, () => {
+    return HttpResponse.json([
+      {
+        id: 1,
+        title: '제주도 여행',
+        location: '제주시',
+        startDate: '2024-03-01',
+        endDate: '2024-03-03',
+        status: 'PLANNED'
+      }
+    ], { status: 200 });
   }),
 
   // 여행 생성
-  rest.post(`${process.env.NEXT_PUBLIC_API_URL}/travels`, (req, res, ctx) => {
-    return res(
-      ctx.status(201),
-      ctx.json({
-        id: 2,
-        ...req.body
-      })
-    );
+  http.post(`${process.env.NEXT_PUBLIC_API_URL}/travels`, async ({ request }) => {
+    const body = await request.json() as TravelBody;
+    return HttpResponse.json({
+      id: 2,
+      ...body
+    }, { status: 201 });
   }),
 
   // 여행 수정
-  rest.put(`${process.env.NEXT_PUBLIC_API_URL}/travels/:id`, (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json({
-        id: req.params.id,
-        ...req.body
-      })
-    );
+  http.put(`${process.env.NEXT_PUBLIC_API_URL}/travels/:id`, async ({ params, request }) => {
+    const body = await request.json() as TravelBody;
+    return HttpResponse.json({
+      id: params.id,
+      ...body
+    }, { status: 200 });
   }),
 
   // 여행 삭제
-  rest.delete(`${process.env.NEXT_PUBLIC_API_URL}/travels/:id`, (req, res, ctx) => {
-    return res(
-      ctx.status(204)
-    );
+  http.delete(`${process.env.NEXT_PUBLIC_API_URL}/travels/:id`, () => {
+    return new HttpResponse(null, { status: 204 });
   }),
 
   // 에러 핸들러
-  rest.all('*', (req, res, ctx) => {
-    console.error(`Unhandled ${req.method} request to ${req.url}`);
-    return res(
-      ctx.status(500),
-      ctx.json({ message: 'Internal Server Error' })
+  http.all('*', ({ request }) => {
+    console.error(`Unhandled ${request.method} request to ${request.url}`);
+    return HttpResponse.json(
+      { message: 'Internal Server Error' },
+      { status: 500 }
     );
   })
 ];
