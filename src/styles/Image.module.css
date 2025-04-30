@@ -1,0 +1,22 @@
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.image {
+  object-fit: cover;
+  transition: transform var(--transition-normal) ease;
+}
+
+.imageWrapper:hover .image {
+  transform: scale(1.05);
+}
+
+/* 반응형 이미지 크기 */
+@media screen and (max-width: var(--breakpoint-md)) {
+  .imageWrapper {
+    aspect-ratio: 16/9;
+  }
+} 

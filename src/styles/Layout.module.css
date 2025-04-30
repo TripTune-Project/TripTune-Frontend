@@ -1,7 +1,8 @@
 .main {
   color: #000000;
-  width: 100vw;
+  width: 100%;
   flex-shrink: 0;
+  -webkit-backdrop-filter: blur(2px);
   backdrop-filter: blur(2px);
   display: flex;
   flex-direction: column;
@@ -15,6 +16,7 @@
   flex-shrink: 0;
   border-bottom: 1px solid #c4c4c4;
   background: #ffffff;
+  -webkit-backdrop-filter: blur(2px);
   backdrop-filter: blur(2px);
   width: 100%;
 }
@@ -34,27 +36,28 @@
 .section::before {
   content: '';
   position: absolute;
-  width: 1455px;
+  width: 100%;
   height: 701px;
   border-radius: 0 0 0 200px;
   background: linear-gradient(264deg, #edf9f7 3.98%, #f1f5ff 98.44%);
   top: 0;
-  left: 66%;
+  left: 50%;
   transform: translateX(-50%);
   z-index: -1;
 }
 
 .content {
-  width: 100vw;
-  height: 1336px;
+  width: 100%;
+  min-height: 100vh;
   flex-grow: 1;
+  padding: 0 2rem;
 }
 
 .footer {
   margin-top: 55px;
   padding-top: 5px;
-  width: 100vw;
-  height: 324px;
+  width: 100%;
+  min-height: 324px;
   flex-shrink: 0;
   background: #363636;
   overflow-y: hidden;
@@ -65,7 +68,7 @@
 .email,
 .github,
 .copyright {
-  margin-left: 135px;
+  margin-left: 2rem;
   color: #ffffff;
   font-family: 'Noto Sans KR', serif;
   font-size: 17px;
@@ -79,7 +82,7 @@
   height: 55px;
   flex-shrink: 0;
   margin-top: 40px;
-  margin-left: 125px;
+  margin-left: 2rem;
 }
 
 .logoText {
@@ -89,4 +92,70 @@
   flex-shrink: 0;
   color: #ffffff;
   margin-top: 0;
+}
+
+/* 반응형 디자인 */
+@media screen and (max-width: 1440px) {
+  .content {
+    padding: 0 1.5rem;
+  }
+  
+  .logoImg,
+  .logoText,
+  .email,
+  .github,
+  .copyright {
+    margin-left: 1.5rem;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .content {
+    padding: 0 1rem;
+  }
+  
+  .logoImg,
+  .logoText,
+  .email,
+  .github,
+  .copyright {
+    margin-left: 1rem;
+  }
+  
+  .logoImg {
+    width: 150px;
+    height: 45px;
+  }
+  
+  .logoText {
+    font-size: 28px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .content {
+    padding: 0 0.5rem;
+  }
+  
+  .logoImg,
+  .logoText,
+  .email,
+  .github,
+  .copyright {
+    margin-left: 0.5rem;
+  }
+  
+  .logoImg {
+    width: 120px;
+    height: 36px;
+  }
+  
+  .logoText {
+    font-size: 24px;
+  }
+  
+  .section::before {
+    height: 500px;
+    border-radius: 0 0 0 100px;
+  }
 }

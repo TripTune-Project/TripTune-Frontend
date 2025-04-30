@@ -9,28 +9,8 @@ export default function NoResultLayout() {
   const isSchedulePage =
     pathname.includes('/Schedule') || (!isTravelPage && !isBookmarkPage);
 
-  let containerStyles: React.CSSProperties = {};
-
-  if (isTravelPage) {
-    containerStyles = {
-      width: '35vw',
-      height: '75vh',
-    };
-  } else if (isBookmarkPage) {
-    containerStyles = {
-      width: '948px',
-      height: '524px',
-    };
-  } else if (isSchedulePage) {
-    containerStyles = {
-      width: '1297px',
-      height: '600px',
-      marginLeft: '-208px',
-    };
-  }
-
-  const styles = {
-    noScheduleContainer: {
+  const getContainerStyles = () => {
+    const baseStyles = {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
@@ -38,39 +18,67 @@ export default function NoResultLayout() {
       color: '#555',
       border: '1px solid #d9d9d9',
       backgroundColor: '#ffffff',
-      ...containerStyles,
-    } as React.CSSProperties,
-    noResults: {
-      color: '#555',
-      fontSize: '16px',
-      textAlign: 'center',
-      margin: '20px 0',
-      padding: '10px',
-    } as React.CSSProperties,
-    noText: {
-      marginTop: '60px',
-      color: '#666',
-      textAlign: 'center',
-      fontSize: '20px',
-      fontStyle: 'normal',
-      fontWeight: 600,
-      lineHeight: 'normal',
-    } as React.CSSProperties,
+      width: '100%',
+      height: 'auto',
+      minHeight: '300px',
+      padding: '2rem',
+      borderRadius: '8px',
+      boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+    } as React.CSSProperties;
+
+    if (isTravelPage) {
+      return {
+        ...baseStyles,
+        maxWidth: '35vw',
+        minHeight: '75vh',
+      };
+    }
+    if (isBookmarkPage) {
+      return {
+        ...baseStyles,
+        maxWidth: '948px',
+        minHeight: '524px',
+      };
+    }
+    if (isSchedulePage) {
+      return {
+        ...baseStyles,
+        maxWidth: '1297px',
+        minHeight: '600px',
+        margin: '0 auto',
+      };
+    }
+
+    return baseStyles;
   };
 
   return (
-    <div style={styles.noScheduleContainer}>
-      <p style={styles.noResults}>
-        <Image
-          src={AlertIcon}
-          alt='no-schedule-root'
-          width={80}
-          height={80}
-          style={{ marginLeft: '120px' }}
-        />
-        <div style={styles.noText}>검색 결과가 없습니다.</div>
-        <br />
-        <p>검색어의 철자와 띄어쓰기가 정확한지 확인해주세요.</p>
+    <div 
+      role="alert" 
+      aria-label="검색 결과 없음" 
+      style={getContainerStyles()}
+    >
+      <Image
+        src={AlertIcon}
+        alt="알림 아이콘"
+        width={48}
+        height={48}
+        style={{ marginBottom: '1rem' }}
+      />
+      <h2 style={{ 
+        fontSize: 'calc(var(--base-font-size) * 1.5)',
+        fontWeight: 600,
+        marginBottom: '0.5rem',
+        textAlign: 'center'
+      }}>
+        검색 결과가 없습니다
+      </h2>
+      <p style={{ 
+        fontSize: 'calc(var(--base-font-size) * 1)',
+        color: '#666',
+        textAlign: 'center'
+      }}>
+        다른 검색어로 다시 시도해보세요
       </p>
     </div>
   );

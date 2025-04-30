@@ -1,0 +1,80 @@
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-8);
+  background-color: var(--color-background);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  max-width: 600px;
+  margin: var(--spacing-4) auto;
+  text-align: center;
+}
+
+.errorIcon {
+  font-size: 48px;
+  margin-bottom: var(--spacing-4);
+}
+
+.errorTitle {
+  color: var(--color-error);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-2);
+}
+
+.errorMessage {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--spacing-4);
+}
+
+.errorDetails {
+  width: 100%;
+  margin-bottom: var(--spacing-4);
+  text-align: left;
+}
+
+.errorDetails summary {
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  padding: var(--spacing-2);
+  border-radius: var(--radius-md);
+  transition: background-color var(--transition-fast);
+}
+
+.errorDetails summary:hover {
+  background-color: var(--color-secondary);
+}
+
+.errorStack {
+  background-color: var(--color-secondary);
+  padding: var(--spacing-4);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  font-family: monospace;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  margin-top: var(--spacing-2);
+}
+
+.retryButton {
+  background-color: var(--color-primary);
+  color: var(--color-background);
+  padding: var(--spacing-3) var(--spacing-6);
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-medium);
+  transition: background-color var(--transition-fast);
+  border: none;
+  cursor: pointer;
+}
+
+.retryButton:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.retryButton:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+} 
