@@ -2,14 +2,15 @@ import Cookies from 'js-cookie';
 
 const saveLocalContent = () => {
   const setEncryptedCookie = (name: string, value: string) => {
-    Cookies.set(name, value, {
+    Cookies.set(name, encodeURIComponent(value), {
       secure: true,
       sameSite: 'strict',
     });
   };
   
   const getDecryptedCookie = (name: string) => {
-    return Cookies.get(name);
+    const value = Cookies.get(name);
+    return value ? decodeURIComponent(value) : undefined;
   };
   
   return {
