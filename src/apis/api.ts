@@ -3,7 +3,7 @@ import saveLocalContent from '@/utils/saveLocalContent';
 import Cookies from 'js-cookie';
 
 const DEFAULT_HEADERS = {
-  'Content-Type': 'application/json',
+  'Content-Type': 'application/json;charset=utf-8',
 };
 
 interface FetchOptions extends RequestInit {
