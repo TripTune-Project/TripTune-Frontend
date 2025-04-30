@@ -11,6 +11,7 @@ import FooterLogoImage from '../../public/assets/images/로고/triptuneLogoWhite
 import '@/styles/global.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Noto_Sans_KR } from 'next/font/google';
+import ErrorBoundary from '@/components/Common/ErrorBoundary';
 
 const notoSansKR = Noto_Sans_KR({
   subsets: ['latin'],
@@ -65,40 +66,42 @@ const Layout = ({ children }: LayoutProps) => {
         />
       </Head>
       <body>
-        <QueryClientProvider client={queryClient}>
-          {isSchedulePage ? (
-            <>{children}</>
-          ) : (
-            <div className={styles.main}>
-              <header className={styles.header}>
-                <Header />
-              </header>
-              <main className={styles.section}>
-                <div className={styles.content}>{children}</div>
-              </main>
-              <footer className={styles.footer}>
-                <Image
-                  className={styles.logoImg}
-                  src={FooterLogoImage}
-                  alt='FooterLogoImage'
-                  priority
-                />
-                <p className={styles.email}>
-                  <b>Email</b>: triptunehost@gmail.com
-                </p>
-                <p className={styles.github}>
-                  <b>Github</b>:{' '}
-                  <a href='https://github.com/TripTune-Project'>
-                    https://github.com/TripTune-Project
-                  </a>
-                </p>
-                <p className={styles.copyright}>
-                  Copyright © 2024 TripTune. All rights reserved.
-                </p>
-              </footer>
-            </div>
-          )}
-        </QueryClientProvider>
+        <ErrorBoundary>
+          <QueryClientProvider client={queryClient}>
+            {isSchedulePage ? (
+              <>{children}</>
+            ) : (
+              <div className={styles.main}>
+                <header className={styles.header}>
+                  <Header />
+                </header>
+                <main className={styles.section}>
+                  <div className={styles.content}>{children}</div>
+                </main>
+                <footer className={styles.footer}>
+                  <Image
+                    className={styles.logoImg}
+                    src={FooterLogoImage}
+                    alt='FooterLogoImage'
+                    priority
+                  />
+                  <p className={styles.email}>
+                    <b>Email</b>: triptunehost@gmail.com
+                  </p>
+                  <p className={styles.github}>
+                    <b>Github</b>:{' '}
+                    <a href='https://github.com/TripTune-Project'>
+                      https://github.com/TripTune-Project
+                    </a>
+                  </p>
+                  <p className={styles.copyright}>
+                    Copyright © 2024 TripTune. All rights reserved.
+                  </p>
+                </footer>
+              </div>
+            )}
+          </QueryClientProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );
