@@ -18,7 +18,9 @@ import minusTravelSearch from '../../../../public/assets/images/일정 만들기
 import AlertIcon from '../../../../public/assets/images/여행지 탐색/홈화면/alertIcon.png';
 
 const ScheduleTravelSearch = () => {
-  const { scheduleId } = useParams();
+  // useParams의 반환 타입을 업데이트
+  const params = useParams();
+  const scheduleId = params?.scheduleId as string;
   const [currentPage, setCurrentPage] = useState(1);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [isSearching, setIsSearching] = useState(false);

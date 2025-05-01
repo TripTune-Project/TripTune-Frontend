@@ -22,7 +22,7 @@ interface IFormInput {
 const ChangePassword = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const passwordToken = searchParams.get('passwordToken');
+  const passwordToken = searchParams?.get('passwordToken');
   const {
     register,
     handleSubmit,

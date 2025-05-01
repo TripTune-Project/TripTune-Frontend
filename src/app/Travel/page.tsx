@@ -28,7 +28,7 @@ import useAuth from '@/hooks/useAuth';
 const TravelPageContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const keyword = searchParams.get('keyword') || '';
+  const keyword = searchParams?.get('keyword') || '';
 
   const {
     currentPage,

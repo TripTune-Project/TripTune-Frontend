@@ -15,7 +15,9 @@ import routeVector from '../../../../public/assets/images/일정 만들기/일�
 
 const ScheduleRoute = () => {
   // URL 파라미터에서 scheduleId 가져오기
-  const { scheduleId } = useParams();
+  // useParams의 반환 타입을 업데이트
+  const params = useParams();
+  const scheduleId = params?.scheduleId as string;
 
   // Zustand store에서 액션 및 상태 가져오기
   const {

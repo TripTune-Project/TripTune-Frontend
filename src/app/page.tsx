@@ -13,17 +13,27 @@ import HomePageSearch from '@/components/Feature/Home/HomePageSearch';
 import HomePagePopularTravel from '@/components/Feature/Home/HomePagePopularTravel';
 import HomePageRecommendTravel from '@/components/Feature/Home/HomePageRecommendTravel';
 
+/**
+ * Home 컴포넌트 - 메인 페이지를 구성하는 루트 컴포넌트
+ * 주요 기능:
+ * - 메인 배너 및 검색 기능 제공
+ * - 일정 만들기 및 여행지 탐색 버튼 제공
+ * - 인기 여행지 및 추천 여행지 표시
+ */
 const Home = () => {
   const router = useRouter();
 
+  // 일정 페이지로 이동하는 핸들러
   const handleScheduleClick = () => {
     router.push('/Schedule');
   };
 
+  // 여행지 페이지로 이동하는 핸들러
   const handleTravelClick = () => {
     router.push('/Travel');
   };
 
+  // 버튼 아이콘 상태 관리
   const [scheduleIcon, setScheduleIcon] = useState(
     '/assets/images/메인화면/scheduleIcon.png'
   );
@@ -31,6 +41,7 @@ const Home = () => {
     '/assets/images/메인화면/travelIcon.png'
   );
 
+  // 페이지 로드 시 overflow 스타일 설정
   useEffect(() => {
     document.body.style.overflow = 'auto';
     return () => {
@@ -40,6 +51,7 @@ const Home = () => {
 
   return (
     <div className={styles.onBoard}>
+      {/* SEO 및 메타 태그 설정 */}
       <Head>
         <title>TripTune - Explore and Plan Your Travel</title>
         <meta
@@ -63,6 +75,8 @@ const Home = () => {
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
+
+      {/* 메인 배너 영역 */}
       <div className={styles.onBoardingTop}>
         <div className={styles.onBoardingView}>
           <Image
@@ -84,6 +98,8 @@ const Home = () => {
               </div>
             </div>
           </div>
+
+          {/* 주요 기능 버튼 영역 */}
           <div className={styles.onBoardingButtonLayout}>
             <div className={styles.textContent}>
               <span className={styles.textSchedule}>일정</span>을 직접 만들고
@@ -150,7 +166,11 @@ const Home = () => {
           </div>
         </div>
       </div>
+
+      {/* 인기 여행지 컴포넌트 */}
       <HomePagePopularTravel />
+
+      {/* 추천 여행지 컴포넌트 */}
       <HomePageRecommendTravel />
     </div>
   );

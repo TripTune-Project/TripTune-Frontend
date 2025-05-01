@@ -27,12 +27,23 @@ import CalendarLayout from '@/components/Common/CalendarLayout';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 
+/**
+ * SchedulePage 컴포넌트 - 사용자의 일정 목록을 표시하는 페이지
+ * 주요 기능:
+ * - 내 일정과 공유받은 일정 목록 표시
+ * - 무한 스크롤 기능을 통한 일정 목록 페이지네이션
+ * - 일정 검색 기능
+ * - 일정 삭제 및 공유 일정 나가기 기능
+ * - 새로운 일정 만들기
+ */
 export default function SchedulePage() {
   const router = useRouter();
   const { isAuthenticated, isLoading } = useAuth();
+  // 무한 스크롤을 위한 관찰자 요소 참조
   const observerRef = useRef<HTMLDivElement | null>(null);
   const [isIntersecting, setIsIntersecting] = useState(false);
 
+  // 로그인 상태에 따른 스크롤 제어
   useEffect(() => {
     if (!isAuthenticated) {
       document.body.style.overflow = 'hidden';
@@ -42,6 +53,7 @@ export default function SchedulePage() {
     };
   }, [isAuthenticated]);
 
+  // 모달 및 메뉴 상태 관리
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeDeleteMenu, setActiveDeleteMenu] = useState<number | null>(null);
   const [selectedScheduleId, setSelectedScheduleId] = useState<number | null>(
@@ -52,14 +64,17 @@ export default function SchedulePage() {
   const [isSearching, setIsSearching] = useState(false);
   const [selectedTab, setSelectedTab] = useState<'all' | 'share'>('all');
 
+  // 알림 상태 관리
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertSeverity, setAlertSeverity] = useState<
     'success' | 'error' | 'warning' | 'info'
   >('info');
 
+  // 검색어 디바운싱 (800ms)
   const debouncedSearchKeyword = useDebounce(searchKeyword, 800);
 
+  // 내 일정 목록 조회 쿼리 (전체 탭 선택 & 검색 중이 아닐 때)
   const {
     data: allScheduleData,
     isLoading: isAllScheduleLoading,
@@ -69,6 +84,7 @@ export default function SchedulePage() {
     isFetchingNextPage: isFetchingNextAllPage,
   } = useScheduleList(selectedTab === 'all' && !isSearching);
 
+  // 공유받은 일정 목록 조회 쿼리 (공유 탭 선택 & 검색 중이 아닐 때)
   const {
     data: sharedScheduleData,
     isLoading: isSharedScheduleLoading,
@@ -78,6 +94,7 @@ export default function SchedulePage() {
     isFetchingNextPage: isFetchingNextSharedPage,
   } = useSharedScheduleList(selectedTab === 'share' && !isSearching);
 
+  // 일정 검색 쿼리 (검색 중일 때)
   const {
     data: searchData,
     fetchNextPage: fetchNextSearchPage,
@@ -85,24 +102,28 @@ export default function SchedulePage() {
     isFetchingNextPage: isFetchingNextSearchPage,
   } = useScheduleListSearch(debouncedSearchKeyword, selectedTab, isSearching);
 
+  // 현재 상태에 따른 무한 스크롤 페이지네이션 함수 선택
   const fetchNextPage = isSearching
     ? fetchNextSearchPage
     : selectedTab === 'all'
       ? fetchNextAllPage
       : fetchNextSharedPage;
 
+  // 현재 상태에 따른 다음 페이지 존재 여부 확인
   const hasNextPage = isSearching
     ? hasNextSearchPage
     : selectedTab === 'all'
       ? hasNextAllPage
       : hasNextSharedPage;
 
+  // 현재 상태에 따른 페이지 로딩 상태 확인
   const isFetchingNextPage = isSearching
     ? isFetchingNextSearchPage
     : selectedTab === 'all'
       ? isFetchingNextAllPage
       : isFetchingNextSharedPage;
 
+  // 무한 스크롤을 위한 Intersection Observer 설정
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -124,16 +145,25 @@ export default function SchedulePage() {
     };
   }, []);
 
+  // 관찰자 요소가 화면에 보일 때 다음 페이지 데이터 로드
   useEffect(() => {
     if (isIntersecting && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
   }, [isIntersecting, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
+  /**
+   * 새 일정 모달 열기 핸들러
+   */
   const handleOpenModal = () => {
     setIsModalOpen(true);
   };
 
+  /**
+   * 일정 옵션 메뉴 토글 핸들러
+   * @param scheduleId 선택한 일정 ID
+   * @param event 마우스 이벤트
+   */
   const handleToggleDeleteMenu = (
     scheduleId: number,
     event: React.MouseEvent
@@ -144,6 +174,10 @@ export default function SchedulePage() {
     );
   };
 
+  /**
+   * 일정 삭제 확인 핸들러
+   * 삭제 모달에서 확인 버튼 클릭 시 실행
+   */
   const handleDeleteConfirmation = async () => {
     if (selectedScheduleId) {
       try {
@@ -166,11 +200,19 @@ export default function SchedulePage() {
     }
   };
 
+  /**
+   * 일정 삭제 버튼 클릭 핸들러
+   * 삭제 확인 모달을 표시
+   */
   const handleDeleteSchedule = (event: React.MouseEvent) => {
     event.stopPropagation();
     setIsDeleteModalOpen(true);
   };
 
+  /**
+   * 공유받은 일정 나가기 핸들러
+   * @param scheduleId 나갈 일정 ID
+   */
   const handleLeaveSchedule = async (scheduleId: number) => {
     if (!scheduleId) return;
 
@@ -193,12 +235,23 @@ export default function SchedulePage() {
     }
   };
 
+  /**
+   * 일정 상세 페이지로 이동하는 핸들러
+   * 옵션 메뉴가 열려 있지 않을 때만 동작
+   * @param event 마우스 이벤트
+   * @param scheduleId 이동할 일정 ID
+   */
   const handleDetailClick = (event: React.MouseEvent, scheduleId: number) => {
     if (!activeDeleteMenu) {
       router.push(`/Schedule/${scheduleId}`);
     }
   };
 
+  /**
+   * 알림창 닫기 핸들러
+   * @param event 이벤트 객체
+   * @param reason 닫히는 이유
+   */
   const handleAlertClose = (
     event?: React.SyntheticEvent | Event,
     reason?: string
@@ -207,15 +260,26 @@ export default function SchedulePage() {
     setAlertOpen(false);
   };
 
+  /**
+   * 일정 목록 렌더링 함수
+   * 데이터 상태에 따라 일정 목록 또는 빈 상태 화면을 렌더링
+   *
+   * @param scheduleListData 일정 목록 데이터
+   * @param isSearching 검색 모드 여부
+   * @returns 렌더링할 JSX 요소
+   */
   const renderSchedules = (
     scheduleListData: ApiResponse<ScheduleList> | undefined,
     isSearching: boolean
   ) => {
+    // 데이터가 없거나 빈 배열인 경우
     if (!scheduleListData?.data || scheduleListData.data.content.length === 0) {
+      // 검색 결과가 없는 경우
       if (isSearching) {
         return <NoResultLayout />;
       }
 
+      // 일정이 없는 경우
       return (
         <div className={styles.noScheduleContainer}>
           <Image
@@ -232,6 +296,7 @@ export default function SchedulePage() {
       );
     }
 
+    // 일정 목록 렌더링
     return scheduleListData.data.content.map((schedule: Schedule) => (
       <div
         key={schedule.scheduleId}
@@ -239,6 +304,7 @@ export default function SchedulePage() {
         onClick={(e) => handleDetailClick(e, schedule.scheduleId as number)}
       >
         <div>
+          {/* 옵션 메뉴 */}
           <div className={styles.hoverMenu}>
             <div
               className={styles.threeDots}
@@ -250,6 +316,7 @@ export default function SchedulePage() {
             </div>
             {activeDeleteMenu === schedule.scheduleId && (
               <div className={styles.deleteMenu}>
+                {/* 일정 작성자인 경우 삭제 버튼 표시 */}
                 {schedule.role === 'AUTHOR' ? (
                   <button
                     className={styles.deleteButton}
@@ -261,6 +328,7 @@ export default function SchedulePage() {
                     일정 삭제
                   </button>
                 ) : (
+                  /* 작성자가 아닌 경우 나가기 버튼 표시 */
                   <button
                     className={styles.leaveButton}
                     onClick={() =>
@@ -275,6 +343,7 @@ export default function SchedulePage() {
           </div>
           <div className={styles.scheduleName}>{schedule.scheduleName}</div>
         </div>
+        {/* 일정 썸네일 이미지 */}
         {schedule.thumbnailUrl ? (
           <Image
             src={schedule.thumbnailUrl}
@@ -286,6 +355,7 @@ export default function SchedulePage() {
         ) : (
           <div className={styles.noImage}>이미지 없음</div>
         )}
+        {/* 일정 정보 영역 */}
         <div className={styles.scheduleContent}>
           <div className={styles.scheduleDates}>
             일정 : {schedule.startDate} ~ {schedule.endDate}

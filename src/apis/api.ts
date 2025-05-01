@@ -33,7 +33,7 @@ let isRedirectingToLogin = false;
 
 const handleRedirectToLogin = (message: string, silent = false) => {
   if (isRedirectingToLogin || window.location.pathname === '/Login') return;
-  
+
   isRedirectingToLogin = true;
   const currentPath = window.location.pathname;
   localStorage.setItem('redirectAfterLogin', currentPath);
@@ -66,7 +66,10 @@ const fetchData = async <T>(
     } catch {
       const refreshToken = Cookies.get('refreshToken');
       if (!refreshToken) {
-        handleRedirectToLogin('인증 정보가 없습니다. 다시 로그인 해주세요.', true);
+        handleRedirectToLogin(
+          '인증 정보가 없습니다. 다시 로그인 해주세요.',
+          true
+        );
         return Promise.reject('인증 실패');
       }
       try {
@@ -127,8 +130,11 @@ const fetchData = async <T>(
       } else if (errorData.message !== undefined) {
         throw new Error(errorData.message);
       }
-    } catch (error: any) {
-      throw new Error(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+      throw new Error('알 수 없는 오류가 발생했습니다.');
     }
     return undefined as unknown as T;
   }

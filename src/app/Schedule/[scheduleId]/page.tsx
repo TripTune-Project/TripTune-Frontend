@@ -19,8 +19,14 @@ import DataLoading from '@/components/Common/DataLoading';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 
+/**
+ * 일정 상세 페이지 컴포넌트
+ * 특정 일정의 상세 정보를 보여주고 편집할 수 있는 페이지
+ */
 export default function ScheduleDetailPage() {
-  const { scheduleId } = useParams();
+  // useParams의 반환 타입을 명시적으로 지정하여 타입 에러 해결
+  const params = useParams();
+  const scheduleId = params?.scheduleId as string;
   const router = useRouter();
 
   const { isAuthenticated, isLoading } = useAuth();
@@ -42,7 +48,7 @@ export default function ScheduleDetailPage() {
       if (scheduleId) {
         try {
           setIsLoadingData(true);
-          await fetchScheduleDetailById(scheduleId as string, 1);
+          await fetchScheduleDetailById(scheduleId, 1);
           // 일정 데이터 로드 성공 후 채팅 데이터 로드 시작
           setIsChatLoading(true);
         } catch (error) {
@@ -78,9 +84,11 @@ export default function ScheduleDetailPage() {
     fetchScheduleData();
   }, [scheduleId, fetchScheduleDetailById, router]);
 
+  // 공유 모달 열기/닫기 핸들러
   const handleShareClick = () => setIsInviteModalOpen(true);
   const handleCloseModal = () => setIsInviteModalOpen(false);
 
+  // 알림창 닫기 핸들러
   const handleAlertClose = (
     event?: React.SyntheticEvent | Event,
     reason?: string
@@ -89,6 +97,7 @@ export default function ScheduleDetailPage() {
     setAlertOpen(false);
   };
 
+  // 일정 저장 핸들러
   const handleSaveSchedule = async () => {
     if (!scheduleDetail) return;
 
@@ -113,14 +122,17 @@ export default function ScheduleDetailPage() {
     }
   };
 
+  // 로딩 중일 때 로딩 화면 표시
   if (isLoading) {
     return <DataLoading />;
   }
 
+  // 인증되지 않았을 때 로그인 모달 표시
   if (!isAuthenticated) {
     return <LoginModal />;
   }
 
+  // 오류 발생 시 에러 화면 표시
   if (isError) {
     return (
       <div className={styles.errorContainer}>
@@ -143,6 +155,7 @@ export default function ScheduleDetailPage() {
     );
   }
 
+  // 데이터 로딩 중일 때 로딩 화면 표시
   if (isLoadingData) {
     return <DataLoading />;
   }

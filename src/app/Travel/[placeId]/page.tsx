@@ -84,7 +84,8 @@ const TravelDetailPage = () => {
     };
   }, []);
 
-  const { placeId } = useParams<{ placeId: string }>();
+  const params = useParams();
+  const placeId = params?.placeId as string;
   const placeIdNumber = parseInt(placeId, 10);
   const queryClient = useQueryClient();
 
