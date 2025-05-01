@@ -33,7 +33,9 @@ const permissions = [
 
 const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
   const router = useRouter();
-  const { scheduleId } = useParams();
+  // useParams의 반환 타입을 업데이트
+  const params = useParams();
+  const scheduleId = params?.scheduleId as string;
   const [email, setEmail] = useState<string>('');
   const { getDecryptedCookie } = saveLocalContent();
   const [selectedPermission, setSelectedPermission] = useState<string>('EDIT');

@@ -16,7 +16,7 @@ export const logoutApi = async () => {
         requiresAuth: true,
       }
     );
-    
+
     Cookies.remove('accessToken');
     Cookies.remove('nickname');
   }
