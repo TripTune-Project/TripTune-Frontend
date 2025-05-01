@@ -57,7 +57,7 @@ const Header = () => {
     );
 
     return () => clearInterval(interval);
-  }, [isAuthenticated]);
+  }, [isAuthenticated, handleTokenRefresh]);
 
   // 모달 제어 함수
   const openModal = () => setIsModalOpen(true);
