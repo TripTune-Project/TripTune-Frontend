@@ -148,6 +148,12 @@ const TravelDetailPage = () => {
       queryClient.invalidateQueries({
         queryKey: ['travelDetail', placeIdNumber],
       });
+      queryClient.invalidateQueries({
+        queryKey: ['travelListSearch'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['travelListByLocation'],
+      });
     },
     onError: (error) => {
       console.error('북마크 변경 오류:', error);
@@ -155,6 +161,10 @@ const TravelDetailPage = () => {
   });
 
   const handleBookmarkToggle = () => {
+    if (!isAuthenticated) {
+      setShowLoginModal(true);
+      return;
+    }
     toggleBookmarkMutation.mutate(data?.bookmarkStatus ?? false);
   };
 

@@ -24,6 +24,7 @@ import locationIcon from '../../../public/assets/images/여행지 탐색/홈화�
 import NoResultLayout from '@/components/Common/NoResult';
 import LoginModal from '@/components/Common/LoginModal';
 import useAuth from '@/hooks/useAuth';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const TravelPageContent = () => {
   const router = useRouter();
@@ -92,6 +93,34 @@ const TravelPageContent = () => {
   );
 
   const debouncedSearchTerm = useDebounce(searchTerm, 800);
+
+  const queryClient = useQueryClient();
+
+  const toggleBookmarkMutation = useMutation({
+    mutationFn: async ({ placeId, bookmarkStatus }: { placeId: number; bookmarkStatus: boolean }) => {
+      if (!isAuthenticated) {
+        setShowLoginModal(true);
+        return;
+      }
+      return bookmarkStatus
+        ? await BookMarkDeleteApi({ placeId })
+        : await BookMarkApi({ placeId });
+    },
+    onSuccess: () => {
+      if (isSearching) {
+        queryClient.invalidateQueries({ queryKey: ['travelListSearch'] });
+      } else {
+        queryClient.invalidateQueries({ queryKey: ['travelListByLocation'] });
+      }
+    },
+    onError: (error) => {
+      console.error('북마크 변경 오류:', error);
+    },
+  });
+
+  const toggleBookmark = (placeId: number, bookmarkStatus = false) => {
+    toggleBookmarkMutation.mutate({ placeId, bookmarkStatus });
+  };
 
   useEffect(() => {
     if (keyword) {
@@ -182,22 +211,6 @@ const TravelPageContent = () => {
   ) => {
     if (event.key === 'Enter') {
       handleSearch();
-    }
-  };
-
-  const toggleBookmark = async (placeId: number, bookmarkStatus = false) => {
-    if (!isAuthenticated) {
-      setShowLoginModal(true);
-      return;
-    }
-    try {
-      if (bookmarkStatus) {
-        await BookMarkDeleteApi({ placeId });
-      } else {
-        await BookMarkApi({ placeId });
-      }
-    } finally {
-      isSearching ? await refetchSearch() : await refetchLocation();
     }
   };
 
