@@ -92,12 +92,10 @@ const TravelDetailPage = () => {
   const { isAuthenticated } = useAuth();
   const [showLoginModal, setShowLoginModal] = useState(false);
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['travelDetail', placeIdNumber],
     queryFn: async () => {
-      const { getDecryptedCookie } = saveLocalContent();
-      const accessToken = getDecryptedCookie('accessToken');
-      const requiresAuth = !!accessToken;
+      const requiresAuth = isAuthenticated === true;
       const result = await fetchTravelDetailData(placeIdNumber, requiresAuth);
       if (result.success) {
         return result.data;
@@ -107,6 +105,13 @@ const TravelDetailPage = () => {
       }
     },
   });
+
+  // 인증 상태가 변경될 때 상세 정보 다시 불러오기
+  useEffect(() => {
+    if (isAuthenticated !== null) {
+      refetch();
+    }
+  }, [isAuthenticated, refetch]);
 
   const [isExpanded, setIsExpanded] = useState(false);
   const [showExpandButton, setShowExpandButton] = useState(false);

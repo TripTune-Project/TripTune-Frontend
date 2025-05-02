@@ -59,7 +59,7 @@ const TravelPageContent = () => {
   };
   
   const { isAuthenticated } = useAuth();
-  const requiresAuth = !!isAuthenticated;
+  const requiresAuth = isAuthenticated === true;
   const [showLoginModal, setShowLoginModal] = useState(false);
   
   const {
@@ -136,6 +136,17 @@ const TravelPageContent = () => {
       }
     }
   }, [permissionState, userCoordinates, geoErrorMessage]);
+  
+  // 인증 상태가 변경될 때 여행지 목록 다시 불러오기
+  useEffect(() => {
+    if (isAuthenticated !== null) {
+      if (isSearching) {
+        refetchSearch();
+      } else {
+        refetchLocation();
+      }
+    }
+  }, [isAuthenticated, isSearching, refetchLocation, refetchSearch]);
   
   const handleSearch = () => {
     if (searchTerm.trim()) {
