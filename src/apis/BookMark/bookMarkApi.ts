@@ -9,9 +9,9 @@ export const BookMarkApi = async (placeId: { placeId: number }) => {
 };
 
 // 북마크 등록 해제
-export const BookMarkDeleteApi = async ({ placeId }: { placeId: number }) => {
+export const BookMarkDeleteApi = async (placeId: { placeId: number }) => {
   const url = `/api/bookmarks/${placeId}`;
-  return await remove(url, undefined, {
+  return await remove(url, placeId, {
     requiresAuth: true,
   });
 };
