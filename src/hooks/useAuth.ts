@@ -82,7 +82,7 @@ const useAuth = () => {
    *
    * @returns 토큰 갱신 결과 프로미스
    */
-  const handleTokenRefresh = async () => {
+  const handleTokenRefresh = useCallback(async () => {
     const refreshToken = Cookies.get('refreshToken');
     if (!refreshToken) {
       setIsAuthenticated(false);
@@ -99,7 +99,7 @@ const useAuth = () => {
       setIsAuthenticated(false);
       setNickname('');
     }
-  };
+  }, [getDecryptedCookie]);
 
   // 컴포넌트 마운트 시 인증 상태 확인 및 주기적 갱신 설정
   useEffect(() => {
