@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState, Suspense, useMemo } from 'react';
+import React, { useEffect, useRef, useState, Suspense } from 'react';
 import Head from 'next/head';
 import Pagination from '@/components/Common/Pagination';
 import SearchPlacesMap from '@/components/Feature/Travel/SearchPlacesMap';
@@ -24,13 +24,12 @@ import locationIcon from '../../../public/assets/images/여행지 탐색/홈화�
 import NoResultLayout from '@/components/Common/NoResult';
 import LoginModal from '@/components/Common/LoginModal';
 import useAuth from '@/hooks/useAuth';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const TravelPageContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const keyword = searchParams?.get('keyword') || '';
-
+  
   const {
     currentPage,
     searchTerm,
@@ -39,11 +38,11 @@ const TravelPageContent = () => {
     setSearchTerm,
     setIsSearching,
   } = useTravelStore();
-
+  
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertSeverity, setAlertSeverity] = useState<AlertColor>('info');
-
+  
   const {
     userCoordinates,
     errorMessage: geoErrorMessage,
@@ -53,19 +52,16 @@ const TravelPageContent = () => {
     latitude: number;
     longitude: number;
   } | null>(null);
-
-  const defaultCoordinates = useMemo(
-    () => ({
-      latitude: 37.5642135,
-      longitude: 127.0016985,
-    }),
-    []
-  );
-
+  
+  const defaultCoordinates = {
+    latitude: 37.5642135,
+    longitude: 127.0016985,
+  };
+  
   const { isAuthenticated } = useAuth();
   const requiresAuth = !!isAuthenticated;
   const [showLoginModal, setShowLoginModal] = useState(false);
-
+  
   const {
     data: locationData,
     isLoading: isLoadingLocation,
@@ -76,7 +72,7 @@ const TravelPageContent = () => {
     requiresAuth,
     !isSearching
   );
-
+  
   const {
     data: searchData,
     isLoading: isLoadingSearch,
@@ -91,37 +87,9 @@ const TravelPageContent = () => {
     requiresAuth,
     isSearching
   );
-
+  
   const debouncedSearchTerm = useDebounce(searchTerm, 800);
-
-  const queryClient = useQueryClient();
-
-  const toggleBookmarkMutation = useMutation({
-    mutationFn: async ({ placeId, bookmarkStatus }: { placeId: number; bookmarkStatus: boolean }) => {
-      if (!isAuthenticated) {
-        setShowLoginModal(true);
-        return;
-      }
-      return bookmarkStatus
-        ? await BookMarkDeleteApi({ placeId })
-        : await BookMarkApi({ placeId });
-    },
-    onSuccess: () => {
-      if (isSearching) {
-        queryClient.invalidateQueries({ queryKey: ['travelListSearch'] });
-      } else {
-        queryClient.invalidateQueries({ queryKey: ['travelListByLocation'] });
-      }
-    },
-    onError: (error) => {
-      console.error('북마크 변경 오류:', error);
-    },
-  });
-
-  const toggleBookmark = (placeId: number, bookmarkStatus = false) => {
-    toggleBookmarkMutation.mutate({ placeId, bookmarkStatus });
-  };
-
+  
   useEffect(() => {
     if (keyword) {
       setSearchTerm(keyword);
@@ -129,7 +97,7 @@ const TravelPageContent = () => {
       setCurrentPage(1);
     }
   }, [keyword, setSearchTerm, setIsSearching, setCurrentPage]);
-
+  
   useEffect(() => {
     if (debouncedSearchTerm.trim()) {
       setIsSearching(true);
@@ -155,7 +123,7 @@ const TravelPageContent = () => {
     setCurrentPage,
     setIsSearching,
   ]);
-
+  
   useEffect(() => {
     if (permissionState === 'granted' && userCoordinates) {
       setCoordinates(userCoordinates);
@@ -167,8 +135,8 @@ const TravelPageContent = () => {
         setAlertOpen(true);
       }
     }
-  }, [permissionState, userCoordinates, geoErrorMessage, defaultCoordinates]);
-
+  }, [permissionState, userCoordinates, geoErrorMessage]);
+  
   const handleSearch = () => {
     if (searchTerm.trim()) {
       setIsSearching(true);
@@ -180,24 +148,22 @@ const TravelPageContent = () => {
       setAlertOpen(true);
     }
   };
-
+  
   const handleSearchInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const input = event.target.value;
     const regex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]*$/;
-
+    
     if (regex.test(input)) {
       setSearchTerm(input);
     } else {
-      setAlertMessage(
-        '특수문자는 사용할 수 없습니다. 다른 검색어를 입력해 주세요.'
-      );
+      setAlertMessage('특수문자는 사용할 수 없습니다. 다른 검색어를 입력해 주세요.');
       setAlertSeverity('warning');
       setAlertOpen(true);
     }
   };
-
+  
   const handleSearchInputBlur = () => {
     if (searchTerm.trim() === '') {
       setIsSearching(false);
@@ -205,7 +171,7 @@ const TravelPageContent = () => {
       refetchLocation();
     }
   };
-
+  
   const handleSearchKeyPress = (
     event: React.KeyboardEvent<HTMLInputElement>
   ) => {
@@ -213,7 +179,23 @@ const TravelPageContent = () => {
       handleSearch();
     }
   };
-
+  
+  const toggleBookmark = async (placeId: number, bookmarkStatus = false) => {
+    if (!isAuthenticated) {
+      setShowLoginModal(true);
+      return;
+    }
+    try {
+      if (bookmarkStatus) {
+        await BookMarkDeleteApi({ placeId });
+      } else {
+        await BookMarkApi({ placeId });
+      }
+    } finally {
+      isSearching ? await refetchSearch() : await refetchLocation();
+    }
+  };
+  
   const handleAlertClose = (
     event?: React.SyntheticEvent | Event,
     reason?: string
@@ -221,11 +203,11 @@ const TravelPageContent = () => {
     if (reason === 'clickaway') return;
     setAlertOpen(false);
   };
-
+  
   const handleDetailClick = (placeId: number) => {
     router.push(`/Travel/${placeId}`);
   };
-
+  
   const calculateTravelTime = (distance: number) => {
     if (isNaN(distance)) {
       return {
@@ -233,35 +215,35 @@ const TravelPageContent = () => {
         driving: '차로 거리 정보 없음',
       };
     }
-
+    
     const distanceInKm = Math.floor(distance * 10) / 10;
     const walkingSpeed = 5;
     const drivingSpeed = 50;
-
+    
     const walkingTime = Math.round((distanceInKm / walkingSpeed) * 60);
     const drivingTime = Math.round((distanceInKm / drivingSpeed) * 60);
-
+    
     return {
       walking: `도보 ${walkingTime}분 (${distanceInKm} km)`,
       driving: `차로 ${drivingTime}분 (${distanceInKm} km)`,
     };
   };
-
+  
   const places = isSearching
     ? searchData?.data?.content
     : locationData?.data?.content;
-
+  
   const totalPages = isSearching
     ? (searchData?.data?.totalPages ?? 0)
     : (locationData?.data?.totalPages ?? 0);
-
+  
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo(0, 0);
   };
-
+  
   const inputRef = useRef<HTMLInputElement>(null);
-
+  
   return (
     <>
       <Head>

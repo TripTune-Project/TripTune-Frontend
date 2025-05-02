@@ -30,43 +30,43 @@ import saveLocalContent from '@/utils/saveLocalContent';
 import useAuth from '@/hooks/useAuth';
 
 const StyledSwiperContainer = styled.div`
-  position: relative;
-  width: 749px;
-  height: 512px;
+    position: relative;
+    width: 749px;
+    height: 512px;
 `;
 
 const StyledSwiperButtonPrev = styled.button`
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%);
-  border: none;
-  cursor: pointer;
-  z-index: 10;
-  user-select: none;
-  width: 50px;
-  height: 50px;
-  background-image: url('/assets/images/여행지 탐색/상세화면/placeDetail_imageLeftBtn.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+    user-select: none;
+    width: 50px;
+    height: 50px;
+    background-image: url('/assets/images/여행지 탐색/상세화면/placeDetail_imageLeftBtn.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 `;
 
 const StyledSwiperButtonNext = styled.button`
-  position: absolute;
-  top: 50%;
-  right: 0;
-  transform: translateY(-50%);
-  border: none;
-  cursor: pointer;
-  z-index: 10;
-  user-select: none;
-  width: 50px;
-  height: 50px;
-  background-image: url('/assets/images/여행지 탐색/상세화면/placeDetail_imageRightBtn.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+    user-select: none;
+    width: 50px;
+    height: 50px;
+    background-image: url('/assets/images/여행지 탐색/상세화면/placeDetail_imageRightBtn.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 `;
 
 const fetchTravelDetailData = async (
@@ -83,15 +83,15 @@ const TravelDetailPage = () => {
       document.body.style.overflow = 'hidden';
     };
   }, []);
-
+  
   const params = useParams();
   const placeId = params?.placeId as string;
   const placeIdNumber = parseInt(placeId, 10);
   const queryClient = useQueryClient();
-
+  
   const { isAuthenticated } = useAuth();
   const [showLoginModal, setShowLoginModal] = useState(false);
-
+  
   const { data, isLoading } = useQuery({
     queryKey: ['travelDetail', placeIdNumber],
     queryFn: async () => {
@@ -107,16 +107,16 @@ const TravelDetailPage = () => {
       }
     },
   });
-
+  
   const [isExpanded, setIsExpanded] = useState(false);
   const [showExpandButton, setShowExpandButton] = useState(false);
-
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  
   const descriptionRef = useRef<HTMLParagraphElement | null>(null);
   const prevButtonRef = useRef<HTMLButtonElement | null>(null);
   const nextButtonRef = useRef<HTMLButtonElement | null>(null);
-
+  
   useEffect(() => {
     if (descriptionRef.current) {
       requestAnimationFrame(() => {
@@ -133,7 +133,7 @@ const TravelDetailPage = () => {
       });
     }
   }, [isExpanded, data]);
-
+  
   const toggleBookmarkMutation = useMutation({
     mutationFn: async (bookmarkStatus: boolean) => {
       if (!isAuthenticated) {
@@ -148,50 +148,40 @@ const TravelDetailPage = () => {
       queryClient.invalidateQueries({
         queryKey: ['travelDetail', placeIdNumber],
       });
-      queryClient.invalidateQueries({
-        queryKey: ['travelListSearch'],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['travelListByLocation'],
-      });
     },
     onError: (error) => {
       console.error('북마크 변경 오류:', error);
     },
   });
-
+  
   const handleBookmarkToggle = () => {
-    if (!isAuthenticated) {
-      setShowLoginModal(true);
-      return;
-    }
     toggleBookmarkMutation.mutate(data?.bookmarkStatus ?? false);
   };
-
+  
   const handleScheduleAdd = () => {
     if (!isAuthenticated) {
       setShowLoginModal(true);
       return;
     }
-
+    
     setIsModalOpen(true);
   };
-
+  
   const closeModal = () => {
     setIsModalOpen(false);
   };
-
+  
   const UseTimeUI = ({ useTime }: { useTime: string }) => (
     <div className={styles.useTimeLabel}>
       <Image width={18} height={18} src={timeIcon} alt='이용 시간' />
       <p>이용시간</p> {useTime}
     </div>
   );
-
+  
   const CheckInOutUI = ({
-    checkInTime,
-    checkOutTime,
-  }: {
+                          checkInTime,
+                          checkOutTime,
+                        }: {
     checkInTime: string;
     checkOutTime: string;
   }) => (
@@ -201,7 +191,7 @@ const TravelDetailPage = () => {
       <p>퇴실시간</p> {checkOutTime}
     </div>
   );
-
+  
   const renderTimeContent = (
     checkInTime?: string,
     checkOutTime?: string,
@@ -220,7 +210,7 @@ const TravelDetailPage = () => {
       return null;
     }
   };
-
+  
   const formatDescriptionWithParagraphs = (text: string) => {
     const paragraphs = text.split(/\n+/);
     return paragraphs.map((paragraph, index) => (
@@ -231,13 +221,13 @@ const TravelDetailPage = () => {
       </React.Fragment>
     ));
   };
-
+  
   const handleExpandClick = () => {
     setIsExpanded(!isExpanded);
   };
-
+  
   if (isLoading || !data) return <DataLoading />;
-
+  
   const {
     placeName,
     country,
@@ -255,15 +245,15 @@ const TravelDetailPage = () => {
     checkInTime,
     bookmarkStatus,
   } = data;
-
+  
   const extractHomepageUrl = (htmlString: string) => {
     if (!htmlString) return '';
     const urlMatch = htmlString.match(/href="([^"]*)"/);
     return urlMatch ? urlMatch[1] : '';
   };
-
+  
   const homepageUrl = homepage ? extractHomepageUrl(homepage) : '';
-
+  
   return (
     <>
       <Head>
