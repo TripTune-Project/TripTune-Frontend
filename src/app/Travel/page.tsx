@@ -180,19 +180,34 @@ const TravelPageContent = () => {
     }
   };
   
+  // TODO : 북마크 토글 이슈 점검 중!!!
   const toggleBookmark = async (placeId: number, bookmarkStatus = false) => {
+    console.log('[토글북마크] 시작 ▶', { placeId, bookmarkStatus });
+    
     if (!isAuthenticated) {
+      console.log('[토글북마크] 인증 안 됨, 로그인 모달 표시');
       setShowLoginModal(true);
       return;
     }
+    
     try {
       if (bookmarkStatus) {
-        await BookMarkDeleteApi({ placeId });
+        const res = await BookMarkDeleteApi({ placeId });
+        console.log('[토글북마크] 북마크 삭제 응답 ◀', res);
       } else {
-        await BookMarkApi({ placeId });
+        const res = await BookMarkApi({ placeId });
+        console.log('[토글북마크] 북마크 등록 응답 ◀', res);
       }
+    } catch (err) {
+      console.error('[토글북마크] 에러 발생 ✖', err);
     } finally {
-      isSearching ? await refetchSearch() : await refetchLocation();
+      console.log('[토글북마크] 목록 재조회 시작');
+      if (isSearching) {
+        await refetchSearch();
+      } else {
+        await refetchLocation();
+      }
+      console.log('[토글북마크] 완료 ✔');
     }
   };
   
