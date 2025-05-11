@@ -123,34 +123,41 @@ export default function SchedulePage() {
       ? isFetchingNextAllPage
       : isFetchingNextSharedPage;
 
-  // 무한 스크롤을 위한 Intersection Observer 설정
+  // 무한 스크롤을 위한 Intersection Observer 설정 및 다음 페이지 로드 로직
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsIntersecting(entry.isIntersecting);
-      },
-      { threshold: 0.1 }
-    );
-
+    // IntersectionObserver 콜백 함수 정의
+    const handleObserver = (entries: IntersectionObserverEntry[]) => {
+      const [entry] = entries;
+      
+      // 관찰 대상이 화면에 보이고, 더 로드할 페이지가 있고, 현재 로딩 중이 아닐 때
+      if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    };
+    
+    // IntersectionObserver 설정 - 관찰 대상이 20% 보이면 콜백 실행
+    const observer = new IntersectionObserver(handleObserver, {
+      root: null, // viewport 기준
+      rootMargin: '0px',
+      threshold: 0.2 // 20% 이상 보이면 콜백 실행
+    });
+  
+    // 현재 관찰 대상 요소
     const currentObserverRef = observerRef.current;
-
+  
+    // 관찰 대상이 있으면 관찰 시작
     if (currentObserverRef) {
       observer.observe(currentObserverRef);
     }
-
+  
+    // 컴포넌트 언마운트 시 관찰 중지
     return () => {
       if (currentObserverRef) {
         observer.unobserve(currentObserverRef);
       }
+      observer.disconnect();
     };
-  }, []);
-
-  // 관찰자 요소가 화면에 보일 때 다음 페이지 데이터 로드
-  useEffect(() => {
-    if (isIntersecting && hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
-    }
-  }, [isIntersecting, hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   /**
    * 새 일정 모달 열기 핸들러
@@ -269,16 +276,16 @@ export default function SchedulePage() {
    * @returns 렌더링할 JSX 요소
    */
   const renderSchedules = (
-    scheduleListData: ApiResponse<ScheduleList> | undefined,
+    scheduleListData: ApiResponse<ScheduleList>[] | undefined,
     isSearching: boolean
   ) => {
-    // 데이터가 없거나 빈 배열인 경우
-    if (!scheduleListData?.data || scheduleListData.data.content.length === 0) {
+    // 데이터가 없거나 모든 페이지에 데이터가 없는 경우
+    if (!scheduleListData || scheduleListData.length === 0 || !scheduleListData[0]?.data) {
       // 검색 결과가 없는 경우
       if (isSearching) {
         return <NoResultLayout />;
       }
-
+  
       // 일정이 없는 경우
       return (
         <div className={styles.noScheduleContainer}>
@@ -295,9 +302,36 @@ export default function SchedulePage() {
         </div>
       );
     }
-
+  
+    // 모든 페이지의 일정을 하나의 배열로 합침
+    const allSchedules: Schedule[] = scheduleListData.flatMap(
+      (page) => page.data?.content || []
+    );
+  
+    // 일정이 없는 경우
+    if (allSchedules.length === 0) {
+      if (isSearching) {
+        return <NoResultLayout />;
+      }
+      
+      return (
+        <div className={styles.noScheduleContainer}>
+          <Image
+            src={NoscheduleIcon}
+            alt='일정 없음 아이콘'
+            width={286}
+            height={180}
+          />
+          <p className={styles.noScheduleMessage}>생성된 일정이 없습니다.</p>
+          <p className={styles.noScheduleSubMessage}>
+            일정을 만들어 멋진 여행을 준비해보세요!
+          </p>
+        </div>
+      );
+    }
+  
     // 일정 목록 렌더링
-    return scheduleListData.data.content.map((schedule: Schedule) => (
+    return allSchedules.map((schedule: Schedule) => (
       <div
         key={schedule.scheduleId}
         className={styles.scheduleItem}
@@ -472,15 +506,23 @@ export default function SchedulePage() {
         <div className={styles.scheduleList}>
           {renderSchedules(
             isSearching
-              ? (searchData?.pages[0] as ApiResponse<ScheduleList>)
+              ? searchData?.pages as ApiResponse<ScheduleList>[]
               : selectedTab === 'all'
-                ? allScheduleData?.pages[0]
-                : sharedScheduleData?.pages[0],
+                ? allScheduleData?.pages as ApiResponse<ScheduleList>[]
+                : sharedScheduleData?.pages as ApiResponse<ScheduleList>[],
             isSearching
           )}
         </div>
-        <div ref={observerRef} className={styles.loadingArea}>
-          {isFetchingNextPage && <DataLoading />}
+        <div
+          ref={observerRef}
+          className={styles.loadingArea}
+          style={{ minHeight: '100px', display: 'flex', justifyContent: 'center', marginTop: '20px' }}
+        >
+          {isFetchingNextPage ? (
+            <DataLoading />
+          ) : (
+            hasNextPage && <div style={{ padding: '20px', textAlign: 'center' }}>더 많은 일정을 불러오려면 스크롤하세요</div>
+          )}
         </div>
         {isDeleteModalOpen && (
           <DeleteModal
