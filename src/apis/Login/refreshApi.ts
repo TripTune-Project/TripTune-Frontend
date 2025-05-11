@@ -19,13 +19,13 @@ export const refreshApi = async (): Promise<{
         requiresAuth: false,
       }
     );
-    
+
     const { accessToken, nickname } = response.data;
-    
+
     const { setEncryptedCookie } = saveLocalContent();
     setEncryptedCookie('accessToken', accessToken);
     setEncryptedCookie('nickname', nickname);
-    
+
     return { accessToken, nickname };
   } catch (error: unknown) {
     console.error('리프레시 중 오류 발생:', error);

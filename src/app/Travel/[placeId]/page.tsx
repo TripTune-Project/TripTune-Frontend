@@ -106,7 +106,6 @@ const TravelDetailPage = () => {
     },
   });
 
-  // 인증 상태가 변경될 때 상세 정보 다시 불러오기
   useEffect(() => {
     if (isAuthenticated !== null) {
       refetch();
@@ -139,44 +138,29 @@ const TravelDetailPage = () => {
     }
   }, [isExpanded, data]);
 
-  // TODO : 북마크 추가 !!!
   const toggleBookmarkMutation = useMutation({
     mutationFn: async (bookmarkStatus: boolean) => {
-      console.log('[상세페이지 북마크] mutationFn 시작 ▶', bookmarkStatus);
-
       if (!isAuthenticated) {
-        console.log('[상세페이지 북마크] 인증 안 됨, 로그인 모달 표시');
         setShowLoginModal(true);
         return;
       }
 
-      // 실제 API 호출
-      const res = bookmarkStatus
+      const response = bookmarkStatus
         ? await BookMarkDeleteApi({ placeId: placeIdNumber })
         : await BookMarkApi({ placeId: placeIdNumber });
-      console.log('[상세페이지 북마크] API 응답 ◀', res);
 
-      return res;
+      return response;
     },
     onSuccess: () => {
-      console.log('[상세페이지 북마크] 성공 ✔, 쿼리 무효화');
       queryClient.invalidateQueries({
         queryKey: ['travelDetail', placeIdNumber],
       });
     },
-    onError: (error) => {
-      console.error('[상세페이지 북마크] 에러 ✖', error);
-    },
-    onSettled: () => {
-      console.log('[상세페이지 북마크] mutation 완료');
-    },
+    onError: (error) => {},
+    onSettled: () => {},
   });
 
   const handleBookmarkToggle = () => {
-    console.log(
-      '[상세페이지 북마크] 버튼 클릭, 현재 상태 ▶',
-      data?.bookmarkStatus
-    );
     toggleBookmarkMutation.mutate(data?.bookmarkStatus ?? false);
   };
 
