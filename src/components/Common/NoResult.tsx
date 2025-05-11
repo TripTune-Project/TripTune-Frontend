@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import emtpyBookmarkIcon from '../../../public/assets/images/마이페이지/emtpyBookmarkIcon.png';
 import AlertIcon from '../../../public/assets/images/여행지 탐색/홈화면/alertIcon.png';
 
 export default function NoResultLayout() {
@@ -62,15 +63,21 @@ export default function NoResultLayout() {
     <div style={styles.noScheduleContainer}>
       <p style={styles.noResults}>
         <Image
-          src={AlertIcon}
-          alt='no-schedule-root'
+          src={isBookmarkPage ? emtpyBookmarkIcon : AlertIcon}
+          alt={isBookmarkPage ? 'empty-bookmark' : 'no-schedule-root'}
           width={80}
           height={80}
           style={{ marginLeft: '120px' }}
         />
-        <div style={styles.noText}>검색 결과가 없습니다.</div>
+        <div style={styles.noText}>
+          {isBookmarkPage ? '북마크한 여행지가 없습니다.' : '검색 결과가 없습니다.'}
+        </div>
         <br />
-        <p>검색어의 철자와 띄어쓰기가 정확한지 확인해주세요.</p>
+        <p>
+          {isBookmarkPage
+            ? '관심있는 여행지의 북마크를 추가해보세요!'
+            : '검색어의 철자와 띄어쓰기가 정확한지 확인해주세요.'}
+        </p>
       </p>
     </div>
   );
