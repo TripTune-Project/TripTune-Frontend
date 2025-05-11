@@ -160,9 +160,6 @@ const EmailVerification = ({
           type='button'
           onClick={() => handleEmailVerificationRequest(getValues('email'))}
           className={styles.emailButton}
-          disabled={
-            !getValues('email') || !validateEmail(getValues('email')) || loading
-          }
         >
           {loading ? <VerificationLoading /> : '인증 요청'}
         </button>

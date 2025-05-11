@@ -220,7 +220,6 @@ const Account = () => {
                       };
                       handleEmailVerification(emailData);
                     }}
-                    disabled={emailRequestLoading}
                   >
                     {emailRequestLoading ? (
                       <VerificationLoading />
