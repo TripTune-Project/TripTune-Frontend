@@ -88,15 +88,31 @@ const CalendarLayout = ({
       }
     } else if (start) {
       // 시작 날짜만 선택된 경우
-      setStartDate(start);
-      setEndDate(null);
+      if (!endDate) {
+        // 종료일이 없는 경우 시작일 설정
+        setStartDate(start);
+      } else if (start > endDate) {
+        // 선택된 날짜가 기존 종료일보다 이후인 경우
+        // 기존 종료일을 시작일로, 선택된 날짜를 종료일로 설정
+        setStartDate(endDate);
+        setEndDate(start);
+      } else {
+        // 선택된 날짜가 기존 종료일보다 이전인 경우
+        setStartDate(start);
+      }
     } else if (end) {
       // 종료 날짜만 선택된 경우
-      if (!startDate || end > startDate) {
+      if (!startDate) {
+        // 시작일이 없는 경우 종료일 설정
         setEndDate(end);
-      } else {
-        setStartDate(end);
+      } else if (end < startDate) {
+        // 선택된 날짜가 기존 시작일보다 이전인 경우
+        // 선택된 날짜를 시작일로, 기존 시작일을 종료일로 설정
         setEndDate(startDate);
+        setStartDate(end);
+      } else {
+        // 선택된 날짜가 기존 시작일보다 이후인 경우
+        setEndDate(end);
       }
     }
   };
