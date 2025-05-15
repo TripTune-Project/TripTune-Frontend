@@ -21,7 +21,7 @@
 .header {
   position: relative;
   width: 100%;
-  height: 100%;
+  height: 91px;
   background-size: cover;
   background-position: center;
   display: flex;
@@ -43,12 +43,15 @@
   justify-content: space-between;
   width: 90%;
   z-index: 1;
+  height: 100%; /* 부모 높이에 맞춤 */
 }
 
 .navMenu {
   display: flex;
   gap: 80px;
   color: #fff;
+  align-items: center; /* 수직 가운데 정렬 추가 */
+  height: 100%; /* 부모 높이에 맞춤 */
 }
 
 .navLink,
