@@ -243,8 +243,14 @@ const DeleteUserModal = ({
         <PasswordSection>
           <PasswordLabel>비밀번호</PasswordLabel>
           <PasswordNotice>
-            ※ 현재 비밀번호를 입력하고 탈퇴하기를 누르면 위 내용에 동의하는
-            것으로 간주됩니다.
+            <li>
+              현재 비밀번호를 입력하고 탈퇴하기를 누르면 위 내용에 동의하는
+              것으로 간주됩니다.
+            </li>
+            <li>
+              소셜 로그인 회원의 경우 [로그인 {'>'} 비밀번호 찾기]를 통해
+              비밀번호를 설정한 후 탈퇴를 진행해주세요.
+            </li>
           </PasswordNotice>
           <PasswordInput>
             <InputField

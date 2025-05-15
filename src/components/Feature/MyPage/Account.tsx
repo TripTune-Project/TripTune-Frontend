@@ -360,6 +360,10 @@ const Account = () => {
                     errors.rePassword ? styles.inputError : styles.input
                   }
                 />
+                <li>
+                  소셜 로그인 회원의 경우 [로그인 {'>'} 비밀번호 찾기] 를 통해
+                  이메일로 전송된 링크에서 비밀번호 설정이 가능합니다.
+                </li>
                 {errors.rePassword && (
                   <p className={styles.errorText}>
                     {errors.rePassword.message}
