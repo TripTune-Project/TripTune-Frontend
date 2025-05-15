@@ -274,6 +274,12 @@ const Account = () => {
                 )}
                 <div className={styles.actionRow}>
                   <button
+                    className={styles.cancelBtn}
+                    onClick={() => setIsEditing(false)}
+                  >
+                    취소
+                  </button>
+                  <button
                     className={styles.saveBtn}
                     onClick={handleSubmit((data) => {
                       const emailData: AccountEmailFormData = {
@@ -285,12 +291,6 @@ const Account = () => {
                     disabled={isEmailSaveDisabled}
                   >
                     저장
-                  </button>
-                  <button
-                    className={styles.cancelBtn}
-                    onClick={() => setIsEditing(false)}
-                  >
-                    취소
                   </button>
                 </div>
               </div>
