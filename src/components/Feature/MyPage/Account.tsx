@@ -367,6 +367,12 @@ const Account = () => {
                 )}
                 <div className={styles.actionRow}>
                   <button
+                    className={styles.cancelBtn}
+                    onClick={() => setIsEditingPwd(false)}
+                  >
+                    취소
+                  </button>
+                  <button
                     className={styles.saveBtn}
                     onClick={handleSubmit((data) => {
                       const passwordData: AccountPasswordFormData = {
@@ -379,12 +385,6 @@ const Account = () => {
                     disabled={isPasswordSaveDisabled}
                   >
                     저장
-                  </button>
-                  <button
-                    className={styles.cancelBtn}
-                    onClick={() => setIsEditingPwd(false)}
-                  >
-                    취소
                   </button>
                 </div>
               </div>
