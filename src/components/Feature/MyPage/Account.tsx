@@ -190,7 +190,7 @@ const Account = () => {
   const newPassword = watch('newPassword');
   const rePassword = watch('rePassword');
 
-  const isEmailSaveDisabled = !email || !verificationCode;
+  const isEmailSaveDisabled = false;
   const isPasswordSaveDisabled = !nowPassword || !newPassword || !rePassword;
 
   return (
@@ -268,6 +268,12 @@ const Account = () => {
                 )}
                 <div className={styles.actionRow}>
                   <button
+                    className={styles.cancelBtn}
+                    onClick={() => setIsEditing(false)}
+                  >
+                    취소
+                  </button>
+                  <button
                     className={styles.saveBtn}
                     onClick={handleSubmit((data) => {
                       const emailData: AccountEmailFormData = {
@@ -279,12 +285,6 @@ const Account = () => {
                     disabled={isEmailSaveDisabled}
                   >
                     저장
-                  </button>
-                  <button
-                    className={styles.cancelBtn}
-                    onClick={() => setIsEditing(false)}
-                  >
-                    취소
                   </button>
                 </div>
               </div>
@@ -354,12 +354,22 @@ const Account = () => {
                     errors.rePassword ? styles.inputError : styles.input
                   }
                 />
+                <li>
+                  소셜 로그인 회원의 경우 [로그인 {'>'} 비밀번호 찾기] 를 통해
+                  이메일로 전송된 링크에서 비밀번호 설정이 가능합니다.
+                </li>
                 {errors.rePassword && (
                   <p className={styles.errorText}>
                     {errors.rePassword.message}
                   </p>
                 )}
                 <div className={styles.actionRow}>
+                  <button
+                    className={styles.cancelBtn}
+                    onClick={() => setIsEditingPwd(false)}
+                  >
+                    취소
+                  </button>
                   <button
                     className={styles.saveBtn}
                     onClick={handleSubmit((data) => {
@@ -374,19 +384,13 @@ const Account = () => {
                   >
                     저장
                   </button>
-                  <button
-                    className={styles.cancelBtn}
-                    onClick={() => setIsEditingPwd(false)}
-                  >
-                    취소
-                  </button>
                 </div>
               </div>
             ) : (
               <>
                 <input
                   type='text'
-                  value='비밀번호 입력'
+                  value='비밀번호 변경'
                   readOnly
                   className={styles.input}
                 />

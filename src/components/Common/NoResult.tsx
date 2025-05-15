@@ -65,12 +65,14 @@ export default function NoResultLayout() {
         <Image
           src={isBookmarkPage ? emtpyBookmarkIcon : AlertIcon}
           alt={isBookmarkPage ? 'empty-bookmark' : 'no-schedule-root'}
-          width={80}
-          height={80}
+          width={isBookmarkPage ? 206 : 80}
+          height={isBookmarkPage ? 118 : 80}
           style={{ marginLeft: '120px' }}
         />
         <div style={styles.noText}>
-          {isBookmarkPage ? '북마크한 여행지가 없습니다.' : '검색 결과가 없습니다.'}
+          {isBookmarkPage
+            ? '북마크한 여행지가 없습니다.'
+            : '검색 결과가 없습니다.'}
         </div>
         <br />
         <p>

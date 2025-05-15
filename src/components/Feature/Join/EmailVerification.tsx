@@ -25,12 +25,12 @@ interface JoinFormData {
 }
 
 interface EmailVerificationProps {
-  register: UseFormRegister<JoinFormData>; // react-hook-form 등록 함수
-  getValues: UseFormGetValues<JoinFormData>; // 폼 값 가져오기 함수
-  setIsVerificationComplete: React.Dispatch<React.SetStateAction<boolean>>; // 인증 완료 상태 업데이트 함수
-  isVerificationComplete: boolean; // 인증 완료 여부
-  errors: FieldErrors<JoinFormData>; // 폼 유효성 검사 오류
-  errorMessage: string; // 에러 메시지
+  register: UseFormRegister<JoinFormData>;
+  getValues: UseFormGetValues<JoinFormData>;
+  setIsVerificationComplete: React.Dispatch<React.SetStateAction<boolean>>;
+  isVerificationComplete: boolean;
+  errors: FieldErrors<JoinFormData>;
+  errorMessage: string;
 }
 
 const EmailVerification = ({
@@ -40,15 +40,14 @@ const EmailVerification = ({
   isVerificationComplete,
   errors,
 }: EmailVerificationProps) => {
-  // 상태 관리
-  const [isVerificationSent, setIsVerificationSent] = useState(false); // 인증 메일 발송 여부
-  const [isEmailDisabled, setIsEmailDisabled] = useState(false); // 이메일 입력 비활성화 여부
-  const [notificationMessage, setNotificationMessage] = useState(''); // 알림 메시지
-  const [openSnackbar, setOpenSnackbar] = useState(false); // 스낵바 표시 여부
-  const [alertSeverity, setAlertSeverity] = useState<'success' | 'error'>( // 알림 종류
+  const [isVerificationSent, setIsVerificationSent] = useState(false);
+  const [isEmailDisabled, setIsEmailDisabled] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState('');
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [alertSeverity, setAlertSeverity] = useState<'success' | 'error'>(
     'success'
   );
-  const [loading, setLoading] = useState(false); // 로딩 상태
+  const [loading, setLoading] = useState(false);
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
@@ -63,31 +62,18 @@ const EmailVerification = ({
     }
     setLoading(true);
     try {
-      const response = await requestEmailVerification(email);
-
-      if (!response.success && response.error) {
-        setAlertSeverity('error');
-        setNotificationMessage(response.error || response.message);
-        setOpenSnackbar(true);
-        return;
-      }
-
+      await requestEmailVerification(email);
       setIsVerificationSent(true);
       setIsEmailDisabled(true);
       setAlertSeverity('success');
       setNotificationMessage(
-        response.message || '인증 코드가 발송되었습니다. 이메일을 확인해주세요.'
+        '인증 코드가 발송되었습니다. 이메일을 확인해주세요.'
       );
       setOpenSnackbar(true);
     } catch (error) {
       if (error instanceof Error) {
         setAlertSeverity('error');
-        const errorMsg = error.message;
-        if (errorMsg.includes('duplicate') || errorMsg.includes('중복')) {
-          setNotificationMessage('이미 사용 중인 이메일 주소입니다.');
-        } else {
-          setNotificationMessage(errorMsg);
-        }
+        setNotificationMessage(error.message);
       } else {
         setAlertSeverity('error');
         setNotificationMessage(
@@ -110,30 +96,15 @@ const EmailVerification = ({
     }
     setLoading(true);
     try {
-      const response = await verifyEmail(email, authCode);
-
-      if (!response.success && response.error) {
-        setAlertSeverity('error');
-        setNotificationMessage(response.error || response.message);
-        setOpenSnackbar(true);
-        return;
-      }
-
+      await verifyEmail(email, authCode);
       setIsVerificationComplete(true);
       setAlertSeverity('success');
-      setNotificationMessage(
-        response.message || '이메일 인증이 완료되었습니다.'
-      );
+      setNotificationMessage('이메일 인증이 완료되었습니다.');
       setOpenSnackbar(true);
     } catch (error) {
       if (error instanceof Error) {
         setAlertSeverity('error');
-        const errorMsg = error.message;
-        if (errorMsg.includes('invalid') || errorMsg.includes('유효하지 않')) {
-          setNotificationMessage('인증 코드가 유효하지 않습니다.');
-        } else {
-          setNotificationMessage(errorMsg);
-        }
+        setNotificationMessage(error.message);
       } else {
         setAlertSeverity('error');
         setNotificationMessage('인증 코드가 유효하지 않습니다.');
@@ -160,6 +131,7 @@ const EmailVerification = ({
           type='button'
           onClick={() => handleEmailVerificationRequest(getValues('email'))}
           className={styles.emailButton}
+          disabled={loading}
         >
           {loading ? <VerificationLoading /> : '인증 요청'}
         </button>
@@ -182,7 +154,7 @@ const EmailVerification = ({
             type='button'
             onClick={handleEmailVerification}
             className={styles.verifyButton}
-            disabled={!getValues('authCode') || loading}
+            disabled={loading}
           >
             {loading ? <VerificationLoading /> : '인증 확인'}
           </button>

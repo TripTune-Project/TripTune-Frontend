@@ -19,12 +19,12 @@ interface CalendarLayoutProps {
 }
 
 const CalendarLayout = ({
-  mode,
-  initialStartDate,
-  initialEndDate,
-  travelName = '',
-  onClose,
-}: CalendarLayoutProps) => {
+                          mode,
+                          initialStartDate,
+                          initialEndDate,
+                          travelName = '',
+                          onClose,
+                        }: CalendarLayoutProps) => {
   const today = new Date();
   const { updateScheduleDetail } = useTravelStore();
   const [startDate, setStartDate] = useState<Date | null>(
