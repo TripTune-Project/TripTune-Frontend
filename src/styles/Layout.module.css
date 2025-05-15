@@ -75,9 +75,8 @@
 }
 
 .logoImg {
-  width: 183px;
-  height: 55px;
-  flex-shrink: 0;
+  max-width: 183px;
+  height: auto;
   margin-top: 40px;
   margin-left: 125px;
 }
