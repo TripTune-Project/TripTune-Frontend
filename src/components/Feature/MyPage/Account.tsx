@@ -392,7 +392,7 @@ const Account = () => {
               <>
                 <input
                   type='text'
-                  value='비밀번호 입력'
+                  value='비밀번호 변경'
                   readOnly
                   className={styles.input}
                 />

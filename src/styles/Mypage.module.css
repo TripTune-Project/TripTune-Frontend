@@ -496,17 +496,6 @@
   border: none;
 }
 
-.editBtn {
-  background-color: #f5f5f5;
-  color: #333;
-  font-size: 15px;
-  font-weight: 700;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  border: none;
-}
-
 .nicknameEditContainer {
   width: fit-content;
   display: flex;
@@ -752,7 +741,6 @@
   color: #333333;
   font-size: 15px;
   font-weight: 700;
-  border-radius: 5px;
   cursor: pointer;
   border: none;
 }
@@ -840,18 +828,6 @@
 
 .cancelBtn {
   width: 81px;
-  height: 47px;
-  background-color: #f5f5f5;
-  color: #333333;
-  font-size: 15px;
-  font-weight: 700;
-  border-radius: 5px;
-  cursor: pointer;
-  border: none;
-}
-
-.editBtn {
-  width: 100px;
   height: 47px;
   background-color: #f5f5f5;
   color: #333333;
