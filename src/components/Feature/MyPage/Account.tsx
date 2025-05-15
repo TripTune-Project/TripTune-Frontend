@@ -24,13 +24,12 @@ type AccountFormData = AccountEmailFormData & AccountPasswordFormData;
 
 const Account = () => {
   const router = useRouter();
-  const { userData } = useMyPage();
+  const { userData, fetchUserData } = useMyPage();
 
-  // 로딩 상태 분리
+
   const [emailRequestLoading, setEmailRequestLoading] = useState(false);
   const [emailConfirmLoading, setEmailConfirmLoading] = useState(false);
-  // 기존의 emailRequestSuccess 상태는 UI에만 사용 중이었으므로
-  // 버튼 비활성화 조건에서 이를 제거하여 재요청이 가능하도록 함
+
   const [emailRequestSuccess, setEmailRequestSuccess] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -137,6 +136,7 @@ const Account = () => {
       setAlertSeverity('success');
       setAlertOpen(true);
       setIsEditing(false);
+      await fetchUserData();
     } catch (error: any) {
       console.error('이메일 변경 실패:', error.message);
       setAlertMessage('이메일 변경에 실패했습니다.');
