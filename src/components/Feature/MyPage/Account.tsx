@@ -124,12 +124,7 @@ const Account = () => {
       setAlertOpen(true);
       return;
     }
-    if (!data.verificationCode) {
-      setAlertMessage('이메일 인증을 확인해주세요.');
-      setAlertSeverity('warning');
-      setAlertOpen(true);
-      return;
-    }
+    
     try {
       await changeEmail(data.email);
       setAlertMessage('이메일이 성공적으로 변경되었습니다.');
@@ -225,7 +220,6 @@ const Account = () => {
                       };
                       handleEmailVerification(emailData);
                     }}
-                    disabled={emailRequestLoading}
                   >
                     {emailRequestLoading ? (
                       <VerificationLoading />

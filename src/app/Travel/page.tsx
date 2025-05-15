@@ -25,11 +25,12 @@ import NoResultLayout from '@/components/Common/NoResult';
 import LoginModal from '@/components/Common/LoginModal';
 import useAuth from '@/hooks/useAuth';
 
+// 여행지 탐색 페이지 주요 컨텐츠 컴포넌트
 const TravelPageContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const keyword = searchParams?.get('keyword') || '';
-  
+
   const {
     currentPage,
     searchTerm,
@@ -38,11 +39,13 @@ const TravelPageContent = () => {
     setSearchTerm,
     setIsSearching,
   } = useTravelStore();
-  
+
+  // 알림 관련 상태
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertSeverity, setAlertSeverity] = useState<AlertColor>('info');
-  
+
+  // 사용자 위치 정보 Hook
   const {
     userCoordinates,
     errorMessage: geoErrorMessage,
@@ -52,16 +55,19 @@ const TravelPageContent = () => {
     latitude: number;
     longitude: number;
   } | null>(null);
-  
+
+  // 기본 위치 설정 (서울 중심부)
   const defaultCoordinates = {
     latitude: 37.5642135,
     longitude: 127.0016985,
   };
-  
+
+  // 인증 상태 확인 및 로그인 모달 관련
   const { isAuthenticated } = useAuth();
   const requiresAuth = isAuthenticated === true;
   const [showLoginModal, setShowLoginModal] = useState(false);
-  
+
+  // 위치 기반 여행지 목록 데이터 쿼리
   const {
     data: locationData,
     isLoading: isLoadingLocation,
@@ -72,7 +78,8 @@ const TravelPageContent = () => {
     requiresAuth,
     !isSearching
   );
-  
+
+  // 검색어 기반 여행지 목록 데이터 쿼리
   const {
     data: searchData,
     isLoading: isLoadingSearch,
@@ -87,9 +94,10 @@ const TravelPageContent = () => {
     requiresAuth,
     isSearching
   );
-  
+
+  // 검색어 디바운스 처리 (타이핑 최적화)
   const debouncedSearchTerm = useDebounce(searchTerm, 800);
-  
+
   useEffect(() => {
     if (keyword) {
       setSearchTerm(keyword);
@@ -97,7 +105,7 @@ const TravelPageContent = () => {
       setCurrentPage(1);
     }
   }, [keyword, setSearchTerm, setIsSearching, setCurrentPage]);
-  
+
   useEffect(() => {
     if (debouncedSearchTerm.trim()) {
       setIsSearching(true);
@@ -123,7 +131,10 @@ const TravelPageContent = () => {
     setCurrentPage,
     setIsSearching,
   ]);
-  
+
+  /**
+   * 위치 정보 설정 및 오류 처리
+   */
   useEffect(() => {
     if (permissionState === 'granted' && userCoordinates) {
       setCoordinates(userCoordinates);
@@ -136,8 +147,10 @@ const TravelPageContent = () => {
       }
     }
   }, [permissionState, userCoordinates, geoErrorMessage]);
-  
-  // 인증 상태가 변경될 때 여행지 목록 다시 불러오기
+
+  /**
+   * 인증 상태 변경 시 데이터 다시 가져오기
+   */
   useEffect(() => {
     if (isAuthenticated !== null) {
       if (isSearching) {
@@ -147,7 +160,10 @@ const TravelPageContent = () => {
       }
     }
   }, [isAuthenticated, isSearching, refetchLocation, refetchSearch]);
-  
+
+  /**
+   * 검색 버튼 클릭 핸들러
+   */
   const handleSearch = () => {
     if (searchTerm.trim()) {
       setIsSearching(true);
@@ -159,22 +175,26 @@ const TravelPageContent = () => {
       setAlertOpen(true);
     }
   };
-  
+
+  // 특수문자를 제외한 입력만 허용
   const handleSearchInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const input = event.target.value;
     const regex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]*$/;
-    
+
     if (regex.test(input)) {
       setSearchTerm(input);
     } else {
-      setAlertMessage('특수문자는 사용할 수 없습니다. 다른 검색어를 입력해 주세요.');
+      setAlertMessage(
+        '특수문자는 사용할 수 없습니다. 다른 검색어를 입력해 주세요.'
+      );
       setAlertSeverity('warning');
       setAlertOpen(true);
     }
   };
-  
+
+  // 검색 입력 포커스 해제 핸들러
   const handleSearchInputBlur = () => {
     if (searchTerm.trim() === '') {
       setIsSearching(false);
@@ -182,7 +202,8 @@ const TravelPageContent = () => {
       refetchLocation();
     }
   };
-  
+
+  // 검색 입력 키 이벤트 핸들러
   const handleSearchKeyPress = (
     event: React.KeyboardEvent<HTMLInputElement>
   ) => {
@@ -190,38 +211,33 @@ const TravelPageContent = () => {
       handleSearch();
     }
   };
-  
-  // TODO : 북마크 토글 이슈 점검 중!!!
+
   const toggleBookmark = async (placeId: number, bookmarkStatus = false) => {
-    console.log('[토글북마크] 시작 ▶', { placeId, bookmarkStatus });
-    
     if (!isAuthenticated) {
-      console.log('[토글북마크] 인증 안 됨, 로그인 모달 표시');
       setShowLoginModal(true);
       return;
     }
-    
+
     try {
       if (bookmarkStatus) {
-        const res = await BookMarkDeleteApi({ placeId });
-        console.log('[토글북마크] 북마크 삭제 응답 ◀', res);
+        await BookMarkDeleteApi({ placeId });
       } else {
-        const res = await BookMarkApi({ placeId });
-        console.log('[토글북마크] 북마크 등록 응답 ◀', res);
+        await BookMarkApi({ placeId });
       }
     } catch (err) {
       console.error('[토글북마크] 에러 발생 ✖', err);
     } finally {
-      console.log('[토글북마크] 목록 재조회 시작');
       if (isSearching) {
         await refetchSearch();
       } else {
         await refetchLocation();
       }
-      console.log('[토글북마크] 완료 ✔');
     }
   };
-  
+
+  /**
+   * 알림 닫기 핸들러
+   */
   const handleAlertClose = (
     event?: React.SyntheticEvent | Event,
     reason?: string
@@ -229,11 +245,13 @@ const TravelPageContent = () => {
     if (reason === 'clickaway') return;
     setAlertOpen(false);
   };
-  
+
+  // 여행지 상세 페이지로 이동 핸들러
   const handleDetailClick = (placeId: number) => {
     router.push(`/Travel/${placeId}`);
   };
-  
+
+  // 도보 및 차량 이동 시간 정보
   const calculateTravelTime = (distance: number) => {
     if (isNaN(distance)) {
       return {
@@ -241,35 +259,38 @@ const TravelPageContent = () => {
         driving: '차로 거리 정보 없음',
       };
     }
-    
+
     const distanceInKm = Math.floor(distance * 10) / 10;
     const walkingSpeed = 5;
     const drivingSpeed = 50;
-    
+
     const walkingTime = Math.round((distanceInKm / walkingSpeed) * 60);
     const drivingTime = Math.round((distanceInKm / drivingSpeed) * 60);
-    
+
     return {
       walking: `도보 ${walkingTime}분 (${distanceInKm} km)`,
       driving: `차로 ${drivingTime}분 (${distanceInKm} km)`,
     };
   };
-  
+
+  // 현재 표시할 여행지 데이터 선택
   const places = isSearching
     ? searchData?.data?.content
     : locationData?.data?.content;
-  
+
+  // 전체 페이지 수 계산
   const totalPages = isSearching
     ? (searchData?.data?.totalPages ?? 0)
     : (locationData?.data?.totalPages ?? 0);
-  
+
+  // 페이지 변경 핸들러
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo(0, 0);
   };
-  
+
   const inputRef = useRef<HTMLInputElement>(null);
-  
+
   return (
     <>
       <Head>
