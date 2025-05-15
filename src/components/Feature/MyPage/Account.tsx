@@ -195,7 +195,7 @@ const Account = () => {
   const newPassword = watch('newPassword');
   const rePassword = watch('rePassword');
 
-  const isEmailSaveDisabled = !email || !verificationCode;
+  const isEmailSaveDisabled = false;
   const isPasswordSaveDisabled = !nowPassword || !newPassword || !rePassword;
 
   return (
