@@ -10,13 +10,9 @@ export const requestEmailVerification = async (
   email: string
 ): Promise<EmailApiResponse> => {
   try {
-    const response = await post<EmailApiResponse>(
-      '/api/emails/verify-request',
-      {
-        email,
-      }
-    );
-    return response;
+    return await post<EmailApiResponse>('/api/emails/verify-request', {
+      email,
+    });
   } catch (error: any) {
     if (error.response?.data) {
       return error.response.data;
@@ -40,13 +36,11 @@ export const verifyEmail = async (
   authCode: string
 ): Promise<EmailApiResponse> => {
   try {
-    const response = await post<EmailApiResponse>('/api/emails/verify', {
+    return await post<EmailApiResponse>('/api/emails/verify', {
       email,
       authCode,
     });
-    return response;
   } catch (error: any) {
-    // 백엔드에서 전달하는 에러 메시지를 그대로 반환
     if (error.response?.data) {
       return error.response.data;
     }
