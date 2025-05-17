@@ -25,8 +25,7 @@ type AccountFormData = AccountEmailFormData & AccountPasswordFormData;
 const Account = () => {
   const router = useRouter();
   const { userData, fetchUserData } = useMyPage();
-
-
+  
   const [emailRequestLoading, setEmailRequestLoading] = useState(false);
   const [emailConfirmLoading, setEmailConfirmLoading] = useState(false);
 
@@ -38,8 +37,7 @@ const Account = () => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingPwd, setIsEditingPwd] = useState(false);
-
-  // Snackbar 상태 관리
+  
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertSeverity, setAlertSeverity] = useState<
@@ -79,14 +77,19 @@ const Account = () => {
     }
     setEmailRequestLoading(true);
     try {
-      await requestEmailVerification(data.email);
-      setAlertMessage('인증 요청이 성공적으로 완료되었습니다.');
-      setAlertSeverity('success');
+      const response = await requestEmailVerification(data.email);
+      if (response.success === false) {
+        setAlertMessage(response.message || '이메일 인증 요청에 실패했습니다.');
+        setAlertSeverity('error');
+      } else {
+        setAlertMessage(response.message || '인증 요청이 성공적으로 완료되었습니다.');
+        setAlertSeverity('success');
+        setEmailRequestSuccess(true);
+      }
       setAlertOpen(true);
-      setEmailRequestSuccess(true); // 요청 성공 여부는 UI 알림으로 남겨두지만, 버튼 비활성화에는 사용하지 않음
     } catch (error: any) {
-      console.error('이메일 인증 요청 실패:', error.message);
-      setAlertMessage('이메일 인증 요청에 실패했습니다.');
+      console.error('이메일 인증 요청 실패:', error);
+      setAlertMessage(error.response.message);
       setAlertSeverity('error');
       setAlertOpen(true);
     } finally {
@@ -103,13 +106,18 @@ const Account = () => {
     }
     setEmailConfirmLoading(true);
     try {
-      await verifyEmail(data.email, data.verificationCode);
-      setAlertMessage('이메일 인증이 성공적으로 완료되었습니다.');
-      setAlertSeverity('success');
+      const response = await verifyEmail(data.email, data.verificationCode);
+      if (response.success) {
+        setAlertMessage(response.message || '이메일 인증이 성공적으로 완료되었습니다.');
+        setAlertSeverity('success');
+      } else {
+        setAlertMessage(response.message || '이메일 인증 확인에 실패했습니다.');
+        setAlertSeverity('error');
+      }
       setAlertOpen(true);
     } catch (error: any) {
       console.error('이메일 인증 확인 실패:', error.message);
-      setAlertMessage('이메일 인증 확인에 실패했습니다.');
+      setAlertMessage(error.response.message);
       setAlertSeverity('error');
       setAlertOpen(true);
     } finally {
@@ -126,15 +134,21 @@ const Account = () => {
     }
     
     try {
-      await changeEmail(data.email);
-      setAlertMessage('이메일이 성공적으로 변경되었습니다.');
-      setAlertSeverity('success');
-      setAlertOpen(true);
-      setIsEditing(false);
-      await fetchUserData();
+      const response = await changeEmail(data.email);
+      if (response.success) {
+        setAlertMessage(response.message || '이메일이 성공적으로 변경되었습니다.');
+        setAlertSeverity('success');
+        setAlertOpen(true);
+        setIsEditing(false);
+        await fetchUserData();
+      } else {
+        setAlertMessage(response.message || '이메일 변경에 실패했습니다.');
+        setAlertSeverity('error');
+        setAlertOpen(true);
+      }
     } catch (error: any) {
       console.error('이메일 변경 실패:', error.message);
-      setAlertMessage('이메일 변경에 실패했습니다.');
+      setAlertMessage(error.response.message);
       setAlertSeverity('error');
       setAlertOpen(true);
     }
@@ -148,14 +162,20 @@ const Account = () => {
       return;
     }
     try {
-      await changePassword(data.nowPassword, data.newPassword, data.rePassword);
-      setAlertMessage('비밀번호가 성공적으로 변경되었습니다.');
-      setAlertSeverity('success');
-      setAlertOpen(true);
-      setIsEditingPwd(false);
+      const response = await changePassword(data.nowPassword, data.newPassword, data.rePassword);
+      if (response.success) {
+        setAlertMessage(response.message || '비밀번호가 성공적으로 변경되었습니다.');
+        setAlertSeverity('success');
+        setAlertOpen(true);
+        setIsEditingPwd(false);
+      } else {
+        setAlertMessage(response.message || '비밀번호 변경에 실패했습니다.');
+        setAlertSeverity('error');
+        setAlertOpen(true);
+      }
     } catch (error: any) {
       console.error('비밀번호 변경 실패:', error.message);
-      setAlertMessage('비밀번호 변경에 실패했습니다.');
+      setAlertMessage(error.response.message);
       setAlertSeverity('error');
       setAlertOpen(true);
     }
@@ -169,16 +189,22 @@ const Account = () => {
       return;
     }
     try {
-      await deactivateAccount(password);
-      setAlertMessage('회원 탈퇴가 완료되었습니다.');
-      setAlertSeverity('success');
-      setAlertOpen(true);
-      Cookies.remove('accessToken');
-      Cookies.remove('nickname');
-      router.push('/');
+      const response = await deactivateAccount(password);
+      if (response.success) {
+        setAlertMessage(response.message || '회원 탈퇴가 완료되었습니다.');
+        setAlertSeverity('success');
+        setAlertOpen(true);
+        Cookies.remove('accessToken');
+        Cookies.remove('nickname');
+        router.push('/');
+      } else {
+        setAlertMessage(response.message || '회원 탈퇴에 실패했습니다. 다시 시도해주세요.');
+        setAlertSeverity('error');
+        setAlertOpen(true);
+      }
     } catch (error: any) {
       console.error('회원 탈퇴 실패:', error.message);
-      setAlertMessage('회원 탈퇴에 실패했습니다. 다시 시도해주세요.');
+      setAlertMessage(error.response.message);
       setAlertSeverity('error');
       setAlertOpen(true);
     }
