@@ -7,6 +7,8 @@ import { createNewSchedule } from '@/apis/Schedule/scheduleApi';
 import { useTravelStore } from '@/store/scheduleStore';
 import Image from 'next/image';
 import triptuneIcon from '../../../public/assets/images/로고/triptuneIcon-removebg.png';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 registerLocale('ko', ko);
 
@@ -35,6 +37,14 @@ const CalendarLayout = ({
   );
   const [scheduleName, setScheduleName] = useState<string>(travelName);
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
+  
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertSeverity, setAlertSeverity] = useState<'error' | 'success' | 'info' | 'warning'>('error');
+  
+  const handleAlertClose = () => {
+    setAlertOpen(false);
+  };
 
   useEffect(() => {
     if (mode === 'create') {
@@ -57,12 +67,16 @@ const CalendarLayout = ({
       };
       try {
         const response = await createNewSchedule(scheduleData);
-        if (response?.data) {
+        if (response.data) {
           onClose();
           window.location.href = `/Schedule/${response.data.scheduleId}`;
+        } else {
+          console.error('일정 생성 실패:', response.message);
+          alert(response.message || '일정 생성에 실패했습니다.');
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error('일정 생성 실패:', error);
+        alert(error.response.message);
       }
     } else {
       updateScheduleDetail({
@@ -75,10 +89,8 @@ const CalendarLayout = ({
 
   const handleDateChange = (dates: [Date | null, Date | null]) => {
     const [start, end] = dates;
-
-    // 시작 날짜와 종료 날짜가 모두 선택된 경우
+    
     if (start && end) {
-      // 시작 날짜가 종료 날짜보다 이후인 경우 스왑
       if (start > end) {
         setStartDate(end);
         setEndDate(start);
@@ -87,31 +99,21 @@ const CalendarLayout = ({
         setEndDate(end);
       }
     } else if (start) {
-      // 시작 날짜만 선택된 경우
       if (!endDate) {
-        // 종료일이 없는 경우 시작일 설정
         setStartDate(start);
       } else if (start > endDate) {
-        // 선택된 날짜가 기존 종료일보다 이후인 경우
-        // 기존 종료일을 시작일로, 선택된 날짜를 종료일로 설정
         setStartDate(endDate);
         setEndDate(start);
       } else {
-        // 선택된 날짜가 기존 종료일보다 이전인 경우
         setStartDate(start);
       }
     } else if (end) {
-      // 종료 날짜만 선택된 경우
       if (!startDate) {
-        // 시작일이 없는 경우 종료일 설정
         setEndDate(end);
       } else if (end < startDate) {
-        // 선택된 날짜가 기존 시작일보다 이전인 경우
-        // 선택된 날짜를 시작일로, 기존 시작일을 종료일로 설정
         setEndDate(startDate);
         setStartDate(end);
       } else {
-        // 선택된 날짜가 기존 시작일보다 이후인 경우
         setEndDate(end);
       }
     }
@@ -165,6 +167,17 @@ const CalendarLayout = ({
         >
           {mode === 'create' ? '생성' : '수정'}
         </button>
+        
+        <Snackbar
+          open={alertOpen}
+          autoHideDuration={3000}
+          onClose={handleAlertClose}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+          <Alert onClose={handleAlertClose} severity={alertSeverity}>
+            {alertMessage}
+          </Alert>
+        </Snackbar>
       </div>
     </div>
   );
