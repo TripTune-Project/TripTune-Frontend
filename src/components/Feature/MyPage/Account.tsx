@@ -78,13 +78,13 @@ const Account = () => {
     setEmailRequestLoading(true);
     try {
       const response = await requestEmailVerification(data.email);
-      if (response.success === false) {
-        setAlertMessage(response.message || '이메일 인증 요청에 실패했습니다.');
-        setAlertSeverity('error');
-      } else {
+      if (response.success) {
         setAlertMessage(response.message || '인증 요청이 성공적으로 완료되었습니다.');
         setAlertSeverity('success');
         setEmailRequestSuccess(true);
+      } else {
+        setAlertMessage(response.message || '이메일 인증 요청에 실패했습니다.');
+        setAlertSeverity('error');
       }
       setAlertOpen(true);
     } catch (error: any) {

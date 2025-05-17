@@ -42,45 +42,45 @@ const EmailVerification = ({
 }: EmailVerificationProps) => {
   const [isVerificationSent, setIsVerificationSent] = useState(false);
   const [isEmailDisabled, setIsEmailDisabled] = useState(false);
-  const [notificationMessage, setNotificationMessage] = useState('');
-  const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [alertSeverity, setAlertSeverity] = useState<'success' | 'error'>(
-    'success'
-  );
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertSeverity, setAlertSeverity] = useState<
+    'success' | 'error' | 'warning' | 'info'
+  >('info');
   const [loading, setLoading] = useState(false);
 
   const handleCloseSnackbar = () => {
-    setOpenSnackbar(false);
+    setAlertOpen(false);
   };
 
   const handleEmailVerificationRequest = async (email: string) => {
     if (!validateEmail(email)) {
       setAlertSeverity('error');
-      setNotificationMessage('유효하지 않은 이메일 주소입니다.');
-      setOpenSnackbar(true);
+      setAlertMessage('유효하지 않은 이메일 주소입니다.');
+      setAlertOpen(true);
       return;
     }
     setLoading(true);
     try {
-      await requestEmailVerification(email);
-      setIsVerificationSent(true);
-      setIsEmailDisabled(true);
-      setAlertSeverity('success');
-      setNotificationMessage(
-        '인증 코드가 발송되었습니다. 이메일을 확인해주세요.'
-      );
-      setOpenSnackbar(true);
-    } catch (error) {
-      if (error instanceof Error) {
-        setAlertSeverity('error');
-        setNotificationMessage(error.message);
+      const response = await requestEmailVerification(email);
+      if (response.success) {
+        setIsVerificationSent(true);
+        setIsEmailDisabled(true);
+        setAlertSeverity('success');
+        setAlertMessage(
+          response.message ||
+            '인증 코드가 발송되었습니다. 이메일을 확인해주세요.'
+        );
       } else {
         setAlertSeverity('error');
-        setNotificationMessage(
-          '인증 코드 요청에 실패했습니다. 다시 시도해주세요.'
-        );
+        setAlertMessage(response.message || '인증 코드 요청에 실패했습니다.');
       }
-      setOpenSnackbar(true);
+      setAlertOpen(true);
+    } catch (error: any) {
+      console.error('이메일 인증 요청 실패:', error);
+      setAlertMessage(error.response.message);
+      setAlertSeverity('error');
+      setAlertOpen(true);
     } finally {
       setLoading(false);
     }
@@ -90,26 +90,29 @@ const EmailVerification = ({
     const { email, authCode } = getValues();
     if (!authCode) {
       setAlertSeverity('error');
-      setNotificationMessage('인증 코드를 입력해주세요.');
-      setOpenSnackbar(true);
+      setAlertMessage('인증 코드를 입력해주세요.');
+      setAlertOpen(true);
       return;
     }
     setLoading(true);
     try {
-      await verifyEmail(email, authCode);
-      setIsVerificationComplete(true);
-      setAlertSeverity('success');
-      setNotificationMessage('이메일 인증이 완료되었습니다.');
-      setOpenSnackbar(true);
-    } catch (error) {
-      if (error instanceof Error) {
-        setAlertSeverity('error');
-        setNotificationMessage(error.message);
+      const response = await verifyEmail(email, authCode);
+      if (response.success) {
+        setIsVerificationComplete(true);
+        setAlertSeverity('success');
+        setAlertMessage(response.message || '이메일 인증이 완료되었습니다.');
       } else {
         setAlertSeverity('error');
-        setNotificationMessage('인증 코드가 유효하지 않습니다.');
+        setAlertMessage(
+          response.message || '인증 코드가 유효하지 않습니다.'
+        );
       }
-      setOpenSnackbar(true);
+      setAlertOpen(true);
+    } catch (error: any) {
+      console.error('이메일 인증 요청 실패:', error);
+      setAlertMessage(error.response.message);
+      setAlertSeverity('error');
+      setAlertOpen(true);
     } finally {
       setLoading(false);
     }
@@ -161,7 +164,7 @@ const EmailVerification = ({
         </div>
       )}
       <Snackbar
-        open={openSnackbar}
+        open={alertOpen}
         autoHideDuration={3000}
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
@@ -171,7 +174,7 @@ const EmailVerification = ({
           severity={alertSeverity}
           sx={{ width: '100%' }}
         >
-          {notificationMessage}
+          {alertMessage}
         </Alert>
       </Snackbar>
     </>
