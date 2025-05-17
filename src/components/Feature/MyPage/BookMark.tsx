@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Pagination from '@/components/Common/Pagination';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -9,6 +9,8 @@ import locationIcon from '../../../../public/assets/images/여행지 탐색/홈�
 import styles from '@/styles/Mypage.module.css';
 import DataLoading from '@/components/Common/DataLoading';
 import { BookmarkPlace } from '@/types/myPage';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 const BookMark = () => {
   const router = useRouter();
@@ -19,10 +21,32 @@ const BookMark = () => {
     currentPage,
     sort
   );
+  
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertSeverity, setAlertSeverity] = useState<'error' | 'success' | 'info' | 'warning'>('error');
+
+  const handleAlertClose = () => {
+    setAlertOpen(false);
+  };
 
   const handleDetailClick = (placeId: number) => {
     router.push(`/Travel/${placeId}`);
   };
+  
+  useEffect(() => {
+    if (myPageBookMarkData && !myPageBookMarkData.success) {
+      setAlertMessage(myPageBookMarkData.message || '북마크를 불러오는데 실패했습니다.');
+      setAlertSeverity('error');
+      setAlertOpen(true);
+      
+      const timer = setTimeout(() => {
+        router.back();
+      }, 3000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [myPageBookMarkData, router]);
 
   if (isLoading) {
     return <DataLoading />;
@@ -40,7 +64,11 @@ const BookMark = () => {
     setSort(e.target.value as 'newest' | 'oldest' | 'name');
     setCurrentPage(1);
   };
-
+  
+  if (myPageBookMarkData && !myPageBookMarkData.success) {
+    return <DataLoading />;
+  }
+  
   return (
     <div className={styles.listContainer}>
       <div className={styles.headerContainer}>
@@ -108,6 +136,17 @@ const BookMark = () => {
           onPageChange={handlePageChange}
         />
       )}
+      
+      <Snackbar
+        open={alertOpen}
+        autoHideDuration={3000}
+        onClose={handleAlertClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={handleAlertClose} severity={alertSeverity}>
+          {alertMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
