@@ -2,182 +2,202 @@ import { refreshApi } from './Login/refreshApi';
 import saveLocalContent from '@/utils/saveLocalContent';
 import Cookies from 'js-cookie';
 
-const DEFAULT_HEADERS = {
-  'Content-Type': 'application/json;charset=UTF-8',
-};
-
-interface FetchOptions extends RequestInit {
-  headers?: HeadersInit;
+// API 요청 옵션 인터페이스
+interface FetchOptions {
+  headers?: Record<string, string>;
   requiresAuth?: boolean;
+  isFormData?: boolean;
+  credentials?: RequestCredentials;
 }
 
-const clearCookies = () => {
-  Cookies.remove('accessToken');
-  Cookies.remove('nickname');
+// 오류 타입 분류
+enum ErrorType {
+  NEED_LOGIN, // 로그인 필요
+  NEED_BACK, // 뒤로가기 필요
+  SHOW_MESSAGE, // 메시지 표시
+  REFRESH_TOKEN, // 토큰 갱신
+}
+
+// 오류 코드별 처리 방식 결정
+const getErrorType = (message: string): ErrorType => {
+  // 1. 로그인 필요 에러
+  if (
+    message === '인증되지 않은 사용자입니다. 로그인 후 다시 시도하세요.' ||
+    message === '유효하지 않은 JWT 토큰입니다.' ||
+    message === '지원되지 않는 JWT 토큰입니다.' ||
+    message === 'JWT 클레임이 존재하지 않습니다.' ||
+    message === '로그아웃 된 사용자입니다. 로그인 후 이용해주세요.'
+  ) {
+    return ErrorType.NEED_LOGIN;
+  }
+  
+  // 2. 토큰 갱신 필요 에러
+  if (message === 'JWT 토큰이 만료되었습니다.') {
+    return ErrorType.REFRESH_TOKEN;
+  }
+  
+  // 3. 토큰 불일치로 인한 로그인 필요 에러
+  if (message === '토큰 갱신이 불가능합니다. 다시 로그인 후 이용해주세요.') {
+    return ErrorType.NEED_LOGIN;
+  }
+  
+  // 4. 뒤로가기 필요 에러
+  if (
+    message === '데이터가 존재하지 않습니다.' ||
+    message === '접근 권한이 없습니다.' ||
+    message === '페이지를 찾을 수 없습니다.' ||
+    message === '여행지 정보를 찾을 수 없습니다.' ||
+    message === '일정 정보를 찾을 수 없습니다.' ||
+    message === '작성자 정보를 찾을 수 없습니다.' ||
+    message === '해당 일정에 접근 권한이 없는 사용자 입니다.' ||
+    message === '해당 일정에 편집 권한이 없는 사용자 입니다.' ||
+    message === '해당 일정에 삭제 권한이 없는 사용자 입니다.' ||
+    message === '채팅 권한이 없는 사용자 입니다.' ||
+    message === '북마크 정보를 찾을 수 없습니다.' ||
+    message === '프로필 이미지 데이터를 찾을 수 없습니다.'
+  ) {
+    return ErrorType.NEED_BACK;
+  }
+  
+  // 5. 기타 모든 에러는 메시지 표시
+  return ErrorType.SHOW_MESSAGE;
 };
 
-const getAuthHeaders = (): HeadersInit => {
-  const { getDecryptedCookie } = saveLocalContent();
-  const accessToken = getDecryptedCookie('accessToken');
-
-  if (!accessToken) {
-    throw new Error('액세스 토큰이 없습니다. 다시 로그인 해주세요.');
-  }
-  return {
-    Authorization: `Bearer ${accessToken}`,
-  };
-};
-
-let isRetrying = false;
-let isRedirectingToLogin = false;
-
-const handleRedirectToLogin = (message: string, silent = false) => {
-  if (isRedirectingToLogin || window.location.pathname === '/Login') return;
-
-  isRedirectingToLogin = true;
-  const currentPath = window.location.pathname;
-  localStorage.setItem('redirectAfterLogin', currentPath);
-
-  if (!silent) {
-    alert(message);
-  }
-
-  clearCookies();
-  window.location.href = '/Login';
-};
-
-const fetchData = async <T>(
-  endpoint: string,
-  options: FetchOptions = {}
-): Promise<T> => {
-  if (isRedirectingToLogin) {
-    return Promise.reject('리다이렉션 중');
-  }
-
-  const url = `https://triptune.site${endpoint}`;
-  let headers: HeadersInit = {
-    ...DEFAULT_HEADERS,
-    ...options.headers,
-  };
-
-  if (options.requiresAuth) {
-    try {
-      headers = { ...headers, ...getAuthHeaders() };
-    } catch {
-      const refreshToken = Cookies.get('refreshToken');
-      if (!refreshToken) {
-        handleRedirectToLogin(
-          '인증 정보가 없습니다. 다시 로그인 해주세요.',
-          true
-        );
-        return Promise.reject('인증 실패');
-      }
+// 오류 처리 함수
+const handleError = async (
+  response: Response,
+  responseData: any
+): Promise<never> => {
+  const errorType = getErrorType(responseData.message);
+  
+  switch (errorType) {
+    case ErrorType.NEED_LOGIN:
+      // 로그인 필요한 경우: 쿠키 삭제 후 로그인 페이지로 이동
+      Cookies.remove('accessToken');
+      Cookies.remove('refreshToken');
+      alert('로그인이 필요합니다.');
+      window.location.href = '/login';
+      break;
+      
+    case ErrorType.NEED_BACK:
+      // 뒤로가기 필요한 경우: 에러 메시지 표시 후 뒤로가기
+      alert(responseData.message);
+      window.history.back();
+      break;
+      
+    case ErrorType.REFRESH_TOKEN:
+      // 토큰 갱신 필요한 경우: refreshApi 함수를 사용해 토큰 갱신
       try {
-        const newAccessToken = await refreshApi();
-        headers = { ...headers, Authorization: `Bearer ${newAccessToken}` };
-      } catch {
-        handleRedirectToLogin(
-          '액세스 토큰이 만료되었습니다. 다시 로그인 해주세요.',
-          true
-        );
-        return Promise.reject('인증 실패');
-      }
-    }
-  }
-
-  const requestConfig: FetchOptions = {
-    ...options,
-    headers,
-    credentials: 'include',
-  };
-
-  let response = await fetch(url, requestConfig);
-
-  if (!response.ok) {
-    try {
-      const errorData = await response.json();
-
-      if (response.status === 401 && !isRetrying) {
-        isRetrying = true;
-        try {
-          const refreshToken = Cookies.get('refreshToken');
-          if (!refreshToken) {
-            handleRedirectToLogin('인증 정보가 만료 되었습니다.', true);
-            return undefined as unknown as T;
-          }
-          const newAccessToken = await refreshApi();
-          headers = { ...headers, Authorization: `Bearer ${newAccessToken}` };
-          const retryResponse = await fetch(url, {
-            ...requestConfig,
-            headers,
-          });
-
-          if (!retryResponse.ok) {
-            throw new Error('재시도 실패');
-          }
-
-          isRetrying = false;
-          return retryResponse.json();
-        } catch {
-          handleRedirectToLogin('인증 정보가 만료 되었습니다.', true);
-          return undefined as unknown as T;
+        const refreshToken = Cookies.get('refreshToken');
+        if (!refreshToken) {
+          Cookies.remove('accessToken');
+          alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+          window.location.href = '/login';
+          break;
         }
+        
+        // refreshApi 함수를 사용해 토큰 갱신
+        await refreshApi();
+        
+        // 토큰 갱신 성공했으므로 여기서 원래 요청을 다시 시도하는 로직을 추가할 수 있음
+        // 현재는 에러를 그대로 throw하므로 호출자가 재시도 여부를 결정할 수 있음
+      } catch (error) {
+        // 토큰 갱신 실패 시에만 사용자에게 알림
+        Cookies.remove('accessToken');
+        Cookies.remove('refreshToken');
+        alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+        window.location.href = '/login';
       }
-
-      if (errorData.message === '해당 일정에 접근 권한이 없는 사용자 입니다.') {
-        window.history.back();
-        throw new Error(errorData.message);
-      } else if (errorData.message !== undefined) {
-        throw new Error(errorData.message);
-      }
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        throw new Error(error.message);
-      }
-      throw new Error('알 수 없는 오류가 발생했습니다.');
-    }
-    return undefined as unknown as T;
+      break;
+      
+    case ErrorType.SHOW_MESSAGE:
+    default:
+      // 단순 메시지 표시
+      alert(responseData.message);
+      break;
   }
-
-  isRetrying = false;
-  return response.json();
+  
+  throw new Error(responseData.message);
 };
 
+// API 요청 기본 함수
+const fetchData = async <T>(
+  method: string,
+  endpoint: string,
+  body?: any,
+  options?: FetchOptions
+): Promise<T> => {
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
+  const url = `${baseUrl}${endpoint}`;
+  
+  // 헤더 설정
+  const headers: Record<string, string> = {
+    ...(options?.headers || {}),
+  };
+  
+  // Content-Type 설정 (FormData가 아닌 경우에만)
+  if (!options?.isFormData) {
+    headers['Content-Type'] = 'application/json';
+  }
+  
+  // 인증 토큰 설정
+  if (options?.requiresAuth) {
+    const { getDecryptedCookie } = saveLocalContent();
+    const token = getDecryptedCookie('accessToken');
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+  }
+  
+  // 요청 옵션 설정
+  const requestOptions: RequestInit = {
+    method,
+    headers,
+    credentials: options?.credentials || 'include',
+  };
+  
+  // GET 요청이 아니고 body가 있는 경우
+  if (method !== 'GET' && body) {
+    requestOptions.body = options?.isFormData ? body : JSON.stringify(body);
+  }
+  
+  try {
+    const response = await fetch(url, requestOptions);
+    const data = await response.json();
+    
+    // 응답 성공 여부 확인
+    if (!response.ok) {
+      return handleError(response, data);
+    }
+    
+    return data as T;
+  } catch (error) {
+    console.error('API 요청 중 오류 발생:', error);
+    throw error;
+  }
+};
+
+// HTTP 메서드별 함수
 export const get = <T>(endpoint: string, options?: FetchOptions) =>
-  fetchData<T>(endpoint, {
-    method: 'GET',
-    ...options,
-  });
+  fetchData<T>('GET', endpoint, undefined, options);
 
 export const post = <T>(
   endpoint: string,
   body: object,
   options?: FetchOptions
 ) =>
-  fetchData<T>(endpoint, {
-    method: 'POST',
-    body: JSON.stringify(body),
-    ...options,
-  });
+  fetchData<T>('POST', endpoint, body, options);
 
 export const patch = <T>(
   endpoint: string,
   body: object,
   options?: FetchOptions
 ) =>
-  fetchData<T>(endpoint, {
-    method: 'PATCH',
-    body: JSON.stringify(body),
-    ...options,
-  });
+  fetchData<T>('PATCH', endpoint, body, options);
 
 export const remove = <T>(
   endpoint: string,
   body?: object,
   options?: FetchOptions
 ) =>
-  fetchData<T>(endpoint, {
-    method: 'DELETE',
-    body: JSON.stringify(body),
-    ...options,
-  });
+  fetchData<T>('DELETE', endpoint, body, options);
