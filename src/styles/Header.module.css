@@ -64,6 +64,9 @@
   border-radius: 5px;
   text-align: center;
   justify-content: center;
+  height: 24px;
+  display: flex;
+  align-items: center;
 }
 
 .navLogin {
