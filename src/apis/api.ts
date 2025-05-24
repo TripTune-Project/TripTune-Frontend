@@ -22,7 +22,6 @@ enum ErrorType {
 const getErrorType = (message: string): ErrorType => {
   // 1. 로그인 필요 에러
   if (
-    message === '인증되지 않은 사용자입니다. 로그인 후 다시 시도하세요.' ||
     message === '유효하지 않은 JWT 토큰입니다.' ||
     message === '지원되지 않는 JWT 토큰입니다.' ||
     message === 'JWT 클레임이 존재하지 않습니다.' ||
@@ -30,17 +29,17 @@ const getErrorType = (message: string): ErrorType => {
   ) {
     return ErrorType.NEED_LOGIN;
   }
-  
+
   // 2. 토큰 갱신 필요 에러
   if (message === 'JWT 토큰이 만료되었습니다.') {
     return ErrorType.REFRESH_TOKEN;
   }
-  
+
   // 3. 토큰 불일치로 인한 로그인 필요 에러
   if (message === '토큰 갱신이 불가능합니다. 다시 로그인 후 이용해주세요.') {
     return ErrorType.NEED_LOGIN;
   }
-  
+
   // 4. 뒤로가기 필요 에러
   if (
     message === '데이터가 존재하지 않습니다.' ||
@@ -49,6 +48,7 @@ const getErrorType = (message: string): ErrorType => {
     message === '여행지 정보를 찾을 수 없습니다.' ||
     message === '일정 정보를 찾을 수 없습니다.' ||
     message === '작성자 정보를 찾을 수 없습니다.' ||
+    message === '인증되지 않은 사용자입니다. 로그인 후 다시 시도하세요.' ||
     message === '해당 일정에 접근 권한이 없는 사용자 입니다.' ||
     message === '해당 일정에 편집 권한이 없는 사용자 입니다.' ||
     message === '해당 일정에 삭제 권한이 없는 사용자 입니다.' ||
@@ -58,7 +58,7 @@ const getErrorType = (message: string): ErrorType => {
   ) {
     return ErrorType.NEED_BACK;
   }
-  
+
   // 5. 기타 모든 에러는 메시지 표시
   return ErrorType.SHOW_MESSAGE;
 };
@@ -69,7 +69,7 @@ const handleError = async (
   responseData: any
 ): Promise<never> => {
   const errorType = getErrorType(responseData.message);
-  
+
   switch (errorType) {
     case ErrorType.NEED_LOGIN:
       // 로그인 필요한 경우: 쿠키 삭제 후 로그인 페이지로 이동
@@ -78,13 +78,13 @@ const handleError = async (
       alert('로그인이 필요합니다.');
       window.location.href = '/login';
       break;
-      
+
     case ErrorType.NEED_BACK:
       // 뒤로가기 필요한 경우: 에러 메시지 표시 후 뒤로가기
       alert(responseData.message);
       window.history.back();
       break;
-      
+
     case ErrorType.REFRESH_TOKEN:
       // 토큰 갱신 필요한 경우: refreshApi 함수를 사용해 토큰 갱신
       try {
@@ -95,10 +95,10 @@ const handleError = async (
           window.location.href = '/login';
           break;
         }
-        
+
         // refreshApi 함수를 사용해 토큰 갱신
         await refreshApi();
-        
+
         // 토큰 갱신 성공했으므로 여기서 원래 요청을 다시 시도하는 로직을 추가할 수 있음
         // 현재는 에러를 그대로 throw하므로 호출자가 재시도 여부를 결정할 수 있음
       } catch (error) {
@@ -109,14 +109,14 @@ const handleError = async (
         window.location.href = '/login';
       }
       break;
-      
+
     case ErrorType.SHOW_MESSAGE:
     default:
       // 단순 메시지 표시
       alert(responseData.message);
       break;
   }
-  
+
   throw new Error(responseData.message);
 };
 
@@ -129,17 +129,17 @@ const fetchData = async <T>(
 ): Promise<T> => {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
   const url = `${baseUrl}${endpoint}`;
-  
+
   // 헤더 설정
   const headers: Record<string, string> = {
     ...(options?.headers || {}),
   };
-  
+
   // Content-Type 설정 (FormData가 아닌 경우에만)
   if (!options?.isFormData) {
     headers['Content-Type'] = 'application/json';
   }
-  
+
   // 인증 토큰 설정
   if (options?.requiresAuth) {
     const { getDecryptedCookie } = saveLocalContent();
@@ -148,28 +148,28 @@ const fetchData = async <T>(
       headers['Authorization'] = `Bearer ${token}`;
     }
   }
-  
+
   // 요청 옵션 설정
   const requestOptions: RequestInit = {
     method,
     headers,
     credentials: options?.credentials || 'include',
   };
-  
+
   // GET 요청이 아니고 body가 있는 경우
   if (method !== 'GET' && body) {
     requestOptions.body = options?.isFormData ? body : JSON.stringify(body);
   }
-  
+
   try {
     const response = await fetch(url, requestOptions);
     const data = await response.json();
-    
+
     // 응답 성공 여부 확인
     if (!response.ok) {
       return handleError(response, data);
     }
-    
+
     return data as T;
   } catch (error) {
     // 콘솔 로깅 제거하여 중복 알림 방지
@@ -185,19 +185,16 @@ export const post = <T>(
   endpoint: string,
   body: object,
   options?: FetchOptions
-) =>
-  fetchData<T>('POST', endpoint, body, options);
+) => fetchData<T>('POST', endpoint, body, options);
 
 export const patch = <T>(
   endpoint: string,
   body: object,
   options?: FetchOptions
-) =>
-  fetchData<T>('PATCH', endpoint, body, options);
+) => fetchData<T>('PATCH', endpoint, body, options);
 
 export const remove = <T>(
   endpoint: string,
   body?: object,
   options?: FetchOptions
-) =>
-  fetchData<T>('DELETE', endpoint, body, options);
+) => fetchData<T>('DELETE', endpoint, body, options);
