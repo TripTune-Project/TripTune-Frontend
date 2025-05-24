@@ -21,7 +21,8 @@
 .header {
   position: relative;
   width: 100%;
-  height: 91px;
+  height: auto;
+  min-height: 91px;
   background-size: cover;
   background-position: center;
   display: flex;
@@ -30,10 +31,10 @@
   justify-content: center;
   background-color: #ffffff;
   color: #333333;
+  padding: 0.5rem 0;
 }
 
 .homeHeader {
-  /* background-image: url('../../public/assets/images/메인화면/ocean_header.png'); */
   border-bottom: 3px solid rgb(255, 255, 255);
 }
 
@@ -41,36 +42,40 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 90%;
+  width: 95%;
+  max-width: 1200px;
   z-index: 1;
-  height: 100%; /* 부모 높이에 맞춤 */
+  height: 100%;
 }
 
 .navMenu {
   display: flex;
-  gap: 80px;
+  gap: 4rem;
   color: #fff;
-  align-items: center; /* 수직 가운데 정렬 추가 */
-  height: 100%; /* 부모 높이에 맞춤 */
+  align-items: center;
+  height: 100%;
+  flex-wrap: wrap;
 }
 
 .navLink,
 .navLogin {
   color: black;
   text-decoration: none;
-  font-size: 18px;
+  font-size: 1.1rem;
   font-weight: 500;
   transition: color 0.3s;
   border-radius: 5px;
   text-align: center;
   justify-content: center;
-  height: 24px;
+  height: auto;
+  min-height: 24px;
   display: flex;
   align-items: center;
+  padding: 0.3rem 0;
 }
 
 .navLogin {
-  margin-top: -5px;
+  margin-top: 0;
 }
 
 .loginButton {
@@ -86,8 +91,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 107px;
-  height: 45px;
+  width: auto;
+  min-width: 100px;
+  height: auto;
+  min-height: 40px;
+  padding: 0.5rem 1rem;
   border-radius: 50px;
   color: #555;
   text-align: center;
@@ -100,13 +108,103 @@
   text-decoration: none;
   cursor: pointer;
   margin-left: auto;
-  margin-right: 40px;
+  margin-right: 1rem;
+  box-sizing: border-box;
 }
 
 .headerLinkLogin img {
-  margin-left: 0.52vw;
+  margin-left: 0.5rem;
 }
 
 .homeNavLink {
   color: #000;
+}
+
+/* 모바일 메뉴 토글 버튼 */
+.mobileMenuToggle {
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 30px;
+  height: 25px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 10;
+}
+
+.mobileMenuToggle span {
+  width: 30px;
+  height: 3px;
+  background: #333;
+  border-radius: 10px;
+  transition: all 0.3s linear;
+  position: relative;
+  transform-origin: 1px;
+}
+
+/* 반응형 미디어 쿼리 */
+@media screen and (max-width: 992px) {
+  .navMenu {
+    gap: 2rem;
+  }
+
+  .navLink,
+  .navLogin {
+    font-size: 1rem;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .mobileMenuToggle {
+    display: flex;
+  }
+
+  .header {
+    min-height: 60px;
+  }
+
+  .navMenu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    height: 100vh;
+    width: 70%;
+    max-width: 300px;
+    flex-direction: column;
+    background-color: white;
+    padding: 5rem 1.5rem;
+    transition: right 0.3s ease-in-out;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+    gap: 2rem;
+    z-index: 5;
+  }
+
+  .navMenu.open {
+    right: 0;
+  }
+
+  .headerLinkLogin {
+    margin-right: 3rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .headerContent {
+    width: 100%;
+    padding: 0 1rem;
+  }
+
+  .headerLinkLogin {
+    min-width: 80px;
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+    margin-right: 1rem;
+  }
+
+  .navLink,
+  .navLogin {
+    font-size: 0.9rem;
+  }
 }
