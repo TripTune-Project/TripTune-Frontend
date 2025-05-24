@@ -67,7 +67,7 @@ const getErrorType = (message: string): ErrorType => {
 const handleError = async (
   response: Response,
   responseData: any
-): Promise<never> => {
+): Promise<undefined | never> => {
   const errorType = getErrorType(responseData.message);
 
   switch (errorType) {
@@ -99,9 +99,10 @@ const handleError = async (
         // refreshApi 함수를 사용해 토큰 갱신
         await refreshApi();
 
-        // 토큰 갱신 성공했으므로 여기서 원래 요청을 다시 시도하는 로직을 추가할 수 있음
-        // 현재는 에러를 그대로 throw하므로 호출자가 재시도 여부를 결정할 수 있음
-      } catch (error) {
+        // 토큰 갱신 성공했으므로 원래 요청을 다시 시도
+        // 이 시점에서는 throw하지 않고 재시도를 위해 return 처리
+        return undefined;
+      } catch (error: any) {
         // 토큰 갱신 실패 시에만 사용자에게 알림
         Cookies.remove('accessToken');
         Cookies.remove('refreshToken');
@@ -125,7 +126,8 @@ const fetchData = async <T>(
   method: string,
   endpoint: string,
   body?: any,
-  options?: FetchOptions
+  options?: FetchOptions,
+  isRetry: boolean = false
 ): Promise<T> => {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
   const url = `${baseUrl}${endpoint}`;
@@ -167,7 +169,20 @@ const fetchData = async <T>(
 
     // 응답 성공 여부 확인
     if (!response.ok) {
-      return handleError(response, data);
+      try {
+        // handleError가 undefined를 반환하면 토큰 갱신 후 재시도를 의미
+        const result = await handleError(response, data);
+
+        // 토큰 갱신 후 재시도 (토큰 갱신이 성공했고 아직 재시도하지 않은 경우)
+        if (result === undefined && !isRetry) {
+          // 토큰이 갱신되었으므로 동일한 요청을 재시도
+          return await fetchData<T>(method, endpoint, body, options, true);
+        }
+      } catch (error) {
+        throw error;
+      }
+
+      throw new Error(data.message);
     }
 
     return data as T;
