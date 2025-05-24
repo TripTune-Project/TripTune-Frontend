@@ -172,7 +172,7 @@ const fetchData = async <T>(
     
     return data as T;
   } catch (error) {
-    console.error('API 요청 중 오류 발생:', error);
+    // 콘솔 로깅 제거하여 중복 알림 방지
     throw error;
   }
 };
