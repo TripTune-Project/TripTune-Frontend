@@ -33,7 +33,9 @@ const permissions = [
 
 const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
   const router = useRouter();
-  const { scheduleId } = useParams();
+  // useParams의 반환 타입을 업데이트
+  const params = useParams();
+  const scheduleId = params?.scheduleId as string;
   const [email, setEmail] = useState<string>('');
   const { getDecryptedCookie } = saveLocalContent();
   const [selectedPermission, setSelectedPermission] = useState<string>('EDIT');
@@ -423,10 +425,11 @@ export default InviteModal;
 // Styled-components
 const ModalOverlay = styled.div`
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  inset: 0;
+  //top: 0;
+  //left: 0;
+  width: 100%;
+  height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;

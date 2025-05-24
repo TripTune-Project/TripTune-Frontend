@@ -84,19 +84,18 @@ const TravelDetailPage = () => {
     };
   }, []);
 
-  const { placeId } = useParams<{ placeId: string }>();
+  const params = useParams();
+  const placeId = params?.placeId as string;
   const placeIdNumber = parseInt(placeId, 10);
   const queryClient = useQueryClient();
 
   const { isAuthenticated } = useAuth();
   const [showLoginModal, setShowLoginModal] = useState(false);
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['travelDetail', placeIdNumber],
     queryFn: async () => {
-      const { getDecryptedCookie } = saveLocalContent();
-      const accessToken = getDecryptedCookie('accessToken');
-      const requiresAuth = !!accessToken;
+      const requiresAuth = isAuthenticated === true;
       const result = await fetchTravelDetailData(placeIdNumber, requiresAuth);
       if (result.success) {
         return result.data;
@@ -106,6 +105,12 @@ const TravelDetailPage = () => {
       }
     },
   });
+
+  useEffect(() => {
+    if (isAuthenticated !== null) {
+      refetch();
+    }
+  }, [isAuthenticated, refetch]);
 
   const [isExpanded, setIsExpanded] = useState(false);
   const [showExpandButton, setShowExpandButton] = useState(false);
@@ -139,18 +144,20 @@ const TravelDetailPage = () => {
         setShowLoginModal(true);
         return;
       }
-      return bookmarkStatus
+
+      const response = bookmarkStatus
         ? await BookMarkDeleteApi({ placeId: placeIdNumber })
         : await BookMarkApi({ placeId: placeIdNumber });
+
+      return response;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['travelDetail', placeIdNumber],
       });
     },
-    onError: (error) => {
-      console.error('북마크 변경 오류:', error);
-    },
+    onError: (error) => {},
+    onSettled: () => {},
   });
 
   const handleBookmarkToggle = () => {

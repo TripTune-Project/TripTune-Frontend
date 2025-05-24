@@ -89,15 +89,18 @@ const HomePageRecommendTravel = () => {
   const [travelList, setTravelList] = useState<TravelItem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const themeMapping = useMemo(() => ({
-    전체: 'all',
-    관광지: 'attractions',
-    문화시설: 'culture',
-    레포츠: 'sports',
-    숙박: 'lodging',
-    쇼핑: 'shopping',
-    음식점: 'food',
-  }), []) as Record<string, string>;
+  const themeMapping = useMemo(
+    () => ({
+      전체: 'all',
+      관광지: 'attractions',
+      문화시설: 'culture',
+      레포츠: 'sports',
+      숙박: 'lodging',
+      쇼핑: 'shopping',
+      음식점: 'food',
+    }),
+    []
+  ) as Record<string, string>;
 
   const handleThemeClick = useCallback(
     async (theme: string) => {

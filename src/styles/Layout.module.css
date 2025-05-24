@@ -2,21 +2,21 @@
   color: #000000;
   width: 100%;
   flex-shrink: 0;
-  -webkit-backdrop-filter: blur(2px);
   backdrop-filter: blur(2px);
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 .header {
   display: flex;
   align-items: center;
-  height: 91px;
+  height: auto;
+  min-height: 70px;
   flex-shrink: 0;
   border-bottom: 1px solid #c4c4c4;
   background: #ffffff;
-  -webkit-backdrop-filter: blur(2px);
   backdrop-filter: blur(2px);
   width: 100%;
 }
@@ -29,7 +29,7 @@
   flex: 1;
   display: flex;
   width: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
 }
 
@@ -37,27 +37,30 @@
   content: '';
   position: absolute;
   width: 100%;
-  height: 701px;
+  max-width: 1455px;
+  height: 50vh;
+  max-height: 701px;
   border-radius: 0 0 0 200px;
   background: linear-gradient(264deg, #edf9f7 3.98%, #f1f5ff 98.44%);
   top: 0;
-  left: 50%;
+  left: 66%;
   transform: translateX(-50%);
   z-index: -1;
 }
 
 .content {
   width: 100%;
+  height: auto;
   min-height: 100vh;
   flex-grow: 1;
-  padding: 0 2rem;
 }
 
 .footer {
-  margin-top: 55px;
-  padding-top: 5px;
+  margin-top: 3rem;
+  padding: 2rem 0;
   width: 100%;
-  min-height: 324px;
+  height: auto;
+  min-height: 250px;
   flex-shrink: 0;
   background: #363636;
   overflow-y: hidden;
@@ -68,25 +71,25 @@
 .email,
 .github,
 .copyright {
-  margin-left: 2rem;
+  margin-left: 8%;
   color: #ffffff;
   font-family: 'Noto Sans KR', serif;
-  font-size: 17px;
+  font-size: 1.1rem;
   font-style: normal;
   font-weight: 300;
   line-height: normal;
 }
 
 .logoImg {
-  width: 183px;
-  height: 55px;
-  flex-shrink: 0;
-  margin-top: 40px;
-  margin-left: 2rem;
+  max-width: 183px;
+  width: 40%;
+  height: auto;
+  margin-top: 2rem;
+  margin-left: 8%;
 }
 
 .logoText {
-  font-size: 35px;
+  font-size: 2.2rem;
   font-family: 'Noto Sans KR', serif;
   font-weight: 500;
   flex-shrink: 0;
@@ -94,10 +97,11 @@
   margin-top: 0;
 }
 
-/* 반응형 디자인 */
-@media screen and (max-width: 1440px) {
-  .content {
-    padding: 0 1.5rem;
+/* 반응형 미디어 쿼리 */
+@media screen and (max-width: 992px) {
+  .section::before {
+    left: 60%;
+    height: 45vh;
   }
   
   .logoImg,
@@ -105,36 +109,31 @@
   .email,
   .github,
   .copyright {
-    margin-left: 1.5rem;
-  }
-}
-
-@media screen and (max-width: 1024px) {
-  .content {
-    padding: 0 1rem;
-  }
-  
-  .logoImg,
-  .logoText,
-  .email,
-  .github,
-  .copyright {
-    margin-left: 1rem;
+    margin-left: 5%;
   }
   
   .logoImg {
-    width: 150px;
-    height: 45px;
-  }
-  
-  .logoText {
-    font-size: 28px;
+    margin-left: 5%;
   }
 }
 
 @media screen and (max-width: 768px) {
-  .content {
-    padding: 0 0.5rem;
+  .header {
+    min-height: 60px;
+  }
+  
+  .section::before {
+    left: 50%;
+    border-radius: 0 0 0 100px;
+    height: 40vh;
+  }
+  
+  .footer {
+    min-height: 200px;
+  }
+  
+  .logoText {
+    font-size: 1.8rem;
   }
   
   .logoImg,
@@ -142,20 +141,37 @@
   .email,
   .github,
   .copyright {
-    margin-left: 0.5rem;
+    font-size: 1rem;
+    margin-left: 5%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .section::before {
+    border-radius: 0 0 0 50px;
+    height: 30vh;
+  }
+  
+  .footer {
+    min-height: 180px;
+    padding: 1.5rem 0;
   }
   
   .logoImg {
-    width: 120px;
-    height: 36px;
+    max-width: 140px;
+    margin-top: 1rem;
   }
   
   .logoText {
-    font-size: 24px;
+    font-size: 1.5rem;
   }
   
-  .section::before {
-    height: 500px;
-    border-radius: 0 0 0 100px;
+  .logoImg,
+  .logoText,
+  .email,
+  .github,
+  .copyright {
+    font-size: 0.9rem;
+    margin-left: 1rem;
   }
 }

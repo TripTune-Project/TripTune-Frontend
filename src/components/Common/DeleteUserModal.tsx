@@ -7,10 +7,11 @@ import Alert from '@mui/material/Alert';
 
 const ModalOverlay = styled.div`
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  inset: 0;
+  //top: 0;
+  //left: 0;
+  width: 100%;
+  height: 100%;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
@@ -242,8 +243,14 @@ const DeleteUserModal = ({
         <PasswordSection>
           <PasswordLabel>비밀번호</PasswordLabel>
           <PasswordNotice>
-            ※ 현재 비밀번호를 입력하고 탈퇴하기를 누르면 위 내용에 동의하는
-            것으로 간주됩니다.
+            <li>
+              현재 비밀번호를 입력하고 탈퇴하기를 누르면 위 내용에 동의하는
+              것으로 간주됩니다.
+            </li>
+            <li>
+              소셜 로그인 회원의 경우 [로그인 {'>'} 비밀번호 찾기]를 통해
+              비밀번호를 설정한 후 탈퇴를 진행해주세요.
+            </li>
           </PasswordNotice>
           <PasswordInput>
             <InputField

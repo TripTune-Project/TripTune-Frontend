@@ -75,7 +75,7 @@ function FindPage() {
       <Head>
         <title>비밀번호 찾기</title>
         <meta name='description' content='비밀번호 찾기 페이지입니다.' />
-        <meta name='viewport' content='width=device-width, initial-scale=1' />
+        <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
       </Head>
 
       <div className={styles.pageContainer}>

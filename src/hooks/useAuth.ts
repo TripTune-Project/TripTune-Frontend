@@ -3,11 +3,30 @@ import { refreshApi } from '@/apis/Login/refreshApi';
 import saveLocalContent from '@/utils/saveLocalContent';
 import Cookies from 'js-cookie';
 
+/**
+ * useAuth 훅 - 인증 상태 관리를 위한 커스텀 훅
+ *
+ * 주요 기능:
+ * - 사용자 인증 상태 확인 및 관리
+ * - 토큰 자동 갱신
+ * - 사용자 닉네임 관리
+ *
+ * @returns 인증 관련 상태 및 함수들
+ */
 const useAuth = () => {
+  // 인증 상태 (null: 로딩 중, true: 인증됨, false: 인증되지 않음)
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  // 사용자 닉네임 상태
   const [nickname, setNickname] = useState<string>('');
+  // 쿠키 관련 유틸리티 함수
   const { getDecryptedCookie } = saveLocalContent();
 
+  /**
+   * 인증 상태를 확인하는 함수
+   * 1. 액세스 토큰 확인
+   * 2. 액세스 토큰이 없으면 리프레시 토큰으로 갱신 시도
+   * 3. 인증 상태 및 닉네임 업데이트
+   */
   const checkAuth = useCallback(async () => {
     try {
       const accessToken = getDecryptedCookie('accessToken');
@@ -42,7 +61,11 @@ const useAuth = () => {
     }
   }, [getDecryptedCookie]);
 
-  // 로그인 성공 시 즉시 인증 상태를 업데이트하는 함수
+  /**
+   * 로그인/로그아웃 시 인증 상태를 수동으로 업데이트하는 함수
+   *
+   * @param status 업데이트할 인증 상태 (true: 인증됨, false: 인증되지 않음)
+   */
   const updateAuthStatus = (status: boolean) => {
     setIsAuthenticated(status);
     if (status) {
@@ -53,8 +76,13 @@ const useAuth = () => {
     }
   };
 
-  // 토큰 갱신 시 인증 상태를 업데이트하는 함수
-  const handleTokenRefresh = async () => {
+  /**
+   * 토큰 갱신 함수
+   * 리프레시 토큰을 사용하여 액세스 토큰 갱신 시도
+   *
+   * @returns 토큰 갱신 결과 프로미스
+   */
+  const handleTokenRefresh = useCallback(async () => {
     const refreshToken = Cookies.get('refreshToken');
     if (!refreshToken) {
       setIsAuthenticated(false);
@@ -71,10 +99,12 @@ const useAuth = () => {
       setIsAuthenticated(false);
       setNickname('');
     }
-  };
+  }, [getDecryptedCookie]);
 
+  // 컴포넌트 마운트 시 인증 상태 확인 및 주기적 갱신 설정
   useEffect(() => {
     checkAuth();
+    // 4분마다 인증 상태 확인 (토큰 만료 방지)
     const id = setInterval(checkAuth, 4 * 60 * 1000);
     return () => clearInterval(id);
   }, [checkAuth]);

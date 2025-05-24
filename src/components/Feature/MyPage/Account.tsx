@@ -24,13 +24,12 @@ type AccountFormData = AccountEmailFormData & AccountPasswordFormData;
 
 const Account = () => {
   const router = useRouter();
-  const { userData } = useMyPage();
+  const { userData, fetchUserData } = useMyPage();
 
-  // 로딩 상태 분리
+
   const [emailRequestLoading, setEmailRequestLoading] = useState(false);
   const [emailConfirmLoading, setEmailConfirmLoading] = useState(false);
-  // 기존의 emailRequestSuccess 상태는 UI에만 사용 중이었으므로
-  // 버튼 비활성화 조건에서 이를 제거하여 재요청이 가능하도록 함
+
   const [emailRequestSuccess, setEmailRequestSuccess] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -125,18 +124,14 @@ const Account = () => {
       setAlertOpen(true);
       return;
     }
-    if (!data.verificationCode) {
-      setAlertMessage('이메일 인증을 확인해주세요.');
-      setAlertSeverity('warning');
-      setAlertOpen(true);
-      return;
-    }
+    
     try {
       await changeEmail(data.email);
       setAlertMessage('이메일이 성공적으로 변경되었습니다.');
       setAlertSeverity('success');
       setAlertOpen(true);
       setIsEditing(false);
+      await fetchUserData();
     } catch (error: any) {
       console.error('이메일 변경 실패:', error.message);
       setAlertMessage('이메일 변경에 실패했습니다.');
@@ -195,7 +190,7 @@ const Account = () => {
   const newPassword = watch('newPassword');
   const rePassword = watch('rePassword');
 
-  const isEmailSaveDisabled = !email || !verificationCode;
+  const isEmailSaveDisabled = false;
   const isPasswordSaveDisabled = !nowPassword || !newPassword || !rePassword;
 
   return (
@@ -214,6 +209,14 @@ const Account = () => {
                     defaultValue={userData?.email || ''}
                     {...register('email', { validate: validateEmail })}
                     className={errors.email ? styles.inputError : styles.input}
+                    onInput={(e) => {
+                      // 복사 붙여넣기 이벤트 감지
+                      const target = e.target as HTMLInputElement;
+                      if (target.value) {
+                        // 입력값이 있을 때 form의 값 업데이트
+                        register('email').onChange(e);
+                      }
+                    }}
                   />
                   <button
                     type='button'
@@ -225,7 +228,6 @@ const Account = () => {
                       };
                       handleEmailVerification(emailData);
                     }}
-                    disabled={emailRequestLoading}
                   >
                     {emailRequestLoading ? (
                       <VerificationLoading />
@@ -247,6 +249,14 @@ const Account = () => {
                     className={
                       errors.verificationCode ? styles.inputError : styles.input
                     }
+                    onInput={(e) => {
+                      // 복사 붙여넣기 이벤트 감지
+                      const target = e.target as HTMLInputElement;
+                      if (target.value) {
+                        // 입력값이 있을 때 form의 값 업데이트
+                        register('verificationCode').onChange(e);
+                      }
+                    }}
                   />
                   <button
                     type='button'
@@ -274,6 +284,12 @@ const Account = () => {
                 )}
                 <div className={styles.actionRow}>
                   <button
+                    className={styles.cancelBtn}
+                    onClick={() => setIsEditing(false)}
+                  >
+                    취소
+                  </button>
+                  <button
                     className={styles.saveBtn}
                     onClick={handleSubmit((data) => {
                       const emailData: AccountEmailFormData = {
@@ -285,12 +301,6 @@ const Account = () => {
                     disabled={isEmailSaveDisabled}
                   >
                     저장
-                  </button>
-                  <button
-                    className={styles.cancelBtn}
-                    onClick={() => setIsEditing(false)}
-                  >
-                    취소
                   </button>
                 </div>
               </div>
@@ -360,12 +370,22 @@ const Account = () => {
                     errors.rePassword ? styles.inputError : styles.input
                   }
                 />
+                <li>
+                  소셜 로그인 회원의 경우 [로그인 {'>'} 비밀번호 찾기] 를 통해
+                  이메일로 전송된 링크에서 비밀번호 설정이 가능합니다.
+                </li>
                 {errors.rePassword && (
                   <p className={styles.errorText}>
                     {errors.rePassword.message}
                   </p>
                 )}
                 <div className={styles.actionRow}>
+                  <button
+                    className={styles.cancelBtn}
+                    onClick={() => setIsEditingPwd(false)}
+                  >
+                    취소
+                  </button>
                   <button
                     className={styles.saveBtn}
                     onClick={handleSubmit((data) => {
@@ -380,19 +400,13 @@ const Account = () => {
                   >
                     저장
                   </button>
-                  <button
-                    className={styles.cancelBtn}
-                    onClick={() => setIsEditingPwd(false)}
-                  >
-                    취소
-                  </button>
                 </div>
               </div>
             ) : (
               <>
                 <input
                   type='text'
-                  value='비밀번호 입력'
+                  value='비밀번호 변경'
                   readOnly
                   className={styles.input}
                 />

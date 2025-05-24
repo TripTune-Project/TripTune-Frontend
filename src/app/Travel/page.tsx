@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState, Suspense, useMemo } from 'react';
+import React, { useEffect, useRef, useState, Suspense } from 'react';
 import Head from 'next/head';
 import Pagination from '@/components/Common/Pagination';
 import SearchPlacesMap from '@/components/Feature/Travel/SearchPlacesMap';
@@ -25,10 +25,11 @@ import NoResultLayout from '@/components/Common/NoResult';
 import LoginModal from '@/components/Common/LoginModal';
 import useAuth from '@/hooks/useAuth';
 
+// 여행지 탐색 페이지 주요 컨텐츠 컴포넌트
 const TravelPageContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const keyword = searchParams.get('keyword') || '';
+  const keyword = searchParams?.get('keyword') || '';
 
   const {
     currentPage,
@@ -39,10 +40,12 @@ const TravelPageContent = () => {
     setIsSearching,
   } = useTravelStore();
 
+  // 알림 관련 상태
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertSeverity, setAlertSeverity] = useState<AlertColor>('info');
 
+  // 사용자 위치 정보 Hook
   const {
     userCoordinates,
     errorMessage: geoErrorMessage,
@@ -53,18 +56,18 @@ const TravelPageContent = () => {
     longitude: number;
   } | null>(null);
 
-  const defaultCoordinates = useMemo(
-    () => ({
-      latitude: 37.5642135,
-      longitude: 127.0016985,
-    }),
-    []
-  );
+  // 기본 위치 설정 (서울 중심부)
+  const defaultCoordinates = {
+    latitude: 37.5642135,
+    longitude: 127.0016985,
+  };
 
+  // 인증 상태 확인 및 로그인 모달 관련
   const { isAuthenticated } = useAuth();
-  const requiresAuth = !!isAuthenticated;
+  const requiresAuth = isAuthenticated === true;
   const [showLoginModal, setShowLoginModal] = useState(false);
 
+  // 위치 기반 여행지 목록 데이터 쿼리
   const {
     data: locationData,
     isLoading: isLoadingLocation,
@@ -76,6 +79,7 @@ const TravelPageContent = () => {
     !isSearching
   );
 
+  // 검색어 기반 여행지 목록 데이터 쿼리
   const {
     data: searchData,
     isLoading: isLoadingSearch,
@@ -91,6 +95,7 @@ const TravelPageContent = () => {
     isSearching
   );
 
+  // 검색어 디바운스 처리 (타이핑 최적화)
   const debouncedSearchTerm = useDebounce(searchTerm, 800);
 
   useEffect(() => {
@@ -127,6 +132,9 @@ const TravelPageContent = () => {
     setIsSearching,
   ]);
 
+  /**
+   * 위치 정보 설정 및 오류 처리
+   */
   useEffect(() => {
     if (permissionState === 'granted' && userCoordinates) {
       setCoordinates(userCoordinates);
@@ -138,8 +146,24 @@ const TravelPageContent = () => {
         setAlertOpen(true);
       }
     }
-  }, [permissionState, userCoordinates, geoErrorMessage, defaultCoordinates]);
+  }, [permissionState, userCoordinates, geoErrorMessage]);
 
+  /**
+   * 인증 상태 변경 시 데이터 다시 가져오기
+   */
+  useEffect(() => {
+    if (isAuthenticated !== null) {
+      if (isSearching) {
+        refetchSearch();
+      } else {
+        refetchLocation();
+      }
+    }
+  }, [isAuthenticated, isSearching, refetchLocation, refetchSearch]);
+
+  /**
+   * 검색 버튼 클릭 핸들러
+   */
   const handleSearch = () => {
     if (searchTerm.trim()) {
       setIsSearching(true);
@@ -152,6 +176,7 @@ const TravelPageContent = () => {
     }
   };
 
+  // 특수문자를 제외한 입력만 허용
   const handleSearchInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -169,6 +194,7 @@ const TravelPageContent = () => {
     }
   };
 
+  // 검색 입력 포커스 해제 핸들러
   const handleSearchInputBlur = () => {
     if (searchTerm.trim() === '') {
       setIsSearching(false);
@@ -177,6 +203,7 @@ const TravelPageContent = () => {
     }
   };
 
+  // 검색 입력 키 이벤트 핸들러
   const handleSearchKeyPress = (
     event: React.KeyboardEvent<HTMLInputElement>
   ) => {
@@ -190,17 +217,27 @@ const TravelPageContent = () => {
       setShowLoginModal(true);
       return;
     }
+
     try {
       if (bookmarkStatus) {
         await BookMarkDeleteApi({ placeId });
       } else {
         await BookMarkApi({ placeId });
       }
+    } catch (err) {
+      console.error('[토글북마크] 에러 발생 ✖', err);
     } finally {
-      isSearching ? await refetchSearch() : await refetchLocation();
+      if (isSearching) {
+        await refetchSearch();
+      } else {
+        await refetchLocation();
+      }
     }
   };
 
+  /**
+   * 알림 닫기 핸들러
+   */
   const handleAlertClose = (
     event?: React.SyntheticEvent | Event,
     reason?: string
@@ -209,10 +246,12 @@ const TravelPageContent = () => {
     setAlertOpen(false);
   };
 
+  // 여행지 상세 페이지로 이동 핸들러
   const handleDetailClick = (placeId: number) => {
     router.push(`/Travel/${placeId}`);
   };
 
+  // 도보 및 차량 이동 시간 정보
   const calculateTravelTime = (distance: number) => {
     if (isNaN(distance)) {
       return {
@@ -234,14 +273,17 @@ const TravelPageContent = () => {
     };
   };
 
+  // 현재 표시할 여행지 데이터 선택
   const places = isSearching
     ? searchData?.data?.content
     : locationData?.data?.content;
 
+  // 전체 페이지 수 계산
   const totalPages = isSearching
     ? (searchData?.data?.totalPages ?? 0)
     : (locationData?.data?.totalPages ?? 0);
 
+  // 페이지 변경 핸들러
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo(0, 0);
