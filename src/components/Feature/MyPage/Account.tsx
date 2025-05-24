@@ -209,6 +209,14 @@ const Account = () => {
                     defaultValue={userData?.email || ''}
                     {...register('email', { validate: validateEmail })}
                     className={errors.email ? styles.inputError : styles.input}
+                    onInput={(e) => {
+                      // 복사 붙여넣기 이벤트 감지
+                      const target = e.target as HTMLInputElement;
+                      if (target.value) {
+                        // 입력값이 있을 때 form의 값 업데이트
+                        register('email').onChange(e);
+                      }
+                    }}
                   />
                   <button
                     type='button'
@@ -241,6 +249,14 @@ const Account = () => {
                     className={
                       errors.verificationCode ? styles.inputError : styles.input
                     }
+                    onInput={(e) => {
+                      // 복사 붙여넣기 이벤트 감지
+                      const target = e.target as HTMLInputElement;
+                      if (target.value) {
+                        // 입력값이 있을 때 form의 값 업데이트
+                        register('verificationCode').onChange(e);
+                      }
+                    }}
                   />
                   <button
                     type='button'

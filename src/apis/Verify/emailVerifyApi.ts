@@ -15,11 +15,37 @@ export const requestEmailVerification = async (
     });
   } catch (error: any) {
     if (error.response?.data) {
-      return error.response.data;
+      const errorMessage = error.response.message || '이메일 인증 요청 중 오류가 발생했습니다.';
+      
+      // 409 에러: 이미 존재하는 이메일
+      if (error.response.status === 409) {
+        return {
+          success: false,
+          message: '이미 존재하는 이메일입니다.',
+        };
+      }
+      // 400 에러: 마이페이지에서 이미 가입된 이메일 인증 요청
+      else if (error.response.status === 400) {
+        if (errorMessage.includes('가입') || errorMessage.includes('존재')) {
+          return {
+            success: false,
+            message: '이미 가입되어 있는 이메일입니다.',
+          };
+        }
+        return {
+          success: false,
+          message: errorMessage,
+        };
+      }
+      return {
+        success: false,
+        message: errorMessage,
+      };
     }
-    throw new Error(
-      error.message || '이메일 인증 요청 중 오류가 발생했습니다.'
-    );
+    return {
+      success: false,
+      message: error.message || '이메일 인증 요청 중 오류가 발생했습니다.',
+    };
   }
 };
 
@@ -42,10 +68,49 @@ export const verifyEmail = async (
     });
   } catch (error: any) {
     if (error.response?.data) {
-      return error.response.data;
+      const errorMessage = error.response.message || '이메일 인증 검증 중 오류가 발생했습니다.';
+      
+      // 400 에러: 잘못된 인증번호 또는 만료된 인증번호
+      if (error.response.status === 400) {
+        if (errorMessage.includes('만료') || errorMessage.includes('요청되지 않았')) {
+          return {
+            success: false,
+            message: '인증번호가 만료되었거나 요청되지 않았습니다. 새로 인증을 요청해 주세요.',
+          };
+        } else if (errorMessage.includes('가입') || errorMessage.includes('존재')) {
+          return {
+            success: false,
+            message: '이미 가입되어 있는 이메일입니다.',
+          };
+        } else {
+          return {
+            success: false,
+            message: '인증번호가 일치하지 않습니다. 다시 확인해 주세요.',
+          };
+        }
+      } else if (error.response.status === 409) {
+        return {
+          success: false,
+          message: '이미 가입되어 있는 이메일입니다.',
+        };
+      }
+      
+      // 기본 에러 메시지 확인 및 구체화
+      if (errorMessage.includes('인증에 실패했습니다')) {
+        return {
+          success: false,
+          message: '이미 가입되어 있는 이메일입니다.',
+        };
+      }
+      
+      return {
+        success: false,
+        message: errorMessage,
+      };
     }
-    throw new Error(
-      error.message || '이메일 인증 검증 중 오류가 발생했습니다.'
-    );
+    return {
+      success: false,
+      message: error.message || '이메일 인증 검증 중 오류가 발생했습니다.',
+    };
   }
 };

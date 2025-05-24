@@ -3,9 +3,9 @@ body {
   color: #000000;
   margin: 0;
   padding: 0;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
   box-sizing: border-box;
   font-family:
     'Noto Sans KR',
@@ -20,6 +20,35 @@ body {
     Droid Sans,
     Helvetica Neue,
     sans-serif;
+}
+
+/* 반응형 기본 설정 */
+* {
+  box-sizing: border-box;
+}
+
+@media (max-width: 1200px) {
+  html {
+    font-size: 95%;
+  }
+}
+
+@media (max-width: 992px) {
+  html {
+    font-size: 90%;
+  }
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 85%;
+  }
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: 80%;
+  }
 }
 
 a {

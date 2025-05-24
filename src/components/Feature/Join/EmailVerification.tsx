@@ -126,6 +126,14 @@ const EmailVerification = ({
           })}
           className={errors.email ? styles.inputError : styles.emailInput}
           disabled={isEmailDisabled}
+          onInput={(e) => {
+            // 복사 붙여넣기 이벤트 감지
+            const target = e.target as HTMLInputElement;
+            if (target.value) {
+              // 입력값이 있을 때 form의 값 업데이트
+              register('email').onChange(e);
+            }
+          }}
         />
         <button
           type='button'
@@ -149,6 +157,14 @@ const EmailVerification = ({
             className={
               errors.authCode ? styles.inputError : styles.inputVerification
             }
+            onInput={(e) => {
+              // 복사 붙여넣기 이벤트 감지
+              const target = e.target as HTMLInputElement;
+              if (target.value) {
+                // 입력값이 있을 때 form의 값 업데이트
+                register('authCode').onChange(e);
+              }
+            }}
           />
           <button
             type='button'
