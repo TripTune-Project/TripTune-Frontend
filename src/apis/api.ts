@@ -19,7 +19,7 @@ enum ErrorType {
 }
 
 // 오류 코드별 처리 방식 결정
-const getErrorType = (message: string): ErrorType => {
+const getErrorType = (message: string, statusCode?: number): ErrorType => {
   // 1. 로그인 필요 에러
   if (
     message === '유효하지 않은 JWT 토큰입니다.' ||
@@ -31,7 +31,7 @@ const getErrorType = (message: string): ErrorType => {
   }
 
   // 2. 토큰 갱신 필요 에러
-  if (message === 'JWT 토큰이 만료되었습니다.') {
+  if (message === 'JWT 토큰이 만료되었습니다.' || statusCode === 401) {
     return ErrorType.REFRESH_TOKEN;
   }
 
@@ -68,7 +68,7 @@ const handleError = async (
   response: Response,
   responseData: any
 ): Promise<undefined | never> => {
-  const errorType = getErrorType(responseData.message);
+  const errorType = getErrorType(responseData.message, response.status);
 
   switch (errorType) {
     case ErrorType.NEED_LOGIN:
@@ -169,6 +169,21 @@ const fetchData = async <T>(
 
     // 응답 성공 여부 확인
     if (!response.ok) {
+      // 401 에러인 경우, 토큰 갱신 후 재시도
+      if (response.status === 401 && !isRetry) {
+        try {
+          await refreshApi();
+          // 토큰 갱신 성공 시 원래 요청 재시도
+          return await fetchData<T>(method, endpoint, body, options, true);
+        } catch (refreshError) {
+          // 토큰 갱신 실패 시 로그인 페이지로 이동
+          Cookies.remove('accessToken');
+          Cookies.remove('refreshToken');
+          window.location.href = '/login';
+          throw new Error('인증이 필요합니다. 다시 로그인해주세요.');
+        }
+      }
+      
       try {
         // handleError가 undefined를 반환하면 토큰 갱신 후 재시도를 의미
         const result = await handleError(response, data);
