@@ -767,8 +767,7 @@
 
 .deleteZone {
   position: fixed;
-  bottom: 20px;
-  left: 50%;
+  left: 14%;
   transform: translateX(-50%);
   z-index: 1000;
   width: 461px;
