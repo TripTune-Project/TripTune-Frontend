@@ -1,3 +1,7 @@
+:root {
+  --base-font-size: 16px;
+}
+
 html,
 body {
   color: #000000;

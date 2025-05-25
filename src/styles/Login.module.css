@@ -50,7 +50,7 @@
 
 .inputGroup {
   width: 100%;
-  max-width: 480px;
+  min-width: 480px;
   height: auto;
   flex-shrink: 0;
   margin-bottom: 15px;
@@ -209,22 +209,22 @@
     width: 95%;
     padding: 1.5rem 0.8rem;
   }
-  
+
   .loginTitle {
     font-size: 2rem;
     margin-top: 1.5rem;
     margin-bottom: 1.5rem;
   }
-  
+
   .inputGroup {
     width: 90%;
   }
-  
+
   .socialLoginContainer,
   .hrContainer {
     max-width: 90%;
   }
-  
+
   .submitButton,
   .kakaoButton,
   .naverButton {
@@ -239,42 +239,42 @@
     padding: 1rem 0.5rem;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   }
-  
+
   .loginTitle {
     font-size: 1.8rem;
     margin-top: 1rem;
     margin-bottom: 1rem;
   }
-  
-  .input, 
+
+  .input,
   .inputError {
     height: 45px;
     font-size: 14px;
   }
-  
+
   .submitButton {
     height: 45px;
     font-size: 16px;
   }
-  
+
   .linkContainer {
     justify-content: center;
   }
-  
+
   .findId,
   .findPassword,
   .join {
     font-size: 12px;
     padding: 3px 6px;
   }
-  
+
   .kakaoButton,
   .naverButton {
     height: 45px;
     font-size: 14px;
     padding: 12px 0;
   }
-  
+
   .hrText {
     font-size: 12px;
   }

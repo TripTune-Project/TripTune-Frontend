@@ -43,7 +43,6 @@
   align-items: center;
   justify-content: space-between;
   width: 95%;
-  max-width: 1200px;
   z-index: 1;
   height: 100%;
 }

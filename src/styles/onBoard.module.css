@@ -53,7 +53,6 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
-  padding: 0 2rem;
 }
 
 .onBoardingSearch {
@@ -187,9 +186,10 @@
 
 .buttonContainer {
   display: flex;
+  float:right;
   align-items: center;
   gap: 15px;
-  margin-top: -80px;
+  margin-top: -50px;
   width: 100%;
   max-width: 800px;
   justify-content: center;
@@ -210,6 +210,7 @@
   text-align: left;
   margin-top: 76px;
   padding: 0 2rem;
+  margin-left: 4%;
 }
 
 .chooseRecomend {
@@ -471,16 +472,16 @@
   .onBoardingExplainDiv {
     margin-top: -300px;
   }
-  
+
   .onBoardingSearch {
     max-width: 900px;
   }
-  
+
   .viewBtn {
     width: 300px;
     height: 187px;
   }
-  
+
   .viewBtnSchedule,
   .viewBtnTravel {
     width: 295px;
@@ -492,22 +493,22 @@
   .onBoardingExplainDiv {
     margin-top: -250px;
   }
-  
+
   .onBoardingSearch {
     max-width: 800px;
   }
-  
+
   .viewBtn {
     width: 250px;
     height: 156px;
   }
-  
+
   .viewBtnSchedule,
   .viewBtnTravel {
     width: 245px;
     height: 169px;
   }
-  
+
   .recommendedDestinations {
     padding: 0 1rem;
   }
@@ -517,26 +518,26 @@
   .onBoardingExplainDiv {
     margin-top: -200px;
   }
-  
+
   .onBoardingSearch {
     max-width: 600px;
   }
-  
+
   .viewBtn {
     width: 200px;
     height: 125px;
   }
-  
+
   .viewBtnSchedule,
   .viewBtnTravel {
     width: 195px;
     height: 135px;
   }
-  
+
   .recommendedDestinations {
     padding: 0 0.5rem;
   }
-  
+
   .buttonContainer {
     margin-top: -40px;
   }
@@ -546,24 +547,24 @@
   .onBoardingExplainDiv {
     margin-top: -150px;
   }
-  
+
   .onBoardingSearch {
     max-width: 100%;
   }
-  
+
   .viewBtn {
     width: 100%;
     height: auto;
     aspect-ratio: 16/10;
   }
-  
+
   .viewBtnSchedule,
   .viewBtnTravel {
     width: 100%;
     height: auto;
     aspect-ratio: 16/10;
   }
-  
+
   .buttonContainer {
     flex-direction: column;
     margin-top: 20px;
