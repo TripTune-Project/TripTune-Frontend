@@ -1,5 +1,6 @@
 import { post } from '../api';
 import saveLocalContent from '@/utils/saveLocalContent';
+import Cookies from 'js-cookie';
 
 export const refreshApi = async (): Promise<{
   accessToken: string;
@@ -13,7 +14,9 @@ export const refreshApi = async (): Promise<{
       };
     }>(
       '/api/members/refresh',
-      {},
+      {
+        refreshToken: Cookies.get('refreshToken'),
+      },
       {
         credentials: 'include',
         requiresAuth: true,
