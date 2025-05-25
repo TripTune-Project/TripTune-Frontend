@@ -16,7 +16,7 @@ export const refreshApi = async (): Promise<{
       {},
       {
         credentials: 'include',
-        requiresAuth: false,
+        requiresAuth: true,
       }
     );
 
