@@ -7,7 +7,7 @@ interface FetchOptions {
   headers?: Record<string, string>;
   requiresAuth?: boolean;
   isFormData?: boolean;
-  credentials?: RequestCredentials;
+  credentials?: string;
 }
 
 // 오류 타입 분류
@@ -155,7 +155,7 @@ const fetchData = async <T>(
   const requestOptions: RequestInit = {
     method,
     headers,
-    credentials: options?.credentials || 'include',
+    credentials: 'include',
   };
 
   // GET 요청이 아니고 body가 있는 경우
