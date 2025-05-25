@@ -71,7 +71,7 @@
 .inputGroup {
   margin-bottom: 20px;
   width: 100%;
-  max-width: 480px;
+  min-width: 480px;
 }
 
 .findText {
@@ -248,17 +248,17 @@
     font-size: 2rem;
     margin: 1.5rem 0;
   }
-  
+
   .pageContainer {
     width: 95%;
     padding: 1.5rem 0.8rem;
     margin-top: 1rem;
   }
-  
+
   .inputGroup {
     width: 90%;
   }
-  
+
   .submitButton {
     height: 50px;
     font-size: 18px;
@@ -270,23 +270,23 @@
     font-size: 1.8rem;
     margin: 1rem 0;
   }
-  
+
   .pageContainer {
     width: 100%;
     border-radius: 15px 0;
     padding: 1rem 0.5rem;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   }
-  
+
   .findText {
     font-size: 14px;
   }
-  
+
   .input {
     padding: 10px;
     font-size: 14px;
   }
-  
+
   .submitButton {
     height: 45px;
     font-size: 16px;
