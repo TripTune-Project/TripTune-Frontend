@@ -89,9 +89,7 @@ const handleError = async (
       // 토큰 갱신 필요한 경우: refreshApi 함수를 사용해 토큰 갱신
       try {
         // 쿠키 관련 유틸리티 함수
-        const { getDecryptedCookie } = saveLocalContent();
-        const refreshToken = getDecryptedCookie('refreshToken');
-        // const refreshToken = Cookies.get('refreshToken');
+        const refreshToken = Cookies.get('refreshToken');
         if (!refreshToken) {
           console.log(refreshToken, 'refreshToken');
           Cookies.remove('accessToken');
@@ -150,8 +148,7 @@ const fetchData = async <T>(
 
   // 인증 토큰 설정
   if (options?.requiresAuth) {
-    const { getDecryptedCookie } = saveLocalContent();
-    const token = getDecryptedCookie('accessToken');
+    const token = Cookies.get('accessToken');
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }

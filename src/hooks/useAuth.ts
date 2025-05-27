@@ -29,7 +29,7 @@ const useAuth = () => {
    */
   const checkAuth = useCallback(async () => {
     try {
-      const accessToken = getDecryptedCookie('accessToken');
+      const accessToken = Cookies.get('accessToken');
       const storedNickname = getDecryptedCookie('nickname');
 
       if (!accessToken) {

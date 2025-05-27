@@ -9,6 +9,7 @@ import saveLocalContent from '@/utils/saveLocalContent';
 import ProfileBasicImg from '../../../../public/assets/images/마이페이지/profileImage.png';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+import Cookies from 'js-cookie';
 
 const Profile = () => {
   const { setEncryptedCookie } = saveLocalContent();
@@ -69,8 +70,7 @@ const Profile = () => {
         try {
           const formData = new FormData();
           formData.append('profileImage', file);
-          const { getDecryptedCookie } = saveLocalContent();
-          const accessToken = getDecryptedCookie('accessToken');
+          const accessToken = Cookies.get('accessToken');
           const response = await fetch(
             'https://www.triptune.site/api/profiles',
             {
