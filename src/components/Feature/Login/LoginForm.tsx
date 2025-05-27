@@ -42,9 +42,9 @@ const LoginForm = () => {
       const response = await loginUser(data);
       const { accessToken, nickname } = response.data;
      
-      const refreshToken = Cookies.get('refreshToken') ?? '';
+      // const refreshToken = Cookies.get('refreshToken') ?? '';
       setEncryptedCookie('accessToken', accessToken);
-      setEncryptedCookie('refreshToken', refreshToken);
+      // setEncryptedCookie('refreshToken', refreshToken);
       setEncryptedCookie('nickname', nickname);
 
       updateAuthStatus(true);
