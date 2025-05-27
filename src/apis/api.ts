@@ -89,16 +89,14 @@ const handleError = async (
       try {
         // 쿠키 관련 유틸리티 함수
         const refreshToken = Cookies.get('refreshToken');
-        console.log(refreshToken, 'refreshToken: ');
-        console.log(Cookies.get('accessToken'), 'accessToken: ');
-        // TODO : 리프레시 토큰이 없을때를 잠깐 끄자!
-        // if (!refreshToken) {
-        //   Cookies.remove('accessToken');
-        //   Cookies.remove('nickname');
-        //   alert('세션이 만료되었습니다. 다시 로그인해주세요.');
-        //   window.location.href = '/login';
-        //   break;
-        // }
+     
+        if (!refreshToken) {
+          Cookies.remove('accessToken');
+          Cookies.remove('nickname');
+          alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+          window.location.href = '/login';
+          break;
+        }
 
         // refreshApi 함수를 사용해 토큰 갱신
         await refreshApi();

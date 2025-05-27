@@ -14,6 +14,7 @@ import VerificationLoading from '@/components/Common/VerificationLoading';
 import { loginUser } from '@/apis/Login/loginApi';
 import useAuth from '@/hooks/useAuth';
 import saveLocalContent from '@/utils/saveLocalContent';
+import Cookies from 'js-cookie';
 
 interface LoginFormData {
   email: string;
@@ -40,8 +41,12 @@ const LoginForm = () => {
     try {
       const response = await loginUser(data);
       const { accessToken, nickname } = response.data;
-
+      const refreshToken = Cookies.get('refreshToken');
+      console.log(refreshToken, 'refreshToken: 야호!!!!');
       setEncryptedCookie('accessToken', accessToken);
+      if (refreshToken != null) {
+        setEncryptedCookie('refreshToken', refreshToken);
+      }
       setEncryptedCookie('nickname', nickname);
 
       updateAuthStatus(true);
