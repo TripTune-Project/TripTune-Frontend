@@ -41,12 +41,10 @@ const LoginForm = () => {
     try {
       const response = await loginUser(data);
       const { accessToken, nickname } = response.data;
-      const refreshToken = Cookies.get('refreshToken');
-      console.log(refreshToken, 'refreshToken: 야호!!!!');
+     
+      const refreshToken = Cookies.get('refreshToken') || 'undefined';
       setEncryptedCookie('accessToken', accessToken);
-      if (refreshToken != null) {
-        setEncryptedCookie('refreshToken', refreshToken);
-      }
+      setEncryptedCookie('refreshToken', refreshToken);
       setEncryptedCookie('nickname', nickname);
 
       updateAuthStatus(true);
