@@ -80,7 +80,7 @@ export const deleteSchedule = async (
   scheduleId: number
 ): Promise<ApiResponse<null>> => {
   const url = `/api/schedules/${scheduleId}`;
-  return await remove(url, { requiresAuth: true });
+  return await remove(url, undefined,  { requiresAuth: true });
 };
 
 // 8. 내 일정 목록 조회 (모달창)
