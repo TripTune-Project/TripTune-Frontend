@@ -76,7 +76,7 @@ const handleError = async (
       Cookies.remove('accessToken');
       Cookies.remove('refreshToken');
       // alert('로그인이 필요합니다.');
-      window.location.href = '/login';
+      // window.location.href = '/login';
       break;
 
     case ErrorType.NEED_BACK:
@@ -91,8 +91,9 @@ const handleError = async (
         const refreshToken = Cookies.get('refreshToken');
         if (!refreshToken) {
           Cookies.remove('accessToken');
-          // alert('세션이 만료되었습니다. 다시 로그인해주세요.');
-          window.location.href = '/login';
+          Cookies.remove('nickname');
+          alert('세션이 만료되었습니다. 다시 로그인해주세요. 1');
+          // window.location.href = '/login';
           break;
         }
 
@@ -106,8 +107,9 @@ const handleError = async (
         // 토큰 갱신 실패 시에만 사용자에게 알림
         Cookies.remove('accessToken');
         Cookies.remove('refreshToken');
-        // alert('세션이 만료되었습니다. 다시 로그인해주세요.');
-        window.location.href = '/login';
+        Cookies.remove('nickname');
+        alert('세션이 만료되었습니다. 다시 로그인해주세요. 2');
+        // window.location.href = '/login';
       }
       break;
 
@@ -179,7 +181,8 @@ const fetchData = async <T>(
           // 토큰 갱신 실패 시 로그인 페이지로 이동
           Cookies.remove('accessToken');
           Cookies.remove('refreshToken');
-          window.location.href = '/login';
+          Cookies.remove('nickname');
+          // window.location.href = '/login';
           throw new Error('인증이 필요합니다. 다시 로그인해주세요.');
         }
       }
