@@ -88,9 +88,12 @@ const handleError = async (
     case ErrorType.REFRESH_TOKEN:
       // 토큰 갱신 필요한 경우: refreshApi 함수를 사용해 토큰 갱신
       try {
-        const refreshToken = Cookies.get('refreshToken');
+        // 쿠키 관련 유틸리티 함수
+        const { getDecryptedCookie } = saveLocalContent();
+        const refreshToken = getDecryptedCookie('refreshToken');
+        // const refreshToken = Cookies.get('refreshToken');
         if (!refreshToken) {
-          console.log(refreshToken, "refreshToken");
+          console.log(refreshToken, 'refreshToken');
           Cookies.remove('accessToken');
           Cookies.remove('nickname');
           alert('세션이 만료되었습니다. 다시 로그인해주세요. 1');
@@ -187,7 +190,7 @@ const fetchData = async <T>(
           throw new Error('인증이 필요합니다. 다시 로그인해주세요.');
         }
       }
-      
+
       try {
         // handleError가 undefined를 반환하면 토큰 갱신 후 재시도를 의미
         const result = await handleError(response, data);
