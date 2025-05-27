@@ -72,10 +72,10 @@ const handleError = async (
   switch (errorType) {
     case ErrorType.NEED_LOGIN:
       // 로그인 필요한 경우: 쿠키 삭제 후 로그인 페이지로 이동
-      Cookies.remove('accessToken');
-      Cookies.remove('nickname');
-      // alert('로그인이 필요합니다.');
-      window.location.href = '/login';
+      // Cookies.remove('accessToken');
+      // Cookies.remove('nickname');
+      alert('1 : 로그인이 필요합니다.');
+      // window.location.href = '/login';
       break;
 
     case ErrorType.NEED_BACK:
@@ -88,13 +88,14 @@ const handleError = async (
       // 토큰 갱신 필요한 경우: refreshApi 함수를 사용해 토큰 갱신
       try {
         // 쿠키 관련 유틸리티 함수
-        const refreshToken = Cookies.get('refreshToken');
+        const accessToken = Cookies.get('accessToken');
+        // const refreshToken = Cookies.get('refreshToken');
      
-        if (!refreshToken) {
-          Cookies.remove('accessToken');
-          Cookies.remove('nickname');
-          alert('세션이 만료되었습니다. 다시 로그인해주세요.');
-          window.location.href = '/login';
+        if (!accessToken) {
+          //Cookies.remove('accessToken');
+          //Cookies.remove('nickname');
+          alert('2: 세션이 만료되었습니다. 다시 로그인해주세요.');
+          // window.location.href = '/login';
           break;
         }
 
@@ -106,9 +107,9 @@ const handleError = async (
         return undefined;
       } catch (error: any) {
         // 토큰 갱신 실패 시에만 사용자에게 알림
-        Cookies.remove('accessToken');
-        Cookies.remove('nickname');
-        alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+        //Cookies.remove('accessToken');
+        // Cookies.remove('nickname');
+        alert('3: 세션이 만료되었습니다. 다시 로그인해주세요.');
         // window.location.href = '/login';
       }
       break;
@@ -178,10 +179,10 @@ const fetchData = async <T>(
           return await fetchData<T>(method, endpoint, body, options, true);
         } catch (refreshError) {
           // 토큰 갱신 실패 시 로그인 페이지로 이동
-          Cookies.remove('accessToken');
-          Cookies.remove('nickname');
-          alert('인증이 필요합니다. 다시 로그인해주세요.');
-          window.location.href = '/login';
+          // Cookies.remove('accessToken');
+          // Cookies.remove('nickname');
+          alert('4 : 인증이 필요합니다. 다시 로그인해주세요.');
+          // window.location.href = '/login';
         }
       }
 
