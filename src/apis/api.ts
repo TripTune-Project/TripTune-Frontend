@@ -90,6 +90,7 @@ const handleError = async (
       try {
         const refreshToken = Cookies.get('refreshToken');
         if (!refreshToken) {
+          console.log(refreshToken, "refreshToken");
           Cookies.remove('accessToken');
           Cookies.remove('nickname');
           alert('세션이 만료되었습니다. 다시 로그인해주세요. 1');
