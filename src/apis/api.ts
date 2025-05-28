@@ -74,13 +74,11 @@ const handleError = async (
       // 로그인 필요한 경우: 쿠키 삭제 후 로그인 페이지로 이동
       Cookies.remove('accessToken');
       Cookies.remove('nickname');
-      alert('1 : 로그인이 필요합니다.');
-      // window.location.href = '/login';
+      window.location.href = '/login';
       break;
 
     case ErrorType.NEED_BACK:
-      // 뒤로가기 필요한 경우: 에러 메시지 표시 후 뒤로가기
-      // alert(responseData.message);
+      // 뒤로가기 필요한 경우: 뒤로가기
       window.history.back();
       break;
 
@@ -90,14 +88,11 @@ const handleError = async (
         // 쿠키 관련 유틸리티 함수
         const accessToken = Cookies.get('accessToken');
         const refreshToken = Cookies.get('refreshToken');
-        console.log(accessToken, 'accessToken: 1');
-        console.log(refreshToken, 'refreshToken: 2');
 
         if (!accessToken && !refreshToken) {
           Cookies.remove('accessToken');
           Cookies.remove('nickname');
-          alert('2: 세션이 만료되었습니다. 다시 로그인해주세요.');
-          // window.location.href = '/login';
+          window.location.href = '/login';
           break;
         }
 
@@ -111,8 +106,7 @@ const handleError = async (
         // 토큰 갱신 실패 시에만 사용자에게 알림
         Cookies.remove('accessToken');
         Cookies.remove('nickname');
-        alert('3: 세션이 만료되었습니다. 다시 로그인해주세요.');
-        // window.location.href = '/login';
+        window.location.href = '/login';
       }
       break;
 
@@ -150,7 +144,6 @@ const fetchData = async <T>(
   // 인증 토큰 설정
   if (options?.requiresAuth) {
     const token = Cookies.get('accessToken');
-    console.log(token, 'token: 3');
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }
@@ -184,10 +177,7 @@ const fetchData = async <T>(
           // 토큰 갱신 실패 시 로그인 페이지로 이동
           Cookies.remove('accessToken');
           Cookies.remove('nickname');
-          console.log(Cookies.get('refreshToken'), 'refreshToken: 3');
-          console.log(Cookies.get('accessToken'), 'accessToken: 4');
-          alert('4 : 인증이 필요합니다. 다시 로그인해주세요.');
-          // window.location.href = '/login';
+          window.location.href = '/login';
         }
       }
 
