@@ -164,6 +164,10 @@ const ScheduleRoute = () => {
         removePlace(item.place.placeId);
         removeMarker(item.place.latitude, item.place.longitude);
       },
+      canDrop: () => true,
+      collect: (monitor) => ({
+        isOver: monitor.isOver(),
+      }),
     });
 
     // 드롭 참조 연결
@@ -212,13 +216,15 @@ const ScheduleRoute = () => {
   // 여행 경로와 삭제 드롭존 렌더링
   return (
     <DndProvider backend={HTML5Backend}>
-      <ul style={{ height: '500px', overflowY: 'auto' }}>
-        {travelRoute.map((place, index) => (
-          <PlaceItem key={place.placeId} place={place} index={index} />
-        ))}
-      </ul>
-      <div ref={ref} style={{ height: '1px', background: 'transparent' }}></div>
-      <DeleteDropZone />
+      <div style={{ position: 'relative', minHeight: '500px' }}>
+        <ul style={{ height: '500px', overflowY: 'auto' }}>
+          {travelRoute.map((place, index) => (
+            <PlaceItem key={place.placeId} place={place} index={index} />
+          ))}
+        </ul>
+        <div ref={ref} style={{ height: '1px', background: 'transparent' }}></div>
+        <DeleteDropZone />
+      </div>
     </DndProvider>
   );
 };

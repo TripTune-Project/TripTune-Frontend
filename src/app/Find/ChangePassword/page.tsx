@@ -10,9 +10,9 @@ import styles from '@/styles/Login.module.css';
 import triptuneIcon from '../../../../public/assets/images/로고/triptuneIcon-removebg.png';
 import VerificationLoading from '@/components/Common/VerificationLoading';
 import { validatePassword } from '@/utils/validation';
-import saveLocalContent from '@/utils/saveLocalContent';
 import DataLoading from '@/components/Common/DataLoading';
 import { AlertColor } from '@mui/material/Alert';
+import Cookies from 'js-cookie';
 
 interface IFormInput {
   password: string;
@@ -67,8 +67,7 @@ const ChangePassword = () => {
     }
     setLoading(true);
     try {
-      const { getDecryptedCookie } = saveLocalContent();
-      const accessToken = getDecryptedCookie('accessToken');
+      const accessToken = Cookies.get('accessToken');
       const response = await fetch(
         'https://www.triptune.site/api/members/reset-password',
         {

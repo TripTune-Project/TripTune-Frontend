@@ -9,6 +9,7 @@ import { useParams } from 'next/navigation';
 import saveLocalContent from '@/utils/saveLocalContent';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+import Cookies from 'js-cookie';
 
 /**
  * 날짜 포맷팅 함수
@@ -63,7 +64,7 @@ const Chatting = ({ onError }: ChattingProps) => {
   const params = useParams();
   const scheduleId = params?.scheduleId as string;
   const { getDecryptedCookie } = saveLocalContent();
-  const token = getDecryptedCookie('accessToken');
+  const token = Cookies.get('accessToken');
   const userNickname = getDecryptedCookie('nickname');
 
   // WebSocket 클라이언트 참조

@@ -230,3 +230,54 @@ Netlify, Vercel 등으로 배포 시:
 - MIT License
 
 ---
+
+## 테스트
+
+### 통합 테스트 (Integration Test)
+- Jest와 React Testing Library를 사용한 통합 테스트
+- 테스트 실행: `yarn test`
+- 테스트 감시 모드: `yarn test:watch`
+- 테스트 커버리지: `yarn test:coverage`
+
+### E2E 테스트 (End-to-End Test)
+- Cypress를 사용한 E2E 테스트
+- 테스트 UI 실행: `yarn cypress:open`
+- 테스트 헤드리스 모드 실행: `yarn cypress:run`
+- 전체 테스트 실행: `yarn test:e2e`
+
+### 테스트 환경 설정
+- 포트: 5814 (localhost:5814)
+- API URL: http://localhost:5814/api
+- 테스트 데이터: cypress.env.json에 정의
+
+### 테스트 커버리지 기준
+- 브랜치: 80%
+- 함수: 80%
+- 라인: 80%
+- 구문: 80%
+
+### 테스트 관련 파일 구조
+```
+├── cypress/
+│   ├── e2e/              # E2E 테스트 파일
+│   ├── support/          # Cypress 지원 파일
+│   │   ├── commands.ts   # 커스텀 명령어
+│   │   └── e2e.ts        # E2E 테스트 설정
+│   └── fixtures/         # 테스트 데이터
+├── src/
+│   ├── __tests__/       # 통합 테스트 파일
+│   └── mocks/           # MSW 모의 서버
+└── jest.config.js       # Jest 설정
+```
+
+### 테스트 실행 전 준비사항
+1. 개발 서버 실행: `yarn dev`
+2. 환경 변수 설정 확인
+3. MSW 서버 설정 확인
+
+### 주의사항
+- 테스트 실행 전 데이터베이스 초기화 필요
+- 민감한 정보는 환경 변수로 관리
+- 테스트 API 키는 별도 관리
+
+---

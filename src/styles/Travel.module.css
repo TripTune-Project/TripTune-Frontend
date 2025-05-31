@@ -353,6 +353,7 @@
   font-size: 24px;
   cursor: pointer;
   padding: 10px 20px;
+  -webkit-user-select: none;
   user-select: none;
   background-color: rgba(255, 255, 255, 0.5);
   border-radius: 50%;
@@ -469,6 +470,7 @@
   font-size: 24px;
   cursor: pointer;
   padding: 10px 20px;
+  -webkit-user-select: none;
   user-select: none;
   background-color: rgba(255, 255, 255, 0.5);
   border-radius: 50%;
@@ -606,4 +608,51 @@
   background-color: #76adac;
   color: #ffffff;
   transition: background-color 0.3s ease;
+}
+
+.travelContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  padding: var(--spacing-4);
+  height: 100%;
+}
+
+.travelContent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-4);
+  flex: 1;
+}
+
+.travelList {
+  background-color: var(--color-background);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--spacing-4);
+  overflow-y: auto;
+}
+
+.travelMap {
+  background-color: var(--color-background);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  min-height: 400px;
+}
+
+.travelFilter {
+  background-color: var(--color-background);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--spacing-4);
+}
+
+@media screen and (max-width: var(--breakpoint-md)) {
+  .travelContent {
+    grid-template-columns: 1fr;
+  }
+
+  .travelContainer {
+    padding: var(--spacing-2);
+  }
 }

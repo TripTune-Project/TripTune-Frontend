@@ -3,8 +3,8 @@ import saveLocalContent from '@/utils/saveLocalContent';
 import Cookies from 'js-cookie';
 
 export const logoutApi = async () => {
-  const { getDecryptedCookie, setEncryptedCookie } = saveLocalContent();
-  const accessToken = getDecryptedCookie('accessToken');
+  const { getDecryptedCookie } = saveLocalContent();
+  const accessToken = Cookies.get('accessToken');
   const nickname = getDecryptedCookie('nickname');
 
   const url = '/api/members/logout';

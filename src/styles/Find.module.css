@@ -1,17 +1,20 @@
 .FindTitle {
   color: #000;
   font-family: 'Noto Sans KR', sans-serif;
-  font-size: 40px;
+  font-size: 2.5rem;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
-  margin: 40px 0;
+  margin: 2rem 0;
+  text-align: center;
 }
 
 .pageContainer {
-  margin-top: 41px;
-  width: 756px;
-  height: 814px;
+  margin: 2rem auto;
+  width: 90%;
+  max-width: 756px;
+  height: auto;
+  min-height: 600px;
   flex-shrink: 0;
   border-radius: 30px 0px;
   background: #ffffff;
@@ -19,17 +22,21 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-left: 37%;
+  padding: 2rem 1rem;
+  box-sizing: border-box;
 }
 
 .tabContainer {
   display: flex;
   margin-bottom: 20px;
+  width: 100%;
+  flex-wrap: wrap;
 }
 
 .tabButton {
   display: flex;
-  width: 240px;
+  width: 100%;
+  max-width: 240px;
   height: 60px;
   flex-direction: column;
   align-items: center;
@@ -63,18 +70,19 @@
 
 .inputGroup {
   margin-bottom: 20px;
-  width: 480px;
+  width: 100%;
+  min-width: 480px;
 }
 
 .findText {
   display: flex;
-  width: 480px;
+  width: 100%;
   flex-direction: column;
   justify-content: center;
   flex-shrink: 0;
   color: #848282;
   font-family:
-    NOto Sans KR,
+    Noto Sans KR,
     sans-serif;
   font-size: 15px;
   font-style: normal;
@@ -84,7 +92,7 @@
 
 .input {
   padding: 12px;
-  width: 480px;
+  width: 100%;
   border-radius: 5px;
   border: 1px solid #ccc;
   font-size: 16px;
@@ -102,7 +110,7 @@
 
 .submitButton {
   margin-top: 18px;
-  width: 480px;
+  width: 100%;
   border: none;
   background-color: #76adac;
   cursor: pointer;
@@ -128,7 +136,8 @@
 }
 
 .hrStyle {
-  width: 445px;
+  width: 100%;
+  max-width: 445px;
   height: 1px;
   background-color: #848282;
   border: none;
@@ -138,8 +147,10 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  width: 445px;
-  height: 60px;
+  width: 100%;
+  max-width: 445px;
+  height: auto;
+  min-height: 60px;
   flex-direction: row;
   flex-shrink: 0;
   color: #333;
@@ -150,13 +161,15 @@
   font-style: normal;
   font-weight: 400;
   line-height: normal;
-  margin-right: 50px;
+  margin-right: 0;
 }
 
 .FindIdBox {
   display: flex;
-  width: 480px;
-  height: 103px;
+  width: 100%;
+  max-width: 480px;
+  height: auto;
+  min-height: 103px;
   flex-direction: column;
   justify-content: center;
   flex-shrink: 0;
@@ -170,34 +183,42 @@
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+  padding: 1rem;
+  box-sizing: border-box;
 }
 
 .alert {
   padding: 15px;
-  width: 480px;
+  width: 100%;
+  max-width: 480px;
   border-radius: 5px;
   font-size: 16px;
   text-align: center;
+  box-sizing: border-box;
 }
 
 .alertSuccess {
   background-color: #d4edda;
   color: #155724;
   border: 1px solid #c3e6cb;
-  width: 450px;
+  width: 100%;
+  max-width: 450px;
 }
 
 .alertError {
   background-color: #f8d7da;
   color: #721c24;
   border: 1px solid #f5c6cb;
-  width: 450px;
+  width: 100%;
+  max-width: 450px;
 }
 
 .hint {
   display: flex;
-  width: 480px;
-  height: 38px;
+  width: 100%;
+  max-width: 480px;
+  height: auto;
+  min-height: 38px;
   flex-direction: column;
   justify-content: center;
   flex-shrink: 0;
@@ -219,4 +240,55 @@
 
 .submitButton.disabledButton:hover {
   background-color: #ccc;
+}
+
+/* 반응형 미디어 쿼리 */
+@media screen and (max-width: 768px) {
+  .FindTitle {
+    font-size: 2rem;
+    margin: 1.5rem 0;
+  }
+
+  .pageContainer {
+    width: 95%;
+    padding: 1.5rem 0.8rem;
+    margin-top: 1rem;
+  }
+
+  .inputGroup {
+    width: 90%;
+  }
+
+  .submitButton {
+    height: 50px;
+    font-size: 18px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .FindTitle {
+    font-size: 1.8rem;
+    margin: 1rem 0;
+  }
+
+  .pageContainer {
+    width: 100%;
+    border-radius: 15px 0;
+    padding: 1rem 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .findText {
+    font-size: 14px;
+  }
+
+  .input {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .submitButton {
+    height: 45px;
+    font-size: 16px;
+  }
 }

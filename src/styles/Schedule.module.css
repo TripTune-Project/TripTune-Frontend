@@ -766,8 +766,11 @@
 }
 
 .deleteZone {
-  position: sticky;
-  bottom: 20px;
+  position: fixed;
+  left: 14%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  width: 461px;
 }
 
 .deleteZone.trashGray {
@@ -782,6 +785,8 @@
   border: 2px dashed #f86c6c;
   background: #ffffff;
   margin: auto;
+  transform: translateX(-50%) scale(1.05);
+  transition: all 0.2s ease;
 }
 
 .placeInfo {

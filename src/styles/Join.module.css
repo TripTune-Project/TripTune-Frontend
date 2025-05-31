@@ -9,9 +9,11 @@
 }
 
 .joinContainer {
-  margin-top: 41px;
-  width: 756px;
-  height: 814px;
+  margin: 2rem auto;
+  width: 90%;
+  max-width: 756px;
+  height: auto;
+  min-height: 600px;
   flex-shrink: 0;
   border-radius: 30px 0px;
   background: #ffffff;
@@ -19,6 +21,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 2rem 1rem;
+  box-sizing: border-box;
 }
 
 .joinTitle {
@@ -26,18 +30,18 @@
   font-family:
     Noto Sans KR,
     serif;
-  font-size: 40px;
+  font-size: 2.5rem;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
   text-align: center;
-  margin-bottom: 54px;
-  margin-top: 64px;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
 }
 
 .inputGroup {
-  width: 464px;
-  max-width: 480px;
+  width: 100%;
+  min-width: 480px;
   height: auto;
   flex-shrink: 0;
   margin-bottom: 15px;
@@ -45,26 +49,26 @@
 }
 
 .input {
-  width: 480px;
-  max-width: 480px;
+  width: 100%;
   height: 55px;
   border: 1px solid #848282;
   border-radius: 5px;
   background: #ffffff;
   font-size: 16px;
   padding-left: 15px;
+  box-sizing: border-box;
 }
 
 .inputError {
-  width: 480px;
+  width: 100%;
   font-family:
     Noto Sans KR,
     sans-serif;
   font-size: 16px;
-  max-width: 480px;
   height: 55px;
   border: 1px solid red;
   padding-left: 15px;
+  box-sizing: border-box;
 }
 
 .errorText {
@@ -104,8 +108,9 @@
   margin-top: 15px;
   display: flex;
   align-items: center;
-  width: 480px;
+  width: 100%;
   max-width: 480px;
+  flex-wrap: wrap;
 }
 
 .emailGroup {
@@ -113,19 +118,24 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 500px;
+  width: 100%;
   max-width: 500px;
-  height: 55px;
+  height: auto;
+  min-height: 55px;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .emailInput {
   flex: 1;
+  min-width: 65%;
   height: 55px;
   border: 1px solid #848282;
   border-radius: 5px;
   background: #ffffff;
   font-size: 16px;
   padding-left: 15px;
+  box-sizing: border-box;
 }
 
 .emailButton {
@@ -158,12 +168,14 @@
 
 .inputVerification {
   flex: 1;
+  min-width: 65%;
   height: 55px;
   border: 1px solid #848282;
   border-radius: 5px;
   background: #ffffff;
   font-size: 16px;
   padding-left: 15px;
+  box-sizing: border-box;
 }
 
 .verifyButton {
@@ -182,4 +194,80 @@
   color: #666666;
   cursor: not-allowed;
   opacity: 0.6;
+}
+
+/* 반응형 미디어 쿼리 */
+@media screen and (max-width: 768px) {
+  .joinContainer {
+    width: 95%;
+    padding: 1.5rem 0.8rem;
+  }
+
+  .joinTitle {
+    font-size: 2rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .emailGroup {
+    flex-direction: column;
+    align-items: stretch;
+    height: auto;
+    gap: 10px;
+  }
+
+  .emailInput,
+  .inputVerification {
+    width: 100%;
+    margin-bottom: 10px;
+    min-width: 100%;
+  }
+
+  .emailButton,
+  .verifyButton {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .submitButton,
+  .emailButton,
+  .verifyButton {
+    height: 50px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .joinContainer {
+    width: 100%;
+    border-radius: 15px 0;
+    padding: 1rem 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .joinTitle {
+    font-size: 1.8rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .input,
+  .inputError,
+  .emailInput,
+  .inputVerification,
+  .emailButton,
+  .verifyButton {
+    height: 45px;
+    font-size: 14px;
+  }
+
+  .submitButton {
+    height: 45px;
+    font-size: 16px;
+  }
+
+  .errorText,
+  .notificationMessage,
+  .verifiedText {
+    font-size: 12px;
+  }
 }

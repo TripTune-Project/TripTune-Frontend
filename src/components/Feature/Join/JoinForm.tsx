@@ -66,9 +66,9 @@ const JoinForm = () => {
         setOpenSnackbar(true);
         return;
       }
-      setNotificationMessage(
-        `${data.nickname} 고객님 회원가입을 축하드립니다!`
-      );
+      // 회원가입 성공 시 환영 메시지 표시
+      const nickname = response.data?.nickname || data.nickname;
+      setNotificationMessage(`환영합니다. ${nickname}님`);
       setAlertSeverity('success');
       setOpenSnackbar(true);
       setTimeout(() => {

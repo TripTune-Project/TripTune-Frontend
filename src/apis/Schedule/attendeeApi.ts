@@ -35,7 +35,7 @@ export const leaveSchedule = async (
   scheduleId: number
 ): Promise<ApiResponse<LeaveSchedule>> => {
   const url = `/api/schedules/${scheduleId}/attendees`;
-  return await remove<ApiResponse<LeaveSchedule>>(url, {
+  return await remove<ApiResponse<LeaveSchedule>>(url, undefined, {
     requiresAuth: true,
   });
 };
@@ -46,7 +46,7 @@ export const quitSchedule = async (
   attendeeId: number
 ): Promise<ApiResponse<LeaveSchedule>> => {
   const url = `/api/schedules/${scheduleId}/attendees/${attendeeId}`;
-  return await remove<ApiResponse<LeaveSchedule>>(url, {
+  return await remove<ApiResponse<LeaveSchedule>>(url, undefined, {
     requiresAuth: true,
   });
 };
