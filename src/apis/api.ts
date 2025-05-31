@@ -169,6 +169,13 @@ const fetchData = async <T>(
     if (!response.ok) {
       // 401 에러인 경우, 토큰 갱신 후 재시도
       if (response.status === 401 && !isRetry) {
+        // 로그아웃 API 호출인 경우 토큰 갱신 시도하지 않음
+        if (endpoint === '/api/members/logout') {
+          Cookies.remove('accessToken');
+          Cookies.remove('nickname');
+          return undefined as unknown as T;
+        }
+
         try {
           await refreshApi();
           // 토큰 갱신 성공 시 원래 요청 재시도
