@@ -57,18 +57,14 @@ export default function ScheduleDetailPage() {
             error instanceof Error &&
             error.message === '일정이 존재하지 않습니다.'
           ) {
-            setAlertMessage(
-              '일정이 존재하지 않습니다. 이전 페이지로 이동합니다.'
-            );
+            setAlertMessage('일정이 존재하지 않습니다.');
             setAlertSeverity('error');
             setAlertOpen(true);
             setTimeout(() => {
               router.back();
             }, 3000);
           } else {
-            setAlertMessage(
-              '일정을 불러오는 중 오류가 발생했습니다. 이전 페이지로 이동합니다.'
-            );
+            setAlertMessage('일정을 불러오는 중 오류가 발생했습니다.');
             setAlertSeverity('error');
             setAlertOpen(true);
             setTimeout(() => {
