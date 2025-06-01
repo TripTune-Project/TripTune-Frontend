@@ -43,16 +43,6 @@ export default function SchedulePage() {
   const observerRef = useRef<HTMLDivElement | null>(null);
   const [isIntersecting, setIsIntersecting] = useState(false);
 
-  // 로그인 상태에 따른 스크롤 제어
-  useEffect(() => {
-    if (!isAuthenticated) {
-      document.body.style.overflow = 'hidden';
-    }
-    return () => {
-      document.body.style.overflow = 'auto';
-    };
-  }, [isAuthenticated]);
-
   // 모달 및 메뉴 상태 관리
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeDeleteMenu, setActiveDeleteMenu] = useState<number | null>(null);
@@ -82,7 +72,7 @@ export default function SchedulePage() {
     fetchNextPage: fetchNextAllPage,
     hasNextPage: hasNextAllPage,
     isFetchingNextPage: isFetchingNextAllPage,
-  } = useScheduleList(selectedTab === 'all' && !isSearching);
+  } = useScheduleList(selectedTab === 'all' && !isSearching && !!isAuthenticated);
 
   // 공유받은 일정 목록 조회 쿼리 (공유 탭 선택 & 검색 중이 아닐 때)
   const {
@@ -92,7 +82,7 @@ export default function SchedulePage() {
     fetchNextPage: fetchNextSharedPage,
     hasNextPage: hasNextSharedPage,
     isFetchingNextPage: isFetchingNextSharedPage,
-  } = useSharedScheduleList(selectedTab === 'share' && !isSearching);
+  } = useSharedScheduleList(selectedTab === 'share' && !isSearching && !!isAuthenticated);
 
   // 일정 검색 쿼리 (검색 중일 때)
   const {
@@ -100,7 +90,7 @@ export default function SchedulePage() {
     fetchNextPage: fetchNextSearchPage,
     hasNextPage: hasNextSearchPage,
     isFetchingNextPage: isFetchingNextSearchPage,
-  } = useScheduleListSearch(debouncedSearchKeyword, selectedTab, isSearching);
+  } = useScheduleListSearch(debouncedSearchKeyword, selectedTab, isSearching && !!isAuthenticated);
 
   // 현재 상태에 따른 무한 스크롤 페이지네이션 함수 선택
   const fetchNextPage = isSearching
@@ -158,6 +148,25 @@ export default function SchedulePage() {
       observer.disconnect();
     };
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+
+  // 로그인 상태에 따른 스크롤 제어
+  useEffect(() => {
+    if (!isAuthenticated) {
+      document.body.style.overflow = 'hidden';
+    }
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [isAuthenticated]);
+
+  // API 에러 처리
+  useEffect(() => {
+    if (isAllScheduleError || isSharedScheduleError) {
+      setAlertMessage('로그인이 필요한 서비스입니다.');
+      setAlertSeverity('warning');
+      setAlertOpen(true);
+    }
+  }, [isAllScheduleError, isSharedScheduleError]);
 
   /**
    * 새 일정 모달 열기 핸들러
@@ -493,7 +502,10 @@ export default function SchedulePage() {
             value={searchKeyword}
             onChange={(e) => setSearchKeyword(e.target.value)}
           />
-          <button onClick={() => setIsSearching(!!debouncedSearchKeyword)}>
+          <button 
+            onClick={() => setIsSearching(!!debouncedSearchKeyword)}
+            title="일정 검색"
+          >
             <Image
               style={{ marginLeft: '-5px' }}
               src={searchIcon}
