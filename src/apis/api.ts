@@ -176,6 +176,12 @@ const fetchData = async <T>(
           return undefined as unknown as T;
         }
 
+        const token = Cookies.get('accessToken');
+        // 토큰이 없는 경우 에러를 throw하여 컴포넌트에서 처리하도록 함
+        if (!token) {
+          throw new Error('로그인이 필요한 서비스입니다.');
+        }
+
         try {
           await refreshApi();
           // 토큰 갱신 성공 시 원래 요청 재시도
