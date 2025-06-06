@@ -36,15 +36,18 @@
 }
 
 .onBoardingExplainDiv {
-  font-size: 2.3rem;
+  font-size: 2.7rem;
   font-weight: 800;
-  margin: 0 0 10px 0;
+  margin-bottom: 10px;
+  margin-top: 0;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.18);
 }
 
 .onBoardingExplainP {
   font-size: 1.5rem;
   font-weight: 500;
-  margin: 0 0 24px 0;
+  margin-bottom: 24px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.12);
 }
 
 .onBoardingView {
@@ -354,27 +357,30 @@
 
 .onBoardingContent {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 44%;
+  left: 50%;
   width: 100%;
-  height: 100%;
+  height: auto;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
+  justify-content: flex-start;
+  align-items: center;
   z-index: 2;
-  margin-left: 32px;
+  transform: translate(-50%, -50%);
+  margin-left: 0;
 }
 
 .onBoardingText {
-  flex: 1;
-  text-align: left;
+  width: 100%;
+  max-width: 900px;
+  text-align: center;
   color: #ffffff;
-  padding-right: 0;
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: center;
-  max-width: 100%;
+  margin: 0 auto;
+  padding: 0;
 }
 
 .viewTitle {
@@ -404,7 +410,6 @@
   width: 100%;
   max-width: 600px;
   height: 60px;
-  flex-shrink: 0;
   border-radius: 20px;
   background: #fff;
   box-shadow: 0 4px 16px 0 rgba(0,0,0,0.10);
@@ -412,6 +417,7 @@
   align-items: center;
   padding: 0 16px;
   margin-top: 16px;
+  border: 1.5px solid #e0e0e0;
 }
 
 .onBoardingButtonLayout {
@@ -426,6 +432,7 @@
   position: relative;
   left: 50%;
   transform: translateX(-50%);
+  padding-left: 48px;
 }
 
 .textContent {
@@ -436,6 +443,7 @@
   line-height: 60px;
   letter-spacing: 1.3px;
   margin-top: 50px;
+  padding-left: 32px;
 }
 
 .textSchedule,
@@ -519,6 +527,26 @@
 
   .recommendedDestinations {
     padding: 0 1rem;
+  }
+
+  .onBoardingContent {
+    top: 42%;
+  }
+
+  .onBoardingText {
+    max-width: 95vw;
+  }
+
+  .homepageSearchLayout {
+    max-width: 90vw;
+  }
+
+  .onBoardingButtonLayout {
+    padding-left: 16px;
+  }
+
+  .textContent {
+    padding-left: 8px;
   }
 }
 

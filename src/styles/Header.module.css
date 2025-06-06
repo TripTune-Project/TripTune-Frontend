@@ -45,6 +45,7 @@
   width: 95%;
   z-index: 1;
   height: 100%;
+  padding-left: 32px;
 }
 
 .navMenu {
@@ -206,5 +207,11 @@
   .navLink,
   .navLogin {
     font-size: 0.9rem;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .headerContent {
+    padding-left: 12px;
   }
 }
