@@ -24,6 +24,7 @@ const ScheduleTravelSearch = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [isSearching, setIsSearching] = useState(false);
+  const [isSearchLoading, setIsSearchLoading] = useState(false);
   const markersRef = useRef<any[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -120,6 +121,18 @@ const ScheduleTravelSearch = () => {
     }
   };
 
+  // 검색 버튼 클릭 핸들러
+  const handleSearch = () => {
+    if (searchKeyword.trim()) {
+      setIsSearchLoading(true);
+      setIsSearching(true);
+      // 검색이 완료되면 로딩 상태 해제
+      setTimeout(() => {
+        setIsSearchLoading(false);
+      }, 500);
+    }
+  };
+
   return (
     <>
       <div className={styles.travelSearchContainerSearch}>
@@ -133,7 +146,9 @@ const ScheduleTravelSearch = () => {
         <button onClick={() => setIsSearching(true)}>검색</button>
       </div>
       <div className={styles.travelList}>
-        {travels.length > 0 ? (
+        {isSearching && searchTravelQuery.isLoading ? (
+          <DataLoading />
+        ) : travels.length > 0 ? (
           <ul>
             {travels.map((place: Place) => (
               <li key={place.placeId} className={styles.placeItemSearch}>
