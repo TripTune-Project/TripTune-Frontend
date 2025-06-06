@@ -9,7 +9,6 @@ import { useTravelStore } from '@/store/scheduleStore';
 import Image from 'next/image';
 import locationIcon from '../../../../public/assets/images/일정 만들기/일정 저장 및 수정/mapIcon.png';
 import Pagination from '@/components/Common/Pagination';
-import { useDebounce } from '@/hooks/useDebounce';
 import DataLoading from '@/components/Common/DataLoading';
 import { truncateText } from '@/utils';
 import { Place } from '@/types/scheduleType';
@@ -47,26 +46,22 @@ const ScheduleTravelSearch = () => {
     };
     loadTravelRoutes();
   }, [fetchAndMergeRoutes, scheduleId]);
-
-  // 검색을 위한 디바운스
-  const debouncedSearchKeyword = useDebounce(searchKeyword, 800);
-
+  
   // 기본 리스트 쿼리
   const travelListQuery = useScheduleTravelList(
     Number(scheduleId),
     currentPage,
     !isSearching
   );
-
+  
   // 검색 리스트 쿼리
   const searchTravelQuery = useTravelListByLocation(
     Number(scheduleId),
-    debouncedSearchKeyword,
+    searchKeyword,
     currentPage,
     isSearching
   );
 
-  // 마커 제거
   const removeMarker = useCallback((latitude: number, longitude: number) => {
     const markerIndex = markersRef.current.findIndex(
       (marker) =>
@@ -79,16 +74,6 @@ const ScheduleTravelSearch = () => {
       removedMarker.setMap(null); // setMap을 통해 지도에서 제거
     }
   }, []);
-
-  useEffect(() => {
-    if (debouncedSearchKeyword.trim()) {
-      setCurrentPage(1);
-      setIsSearching(true);
-      inputRef.current?.focus();
-    } else {
-      setIsSearching(false);
-    }
-  }, [debouncedSearchKeyword]);
 
   const travels = isSearching
     ? searchTravelQuery?.data?.data?.content || []
@@ -120,13 +105,12 @@ const ScheduleTravelSearch = () => {
       addPlaceToRoute(place);
     }
   };
-
+  
   // 검색 버튼 클릭 핸들러
   const handleSearch = () => {
     if (searchKeyword.trim()) {
       setIsSearchLoading(true);
       setIsSearching(true);
-      // 검색이 완료되면 로딩 상태 해제
       setTimeout(() => {
         setIsSearchLoading(false);
       }, 500);
@@ -143,7 +127,7 @@ const ScheduleTravelSearch = () => {
           value={searchKeyword}
           onChange={(e) => setSearchKeyword(e.target.value)}
         />
-        <button onClick={() => setIsSearching(true)}>검색</button>
+        <button onClick={handleSearch}>검색</button>
       </div>
       <div className={styles.travelList}>
         {isSearching && searchTravelQuery.isLoading ? (
