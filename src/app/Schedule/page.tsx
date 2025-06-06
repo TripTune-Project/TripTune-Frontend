@@ -325,10 +325,6 @@ export default function SchedulePage() {
   
     // 일정이 없는 경우
     if (allSchedules.length === 0) {
-      if (isSearching) {
-        return <NoResultLayout />;
-      }
-      
       return (
         <div className={styles.noScheduleContainer}>
           <Image
