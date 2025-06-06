@@ -20,7 +20,6 @@ import { deleteSchedule } from '@/apis/Schedule/scheduleApi';
 import { leaveSchedule } from '@/apis/Schedule/attendeeApi';
 import DeleteModal from '@/components/Feature/Schedule/DeleteModal';
 import moreBtn from '../../../public/assets/images/일정 만들기/일정 목록 조회/moreBtn.png';
-import NoResultLayout from '@/components/Common/NoResult';
 import LoginModal from '@/components/Common/LoginModal';
 import CalendarLayout from '@/components/Common/CalendarLayout';
 import Snackbar from '@mui/material/Snackbar';
