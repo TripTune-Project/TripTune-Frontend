@@ -57,16 +57,13 @@
 
 .onBoardingSearch {
   width: 100%;
-  max-width: 600px;
-  height: 60px;
-  flex-shrink: 0;
-  border-radius: 20px;
-  border: none;
-  background: #ffffff;
+  height: 48px;
   display: flex;
   align-items: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-top: 0;
+  background: transparent;
+  box-shadow: none;
+  border-radius: 16px;
+  padding: 0;
 }
 
 .filterSelect {
@@ -82,7 +79,7 @@
 
 .searchInput {
   flex: 1;
-  padding: 8px 16px;
+  padding: 12px 16px;
   font-size: 16px;
   color: #333;
   border: none;
@@ -95,16 +92,17 @@
 }
 
 .searchButton {
-  width: 48px;
-  height: 48px;
-  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
   background: linear-gradient(313deg, #004a55 1.45%, #ccead5 98.55%);
-  margin-right: 12px;
   border: none;
   border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-left: 8px;
+  margin-right: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
 .viewBtn {
@@ -409,11 +407,11 @@
   height: 60px;
   flex-shrink: 0;
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.4);
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.25);
-  position: static;
-  left: auto;
-  transform: none;
+  background: #fff;
+  box-shadow: 0 4px 16px 0 rgba(0,0,0,0.10);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
   margin-top: 16px;
 }
 

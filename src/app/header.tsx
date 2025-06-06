@@ -113,7 +113,7 @@ const Header = () => {
         </Link>
 
         {/* 네비게이션 메뉴 */}
-        <nav className={styles.navMenu}>
+        <nav className={styles.navMenu} style={{ marginLeft: 'auto' }}>
           <Link href='/' className={isActive('/')}>
             홈 화면
           </Link>
