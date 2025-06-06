@@ -189,7 +189,7 @@ const ScheduleTravelSearch = () => {
               </li>
             ))}
           </ul>
-        ) : (
+        ) : isSearching ? (
           <>
             <p className={styles.noResults}>
               <Image
@@ -204,7 +204,7 @@ const ScheduleTravelSearch = () => {
               <p>검색어의 철자와 띄어쓰기가 정확한지 확인해주세요.</p>
             </p>
           </>
-        )}
+        ) : null}
       </div>
       {totalPages > 0 && (
         <Pagination
