@@ -7,7 +7,6 @@ import DataLoading from '@/components/Common/DataLoading';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { ScheduleList, ApiResponse, Schedule } from '@/types/scheduleType';
-import { useDebounce } from '@/hooks/useDebounce';
 import ScheduleImage from '../../../public/assets/images/일정 만들기/일정 목록 조회/computer.png';
 import NoscheduleIcon from '../../../public/assets/images/일정 만들기/일정 목록 조회/scheduleIcon.png';
 import searchIcon from '../../../public/assets/images/일정 만들기/일정 목록 조회/searchIcon.png';
