@@ -60,6 +60,7 @@ export default function ScheduleDetailPage() {
             setAlertMessage('일정이 존재하지 않습니다.');
             setAlertSeverity('error');
             setAlertOpen(true);
+            // 메시지가 표시된 후 3초 뒤에 뒤로가기
             setTimeout(() => {
               router.back();
             }, 3000);
@@ -67,6 +68,7 @@ export default function ScheduleDetailPage() {
             setAlertMessage('일정을 불러오는 중 오류가 발생했습니다.');
             setAlertSeverity('error');
             setAlertOpen(true);
+            // 메시지가 표시된 후 3초 뒤에 뒤로가기
             setTimeout(() => {
               router.back();
             }, 3000);
@@ -137,7 +139,6 @@ export default function ScheduleDetailPage() {
   if (isError) {
     return (
       <div className={styles.errorContainer}>
-        <DataLoading />
         <Snackbar
           open={alertOpen}
           autoHideDuration={3000}
