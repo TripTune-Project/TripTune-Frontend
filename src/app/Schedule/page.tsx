@@ -61,12 +61,9 @@ export default function SchedulePage() {
     'success' | 'error' | 'warning' | 'info'
   >('info');
 
-  // 검색어 디바운싱 (800ms)
-  const debouncedSearchKeyword = useDebounce(searchKeyword, 800);
-
   // 검색 아이콘 클릭 핸들러
   const handleSearchClick = () => {
-    if (debouncedSearchKeyword.trim()) {
+    if (searchKeyword.trim()) {
       setIsSearching(true);
     } else {
       setIsSearching(false);
@@ -107,7 +104,7 @@ export default function SchedulePage() {
     fetchNextPage: fetchNextSearchPage,
     hasNextPage: hasNextSearchPage,
     isFetchingNextPage: isFetchingNextSearchPage,
-  } = useScheduleListSearch(debouncedSearchKeyword, selectedTab, isSearching && !!isAuthenticated);
+  } = useScheduleListSearch(searchKeyword, selectedTab, isSearching && !!isAuthenticated);
 
   // 현재 상태에 따른 무한 스크롤 페이지네이션 함수 선택
   const fetchNextPage = isSearching
