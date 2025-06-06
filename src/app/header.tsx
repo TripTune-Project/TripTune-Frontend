@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import styles from '@/styles/Header.module.css';
 import LogoutModal from '@/components/Common/LogoutModal';
@@ -33,31 +33,9 @@ const Header = () => {
   const {
     isAuthenticated,
     isLoading,
-    handleTokenRefresh,
     updateAuthStatus,
     nickname,
   } = useAuth();
-
-  /**
-   * 토큰 갱신 주기 설정 (4분마다 토큰 갱신)
-   * 인증된 사용자에 대해서만 실행
-   */
-  useEffect(() => {
-    if (!isAuthenticated) return;
-
-    const interval = setInterval(
-      async () => {
-        try {
-          await handleTokenRefresh();
-        } catch (error) {
-          console.error('토큰 갱신 실패:', error);
-        }
-      },
-      4 * 60 * 1000
-    );
-
-    return () => clearInterval(interval);
-  }, [isAuthenticated, handleTokenRefresh]);
 
   // 모달 제어 함수
   const openModal = () => setIsModalOpen(true);
