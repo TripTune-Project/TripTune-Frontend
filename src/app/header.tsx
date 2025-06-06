@@ -104,6 +104,7 @@ const Header = () => {
         {/* 로고 및 홈 링크 */}
         <Link href='/'>
           <Image
+            style={{ marginLeft: '66px' }}
             src={MainLogoImage}
             alt='로고'
             width={184}

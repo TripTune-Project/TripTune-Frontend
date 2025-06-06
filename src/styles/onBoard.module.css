@@ -358,28 +358,28 @@
 .onBoardingContent {
   position: absolute;
   top: 44%;
-  left: 50%;
+  left: 0;
   width: 100%;
   height: auto;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
   z-index: 2;
-  transform: translate(-50%, -50%);
-  margin-left: 0;
+  transform: none;
+  margin-left: 64px;
 }
 
 .onBoardingText {
   width: 100%;
   max-width: 900px;
-  text-align: center;
+  text-align: left;
   color: #ffffff;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  margin: 0 auto;
+  margin: 0;
   padding: 0;
 }
 
@@ -411,7 +411,7 @@
   max-width: 600px;
   height: 60px;
   border-radius: 20px;
-  background: #fff;
+  background: #f5f6fa;
   box-shadow: 0 4px 16px 0 rgba(0,0,0,0.10);
   display: flex;
   align-items: center;
@@ -421,18 +421,19 @@
 }
 
 .onBoardingButtonLayout {
-  width: 100vw;
-  max-width: none;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
   height: 382px;
   flex-shrink: 0;
   border-radius: 0;
   background: #f7f8fb;
   margin-top: 156px;
-  margin-left: 0;
   position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-  padding-left: 48px;
+  padding-left: 32px;
+  padding-right: 32px;
+  left: unset;
+  transform: unset;
 }
 
 .textContent {
@@ -530,7 +531,7 @@
   }
 
   .onBoardingContent {
-    top: 42%;
+    margin-left: 24px;
   }
 
   .onBoardingText {
