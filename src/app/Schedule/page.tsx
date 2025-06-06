@@ -64,6 +64,23 @@ export default function SchedulePage() {
   // 검색어 디바운싱 (800ms)
   const debouncedSearchKeyword = useDebounce(searchKeyword, 800);
 
+  // 검색 아이콘 클릭 핸들러
+  const handleSearchClick = () => {
+    if (debouncedSearchKeyword.trim()) {
+      setIsSearching(true);
+    } else {
+      setIsSearching(false);
+    }
+  };
+
+  // 검색어 변경 핸들러
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchKeyword(e.target.value);
+    if (!e.target.value.trim()) {
+      setIsSearching(false);
+    }
+  };
+
   // 내 일정 목록 조회 쿼리 (전체 탭 선택 & 검색 중이 아닐 때)
   const {
     data: allScheduleData,
@@ -504,10 +521,10 @@ export default function SchedulePage() {
             type='text'
             placeholder='일정을 검색하세요.'
             value={searchKeyword}
-            onChange={(e) => setSearchKeyword(e.target.value)}
+            onChange={handleSearchChange}
           />
           <button 
-            onClick={() => setIsSearching(!!debouncedSearchKeyword)}
+            onClick={handleSearchClick}
             title="일정 검색"
           >
             <Image
