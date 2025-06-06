@@ -60,19 +60,20 @@ export default function SchedulePage() {
     'success' | 'error' | 'warning' | 'info'
   >('info');
 
+  // 검색어 변경 핸들러
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchKeyword(e.target.value);
+    // 검색어가 비어있을 때 검색 상태를 false로 변경
+    if (!e.target.value.trim()) {
+      setIsSearching(false);
+    }
+  };
+
   // 검색 아이콘 클릭 핸들러
   const handleSearchClick = () => {
     if (searchKeyword.trim()) {
       setIsSearching(true);
     } else {
-      setIsSearching(false);
-    }
-  };
-
-  // 검색어 변경 핸들러
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchKeyword(e.target.value);
-    if (!e.target.value.trim()) {
       setIsSearching(false);
     }
   };
@@ -309,13 +310,6 @@ export default function SchedulePage() {
       }
   
       // 일정이 없는 경우
-      setAlertMessage('일정 정보를 찾을 수 없습니다.');
-      setAlertSeverity('error');
-      setAlertOpen(true);
-      setTimeout(() => {
-        router.back();
-      }, 3000);
-      
       return (
         <div className={styles.noScheduleContainer}>
           <Image
