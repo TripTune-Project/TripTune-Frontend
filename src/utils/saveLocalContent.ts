@@ -14,17 +14,11 @@ const saveLocalContent = () => {
    * @param value 저장할 값
    */
   const setEncryptedCookie = (name: string, value: string) => {
-    // Cookies.set(name, encodeURIComponent(value), {
-    //   secure: true,
-    //   sameSite: 'strict',
-    //   expires: 7,
-    // });
-    Cookies.set(name, value, {
+    Cookies.set(name, encodeURIComponent(value), {
       secure: true,
       sameSite: 'strict',
       expires: 7,
     });
-    console.log(value,"value: ")
   };
 
   /**
