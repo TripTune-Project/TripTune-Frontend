@@ -304,11 +304,6 @@ export default function SchedulePage() {
   ) => {
     // 데이터가 없거나 모든 페이지에 데이터가 없는 경우
     if (!scheduleListData || scheduleListData.length === 0 || !scheduleListData[0]?.data) {
-      // 검색 결과가 없는 경우
-      if (isSearching) {
-        return <NoResultLayout />;
-      }
-  
       // 일정이 없는 경우
       return (
         <div className={styles.noScheduleContainer}>
@@ -513,7 +508,7 @@ export default function SchedulePage() {
             value={searchKeyword}
             onChange={handleSearchChange}
           />
-          <button 
+          <button
             onClick={handleSearchClick}
             title="일정 검색"
           >

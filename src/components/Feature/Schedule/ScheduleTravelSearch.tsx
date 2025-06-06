@@ -14,7 +14,6 @@ import { truncateText } from '@/utils';
 import { Place } from '@/types/scheduleType';
 import plusTravelSearch from '../../../../public/assets/images/일정 만들기/일정 저장 및 수정/plusIcon.png';
 import minusTravelSearch from '../../../../public/assets/images/일정 만들기/일정 저장 및 수정/minusBtn.png';
-import AlertIcon from '../../../../public/assets/images/여행지 탐색/홈화면/alertIcon.png';
 
 const ScheduleTravelSearch = () => {
   // useParams의 반환 타입을 업데이트
