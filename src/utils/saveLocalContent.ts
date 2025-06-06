@@ -29,6 +29,7 @@ const saveLocalContent = () => {
    */
   const getDecryptedCookie = (name: string) => {
     const value = Cookies.get(name);
+    console.log(value, "value: ")
     return value ? decodeURIComponent(value) : undefined;
   };
 
