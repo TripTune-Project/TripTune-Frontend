@@ -189,21 +189,6 @@ const ScheduleTravelSearch = () => {
               </li>
             ))}
           </ul>
-        ) : isSearching ? (
-          <>
-            <p className={styles.noResults}>
-              <Image
-                src={AlertIcon}
-                alt={'no-schedule-root'}
-                width={80}
-                height={80}
-                style={{ marginLeft: '43%' }}
-              />
-              <div className={styles.noText}>검색 결과가 없습니다.</div>
-              <br />
-              <p>검색어의 철자와 띄어쓰기가 정확한지 확인해주세요.</p>
-            </p>
-          </>
         ) : null}
       </div>
       {totalPages > 0 && (
