@@ -17,6 +17,7 @@ const saveLocalContent = () => {
     Cookies.set(name, encodeURIComponent(value), {
       secure: true,
       sameSite: 'strict',
+      expires: 7,
     });
   };
 
