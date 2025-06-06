@@ -14,10 +14,12 @@ const saveLocalContent = () => {
    * @param value 저장할 값
    */
   const setEncryptedCookie = (name: string, value: string) => {
+    // - accessToken : 1시간
+    // - refreshToken, nickname : 1주일
     Cookies.set(name, encodeURIComponent(value), {
       secure: true,
       sameSite: 'strict',
-      expires: 7,
+      expires: name === 'accessToken' ? 1/24 : 7, // 1시간 또는 7일
     });
   };
 
@@ -29,7 +31,6 @@ const saveLocalContent = () => {
    */
   const getDecryptedCookie = (name: string) => {
     const value = Cookies.get(name);
-    console.log(value, "value: ")
     return value ? decodeURIComponent(value) : undefined;
   };
 
