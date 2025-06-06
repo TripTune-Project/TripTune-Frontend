@@ -130,14 +130,14 @@ const Header = () => {
           {/* 로그인/로그아웃 상태 표시 */}
           {isLoading ? (
             <div>로딩 중...</div>
-          ) : !isAuthenticated ? (
-            // 비로그인 상태: 로그인 버튼 표시
+          ) : !isAuthenticated || !nickname ? (
+            // 비로그인 상태 또는 닉네임이 없는 경우: 로그인 버튼 표시
             <div className={styles.headerLinkLogin} onClick={handleLogin}>
               로그인
               <Image src={LoginIcon} alt='>' width={8} height={8} priority />
             </div>
           ) : (
-            // 로그인 상태: 사용자 이름과 로그아웃 버튼 표시
+            // 로그인 상태이고 닉네임이 있는 경우: 사용자 이름과 로그아웃 버튼 표시
             <div className={styles.navLogin}>
               {nickname} 님
               <Button onClick={openModal} variant='text' size='large'>

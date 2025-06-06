@@ -40,7 +40,7 @@ export default function ScheduleDetailPage() {
   >('error');
   const [isError, setIsError] = useState(false);
 
-  const { travelRoute, scheduleDetail, fetchScheduleDetailById } =
+  const { travelRoute, scheduleDetail, fetchScheduleDetailById, resetTravelRoute } =
     useTravelStore();
 
   useEffect(() => {
@@ -78,7 +78,12 @@ export default function ScheduleDetailPage() {
     };
 
     fetchScheduleData();
-  }, [scheduleId, fetchScheduleDetailById, router]);
+
+    // 페이지를 떠날 때 여행 루트 데이터 초기화
+    return () => {
+      resetTravelRoute();
+    };
+  }, [scheduleId, fetchScheduleDetailById, router, resetTravelRoute]);
 
   // 공유 모달 열기/닫기 핸들러
   const handleShareClick = () => setIsInviteModalOpen(true);

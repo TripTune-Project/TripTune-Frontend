@@ -296,6 +296,13 @@ export default function SchedulePage() {
       }
   
       // 일정이 없는 경우
+      setAlertMessage('일정 정보를 찾을 수 없습니다.');
+      setAlertSeverity('error');
+      setAlertOpen(true);
+      setTimeout(() => {
+        router.back();
+      }, 3000);
+      
       return (
         <div className={styles.noScheduleContainer}>
           <Image
@@ -304,10 +311,7 @@ export default function SchedulePage() {
             width={286}
             height={180}
           />
-          <p className={styles.noScheduleMessage}>생성된 일정이 없습니다.</p>
-          <p className={styles.noScheduleSubMessage}>
-            일정을 만들어 멋진 여행을 준비해보세요!
-          </p>
+          <p className={styles.noScheduleMessage}>일정 정보를 찾을 수 없습니다.</p>
         </div>
       );
     }

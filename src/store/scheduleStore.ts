@@ -35,6 +35,9 @@ interface TravelStore {
 
   // 과거 데이터와 새로운 데이터를 병합
   fetchAndMergeRoutes: (scheduleId: number) => Promise<void>;
+
+  // 여행 루트 초기화
+  resetTravelRoute: () => void;
 }
 
 // 초기 상태 타입 정의 강화
@@ -250,4 +253,12 @@ export const useTravelStore = create<TravelStore>((set) => ({
       console.error('[여행 경로 가져오기] 오류 발생:', error);
     }
   },
+
+  // 여행 루트 초기화
+  resetTravelRoute: () =>
+    set(() => ({
+      addedPlaces: [],
+      travelRoute: [],
+      deletedPlaces: [],
+    })),
 }));
