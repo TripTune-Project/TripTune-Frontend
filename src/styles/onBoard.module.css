@@ -9,7 +9,7 @@
   margin: 0;
   padding: 0;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   position: relative;
   width: 100%;
 }
@@ -26,39 +26,39 @@
 .onBoardingExplainP {
   color: #ffffff;
   font-family: 'Noto Sans KR', sans-serif;
-  position: absolute;
-  left: 5%;
-  transform: translateY(-50%);
+  position: static;
+  left: auto;
+  transform: none;
   text-align: left;
   z-index: 1;
-  width: 90%;
+  width: auto;
   max-width: 800px;
 }
 
 .onBoardingExplainDiv {
-  font-size: calc(var(--base-font-size) * 2.3);
+  font-size: 2.3rem;
   font-weight: 800;
-  margin-top: -360px;
+  margin: 0 0 10px 0;
 }
 
 .onBoardingExplainP {
-  bottom: 85px;
-  font-size: calc(var(--base-font-size) * 1.5);
+  font-size: 1.5rem;
   font-weight: 500;
+  margin: 0 0 24px 0;
 }
 
 .onBoardingView {
   position: relative;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   width: 100%;
 }
 
 .onBoardingSearch {
   width: 100%;
-  max-width: 1025px;
-  height: 74px;
+  max-width: 600px;
+  height: 60px;
   flex-shrink: 0;
   border-radius: 20px;
   border: none;
@@ -66,7 +66,7 @@
   display: flex;
   align-items: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-top: 1%;
+  margin-top: 0;
 }
 
 .filterSelect {
@@ -87,6 +87,7 @@
   color: #333;
   border: none;
   outline: none;
+  background: transparent;
 }
 
 .searchInput::placeholder {
@@ -94,13 +95,16 @@
 }
 
 .searchButton {
-  width: 71px;
-  height: 51px;
+  width: 48px;
+  height: 48px;
   flex-shrink: 0;
   background: linear-gradient(313deg, #004a55 1.45%, #ccead5 98.55%);
-  margin-right: 20px;
+  margin-right: 12px;
   border: none;
   border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .viewBtn {
@@ -210,7 +214,9 @@
   text-align: left;
   margin-top: 76px;
   padding: 0 2rem;
-  margin-left: 4%;
+  margin-left: 0;
+  margin-right: 0;
+  margin: 0 auto;
 }
 
 .chooseRecomend {
@@ -352,25 +358,26 @@
 }
 
 .onBoardingContent {
-  width: 100%;
-  position: absolute;
-  top: 35%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  width: auto;
+  position: static;
+  top: auto;
+  left: auto;
+  transform: none;
   z-index: 1;
   display: flex;
   flex-direction: column;
+  margin-left: 32px;
 }
 
 .onBoardingText {
   flex: 1;
   text-align: left;
   color: #ffffff;
-  padding-right: 40px;
+  padding-right: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  max-width: 50%;
+  max-width: 100%;
 }
 
 .viewTitle {
@@ -398,26 +405,30 @@
 
 .homepageSearchLayout {
   width: 100%;
-  max-width: 1297px;
-  height: 102px;
+  max-width: 600px;
+  height: 60px;
   flex-shrink: 0;
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.4);
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.25);
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  position: static;
+  left: auto;
+  transform: none;
+  margin-top: 16px;
 }
 
 .onBoardingButtonLayout {
-  width: 100%;
-  max-width: 1610px;
+  width: 100vw;
+  max-width: none;
   height: 382px;
   flex-shrink: 0;
-  border-radius: 0px 0px 100px 0px;
+  border-radius: 0;
   background: #f7f8fb;
   margin-top: 156px;
   margin-left: 0;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .textContent {

@@ -26,9 +26,9 @@
   background-size: cover;
   background-position: center;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   background-color: #ffffff;
   color: #333333;
   padding: 0.5rem 0;
@@ -41,7 +41,7 @@
 .headerContent {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   width: 95%;
   z-index: 1;
   height: 100%;

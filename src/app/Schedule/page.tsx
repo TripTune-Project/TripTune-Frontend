@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import styles from '@/styles/Schedule.module.css';
 import DataLoading from '@/components/Common/DataLoading';
