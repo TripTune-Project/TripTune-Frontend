@@ -217,7 +217,7 @@ const ScheduleRoute = () => {
   return (
     <DndProvider backend={HTML5Backend}>
       <div style={{ position: 'relative', minHeight: '500px' }}>
-        <ul style={{ height: '500px', overflowY: 'auto' }}>
+        <ul className={styles.routeListContainer}>
           {travelRoute.map((place, index) => (
             <PlaceItem key={place.placeId} place={place} index={index} />
           ))}

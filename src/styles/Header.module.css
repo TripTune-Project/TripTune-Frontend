@@ -26,9 +26,9 @@
   background-size: cover;
   background-position: center;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   background-color: #ffffff;
   color: #333333;
   padding: 0.5rem 0;
@@ -45,6 +45,7 @@
   width: 95%;
   z-index: 1;
   height: 100%;
+  padding-left: 44px;
 }
 
 .navMenu {
@@ -54,6 +55,7 @@
   align-items: center;
   height: 100%;
   flex-wrap: wrap;
+  margin-left: auto;
 }
 
 .navLink,
@@ -205,5 +207,11 @@
   .navLink,
   .navLogin {
     font-size: 0.9rem;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .headerContent {
+    padding-left: 12px;
   }
 }

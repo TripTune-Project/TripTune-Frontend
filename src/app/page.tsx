@@ -76,91 +76,77 @@ const Home = () => {
         <link rel='icon' href='/favicon.ico' />
       </Head>
 
-      {/* 메인 배너 영역 */}
-      <div className={styles.onBoardingTop}>
-        <div className={styles.onBoardingView}>
-          <Image
-            className={styles.onBoardingImg}
-            src={HomeImage}
-            alt='온보딩 이미지'
-            priority
-          />
-          <div className={styles.onBoardingContent}>
-            <div className={styles.onBoardingText}>
-              <div className={styles.onBoardingExplainDiv}>
-                모두의 아이디어로 완성되는 여행
-              </div>
-              <p className={styles.onBoardingExplainP}>
-                TripTune과 함께 즐겁고 새로운 여행 계획을 세워보세요.
+      {/* 메인 배경 및 중앙 컨텐츠 */}
+      <div className={styles.heroSection}>
+        <div className={styles.heroTextArea}>
+          <div className={styles.heroTitle}>모두의 아이디어로 완성되는 여행</div>
+          <div className={styles.heroSubtitle}><b>TripTune</b>과 함께 즐겁고 새로운 여행 계획을 세워보세요.</div>
+        </div>
+        <div className={styles.heroContentBox}>
+          <HomePageSearch />
+        </div>
+      </div>
+
+      {/* 주요 기능 버튼 영역 - 이미지 아래로 분리 */}
+      <div className={styles.onBoardingButtonLayout}>
+        <div className={styles.textContent}>
+          <span className={styles.textSchedule}>일정</span>을 직접 만들고
+          <br />
+          <span className={styles.textEtc}>여러</span>{' '}
+          <span className={styles.textTravel}>여행지</span>를 만나보세요!
+          <div className={styles.buttonContainer}>
+            {/* 일정 만들기 버튼 */}
+            <div
+              className={styles.viewBtnSchedule}
+              onClick={handleScheduleClick}
+              onMouseEnter={() =>
+                setScheduleIcon(
+                  '/assets/images/메인화면/selectScheduleIcon.png'
+                )
+              }
+              onMouseLeave={() =>
+                setScheduleIcon('/assets/images/메인화면/scheduleIcon.png')
+              }
+            >
+              <div className={styles.viewTitle}>일정 만들기</div>
+              <p className={styles.viewTitleSmall}>
+                직접 일정을 만들어보세요!
               </p>
-              <div className={styles.homepageSearchLayout}>
-                <HomePageSearch />
+              <div className={styles.iconContainer}>
+                <Image
+                  src={scheduleIcon}
+                  className={styles.time}
+                  alt='일정 만들기'
+                  width={98}
+                  height={82}
+                />
               </div>
             </div>
-          </div>
-
-          {/* 주요 기능 버튼 영역 */}
-          <div className={styles.onBoardingButtonLayout}>
-            <div className={styles.textContent}>
-              <span className={styles.textSchedule}>일정</span>을 직접 만들고
-              <br />
-              <span className={styles.textEtc}>여러</span>{' '}
-              <span className={styles.textTravel}>여행지</span>를 만나보세요!
-              <div className={styles.buttonContainer}>
-                {/* 일정 만들기 버튼 */}
-                <div
-                  className={styles.viewBtnSchedule}
-                  onClick={handleScheduleClick}
-                  onMouseEnter={() =>
-                    setScheduleIcon(
-                      '/assets/images/메인화면/selectScheduleIcon.png'
-                    )
-                  }
-                  onMouseLeave={() =>
-                    setScheduleIcon('/assets/images/메인화면/scheduleIcon.png')
-                  }
-                >
-                  <div className={styles.viewTitle}>일정 만들기</div>
-                  <p className={styles.viewTitleSmall}>
-                    직접 일정을 만들어보세요!
-                  </p>
-                  <div className={styles.iconContainer}>
-                    <Image
-                      src={scheduleIcon}
-                      className={styles.time}
-                      alt='일정 만들기'
-                      width={98}
-                      height={82}
-                    />
-                  </div>
-                </div>
-                {/* 여행지 탐색 버튼 */}
-                <div
-                  className={styles.viewBtnTravel}
-                  onClick={handleTravelClick}
-                  onMouseEnter={() =>
-                    setTravelIcon(
-                      '/assets/images/메인화면/selectTravelIcon.png'
-                    )
-                  }
-                  onMouseLeave={() =>
-                    setTravelIcon('/assets/images/메인화면/travelIcon.png')
-                  }
-                >
-                  <div className={styles.viewTitle}>여행지 탐색</div>
-                  <p className={styles.viewTitleSmall}>
-                    여행지 탐색을 통해 여러 여행지를 만나보세요.
-                  </p>
-                  <div className={styles.iconContainer}>
-                    <Image
-                      src={travelIcon}
-                      className={styles.travel}
-                      alt='여행지 탐색'
-                      width={98}
-                      height={82}
-                    />
-                  </div>
-                </div>
+            {/* 여행지 탐색 버튼 */}
+            <div
+              className={styles.viewBtnTravel}
+              onClick={handleTravelClick}
+              onMouseEnter={() =>
+                setTravelIcon(
+                  '/assets/images/메인화면/selectTravelIcon.png'
+                )
+              }
+              onMouseLeave={() =>
+                setTravelIcon('/assets/images/메인화면/travelIcon.png')
+              }
+            >
+              <div className={styles.viewTitle}>여행지 탐색</div>
+              <p className={styles.viewTitleSmall}>
+                여행지 탐색을 통해 여러 여행지를 만나보세요.
+              </p>
+              <div className={styles.iconContainer}>
+                <Image
+                  src={travelIcon}
+                  className={styles.travel}
+                  alt='여행지 탐색'
+                  width={98}
+                  height={82}
+                />
               </div>
             </div>
           </div>

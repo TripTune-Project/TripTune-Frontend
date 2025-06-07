@@ -9,13 +9,11 @@ import { useTravelStore } from '@/store/scheduleStore';
 import Image from 'next/image';
 import locationIcon from '../../../../public/assets/images/일정 만들기/일정 저장 및 수정/mapIcon.png';
 import Pagination from '@/components/Common/Pagination';
-import { useDebounce } from '@/hooks/useDebounce';
 import DataLoading from '@/components/Common/DataLoading';
 import { truncateText } from '@/utils';
 import { Place } from '@/types/scheduleType';
 import plusTravelSearch from '../../../../public/assets/images/일정 만들기/일정 저장 및 수정/plusIcon.png';
 import minusTravelSearch from '../../../../public/assets/images/일정 만들기/일정 저장 및 수정/minusBtn.png';
-import AlertIcon from '../../../../public/assets/images/여행지 탐색/홈화면/alertIcon.png';
 
 const ScheduleTravelSearch = () => {
   // useParams의 반환 타입을 업데이트
@@ -24,6 +22,7 @@ const ScheduleTravelSearch = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [isSearching, setIsSearching] = useState(false);
+  const [isSearchLoading, setIsSearchLoading] = useState(false);
   const markersRef = useRef<any[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -46,26 +45,22 @@ const ScheduleTravelSearch = () => {
     };
     loadTravelRoutes();
   }, [fetchAndMergeRoutes, scheduleId]);
-
-  // 검색을 위한 디바운스
-  const debouncedSearchKeyword = useDebounce(searchKeyword, 800);
-
+  
   // 기본 리스트 쿼리
   const travelListQuery = useScheduleTravelList(
     Number(scheduleId),
     currentPage,
     !isSearching
   );
-
+  
   // 검색 리스트 쿼리
   const searchTravelQuery = useTravelListByLocation(
     Number(scheduleId),
-    debouncedSearchKeyword,
+    searchKeyword,
     currentPage,
     isSearching
   );
 
-  // 마커 제거
   const removeMarker = useCallback((latitude: number, longitude: number) => {
     const markerIndex = markersRef.current.findIndex(
       (marker) =>
@@ -78,16 +73,6 @@ const ScheduleTravelSearch = () => {
       removedMarker.setMap(null); // setMap을 통해 지도에서 제거
     }
   }, []);
-
-  useEffect(() => {
-    if (debouncedSearchKeyword.trim()) {
-      setCurrentPage(1);
-      setIsSearching(true);
-      inputRef.current?.focus();
-    } else {
-      setIsSearching(false);
-    }
-  }, [debouncedSearchKeyword]);
 
   const travels = isSearching
     ? searchTravelQuery?.data?.data?.content || []
@@ -119,6 +104,17 @@ const ScheduleTravelSearch = () => {
       addPlaceToRoute(place);
     }
   };
+  
+  // 검색 버튼 클릭 핸들러
+  const handleSearch = () => {
+    if (searchKeyword.trim()) {
+      setIsSearchLoading(true);
+      setIsSearching(true);
+      setTimeout(() => {
+        setIsSearchLoading(false);
+      }, 500);
+    }
+  };
 
   return (
     <>
@@ -130,10 +126,12 @@ const ScheduleTravelSearch = () => {
           value={searchKeyword}
           onChange={(e) => setSearchKeyword(e.target.value)}
         />
-        <button onClick={() => setIsSearching(true)}>검색</button>
+        <button onClick={handleSearch}>검색</button>
       </div>
       <div className={styles.travelList}>
-        {travels.length > 0 ? (
+        {isSearching && searchTravelQuery.isLoading ? (
+          <DataLoading />
+        ) : travels.length > 0 ? (
           <ul>
             {travels.map((place: Place) => (
               <li key={place.placeId} className={styles.placeItemSearch}>
@@ -190,22 +188,7 @@ const ScheduleTravelSearch = () => {
               </li>
             ))}
           </ul>
-        ) : (
-          <>
-            <p className={styles.noResults}>
-              <Image
-                src={AlertIcon}
-                alt={'no-schedule-root'}
-                width={80}
-                height={80}
-                style={{ marginLeft: '43%' }}
-              />
-              <div className={styles.noText}>검색 결과가 없습니다.</div>
-              <br />
-              <p>검색어의 철자와 띄어쓰기가 정확한지 확인해주세요.</p>
-            </p>
-          </>
-        )}
+        ) : null}
       </div>
       {totalPages > 0 && (
         <Pagination

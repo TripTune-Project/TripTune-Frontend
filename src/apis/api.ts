@@ -45,7 +45,7 @@ const getErrorType = (message: string, statusCode?: number): ErrorType => {
     message === '접근 권한이 없습니다.' ||
     message === '페이지를 찾을 수 없습니다.' ||
     message === '여행지 정보를 찾을 수 없습니다.' ||
-    message === '일정 정보를 찾을 수 없습니다.' ||
+    // message === '일정 정보를 찾을 수 없습니다.' ||
     message === '작성자 정보를 찾을 수 없습니다.' ||
     message === '인증되지 않은 사용자입니다. 로그인 후 다시 시도하세요.' ||
     message === '해당 일정에 접근 권한이 없는 사용자 입니다.' ||

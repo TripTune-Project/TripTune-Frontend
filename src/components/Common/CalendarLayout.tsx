@@ -35,7 +35,7 @@ const CalendarLayout = ({
   );
   const [scheduleName, setScheduleName] = useState<string>(travelName);
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
-
+  
   useEffect(() => {
     if (mode === 'create') {
       setIsFormValid(
@@ -45,10 +45,10 @@ const CalendarLayout = ({
       setIsFormValid(startDate !== null && endDate !== null);
     }
   }, [startDate, endDate, scheduleName, mode]);
-
+  
   const handleConfirm = async () => {
     if (!isFormValid) return;
-
+    
     if (mode === 'create') {
       const scheduleData = {
         scheduleName,
@@ -72,10 +72,10 @@ const CalendarLayout = ({
       onClose();
     }
   };
-
+  
   const handleDateChange = (dates: [Date | null, Date | null]) => {
     const [start, end] = dates;
-
+    
     // 시작 날짜와 종료 날짜가 모두 선택된 경우
     if (start && end) {
       // 시작 날짜가 종료 날짜보다 이후인 경우 스왑
@@ -116,7 +116,7 @@ const CalendarLayout = ({
       }
     }
   };
-
+  
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContainer}>
