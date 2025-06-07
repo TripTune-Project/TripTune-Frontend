@@ -41,9 +41,9 @@
   max-width: 98vw;
   position: relative;
   display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 32px;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
 }
 
 .detailTitle {
@@ -58,11 +58,10 @@
 
 .inputGroup {
   display: flex;
-  flex-direction: column;
-  gap: 18px;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
   margin-bottom: 0;
-  min-width: 220px;
-  flex: 1 1 220px;
 }
 .inputGroup label {
   font-size: 1rem;
@@ -84,11 +83,10 @@
 .datePickerContainer {
   margin-top: 0;
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: flex-start;
-  min-width: 340px;
-  flex: 1 1 340px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 .confirmButton {
   background-color: #076a6a;
@@ -101,7 +99,7 @@
   font-size: 1.08rem;
   font-weight: 600;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  align-self: flex-end;
+  align-self: center;
   transition: background 0.2s;
 }
 .confirmButton:disabled {
