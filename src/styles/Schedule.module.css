@@ -1570,11 +1570,6 @@
   line-height: normal;
 }
 
-/* 1. body 스크롤 막기 */
-body {
-  overflow: hidden;
-}
-
 .leftSection {
   background-color: #ffffff;
   flex: 1;
