@@ -56,14 +56,15 @@
 }
 
 .onBoardingSearch {
-  width: 100%;
-  height: 48px;
   display: flex;
   align-items: center;
-  background: transparent;
-  box-shadow: none;
-  border-radius: 16px;
-  padding: 0;
+  width: 90%;
+  max-width: 600px;
+  background: #fff;
+  border-radius: 30px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 0 10px 0 24px;
+  margin: 0 auto;
 }
 
 .filterSelect {
@@ -78,13 +79,12 @@
 }
 
 .searchInput {
-  flex: 1;
-  padding: 12px 16px;
-  font-size: 16px;
-  color: #333;
   border: none;
   outline: none;
+  font-size: 1rem;
+  flex: 1;
   background: transparent;
+  padding: 18px 0;
 }
 
 .searchInput::placeholder {
@@ -92,17 +92,27 @@
 }
 
 .searchButton {
-  width: 40px;
-  height: 40px;
-  background: linear-gradient(313deg, #004a55 1.45%, #ccead5 98.55%);
+  background: linear-gradient(135deg, #3ec6e0, #1e8fa3);
   border: none;
-  border-radius: 10px;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-left: 8px;
-  margin-right: 0;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+
+.searchButton:hover {
+  box-shadow: 0 4px 16px rgba(62,198,224,0.15);
+}
+
+.searchButton img {
+  width: 22px;
+  height: 22px;
 }
 
 .viewBtn {
@@ -628,4 +638,49 @@
     flex-direction: column;
     margin-top: 20px;
   }
+}
+
+/* Hero Section (배경 이미지) */
+.heroSection {
+  position: relative;
+  width: 100%;
+  height: 350px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: url('/assets/images/메인화면/ocean_title.png') center/cover no-repeat;
+}
+
+/* 불투명 오버레이 박스 */
+.heroOverlay {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heroContentBox {
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 18px;
+  padding: 32px 0 24px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 70%;
+  max-width: 900px;
+}
+
+.heroTitle {
+  color: #fff;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.heroSubtitle {
+  color: #fff;
+  font-size: 1.1rem;
+  margin-bottom: 24px;
+  text-align: center;
 }

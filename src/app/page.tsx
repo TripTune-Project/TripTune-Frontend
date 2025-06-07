@@ -76,27 +76,15 @@ const Home = () => {
         <link rel='icon' href='/favicon.ico' />
       </Head>
 
-      {/* 메인 배너 영역 */}
-      <div className={styles.onBoardingTop}>
-        <div className={styles.onBoardingView}>
-          <Image
-            className={styles.onBoardingImg}
-            src={HomeImage}
-            alt='온보딩 이미지'
-            priority
-          />
-          <div className={styles.onBoardingContent}>
-            <div className={styles.onBoardingText}>
-              <div className={styles.onBoardingExplainDiv}>
-                모두의 아이디어로 완성되는 여행
-              </div>
-              <p className={styles.onBoardingExplainP}>
-                TripTune과 함께 즐겁고 새로운 여행 계획을 세워보세요.
-              </p>
-              <div className={styles.homepageSearchLayout}>
-                <HomePageSearch />
-              </div>
+      {/* 메인 배경 및 중앙 컨텐츠 */}
+      <div className={styles.heroSection}>
+        <div className={styles.heroOverlay}>
+          <div className={styles.heroContentBox}>
+            <div className={styles.heroTitle}>모두의 아이디어로 완성되는 여행</div>
+            <div className={styles.heroSubtitle}>
+              <b>TripTune</b>과 함께 즐겁고 새로운 여행 계획을 세워보세요.
             </div>
+            <HomePageSearch />
           </div>
         </div>
       </div>

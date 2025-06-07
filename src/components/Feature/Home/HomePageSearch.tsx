@@ -97,7 +97,7 @@ const HomePageSearch = () => {
         <input
           ref={inputRef}
           type='text'
-          placeholder='원하는 여행지를 검색하세요.'
+          placeholder='원하는 여행지를 검색해보세요.'
           value={searchTerm}
           onChange={handleSearchInputChange}
           onKeyPress={handleSearchKeyPress}
@@ -107,9 +107,8 @@ const HomePageSearch = () => {
           <Image
             src={searchIcon}
             alt='돋보기 아이콘'
-            width={20}
-            height={20}
-            style={{ marginLeft: '25px' }}
+            width={22}
+            height={22}
           />
         </button>
       </div>
