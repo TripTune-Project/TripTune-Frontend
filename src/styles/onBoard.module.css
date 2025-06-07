@@ -357,17 +357,15 @@
 
 .onBoardingContent {
   position: absolute;
-  top: 44%;
-  left: 0;
-  width: 100%;
-  height: auto;
+  top: 120px;
+  left: 48px;
+  z-index: 2;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  z-index: 2;
-  transform: none;
-  margin-left: 0;
+  align-items: flex-start;
+  background: transparent;
+  width: auto;
+  max-width: 700px;
 }
 
 .onBoardingText {
