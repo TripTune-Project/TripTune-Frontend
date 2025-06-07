@@ -58,12 +58,11 @@
 .onBoardingSearch {
   display: flex;
   align-items: center;
-  width: 90%;
-  max-width: 600px;
+  width: 100%;
   background: #fff;
-  border-radius: 30px;
+  border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-  padding: 0 10px 0 24px;
+  padding: 0 0 0 18px;
   margin: 0 auto;
 }
 
@@ -84,7 +83,7 @@
   font-size: 1rem;
   flex: 1;
   background: transparent;
-  padding: 18px 0;
+  padding: 14px 0;
 }
 
 .searchInput::placeholder {
@@ -92,11 +91,11 @@
 }
 
 .searchButton {
-  background: linear-gradient(135deg, #3ec6e0, #1e8fa3);
-  border: none;
-  border-radius: 50%;
+  background: #fff;
+  border: 1.5px solid #3ec6e0;
+  border-radius: 8px;
   width: 44px;
-  height: 44px;
+  height: 38px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -113,6 +112,7 @@
 .searchButton img {
   width: 22px;
   height: 22px;
+  filter: invert(44%) sepia(80%) saturate(400%) hue-rotate(150deg);
 }
 
 .viewBtn {
@@ -662,12 +662,12 @@
 .heroContentBox {
   background: rgba(255, 255, 255, 0.4);
   border-radius: 18px;
-  padding: 32px 0 24px 0;
+  padding: 28px 32px 24px 32px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: 70%;
-  max-width: 900px;
+  align-items: flex-start;
+  width: 420px;
+  max-width: 90vw;
 }
 
 .heroTitle {
@@ -675,12 +675,14 @@
   font-size: 2rem;
   font-weight: bold;
   margin-bottom: 10px;
-  text-align: center;
+  text-align: left;
+  width: 100%;
 }
 
 .heroSubtitle {
   color: #fff;
   font-size: 1.1rem;
   margin-bottom: 24px;
-  text-align: center;
+  text-align: left;
+  width: 100%;
 }
