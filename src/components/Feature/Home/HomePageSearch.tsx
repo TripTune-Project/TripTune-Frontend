@@ -92,7 +92,6 @@ const HomePageSearch = () => {
 
   return (
     <>
-      {/* 검색 입력 필드 및 버튼 */}
       <div className={styles.onBoardingSearch}>
         <input
           ref={inputRef}
@@ -103,17 +102,16 @@ const HomePageSearch = () => {
           onKeyPress={handleSearchKeyPress}
           className={styles.searchInput}
         />
-        <button className={styles.searchButton} onClick={handleSearch}>
-          <Image
-            src={searchIcon}
-            alt='돋보기 아이콘'
-            width={22}
-            height={22}
-          />
-        </button>
       </div>
-
-      {/* 경고 메시지 Snackbar */}
+      <button className={styles.searchButton} onClick={handleSearch}>
+        <Image
+          src={searchIcon}
+          alt='돋보기 아이콘'
+          width={32}
+          height={32}
+          style={{ filter: 'brightness(0) invert(1)' }}
+        />
+      </button>
       <Snackbar
         open={alertOpen}
         autoHideDuration={3000}

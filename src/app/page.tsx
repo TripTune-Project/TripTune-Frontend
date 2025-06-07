@@ -78,14 +78,12 @@ const Home = () => {
 
       {/* 메인 배경 및 중앙 컨텐츠 */}
       <div className={styles.heroSection}>
-        <div className={styles.heroOverlay}>
-          <div className={styles.heroContentBox}>
-            <div className={styles.heroTitle}>모두의 아이디어로 완성되는 여행</div>
-            <div className={styles.heroSubtitle}>
-              <b>TripTune</b>과 함께 즐겁고 새로운 여행 계획을 세워보세요.
-            </div>
-            <HomePageSearch />
-          </div>
+        <div className={styles.heroTextArea}>
+          <div className={styles.heroTitle}>모두의 아이디어로 완성되는 여행</div>
+          <div className={styles.heroSubtitle}><b>TripTune</b>과 함께 즐겁고 새로운 여행 계획을 세워보세요.</div>
+        </div>
+        <div className={styles.heroContentBox}>
+          <HomePageSearch />
         </div>
       </div>
 
