@@ -423,10 +423,7 @@
 }
 
 .onBoardingButtonLayout {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%);
+  position: static;
   width: 50vw;
   min-width: 400px;
   max-width: 900px;
@@ -443,6 +440,8 @@
   flex-direction: column;
   justify-content: center;
   box-shadow: 0 4px 16px 0 rgba(0,0,0,0.10);
+  margin: 0 auto 32px auto;
+  margin-top: 32px;
 }
 
 .textContent {
