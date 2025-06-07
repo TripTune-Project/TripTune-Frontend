@@ -364,10 +364,10 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: center;
   z-index: 2;
   transform: none;
-  margin-left: 64px;
+  margin-left: 0;
 }
 
 .onBoardingText {
@@ -418,22 +418,31 @@
   padding: 0 16px;
   margin-top: 16px;
   border: 1.5px solid #e0e0e0;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .onBoardingButtonLayout {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 50vw;
+  min-width: 400px;
+  max-width: 900px;
   height: 382px;
-  flex-shrink: 0;
-  border-radius: 0;
   background: #f7f8fb;
-  margin-top: 156px;
-  position: relative;
+  border-top-right-radius: 40px;
+  border-bottom-right-radius: 40px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
   padding-left: 32px;
   padding-right: 32px;
-  left: unset;
-  transform: unset;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: 0 4px 16px 0 rgba(0,0,0,0.10);
 }
 
 .textContent {
@@ -543,6 +552,9 @@
   }
 
   .onBoardingButtonLayout {
+    width: 70vw;
+    min-width: 250px;
+    max-width: 95vw;
     padding-left: 16px;
   }
 
@@ -577,6 +589,19 @@
 
   .buttonContainer {
     margin-top: -40px;
+  }
+
+  .onBoardingButtonLayout {
+    width: 95vw;
+    min-width: unset;
+    max-width: 100vw;
+    left: 0;
+    top: unset;
+    transform: none;
+    position: static;
+    margin-top: 32px;
+    border-radius: 20px;
+    height: auto;
   }
 }
 
