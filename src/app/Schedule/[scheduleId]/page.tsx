@@ -87,6 +87,15 @@ export default function ScheduleDetailPage() {
     };
   }, [scheduleId, fetchScheduleDetailById, router, resetTravelRoute]);
 
+  useEffect(() => {
+    // 페이지 진입 시 body 스크롤 막기
+    document.body.style.overflow = 'hidden';
+    return () => {
+      // 페이지 벗어날 때 원복
+      document.body.style.overflow = '';
+    };
+  }, []);
+
   // 공유 모달 열기/닫기 핸들러
   const handleShareClick = () => setIsInviteModalOpen(true);
   const handleCloseModal = () => setIsInviteModalOpen(false);
