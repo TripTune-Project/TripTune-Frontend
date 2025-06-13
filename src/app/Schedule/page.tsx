@@ -1,13 +1,12 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import styles from '@/styles/Schedule.module.css';
 import DataLoading from '@/components/Common/DataLoading';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { ScheduleList, ApiResponse, Schedule } from '@/types/scheduleType';
-import { useDebounce } from '@/hooks/useDebounce';
 import ScheduleImage from '../../../public/assets/images/일정 만들기/일정 목록 조회/computer.png';
 import NoscheduleIcon from '../../../public/assets/images/일정 만들기/일정 목록 조회/scheduleIcon.png';
 import searchIcon from '../../../public/assets/images/일정 만들기/일정 목록 조회/searchIcon.png';
@@ -21,7 +20,6 @@ import { deleteSchedule } from '@/apis/Schedule/scheduleApi';
 import { leaveSchedule } from '@/apis/Schedule/attendeeApi';
 import DeleteModal from '@/components/Feature/Schedule/DeleteModal';
 import moreBtn from '../../../public/assets/images/일정 만들기/일정 목록 조회/moreBtn.png';
-import NoResultLayout from '@/components/Common/NoResult';
 import LoginModal from '@/components/Common/LoginModal';
 import CalendarLayout from '@/components/Common/CalendarLayout';
 import Snackbar from '@mui/material/Snackbar';
@@ -61,8 +59,23 @@ export default function SchedulePage() {
     'success' | 'error' | 'warning' | 'info'
   >('info');
 
-  // 검색어 디바운싱 (800ms)
-  const debouncedSearchKeyword = useDebounce(searchKeyword, 800);
+  // 검색어 변경 핸들러
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchKeyword(e.target.value);
+    // 검색어가 비어있을 때 검색 상태를 false로 변경
+    if (!e.target.value.trim()) {
+      setIsSearching(false);
+    }
+  };
+
+  // 검색 아이콘 클릭 핸들러
+  const handleSearchClick = () => {
+    if (searchKeyword.trim()) {
+      setIsSearching(true);
+    } else {
+      setIsSearching(false);
+    }
+  };
 
   // 내 일정 목록 조회 쿼리 (전체 탭 선택 & 검색 중이 아닐 때)
   const {
@@ -90,7 +103,7 @@ export default function SchedulePage() {
     fetchNextPage: fetchNextSearchPage,
     hasNextPage: hasNextSearchPage,
     isFetchingNextPage: isFetchingNextSearchPage,
-  } = useScheduleListSearch(debouncedSearchKeyword, selectedTab, isSearching && !!isAuthenticated);
+  } = useScheduleListSearch(searchKeyword, selectedTab, isSearching && !!isAuthenticated);
 
   // 현재 상태에 따른 무한 스크롤 페이지네이션 함수 선택
   const fetchNextPage = isSearching
@@ -290,11 +303,6 @@ export default function SchedulePage() {
   ) => {
     // 데이터가 없거나 모든 페이지에 데이터가 없는 경우
     if (!scheduleListData || scheduleListData.length === 0 || !scheduleListData[0]?.data) {
-      // 검색 결과가 없는 경우
-      if (isSearching) {
-        return <NoResultLayout />;
-      }
-  
       // 일정이 없는 경우
       return (
         <div className={styles.noScheduleContainer}>
@@ -304,10 +312,7 @@ export default function SchedulePage() {
             width={286}
             height={180}
           />
-          <p className={styles.noScheduleMessage}>생성된 일정이 없습니다.</p>
-          <p className={styles.noScheduleSubMessage}>
-            일정을 만들어 멋진 여행을 준비해보세요!
-          </p>
+          <p className={styles.noScheduleMessage}>일정 정보를 찾을 수 없습니다.</p>
         </div>
       );
     }
@@ -319,10 +324,6 @@ export default function SchedulePage() {
   
     // 일정이 없는 경우
     if (allSchedules.length === 0) {
-      if (isSearching) {
-        return <NoResultLayout />;
-      }
-      
       return (
         <div className={styles.noScheduleContainer}>
           <Image
@@ -500,10 +501,10 @@ export default function SchedulePage() {
             type='text'
             placeholder='일정을 검색하세요.'
             value={searchKeyword}
-            onChange={(e) => setSearchKeyword(e.target.value)}
+            onChange={handleSearchChange}
           />
-          <button 
-            onClick={() => setIsSearching(!!debouncedSearchKeyword)}
+          <button
+            onClick={handleSearchClick}
             title="일정 검색"
           >
             <Image

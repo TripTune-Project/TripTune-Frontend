@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import styles from '@/styles/Header.module.css';
 import LogoutModal from '@/components/Common/LogoutModal';
@@ -33,31 +33,9 @@ const Header = () => {
   const {
     isAuthenticated,
     isLoading,
-    handleTokenRefresh,
     updateAuthStatus,
     nickname,
   } = useAuth();
-
-  /**
-   * 토큰 갱신 주기 설정 (4분마다 토큰 갱신)
-   * 인증된 사용자에 대해서만 실행
-   */
-  useEffect(() => {
-    if (!isAuthenticated) return;
-
-    const interval = setInterval(
-      async () => {
-        try {
-          await handleTokenRefresh();
-        } catch (error) {
-          console.error('토큰 갱신 실패:', error);
-        }
-      },
-      4 * 60 * 1000
-    );
-
-    return () => clearInterval(interval);
-  }, [isAuthenticated, handleTokenRefresh]);
 
   // 모달 제어 함수
   const openModal = () => setIsModalOpen(true);
@@ -104,6 +82,7 @@ const Header = () => {
         {/* 로고 및 홈 링크 */}
         <Link href='/'>
           <Image
+            style={{ marginLeft: '66px' }}
             src={MainLogoImage}
             alt='로고'
             width={184}
@@ -113,7 +92,7 @@ const Header = () => {
         </Link>
 
         {/* 네비게이션 메뉴 */}
-        <nav className={styles.navMenu}>
+        <nav className={styles.navMenu} style={{ marginLeft: 'auto' }}>
           <Link href='/' className={isActive('/')}>
             홈 화면
           </Link>
@@ -130,14 +109,14 @@ const Header = () => {
           {/* 로그인/로그아웃 상태 표시 */}
           {isLoading ? (
             <div>로딩 중...</div>
-          ) : !isAuthenticated ? (
-            // 비로그인 상태: 로그인 버튼 표시
+          ) : !isAuthenticated || !nickname ? (
+            // 비로그인 상태 또는 닉네임이 없는 경우: 로그인 버튼 표시
             <div className={styles.headerLinkLogin} onClick={handleLogin}>
               로그인
               <Image src={LoginIcon} alt='>' width={8} height={8} priority />
             </div>
           ) : (
-            // 로그인 상태: 사용자 이름과 로그아웃 버튼 표시
+            // 로그인 상태이고 닉네임이 있는 경우: 사용자 이름과 로그아웃 버튼 표시
             <div className={styles.navLogin}>
               {nickname} 님
               <Button onClick={openModal} variant='text' size='large'>

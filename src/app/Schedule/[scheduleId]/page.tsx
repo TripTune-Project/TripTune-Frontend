@@ -40,7 +40,7 @@ export default function ScheduleDetailPage() {
   >('error');
   const [isError, setIsError] = useState(false);
 
-  const { travelRoute, scheduleDetail, fetchScheduleDetailById } =
+  const { travelRoute, scheduleDetail, fetchScheduleDetailById, resetTravelRoute } =
     useTravelStore();
 
   useEffect(() => {
@@ -60,6 +60,7 @@ export default function ScheduleDetailPage() {
             setAlertMessage('일정이 존재하지 않습니다.');
             setAlertSeverity('error');
             setAlertOpen(true);
+            // 메시지가 표시된 후 3초 뒤에 뒤로가기
             setTimeout(() => {
               router.back();
             }, 3000);
@@ -67,6 +68,7 @@ export default function ScheduleDetailPage() {
             setAlertMessage('일정을 불러오는 중 오류가 발생했습니다.');
             setAlertSeverity('error');
             setAlertOpen(true);
+            // 메시지가 표시된 후 3초 뒤에 뒤로가기
             setTimeout(() => {
               router.back();
             }, 3000);
@@ -78,7 +80,21 @@ export default function ScheduleDetailPage() {
     };
 
     fetchScheduleData();
-  }, [scheduleId, fetchScheduleDetailById, router]);
+
+    // 페이지를 떠날 때 여행 루트 데이터 초기화
+    return () => {
+      resetTravelRoute();
+    };
+  }, [scheduleId, fetchScheduleDetailById, router, resetTravelRoute]);
+
+  useEffect(() => {
+    // 페이지 진입 시 body 스크롤 막기
+    document.body.style.overflow = 'hidden';
+    return () => {
+      // 페이지 벗어날 때 원복
+      document.body.style.overflow = '';
+    };
+  }, []);
 
   // 공유 모달 열기/닫기 핸들러
   const handleShareClick = () => setIsInviteModalOpen(true);
@@ -132,7 +148,6 @@ export default function ScheduleDetailPage() {
   if (isError) {
     return (
       <div className={styles.errorContainer}>
-        <DataLoading />
         <Snackbar
           open={alertOpen}
           autoHideDuration={3000}
