@@ -102,6 +102,7 @@ const EmailVerification = ({
       setNotificationMessage('이메일 인증이 완료되었습니다.');
       setOpenSnackbar(true);
     } catch (error) {
+      setIsVerificationComplete(false);
       if (error instanceof Error) {
         setAlertSeverity('error');
         setNotificationMessage(error.message);
@@ -125,12 +126,10 @@ const EmailVerification = ({
             validate: validateEmail,
           })}
           className={errors.email ? styles.inputError : styles.emailInput}
-          disabled={isEmailDisabled}
+          disabled={isEmailDisabled || isVerificationComplete}
           onInput={(e) => {
-            // 복사 붙여넣기 이벤트 감지
             const target = e.target as HTMLInputElement;
             if (target.value) {
-              // 입력값이 있을 때 form의 값 업데이트
               register('email').onChange(e);
             }
           }}
@@ -138,10 +137,10 @@ const EmailVerification = ({
         <button
           type='button'
           onClick={() => handleEmailVerificationRequest(getValues('email'))}
-          className={styles.emailButton}
-          disabled={loading}
+          className={isVerificationComplete ? styles.verifiedButton : styles.emailButton}
+          disabled={loading || isVerificationComplete}
         >
-          {loading ? <VerificationLoading /> : '인증 요청'}
+          {isVerificationComplete ? '인증 완료' : (loading ? <VerificationLoading /> : '인증 요청')}
         </button>
       </div>
       {errors.email && (
@@ -154,14 +153,11 @@ const EmailVerification = ({
             {...register('authCode', {
               required: '인증 코드를 입력해주세요.',
             })}
-            className={
-              errors.authCode ? styles.inputError : styles.inputVerification
-            }
+            className={errors.authCode ? styles.inputError : styles.inputVerification}
+            disabled={isVerificationComplete}
             onInput={(e) => {
-              // 복사 붙여넣기 이벤트 감지
               const target = e.target as HTMLInputElement;
               if (target.value) {
-                // 입력값이 있을 때 form의 값 업데이트
                 register('authCode').onChange(e);
               }
             }}
@@ -169,12 +165,15 @@ const EmailVerification = ({
           <button
             type='button'
             onClick={handleEmailVerification}
-            className={styles.verifyButton}
-            disabled={loading}
+            className={isVerificationComplete ? styles.verifiedButton : styles.verifyButton}
+            disabled={loading || isVerificationComplete}
           >
-            {loading ? <VerificationLoading /> : '인증 확인'}
+            {isVerificationComplete ? '인증 완료' : (loading ? <VerificationLoading /> : '인증 확인')}
           </button>
         </div>
+      )}
+      {errors.authCode && (
+        <div className={styles.errorText}>{errors.authCode.message}</div>
       )}
       <Snackbar
         open={openSnackbar}
