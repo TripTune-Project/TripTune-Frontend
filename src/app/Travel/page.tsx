@@ -220,7 +220,7 @@ const TravelPageContent = () => {
 
     try {
       if (bookmarkStatus) {
-        await BookMarkDeleteApi({ placeId });
+        await BookMarkDeleteApi(placeId);
       } else {
         await BookMarkApi({ placeId });
       }

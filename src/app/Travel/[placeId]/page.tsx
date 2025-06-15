@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -24,9 +24,8 @@ import homePageIcon from '../../../../public/assets/images/여행지 탐색/상�
 import phoneIcon from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_phoneIcon.png';
 import { fetchTravelDetail } from '@/apis/Travel/travelApi';
 import { useParams } from 'next/navigation';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import LoginModal from '@/components/Common/LoginModal';
-import saveLocalContent from '@/utils/saveLocalContent';
 import useAuth from '@/hooks/useAuth';
 
 const StyledSwiperContainer = styled.div`
@@ -145,11 +144,9 @@ const TravelDetailPage = () => {
         return;
       }
 
-      const response = bookmarkStatus
-        ? await BookMarkDeleteApi({ placeId: placeIdNumber })
+      return bookmarkStatus
+        ? await BookMarkDeleteApi(placeIdNumber)
         : await BookMarkApi({ placeId: placeIdNumber });
-
-      return response;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
