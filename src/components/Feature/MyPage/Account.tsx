@@ -46,6 +46,8 @@ const Account = () => {
     'success' | 'error' | 'warning' | 'info'
   >('info');
 
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+
   const handleAlertClose = (
     event?: React.SyntheticEvent | Event,
     reason?: string
@@ -86,7 +88,11 @@ const Account = () => {
       setEmailRequestSuccess(true); // 요청 성공 여부는 UI 알림으로 남겨두지만, 버튼 비활성화에는 사용하지 않음
     } catch (error: any) {
       console.error('이메일 인증 요청 실패:', error.message);
-      setAlertMessage('이메일 인증 요청에 실패했습니다.');
+      if (error.message === '이미 존재하는 이메일입니다.' || error.message === '이미 가입되어 있는 이메일입니다.') {
+        setAlertMessage('이미 가입되어 있는 이메일입니다.');
+      } else {
+        setAlertMessage('이메일 인증 요청에 실패했습니다.');
+      }
       setAlertSeverity('error');
       setAlertOpen(true);
     } finally {
@@ -107,9 +113,10 @@ const Account = () => {
       setAlertMessage('이메일 인증이 성공적으로 완료되었습니다.');
       setAlertSeverity('success');
       setAlertOpen(true);
+      setIsEmailVerified(true);
     } catch (error: any) {
       console.error('이메일 인증 확인 실패:', error.message);
-      setAlertMessage('이메일 인증 확인에 실패했습니다.');
+      setAlertMessage(error.message || '이메일 인증 확인에 실패했습니다.');
       setAlertSeverity('error');
       setAlertOpen(true);
     } finally {
@@ -250,13 +257,12 @@ const Account = () => {
                       errors.verificationCode ? styles.inputError : styles.input
                     }
                     onInput={(e) => {
-                      // 복사 붙여넣기 이벤트 감지
                       const target = e.target as HTMLInputElement;
                       if (target.value) {
-                        // 입력값이 있을 때 form의 값 업데이트
                         register('verificationCode').onChange(e);
                       }
                     }}
+                    disabled={isEmailVerified}
                   />
                   <button
                     type='button'
@@ -268,13 +274,9 @@ const Account = () => {
                       };
                       handleEmailVerificationConfirm(emailData);
                     })}
-                    disabled={emailConfirmLoading}
+                    disabled={emailConfirmLoading || isEmailVerified}
                   >
-                    {emailConfirmLoading ? (
-                      <VerificationLoading />
-                    ) : (
-                      '인증 확인'
-                    )}
+                    {isEmailVerified ? '인증 완료' : (emailConfirmLoading ? <VerificationLoading /> : '인증 확인')}
                   </button>
                 </div>
                 {errors.verificationCode && (
