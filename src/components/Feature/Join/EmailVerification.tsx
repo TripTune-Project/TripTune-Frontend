@@ -47,7 +47,8 @@ const EmailVerification = ({
   const [alertSeverity, setAlertSeverity] = useState<'success' | 'error'>(
     'success'
   );
-  const [loading, setLoading] = useState(false);
+  const [requestLoading, setRequestLoading] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
@@ -60,7 +61,7 @@ const EmailVerification = ({
       setOpenSnackbar(true);
       return;
     }
-    setLoading(true);
+    setRequestLoading(true);
     try {
       await requestEmailVerification(email);
       setIsVerificationSent(true);
@@ -82,7 +83,7 @@ const EmailVerification = ({
       }
       setOpenSnackbar(true);
     } finally {
-      setLoading(false);
+      setRequestLoading(false);
     }
   };
 
@@ -94,7 +95,7 @@ const EmailVerification = ({
       setOpenSnackbar(true);
       return;
     }
-    setLoading(true);
+    setConfirmLoading(true);
     try {
       await verifyEmail(email, authCode);
       setIsVerificationComplete(true);
@@ -112,7 +113,7 @@ const EmailVerification = ({
       }
       setOpenSnackbar(true);
     } finally {
-      setLoading(false);
+      setConfirmLoading(false);
     }
   };
 
@@ -138,9 +139,9 @@ const EmailVerification = ({
           type='button'
           onClick={() => handleEmailVerificationRequest(getValues('email'))}
           className={isVerificationComplete ? styles.verifiedButton : styles.emailButton}
-          disabled={loading || isVerificationComplete}
+          disabled={requestLoading || confirmLoading || isVerificationComplete}
         >
-          {isVerificationComplete ? '인증 완료' : (loading ? <VerificationLoading /> : '인증 요청')}
+          {isVerificationComplete ? '인증 완료' : (requestLoading ? <VerificationLoading /> : '인증 요청')}
         </button>
       </div>
       {errors.email && (
@@ -166,9 +167,9 @@ const EmailVerification = ({
             type='button'
             onClick={handleEmailVerification}
             className={isVerificationComplete ? styles.verifiedButton : styles.verifyButton}
-            disabled={loading || isVerificationComplete}
+            disabled={requestLoading || confirmLoading || isVerificationComplete}
           >
-            {isVerificationComplete ? '인증 완료' : (loading ? <VerificationLoading /> : '인증 확인')}
+            {isVerificationComplete ? '인증 완료' : (confirmLoading ? <VerificationLoading /> : '인증 확인')}
           </button>
         </div>
       )}

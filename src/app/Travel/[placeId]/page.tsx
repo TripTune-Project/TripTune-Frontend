@@ -24,7 +24,7 @@ import homePageIcon from '../../../../public/assets/images/여행지 탐색/상�
 import phoneIcon from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_phoneIcon.png';
 import { fetchTravelDetail } from '@/apis/Travel/travelApi';
 import { useParams } from 'next/navigation';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import LoginModal from '@/components/Common/LoginModal';
 import useAuth from '@/hooks/useAuth';
 
@@ -86,7 +86,6 @@ const TravelDetailPage = () => {
   const params = useParams();
   const placeId = params?.placeId as string;
   const placeIdNumber = parseInt(placeId, 10);
-  const queryClient = useQueryClient();
 
   const { isAuthenticated } = useAuth();
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -137,28 +136,29 @@ const TravelDetailPage = () => {
     }
   }, [isExpanded, data]);
 
-  const toggleBookmarkMutation = useMutation({
-    mutationFn: async (bookmarkStatus: boolean) => {
-      if (!isAuthenticated) {
-        setShowLoginModal(true);
-        return;
-      }
+  const toggleBookmark = async (bookmarkStatus: boolean) => {
+    if (!isAuthenticated) {
+      setShowLoginModal(true);
+      return;
+    }
 
-      return bookmarkStatus
-        ? await BookMarkDeleteApi(placeIdNumber)
-        : await BookMarkApi({ placeId: placeIdNumber });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['travelDetail', placeIdNumber],
-      });
-    },
-    onError: (error) => {},
-    onSettled: () => {},
-  });
+    try {
+      if (bookmarkStatus) {
+        await BookMarkDeleteApi(placeIdNumber);
+      } else {
+        await BookMarkApi({ placeId: placeIdNumber });
+      }
+    } catch (err) {
+      console.error('[토글북마크] 에러 발생 ✖', err);
+    } finally {
+      setTimeout(async () => {
+        await refetch();
+      }, 100);
+    }
+  };
 
   const handleBookmarkToggle = () => {
-    toggleBookmarkMutation.mutate(data?.bookmarkStatus ?? false);
+    toggleBookmark(data?.bookmarkStatus ?? false);
   };
 
   const handleScheduleAdd = () => {
@@ -177,7 +177,8 @@ const TravelDetailPage = () => {
   const UseTimeUI = ({ useTime }: { useTime: string }) => (
     <div className={styles.useTimeLabel}>
       <Image width={18} height={18} src={timeIcon} alt='이용 시간' />
-      <p>이용시간</p> {useTime}
+      <p>이용시간</p>
+      <span>{formatDescriptionWithParagraphs(useTime)}</span>
     </div>
   );
 
@@ -188,10 +189,17 @@ const TravelDetailPage = () => {
     checkInTime: string;
     checkOutTime: string;
   }) => (
-    <div className={styles.useTimeLabel}>
-      <Image width={18} height={18} src={timeIcon} alt='입/퇴실 시간' />
-      <p>입실시간</p> {checkInTime}
-      <p>퇴실시간</p> {checkOutTime}
+    <div>
+      <div className={styles.useTimeLabel}>
+        <Image width={18} height={18} src={timeIcon} alt='입실 시간' />
+        <p>입실시간</p>
+        <span>{formatDescriptionWithParagraphs(checkInTime)}</span>
+      </div>
+      <div className={styles.useTimeLabel}>
+        <Image width={18} height={18} src={timeIcon} alt='퇴실 시간' />
+        <p>퇴실시간</p>
+        <span>{formatDescriptionWithParagraphs(checkOutTime)}</span>
+      </div>
     </div>
   );
 
@@ -215,7 +223,8 @@ const TravelDetailPage = () => {
   };
 
   const formatDescriptionWithParagraphs = (text: string) => {
-    const paragraphs = text.split(/\n+/);
+    const normalizedText = text.replace(/<br\s*\/?>/gi, '\n');
+    const paragraphs = normalizedText.split(/\n+/);
     return paragraphs.map((paragraph, index) => (
       <React.Fragment key={index}>
         {paragraph}

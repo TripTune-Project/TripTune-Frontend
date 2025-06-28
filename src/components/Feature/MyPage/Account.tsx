@@ -235,6 +235,7 @@ const Account = () => {
                       };
                       handleEmailVerification(emailData);
                     }}
+                    disabled={emailRequestLoading || emailConfirmLoading || isEmailVerified}
                   >
                     {emailRequestLoading ? (
                       <VerificationLoading />
@@ -274,7 +275,7 @@ const Account = () => {
                       };
                       handleEmailVerificationConfirm(emailData);
                     })}
-                    disabled={emailConfirmLoading || isEmailVerified}
+                    disabled={emailRequestLoading || emailConfirmLoading || isEmailVerified}
                   >
                     {isEmailVerified ? '인증 완료' : (emailConfirmLoading ? <VerificationLoading /> : '인증 확인')}
                   </button>

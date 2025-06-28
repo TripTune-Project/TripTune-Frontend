@@ -273,14 +273,6 @@
   width: auto;
 }
 
-.rightSection {
-  background-color: #ffffff;
-  width: 749px;
-  height: 512px;
-  display: flex;
-  flex-direction: column;
-}
-
 .infoSection {
   background-color: #f3f8f8;
   padding: 20px;
@@ -326,7 +318,7 @@
   font-weight: 600;
   line-height: normal;
   font-family: 'Noto Sans KR', sans-serif;
-  margin-left: 200px;
+  margin-left: 120px;
 }
 
 .detailTitleIcon {
@@ -504,13 +496,13 @@
 .rightSection {
   background-color: #ffffff;
   padding: 0 0 20px 20px;
-  border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   max-width: 749px;
-  height: 512px;
+  height: 530px;
   margin: 0 auto;
+  width: 749px;
 }
 
 .countryCityDistrict {
