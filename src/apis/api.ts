@@ -128,8 +128,8 @@ const fetchData = async <T>(
   options?: FetchOptions,
   isRetry: boolean = false
 ): Promise<T> => {
-  const baseUrl = 'https://www.triptune.site/api';
-  //const baseUrl = 'https://www.triptune.site' // 로컬에서만
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
+  // const baseUrl = 'https://www.triptune.site' // 로컬에서만
   const url = `${baseUrl}${endpoint}`;
 
   // 헤더 설정
