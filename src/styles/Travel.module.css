@@ -503,6 +503,7 @@
   height: 530px;
   margin: 0 auto;
   width: 749px;
+  overflow-y:auto;
 }
 
 .countryCityDistrict {
