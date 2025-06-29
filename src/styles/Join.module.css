@@ -148,6 +148,10 @@
   cursor: pointer;
   margin-left: 10px;
   font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 106px;
 }
 
 .emailButton:disabled {
@@ -187,6 +191,10 @@
   border: none;
   cursor: pointer;
   margin-left: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 106px;
 }
 
 .verifyButton:disabled {
@@ -207,6 +215,10 @@
   margin-left: 10px;
   font-weight: 700;
   opacity: 0.8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 106px;
 }
 
 /* 반응형 미디어 쿼리 */

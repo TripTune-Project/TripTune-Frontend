@@ -474,7 +474,7 @@ export default function SchedulePage() {
         </div>
       </div>
       <div className={styles.createContainer}>
-        <button
+        <div
           className={`${styles.scheduleCounter} ${selectedTab === 'all' ? styles.activeTab : ''}`}
           onClick={() => setSelectedTab('all')}
         >
@@ -482,7 +482,7 @@ export default function SchedulePage() {
           <span className={styles.counterNumber}>
             {allScheduleData?.pages[0]?.data?.totalElements ?? 0}
           </span>
-        </button>
+        </div>
 
         <button
           className={`${styles.scheduleCounterShare} ${selectedTab === 'share' ? styles.activeTab : ''}`}

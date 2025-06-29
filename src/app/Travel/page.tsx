@@ -227,11 +227,13 @@ const TravelPageContent = () => {
     } catch (err) {
       console.error('[토글북마크] 에러 발생 ✖', err);
     } finally {
-      if (isSearching) {
-        await refetchSearch();
-      } else {
-        await refetchLocation();
-      }
+      setTimeout(async () => {
+        if (isSearching) {
+          await refetchSearch();
+        } else {
+          await refetchLocation();
+        }
+      }, 100);
     }
   };
 
