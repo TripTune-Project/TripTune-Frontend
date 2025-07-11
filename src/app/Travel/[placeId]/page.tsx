@@ -24,7 +24,7 @@ import homePageIcon from '../../../../public/assets/images/여행지 탐색/상�
 import phoneIcon from '../../../../public/assets/images/여행지 탐색/상세화면/placeDetail_phoneIcon.png';
 import { fetchTravelDetail } from '@/apis/Travel/travelApi';
 import { useParams } from 'next/navigation';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import LoginModal from '@/components/Common/LoginModal';
 import useAuth from '@/hooks/useAuth';
 
@@ -86,7 +86,6 @@ const TravelDetailPage = () => {
   const params = useParams();
   const placeId = params?.placeId as string;
   const placeIdNumber = parseInt(placeId, 10);
-  const queryClient = useQueryClient();
 
   const { isAuthenticated } = useAuth();
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -137,28 +136,29 @@ const TravelDetailPage = () => {
     }
   }, [isExpanded, data]);
 
-  const toggleBookmarkMutation = useMutation({
-    mutationFn: async (bookmarkStatus: boolean) => {
-      if (!isAuthenticated) {
-        setShowLoginModal(true);
-        return;
-      }
+  const toggleBookmark = async (bookmarkStatus: boolean) => {
+    if (!isAuthenticated) {
+      setShowLoginModal(true);
+      return;
+    }
 
-      return bookmarkStatus
-        ? await BookMarkDeleteApi(placeIdNumber)
-        : await BookMarkApi({ placeId: placeIdNumber });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['travelDetail', placeIdNumber],
-      });
-    },
-    onError: (error) => {},
-    onSettled: () => {},
-  });
+    try {
+      if (bookmarkStatus) {
+        await BookMarkDeleteApi(placeIdNumber);
+      } else {
+        await BookMarkApi({ placeId: placeIdNumber });
+      }
+    } catch (err) {
+      console.error('[토글북마크] 에러 발생 ✖', err);
+    } finally {
+      setTimeout(async () => {
+        await refetch();
+      }, 100);
+    }
+  };
 
   const handleBookmarkToggle = () => {
-    toggleBookmarkMutation.mutate(data?.bookmarkStatus ?? false);
+    toggleBookmark(data?.bookmarkStatus ?? false);
   };
 
   const handleScheduleAdd = () => {
@@ -177,7 +177,8 @@ const TravelDetailPage = () => {
   const UseTimeUI = ({ useTime }: { useTime: string }) => (
     <div className={styles.useTimeLabel}>
       <Image width={18} height={18} src={timeIcon} alt='이용 시간' />
-      <p>이용시간</p> {useTime}
+      <p>이용시간</p>
+      <>{formatDescriptionWithParagraphs(useTime, true)}</>
     </div>
   );
 
@@ -188,10 +189,17 @@ const TravelDetailPage = () => {
     checkInTime: string;
     checkOutTime: string;
   }) => (
-    <div className={styles.useTimeLabel}>
-      <Image width={18} height={18} src={timeIcon} alt='입/퇴실 시간' />
-      <p>입실시간</p> {checkInTime}
-      <p>퇴실시간</p> {checkOutTime}
+    <div>
+      <div className={styles.useTimeLabel}>
+        <Image width={18} height={18} src={timeIcon} alt='입실 시간' />
+        <p>입실시간</p>
+        <span>{formatDescriptionWithParagraphs(checkInTime, true)}</span>
+      </div>
+      <div className={styles.useTimeLabel}>
+        <Image width={18} height={18} src={timeIcon} alt='퇴실 시간' />
+        <p>퇴실시간</p>
+        <span>{formatDescriptionWithParagraphs(checkOutTime, true)}</span>
+      </div>
     </div>
   );
 
@@ -214,15 +222,24 @@ const TravelDetailPage = () => {
     }
   };
 
-  const formatDescriptionWithParagraphs = (text: string) => {
-    const paragraphs = text.split(/\n+/);
-    return paragraphs.map((paragraph, index) => (
+  const formatDescriptionWithParagraphs = (text: string, applyMargin: boolean = false) => {
+    const normalizedText = text.replace(/<br\s*\/?>/gi, '\n');
+    const paragraphs = normalizedText.split(/\n+/);
+    const hasMultipleLines = paragraphs.length > 1;
+
+    const content = paragraphs.map((paragraph, index) => (
       <React.Fragment key={index}>
         {paragraph}
         {index < paragraphs.length - 1 && <br />}
-        {index < paragraphs.length - 1 && <br />}
       </React.Fragment>
     ));
+
+    // applyMargin이 true이고 여러 줄이 있을 때만 marginLeft 적용
+    if (applyMargin && hasMultipleLines) {
+      return <span style={{ marginLeft: '80px' }}>{content}</span>;
+    }
+
+    return content;
   };
 
   const handleExpandClick = () => {
@@ -314,36 +331,42 @@ const TravelDetailPage = () => {
               {country} &gt; {city} &gt; {district}
             </p>
             <div className={styles.detailplaceName}>{placeName}</div>
-            <div className={styles.addressLabel}>
-              <Image width={14} height={21} src={locationIcon} alt='주소' />
-              <p> 주소 </p> {address}
+            <div className={styles.scrollbar}>
+              <div className={styles.addressLabel}>
+                <Image width={14} height={21} src={locationIcon} alt='주소' />
+                <p> 주소 </p> {address}
+              </div>
+              {renderTimeContent(checkInTime, checkOutTime, useTime)}
+              {homepageUrl && (
+                <div className={styles.homepageLabel}>
+                  <Image
+                    width={18}
+                    height={18}
+                    src={homePageIcon}
+                    alt='홈페이지'
+                  />
+                  <p> 홈페이지 </p>
+                  <a
+                    href={homepageUrl}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                  >
+                    {homepageUrl}
+                  </a>
+                </div>
+              )}
+              {phoneNumber && (
+                <div className={styles.phoneLabel}>
+                  <Image
+                    width={36}
+                    height={28}
+                    src={phoneIcon}
+                    alt='문의 및 안내'
+                  />
+                  <p> 문의 및 안내 </p> {phoneNumber}
+                </div>
+              )}
             </div>
-            {renderTimeContent(checkInTime, checkOutTime, useTime)}
-            {homepageUrl && (
-              <div className={styles.homepageLabel}>
-                <Image
-                  width={18}
-                  height={18}
-                  src={homePageIcon}
-                  alt='홈페이지'
-                />
-                <p> 홈페이지 </p>
-                <a href={homepageUrl} target='_blank' rel='noopener noreferrer'>
-                  {homepageUrl}
-                </a>
-              </div>
-            )}
-            {phoneNumber && (
-              <div className={styles.phoneLabel}>
-                <Image
-                  width={36}
-                  height={28}
-                  src={phoneIcon}
-                  alt='문의 및 안내'
-                />
-                <p> 문의 및 안내 </p> {phoneNumber}
-              </div>
-            )}
             <div className={styles.buttonContainer}>
               <button
                 onClick={handleBookmarkToggle}

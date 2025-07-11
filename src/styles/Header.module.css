@@ -19,10 +19,10 @@
 }
 
 .header {
+  font-size: 16px;
   position: relative;
   width: 100%;
-  height: auto;
-  min-height: 91px;
+  height: 75px;
   background-size: cover;
   background-position: center;
   display: flex;
@@ -31,7 +31,6 @@
   justify-content: flex-start;
   background-color: #ffffff;
   color: #333333;
-  padding: 0.5rem 0;
 }
 
 .homeHeader {
@@ -68,8 +67,7 @@
   border-radius: 5px;
   text-align: center;
   justify-content: center;
-  height: auto;
-  min-height: 24px;
+  height: 19px;
   display: flex;
   align-items: center;
   padding: 0.3rem 0;

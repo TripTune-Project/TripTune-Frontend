@@ -835,6 +835,10 @@
   border: none;
   cursor: pointer;
   margin-left: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 106px;
 }
 .requestBtn:disabled {
   background-color: #cccccc;
@@ -853,6 +857,10 @@
   border: none;
   cursor: pointer;
   margin-left: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 106px;
 }
 .verifyBtn:disabled {
   background-color: #cccccc;
