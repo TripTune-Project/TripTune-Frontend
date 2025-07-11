@@ -176,12 +176,12 @@ const TravelPageContent = () => {
     }
   };
 
-  // 특수문자를 제외한 입력만 허용
+  // 특수문자를 제외한 입력만 허용 (띄어쓰기는 허용)
   const handleSearchInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const input = event.target.value;
-    const regex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]*$/;
+    const regex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9 ]*$/;
 
     if (regex.test(input)) {
       setSearchTerm(input);
