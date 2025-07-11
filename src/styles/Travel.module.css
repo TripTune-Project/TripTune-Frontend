@@ -503,7 +503,6 @@
   height: 530px;
   margin: 0 auto;
   width: 749px;
-  overflow-y:auto;
 }
 
 .countryCityDistrict {
@@ -524,6 +523,10 @@
   line-height: normal;
   margin-bottom: 15px;
   font-family: 'Noto Sans KR', sans-serif;
+}
+
+.scrollbar {
+  overflow-y: auto;
 }
 
 .addressLabel,
