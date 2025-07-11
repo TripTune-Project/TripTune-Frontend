@@ -1,7 +1,7 @@
 .FindTitle {
   color: #000;
   font-family: 'Noto Sans KR', sans-serif;
-  font-size: 2.5rem;
+  font-size: 1.625rem;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
@@ -10,11 +10,10 @@
 }
 
 .pageContainer {
-  margin: 2rem auto;
-  width: 90%;
-  max-width: 756px;
-  height: auto;
-  min-height: 600px;
+  margin-top:108px;
+  margin-left: 40%;
+  width: 550px;
+  height: 630px;
   flex-shrink: 0;
   border-radius: 30px 0px;
   background: #ffffff;
@@ -71,7 +70,7 @@
 .inputGroup {
   margin-bottom: 20px;
   width: 100%;
-  min-width: 480px;
+  min-width: 400px;
 }
 
 .findText {
@@ -88,6 +87,13 @@
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+}
+
+.emailInputIcon {
+  width: 36px;
+  height: 27px;
+  flex-shrink: 0;
+  margin-right: 10px;
 }
 
 .input {
@@ -167,7 +173,7 @@
 .FindIdBox {
   display: flex;
   width: 100%;
-  max-width: 480px;
+  max-width: 400px;
   height: auto;
   min-height: 103px;
   flex-direction: column;
@@ -190,7 +196,7 @@
 .alert {
   padding: 15px;
   width: 100%;
-  max-width: 480px;
+  max-width: 400px;
   border-radius: 5px;
   font-size: 16px;
   text-align: center;
@@ -216,7 +222,7 @@
 .hint {
   display: flex;
   width: 100%;
-  max-width: 480px;
+  max-width: 400px;
   height: auto;
   min-height: 38px;
   flex-direction: column;
