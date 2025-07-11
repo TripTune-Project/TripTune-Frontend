@@ -9,6 +9,8 @@ import styles from '@/styles/Find.module.css';
 import { validateEmail } from '@/utils/validation';
 import { Snackbar, Alert } from '@mui/material';
 import type { AlertColor, SnackbarCloseReason } from '@mui/material';
+import Image from 'next/image';
+import triptuneIcon from '../../../public/assets/images/로고/triptuneIcon-removebg.png';
 
 function FindPage() {
   const [email, setEmail] = useState('');
@@ -81,9 +83,14 @@ function FindPage() {
       <div className={styles.pageContainer}>
         <h1 className={styles.FindTitle}>비밀번호 찾기</h1>
         <form onSubmit={handleFindPasswordSubmit} className={styles.inputGroup}>
-          <p className={styles.findText}>
-            이메일을 입력해주세요. 이메일로 비밀번호 변경 링크가 전송됩니다.
-          </p>
+          <span className={styles.findText}>
+            <Image
+              className={styles.emailInputIcon}
+              src={triptuneIcon}
+              alt='이메일 주소 입력'
+            />
+            이메일 주소를 입력하면 비밀번호 변경 링크가 전송됩니다.
+          </span><br/>
           <label htmlFor='email'>이메일</label>
           <input
             type='email'

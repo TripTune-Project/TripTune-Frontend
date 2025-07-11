@@ -112,7 +112,7 @@ const LoginForm = () => {
               className={styles.submitButton}
               disabled={!isValid}
             >
-              로그인하기
+              로그인
             </button>
           </form>
 

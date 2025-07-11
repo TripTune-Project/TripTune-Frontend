@@ -37,7 +37,7 @@
   content: '';
   position: absolute;
   width: 100%;
-  max-width: 1455px;
+  max-width: 1735px;
   height: 50vh;
   max-height: 701px;
   border-radius: 0 0 0 200px;
@@ -51,7 +51,7 @@
 .content {
   width: 100%;
   height: auto;
-  min-height: 100vh;
+  min-height: 64vh;
   flex-grow: 1;
 }
 
