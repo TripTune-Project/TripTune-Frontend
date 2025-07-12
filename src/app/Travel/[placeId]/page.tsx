@@ -90,10 +90,13 @@ const TravelDetailPage = () => {
   const { isAuthenticated } = useAuth();
   const [showLoginModal, setShowLoginModal] = useState(false);
 
+  // 인증 상태가 확정되었는지 확인 (null이 아닌 경우)
+  const isAuthStateReady = isAuthenticated !== null;
+  const requiresAuth = isAuthenticated === true;
+
   const { data, isLoading, refetch } = useQuery({
-    queryKey: ['travelDetail', placeIdNumber],
+    queryKey: ['travelDetail', placeIdNumber, requiresAuth],
     queryFn: async () => {
-      const requiresAuth = isAuthenticated === true;
       const result = await fetchTravelDetailData(placeIdNumber, requiresAuth);
       if (result.success) {
         return result.data;
@@ -102,6 +105,7 @@ const TravelDetailPage = () => {
         throw new Error(result.message);
       }
     },
+    enabled: isAuthStateReady, // 인증 상태가 확정된 후에만 실행
   });
 
   useEffect(() => {
@@ -148,9 +152,12 @@ const TravelDetailPage = () => {
       } else {
         await BookMarkApi({ placeId: placeIdNumber });
       }
+
+      // 북마크 상태 변경 성공 시 즉시 데이터 재조회
+      await refetch();
     } catch (err) {
       console.error('[토글북마크] 에러 발생 ✖', err);
-    } finally {
+      // 에러 발생 시에도 데이터 재조회하여 상태 동기화
       setTimeout(async () => {
         await refetch();
       }, 100);

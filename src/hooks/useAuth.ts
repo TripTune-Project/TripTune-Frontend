@@ -38,8 +38,10 @@ const useAuth = () => {
         if (refreshToken) {
           try {
             await refreshApi();
+            // 토큰 갱신 후 다시 닉네임 확인
+            const updatedNickname = getDecryptedCookie('nickname');
             setIsAuthenticated(true);
-            setNickname(storedNickname || '');
+            setNickname(updatedNickname || '');
           } catch (refreshError) {
             // 리프레시 실패 시 인증 실패 처리
             console.error('토큰 갱신 실패:', refreshError);

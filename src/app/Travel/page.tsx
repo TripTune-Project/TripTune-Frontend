@@ -67,6 +67,9 @@ const TravelPageContent = () => {
   const requiresAuth = isAuthenticated === true;
   const [showLoginModal, setShowLoginModal] = useState(false);
 
+  // 인증 상태가 확정되었는지 확인 (null이 아닌 경우)
+  const isAuthStateReady = isAuthenticated !== null;
+
   // 위치 기반 여행지 목록 데이터 쿼리
   const {
     data: locationData,
@@ -76,7 +79,7 @@ const TravelPageContent = () => {
     coordinates ?? defaultCoordinates,
     currentPage,
     requiresAuth,
-    !isSearching
+    !isSearching && isAuthStateReady // 인증 상태가 확정된 후에만 실행
   );
 
   // 검색어 기반 여행지 목록 데이터 쿼리
@@ -92,7 +95,7 @@ const TravelPageContent = () => {
     },
     currentPage,
     requiresAuth,
-    isSearching
+    isSearching && isAuthStateReady // 인증 상태가 확정된 후에만 실행
   );
 
   // 검색어 디바운스 처리 (타이핑 최적화)
@@ -150,16 +153,22 @@ const TravelPageContent = () => {
 
   /**
    * 인증 상태 변경 시 데이터 다시 가져오기
+   * 인증 상태가 확정된 후에만 데이터를 다시 가져옴
    */
   useEffect(() => {
-    if (isAuthenticated !== null) {
-      if (isSearching) {
-        refetchSearch();
-      } else {
-        refetchLocation();
-      }
+    if (isAuthStateReady) {
+      // 약간의 지연을 두어 인증 상태가 완전히 안정화된 후 데이터 조회
+      const timer = setTimeout(() => {
+        if (isSearching) {
+          refetchSearch();
+        } else {
+          refetchLocation();
+        }
+      }, 100);
+
+      return () => clearTimeout(timer);
     }
-  }, [isAuthenticated, isSearching, refetchLocation, refetchSearch]);
+  }, [isAuthenticated, isSearching, refetchLocation, refetchSearch, isAuthStateReady]);
 
   /**
    * 검색 버튼 클릭 핸들러
@@ -224,9 +233,16 @@ const TravelPageContent = () => {
       } else {
         await BookMarkApi({ placeId });
       }
+
+      // 북마크 상태 변경 성공 시 즉시 데이터 재조회
+      if (isSearching) {
+        await refetchSearch();
+      } else {
+        await refetchLocation();
+      }
     } catch (err) {
       console.error('[토글북마크] 에러 발생 ✖', err);
-    } finally {
+      // 에러 발생 시에도 데이터 재조회하여 상태 동기화
       setTimeout(async () => {
         if (isSearching) {
           await refetchSearch();

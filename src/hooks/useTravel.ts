@@ -16,6 +16,9 @@ export const useTravelListByLocation = (
     queryKey: ['travelList', params, page, requiresAuth],
     queryFn: () => fetchTravelListByLocation(params, page, requiresAuth),
     enabled,
+    // 인증 상태 변경 시 데이터 신선도 유지
+    staleTime: 0,
+    gcTime: 5 * 60 * 1000, // 5분간 캐시 유지
   });
 };
 
@@ -29,5 +32,8 @@ export const useTravelListSearch = (
     queryKey: ['travelListSearch', params, page, requiresAuth],
     queryFn: () => fetchTravelListSearch(params, page, requiresAuth), // requiresAuth 전달
     enabled,
+    // 인증 상태 변경 시 데이터 신선도 유지
+    staleTime: 0,
+    gcTime: 5 * 60 * 1000, // 5분간 캐시 유지
   });
 };
