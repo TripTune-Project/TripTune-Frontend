@@ -147,6 +147,9 @@ const fetchData = async <T>(
     const token = Cookies.get('accessToken');
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
+    } else {
+      // 인증이 필요한데 토큰이 없는 경우 로그 출력
+      console.warn('인증이 필요한 요청이지만 액세스 토큰이 없습니다:', endpoint);
     }
   }
 
