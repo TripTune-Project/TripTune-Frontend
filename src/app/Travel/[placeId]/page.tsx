@@ -313,7 +313,7 @@ const TravelDetailPage = () => {
                         src={image.imageUrl}
                         alt={image.imageName}
                         layout='responsive'
-                        width={643}
+                        width={649}
                         height={433}
                       />
                     </div>

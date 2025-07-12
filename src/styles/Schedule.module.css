@@ -244,22 +244,34 @@
     background: none;
     box-shadow: none;
     border-radius: 0;
-    padding-top: 18px;
+    padding-top: 77px;
+}
+
+.tabAndSearchContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.tabContainer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .scheduleCounter,
 .scheduleCounterShare {
-    display: inline-flex;
+    display: contents;
     align-items: center;
     font-size: 1.08rem;
     font-weight: 600;
     margin: 0 10px 0 0;
     padding: 8px 22px;
     border-radius: 8px;
-    background: #fff;
+    border:none;
     color: #222;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    border: 1px solid #e0e7ef;
     transition: border 0.2s, color 0.2s;
     cursor: pointer;
 }
@@ -267,16 +279,16 @@
 .scheduleCounter.activeTab,
 .scheduleCounterShare.activeTab {
     color: #76adac;
-    background-color: transparent;
+    border:none;
 }
 
 .scheduleCounter .counterNumber,
 .scheduleCounterShare .counterNumber {
     display: inline-block;
-    background: #e0e7ef;
+    background-color: #666;
     font-size: 0.98rem;
     font-weight: 700;
-    color: #666;
+    color: #fff;
     padding: 3px 12px;
     border-radius: 16px;
     margin-left: 8px;
@@ -432,7 +444,6 @@
 
 .tabContainer {
     margin-top: 21px;
-    margin-left: 7%;
     display: inline-flex;
     margin-bottom: 10px;
 }
@@ -1229,8 +1240,8 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    margin-top: 20px;
-    margin-bottom: 18px;
+    margin-top: 0;
+    margin-bottom: 0;
     margin-left: auto;
     margin-right: 0;
     gap: 8px;

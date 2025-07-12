@@ -117,8 +117,8 @@ const Home = () => {
                   src={scheduleIcon}
                   className={styles.time}
                   alt='일정 만들기'
-                  width={98}
-                  height={82}
+                  width={68}
+                  height={56}
                 />
               </div>
             </div>
@@ -137,15 +137,15 @@ const Home = () => {
             >
               <div className={styles.viewTitle}>여행지 탐색</div>
               <p className={styles.viewTitleSmall}>
-                여행지 탐색을 통해 여러 여행지를 만나보세요.
+                여행지 탐색으로 여러 여행지를<br/>만나보세요.
               </p>
               <div className={styles.iconContainer}>
                 <Image
                   src={travelIcon}
                   className={styles.travel}
                   alt='여행지 탐색'
-                  width={98}
-                  height={82}
+                  width={68}
+                  height={56}
                 />
               </div>
             </div>

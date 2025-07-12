@@ -474,47 +474,51 @@ export default function SchedulePage() {
         </div>
       </div>
       <div className={styles.createContainer}>
-        <div
-          className={`${styles.scheduleCounter} ${selectedTab === 'all' ? styles.activeTab : ''}`}
-          onClick={() => setSelectedTab('all')}
-        >
-          전체 일정
-          <span className={styles.counterNumber}>
-            {allScheduleData?.pages[0]?.data?.totalElements ?? 0}
-          </span>
-        </div>
+        <div className={styles.tabAndSearchContainer}>
+          <div className={styles.tabContainer}>
+            <div
+              className={`${styles.scheduleCounter} ${selectedTab === 'all' ? styles.activeTab : ''}`}
+              onClick={() => setSelectedTab('all')}
+            >
+              전체 일정
+              <span className={styles.counterNumber}>
+                {allScheduleData?.pages[0]?.data?.totalElements ?? 0}
+              </span>
+            </div>
 
-        <button
-          className={`${styles.scheduleCounterShare} ${selectedTab === 'share' ? styles.activeTab : ''}`}
-          onClick={() => setSelectedTab('share')}
-        >
-          공유된 일정
-          <span className={styles.counterNumber}>
-            {sharedScheduleData
-              ? (sharedScheduleData.pages[0]?.data?.totalSharedElements ?? 0)
-              : (allScheduleData?.pages[0]?.data?.totalSharedElements ?? 0)}
-          </span>
-        </button>
+            <div
+              className={`${styles.scheduleCounterShare} ${selectedTab === 'share' ? styles.activeTab : ''}`}
+              onClick={() => setSelectedTab('share')}
+            >
+              공유된 일정
+              <span className={styles.counterNumber}>
+                {sharedScheduleData
+                  ? (sharedScheduleData.pages[0]?.data?.totalSharedElements ?? 0)
+                  : (allScheduleData?.pages[0]?.data?.totalSharedElements ?? 0)}
+              </span>
+            </div>
+          </div>
 
-        <div className={styles.travelSearchContainer}>
-          <input
-            type='text'
-            placeholder='일정을 검색하세요.'
-            value={searchKeyword}
-            onChange={handleSearchChange}
-          />
-          <button
-            onClick={handleSearchClick}
-            title="일정 검색"
-          >
-            <Image
-              style={{ marginLeft: '-5px' }}
-              src={searchIcon}
-              alt='돋보기'
-              width={21}
-              height={21}
+          <div className={styles.travelSearchContainer}>
+            <input
+              type='text'
+              placeholder='일정을 검색하세요.'
+              value={searchKeyword}
+              onChange={handleSearchChange}
             />
-          </button>
+            <button
+              onClick={handleSearchClick}
+              title="일정 검색"
+            >
+              <Image
+                style={{ marginLeft: '-5px' }}
+                src={searchIcon}
+                alt='돋보기'
+                width={21}
+                height={21}
+              />
+            </button>
+          </div>
         </div>
         <div className={styles.scheduleList}>
           {renderSchedules(

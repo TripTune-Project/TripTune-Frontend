@@ -144,7 +144,7 @@
 
 .time,
 .travel {
-  margin-left: 230px;
+  margin-left: 155px;
   object-fit: cover;
   margin-bottom: 20px;
 }
@@ -152,8 +152,8 @@
 .viewBtnSchedule,
 .viewBtnTravel {
   background-color: #ffffff;
-  width: 345px;
-  height: 237px;
+  width: 237px;
+  height: 206px;
   display: flex;
   flex-direction: column;
   border-radius: 30px 0px;
@@ -188,8 +188,8 @@
 }
 
 .viewTitleSmall {
-  margin-left: 40px;
-  font-size: 16px;
+  margin-left: 27px;
+  font-size: 14px;
   line-height: 20px;
   width: 250px;
   height: 70px;
@@ -199,8 +199,8 @@
   display: flex;
   float:right;
   align-items: center;
-  gap: 15px;
-  margin-top: -50px;
+  gap: 62px;
+  margin-top: -100px;
   width: 100%;
   max-width: 800px;
   justify-content: center;
@@ -229,16 +229,20 @@
 .chooseRecomend {
   margin-left: 50px;
   color: #000;
-  font-size: 2vw;
+  font-size: 31px;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
   font-family: 'Noto Sans KR', sans-serif;
   margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .onBoardChips {
   margin-left: 42px;
+  font-size:17px;
 }
 
 .onBoardNoChooseBtn,
@@ -266,8 +270,8 @@
 .imgSliderContainer {
   margin-top: 39px;
   flex: 1;
-  width: 295px;
-  height: 351px;
+  width: 305px;
+  height: 341px;
   border-radius: 0 0 30px 0;
   background: #ffffff;
   text-align: center;
@@ -300,7 +304,7 @@
 .sliderTextP {
   color: #000;
   font-family: 'Noto Sans KR', sans-serif;
-  font-size: 25px;
+  font-size: 19px;
   font-weight: 500;
   line-height: normal;
   margin-top: 10px;
@@ -311,7 +315,7 @@
 .sliderTextPDetail {
   color: #848282;
   font-family: 'Noto Sans KR', sans-serif;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 500;
   line-height: normal;
   margin-top: 5px;
@@ -392,12 +396,12 @@
 
 .viewTitle {
   margin-top: 15px;
-  margin-left: 41px;
+  margin-left: 27px;
   color: #555;
   font-family:
     Noto Sans KR,
     sans-serif;
-  font-size: 25px;
+  font-size: 19px;
   font-style: normal;
   font-weight: 700;
   line-height: normal;
@@ -431,8 +435,8 @@
 
 .onBoardingButtonLayout {
   position: static;
-  width: 90vw;
-  height: 382px;
+  width: 1649px;
+  height: 280px;
   background: #f7f8fb;
   border-top-right-radius: 40px;
   border-bottom-right-radius: 40px;
@@ -445,19 +449,20 @@
   flex-direction: column;
   justify-content: center;
   box-shadow: 0 4px 16px 0 rgba(0,0,0,0.10);
-  margin-top: 50px;
+  margin-top: 130px;
   margin-right:382px;
   margin-bottom:120px;
 }
 
 .textContent {
   color: #000;
-  font-size: 26px;
+  font-size: 22px;
   font-style: normal;
   font-weight: 505;
   line-height: 60px;
   letter-spacing: 1.3px;
   margin-top: 50px;
+  margin-left: 275px;
   padding-left: 32px;
 }
 
@@ -649,7 +654,7 @@
 .heroTextArea {
   position: absolute;
   top: 100px;
-  left: 158px;
+  left: 352px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;

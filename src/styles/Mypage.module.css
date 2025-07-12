@@ -1,6 +1,7 @@
 /* 마이페이지 - 기본 페이지 구축 */
 .mainContainer {
   margin: 0;
+  margin-left:242px;
   padding: 0;
   flex-shrink: 0;
   position: relative;
@@ -830,8 +831,8 @@
   height: 55px;
   background-color: #363636;
   color: #ffffff;
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 15px;
+  font-weight: 400;
   border: none;
   cursor: pointer;
   margin-left: 10px;

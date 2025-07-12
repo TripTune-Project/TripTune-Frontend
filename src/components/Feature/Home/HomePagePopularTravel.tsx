@@ -203,6 +203,7 @@ const HomePagePopularTravel = () => {
             style={{ overflow: 'visible' }}
             modules={[Navigation, Pagination]}
             slidesPerView={4}
+            spaceBetween={25}
             navigation={{
               nextEl: '.swiper-button-next',
               prevEl: '.swiper-button-prev',
@@ -222,7 +223,7 @@ const HomePagePopularTravel = () => {
                         className={styles.sliderImg}
                         src={item.thumbnailUrl}
                         alt={item.placeName}
-                        width={295}
+                        width={305}
                         height={203}
                       />
                     </>

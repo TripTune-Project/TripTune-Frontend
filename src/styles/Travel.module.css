@@ -1,654 +1,658 @@
 /* 페이지내이션 */
 .paginationContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-  gap: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    gap: 5px;
 }
 
 .pageButton {
-  padding: 5px 10px;
-  border: 1px solid #dddddd;
-  background-color: #ffffff;
-  cursor: pointer;
-  transition: background-color 0.3s;
+    padding: 5px 10px;
+    border: 1px solid #dddddd;
+    background-color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .pageButton:hover {
-  background-color: #f0f0f0;
+    background-color: #f0f0f0;
 }
 
 .pageButton.active {
-  background-color: #0070f3;
-  color: #ffffff;
-  border: 1px solid #0070f3;
+    background-color: #0070f3;
+    color: #ffffff;
+    border: 1px solid #0070f3;
 }
 
 .navButton {
-  padding: 5px 10px;
-  border: 1px solid #dddddd;
-  background-color: #ffffff;
-  cursor: pointer;
-  transition: background-color 0.3s;
+    padding: 5px 10px;
+    border: 1px solid #dddddd;
+    background-color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .navButton:hover {
-  background-color: #f0f0f0;
+    background-color: #f0f0f0;
 }
 
 .navButton.disabled {
-  background-color: #f9f9f9;
-  color: #ccc;
-  cursor: not-allowed;
+    background-color: #f9f9f9;
+    color: #ccc;
+    cursor: not-allowed;
 }
 
 .ellipsis {
-  padding: 5px;
-  font-size: 16px;
-  color: #999;
+    padding: 5px;
+    font-size: 16px;
+    color: #999;
 }
 
 /* 여행지 탐색 기본, 검색 */
 .container {
-  padding: 15px;
-  display: flex;
-  overflow-y: hidden;
+    padding: 39px;
+    display: flex;
+    overflow-y: hidden;
 }
 
 .listContainer {
-  width: 36%;
-  height: 88vh;
+    width: 36%;
+    height: 88vh;
 }
 
 .searchContainer {
-  display: flex;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
 }
 
 .input {
-  background-color: #ffffff;
-  padding: 11px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  flex: 1;
-  min-width: 100px;
+    background-color: #ffffff;
+    padding: 11px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    flex: 1;
+    min-width: 100px;
 }
 
 .searchButton {
-  background-color: #76adac;
-  color: #ffffff;
-  margin-left: 5px;
-  border: none;
-  cursor: pointer;
-  display: inline-flex;
-  flex-shrink: 0;
-  width: 79px;
-  height: 50px;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
-  padding: 8px 20px;
+    background-color: #76adac;
+    color: #ffffff;
+    margin-left: 5px;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    flex-shrink: 0;
+    width: 79px;
+    height: 50px;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    padding: 8px 20px;
 }
 
 .placeList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 .placeItem {
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: #ffffff;
-  transition: box-shadow 0.3s ease;
-  width: 650px;
-  height: 120px;
-  margin-bottom: 7px;
-  border-radius: 10px 0px;
-  padding: 7px;
-  border: 1px solid #e8e8e8;
-  box-shadow: 4px 4px 24px 0px rgba(217, 217, 217, 0.57);
-  cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #ffffff;
+    transition: box-shadow 0.3s ease;
+    width: 650px;
+    height: 120px;
+    margin-bottom: 7px;
+    border-radius: 10px 0px;
+    padding: 7px;
+    border: 1px solid #e8e8e8;
+    box-shadow: 4px 4px 24px 0px rgba(217, 217, 217, 0.57);
+    cursor: pointer;
 }
 
 .placeItem:hover {
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .placeThumbnail {
-  margin-right: 20px;
-  width: 85px;
-  height: 85px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f0f0f0;
-  border-radius: 8px;
-  overflow: hidden;
+    margin-right: 20px;
+    width: 85px;
+    height: 85px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 .thumbnailImage {
-  border-radius: 8px;
-  width: 85px;
-  height: 85px;
-  padding: 5px;
-  object-fit: cover;
+    border-radius: 8px;
+    width: 85px;
+    height: 85px;
+    padding: 5px;
+    object-fit: cover;
 }
 
 .noImage {
-  position: relative;
-  width: 749px;
-  height: 512px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  background-color: #e0e0e0;
-  border: 1px dashed #ccc;
-  color: #888;
-  font-size: 18px;
+    position: relative;
+    width: 749px;
+    height: 512px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background-color: #e0e0e0;
+    border: 1px dashed #ccc;
+    color: #888;
+    font-size: 18px;
 }
 
 .placeInfo {
-  position: relative;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .placeName {
-  color: #2c2c2c;
-  font-size: 14px;
-  font-style: normal;
-  line-height: normal;
-  font-weight: 505;
-  font-family: 'Noto Sans KR', sans-serif;
-  margin-top: 10px;
+    color: #2c2c2c;
+    font-size: 14px;
+    font-style: normal;
+    line-height: normal;
+    font-weight: 505;
+    font-family: 'Noto Sans KR', sans-serif;
+    margin-top: 10px;
 }
 
 .placeAddress,
 .placeDetailAddress {
-  margin: 0;
-  color: #868686;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 300;
-  line-height: normal;
-  padding-bottom: 7px;
+    margin: 0;
+    color: #868686;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+    padding-bottom: 7px;
 }
 
 .placeDetailAddress {
-  display: flex;
-  align-items: center;
-  padding: 0;
+    display: flex;
+    align-items: center;
+    padding: 0;
 }
 
 .bookmarkButton {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  background: none;
-  border: none;
-  cursor: pointer;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
 }
 
 .timeAndDistance {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
 }
 
 .distanceInfo {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  color: #555;
-  font-size: 14px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    color: #555;
+    font-size: 14px;
 }
 
 .mapContainer {
-  margin-left: 55px;
-  width: 64%;
-  height: 88vh;
+    margin-left: 55px;
+    width: 1202px;
+    height: 785px;
 }
 
 .headerContainer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
 .travelSearch {
-  margin: 0;
-  text-align: left;
-  flex: 1;
+    margin: 0;
+    text-align: left;
+    flex: 1;
 }
 
 .mylocation {
-  margin: 0;
-  text-align: right;
-  padding: 10px 20px;
-  background-color: #4caf50;
-  color: #ffffff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+    margin: 0;
+    text-align: right;
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .mylocation:hover {
-  background-color: #45a049;
+    background-color: #45a049;
 }
 
 .errorMessage {
-  color: red;
-  text-align: center;
-  padding: 10px;
-  background-color: #ffe0e0;
-  border: 1px solid #ffcccc;
-  border-radius: 4px;
+    color: red;
+    text-align: center;
+    padding: 10px;
+    background-color: #ffe0e0;
+    border: 1px solid #ffcccc;
+    border-radius: 4px;
 }
 
 /* 여행지 탐색 상세 조회 */
 .travelDetailContent {
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-  padding: 0;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
 }
 
 .topSection {
-  margin: 50px auto;
-  display: flex;
-  flex-wrap: wrap;
-  width: auto;
+    margin: 50px auto;
+    display: flex;
+    flex-wrap: wrap;
+    width: auto;
 }
 
 .infoSection {
-  background-color: #f3f8f8;
-  padding: 20px;
-  border-radius: 8px;
-  width: fit-content;
-  max-width: 1465px;
-  height: auto;
-  margin: auto;
+    background-color: #f3f8f8;
+    padding: 20px;
+    border-radius: 8px;
+    width: fit-content;
+    max-width: 1465px;
+    height: auto;
+    margin: auto;
 }
 
 .infoText {
-  font-family: 'Noto Sans KR', sans-serif;
-  font-size: 16px;
-  color: #333;
-  font-weight: normal;
-  overflow: hidden;
-  -webkit-box-orient: vertical;
-  white-space: pre-line;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 16px;
+    color: #333;
+    font-weight: normal;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    white-space: pre-line;
 }
 
 .expandButton {
-  background: none;
-  border: none;
-  color: #0070f3;
-  cursor: pointer;
-  font-size: 14px;
-  margin-left: 5px;
-  font-weight: bold;
-  transition: color 0.3s ease;
+    background: none;
+    border: none;
+    color: #0070f3;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 5px;
+    font-weight: bold;
+    transition: color 0.3s ease;
 }
 
 .expandButton:hover {
-  text-decoration: underline;
-  color: #0056b3;
+    text-decoration: underline;
+    color: #0056b3;
 }
 
 .detailTitle {
-  display: flex;
-  align-items: center;
-  color: #000;
-  font-size: 32px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: normal;
-  font-family: 'Noto Sans KR', sans-serif;
-  margin-left: 120px;
+    display: flex;
+    align-items: center;
+    color: #000;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    font-family: 'Noto Sans KR', sans-serif;
+    margin-left: 228px;
 }
 
 .detailTitleIcon {
-  width: 36px;
-  height: 27px;
-  flex-shrink: 0;
-  margin-right: 10px;
+    width: 36px;
+    height: 27px;
+    flex-shrink: 0;
+    margin-right: 10px;
 }
 
 .sliderImageContainer {
-  background-color: #f0f0f0;
-  width: 100%;
-  height: 530px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
+    background-color: #f0f0f0;
+    width: 100%;
+    height: 512px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    padding-top:40px;
+    padding-bottom: 40px;
 }
 
 .sliderButton {
-  background: none;
-  border: none;
-  color: #333;
-  font-size: 24px;
-  cursor: pointer;
-  padding: 10px 20px;
-  -webkit-user-select: none;
-  user-select: none;
-  background-color: rgba(255, 255, 255, 0.5);
-  border-radius: 50%;
+    background: none;
+    border: none;
+    color: #333;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 10px 20px;
+    -webkit-user-select: none;
+    user-select: none;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
 }
 
 .sliderButton:hover {
-  background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.8);
 }
 
 .travelSearch,
 .travelSearchDetail {
-  font-size: 28px;
-  font-weight: bold;
-  font-family: 'Noto Sans KR', sans-serif;
+    font-size: 28px;
+    font-weight: bold;
+    font-family: 'Noto Sans KR', sans-serif;
 }
 
 .travelSearchDetail {
-  margin-top: 30px;
-  text-align: center;
+    margin-top: 30px;
+    text-align: center;
 }
 
 .description {
-  margin: 10px 0;
-  font-family: 'Noto Sans KR', sans-serif;
-  font-size: 18px;
-  color: #333;
-  line-height: 1.6;
-  position: relative;
+    margin: 10px 0;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 18px;
+    color: #333;
+    line-height: 1.6;
+    position: relative;
 }
 
 .expandButton {
-  background: none;
-  border: none;
-  color: #0070f3;
-  cursor: pointer;
-  padding: 0;
-  font-size: 16px;
-  margin-left: 5px;
-  font-weight: bold;
-  transition: color 0.3s;
+    background: none;
+    border: none;
+    color: #0070f3;
+    cursor: pointer;
+    padding: 0;
+    font-size: 16px;
+    margin-left: 5px;
+    font-weight: bold;
+    transition: color 0.3s;
 }
 
 .expandButton:hover {
-  color: #0056b3;
-  text-decoration: underline;
+    color: #0056b3;
+    text-decoration: underline;
 }
 
 .recommendedDestinations {
-  text-align: left;
+    text-align: left;
 }
 
 .chooseRecomend {
-  margin: 20px 0;
-  color: #000;
-  font-size: 24px;
-  font-weight: 600;
-  font-family: 'Noto Sans KR', sans-serif;
+    margin: 20px 0;
+    color: #000;
+    font-size: 24px;
+    font-weight: 600;
+    font-family: 'Noto Sans KR', sans-serif;
 }
 
 .sliderImg {
-  width: 100%;
-  height: auto;
-  object-fit: cover;
-  border-radius: 8px;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
 }
 
 .sliderTextP {
-  color: #000;
-  font-family: 'Noto Sans KR', sans-serif;
-  font-size: 20px;
-  font-weight: 500;
-  margin-top: 10px;
-  text-align: left;
-  padding-left: 10px;
+    color: #000;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+    margin-top: 10px;
+    text-align: left;
+    padding-left: 10px;
 }
 
 .sliderTextPDetail {
-  color: #848282;
-  font-family: 'Noto Sans KR', sans-serif;
-  font-size: 18px;
-  font-weight: 500;
-  margin-top: 5px;
-  text-align: left;
-  margin-left: 30px;
-  padding-left: 10px;
-  display: flex;
-  align-items: center;
+    color: #848282;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    margin-top: 5px;
+    text-align: left;
+    margin-left: 30px;
+    padding-left: 10px;
+    display: flex;
+    align-items: center;
 }
 
 .sliderTextPDetail img {
-  vertical-align: middle;
-  display: inline-block;
-  margin-right: 5px;
+    vertical-align: middle;
+    display: inline-block;
+    margin-right: 5px;
 }
 
 .sliderContainer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-  width: 100%;
-  cursor: grab;
-  flex-wrap: wrap;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    width: 100%;
+    cursor: grab;
+    flex-wrap: wrap;
 }
 
 .sliderContainer:active {
-  cursor: grabbing;
+    cursor: grabbing;
 }
 
 .sliderButton {
-  background: none;
-  border: none;
-  color: #333;
-  font-size: 24px;
-  cursor: pointer;
-  padding: 10px 20px;
-  -webkit-user-select: none;
-  user-select: none;
-  background-color: rgba(255, 255, 255, 0.5);
-  border-radius: 50%;
+    background: none;
+    border: none;
+    color: #333;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 10px 20px;
+    -webkit-user-select: none;
+    user-select: none;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
 }
 
 .sliderButton:hover {
-  background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.8);
 }
 
 .imgSliderExplain {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
 }
 
 .noRecommendations {
-  text-align: center;
-  color: #999;
-  font-size: 18px;
-  height: 500px;
-  width: 100%;
-  margin: 0;
+    text-align: center;
+    color: #999;
+    font-size: 18px;
+    height: 500px;
+    width: 100%;
+    margin: 0;
 }
 
 .infoIcon {
-  margin-right: 10px;
-  font-size: 24px;
-  color: #0070f3;
+    margin-right: 10px;
+    font-size: 24px;
+    color: #0070f3;
 }
 
 .rightSection {
-  background-color: #ffffff;
-  padding: 0 0 20px 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  max-width: 749px;
-  height: 530px;
-  margin: 0 auto;
-  width: 749px;
+    background-color: #ffffff;
+    padding: 0 0 20px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    max-width: 749px;
+    height: 530px;
+    margin: 0 auto;
+    width: 749px;
 }
 
 .countryCityDistrict {
-  color: #636363;
-  font-size: 18px;
-  font-style: normal;
-  font-weight: 300;
-  line-height: normal;
-  margin-bottom: 10px;
-  font-family: 'Noto Sans KR', sans-serif;
+    color: #636363;
+    height:19px;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+    margin-bottom: 10px;
+    font-family: 'Noto Sans KR', sans-serif;
 }
 
 .detailplaceName {
-  color: #000;
-  font-size: 38px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
-  margin-bottom: 15px;
-  font-family: 'Noto Sans KR', sans-serif;
+    color: #000;
+    height:46px;
+    font-size: 38px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    margin-bottom: 15px;
+    font-family: 'Noto Sans KR', sans-serif;
 }
 
 .scrollbar {
-  overflow-y: auto;
+    overflow-y: auto;
 }
 
 .addressLabel,
 .useTimeLabel,
 .homepageLabel,
 .phoneLabel {
-  display: flex;
-  align-items: center;
-  font-size: 18px;
-  color: #2d2d2d;
-  font-weight: 500;
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    color: #2d2d2d;
+    font-weight: 505;
 }
 
 .addressLabel img,
 .useTimeLabel img,
 .homepageLabel img,
 .phoneLabel img {
-  width: 16px;
-  height: 16px;
-  margin-right: 8px;
-  object-fit: contain;
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    object-fit: contain;
 }
 
 .addressLabel p,
 .useTimeLabel p,
 .homepageLabel p,
 .phoneLabel p {
-  width: 150px;
-  height: 27px;
+    width: 150px;
+    height: 27px;
 }
 
 .homepageLabel a {
-  color: #00f;
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 300;
-  line-height: normal;
-  text-decoration: none;
-  font-family: 'Noto Sans KR', sans-serif;
+    color: #00f;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+    text-decoration: none;
+    font-family: 'Noto Sans KR', sans-serif;
 }
 
 .buttonContainer {
-  display: flex;
-  margin-top: 20px;
+    display: flex;
+    margin-top: 20px;
 }
 
 .bookmarkBtn,
 .chooseBtn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 300px;
-  height: 55px;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-family: 'Noto Sans KR', sans-serif;
-  gap: 10px;
-  margin-left: 30px;
-  text-align: center;
-  font-size: 18px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 300px;
+    height: 55px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    gap: 10px;
+    margin-left: 30px;
+    text-align: center;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
 }
 
 .bookmarkBtn {
-  background-color: #74a5da;
-  color: #ffffff;
-  transition: background-color 0.3s ease;
+    background-color: #74a5da;
+    color: #ffffff;
+    transition: background-color 0.3s ease;
 }
 
 .chooseBtn {
-  background-color: #76adac;
-  color: #ffffff;
-  transition: background-color 0.3s ease;
+    background-color: #76adac;
+    color: #ffffff;
+    transition: background-color 0.3s ease;
 }
 
 .travelContainer {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-4);
-  padding: var(--spacing-4);
-  height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+    padding: var(--spacing-4);
+    height: 100%;
 }
 
 .travelContent {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--spacing-4);
-  flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-4);
+    flex: 1;
 }
 
 .travelList {
-  background-color: var(--color-background);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
-  padding: var(--spacing-4);
-  overflow-y: auto;
+    background-color: var(--color-background);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    padding: var(--spacing-4);
+    overflow-y: auto;
 }
 
 .travelMap {
-  background-color: var(--color-background);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
-  min-height: 400px;
+    background-color: var(--color-background);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    min-height: 400px;
 }
 
 .travelFilter {
-  background-color: var(--color-background);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
-  padding: var(--spacing-4);
+    background-color: var(--color-background);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    padding: var(--spacing-4);
 }
 
 @media screen and (max-width: var(--breakpoint-md)) {
-  .travelContent {
-    grid-template-columns: 1fr;
-  }
+    .travelContent {
+        grid-template-columns: 1fr;
+    }
 
-  .travelContainer {
-    padding: var(--spacing-2);
-  }
+    .travelContainer {
+        padding: var(--spacing-2);
+    }
 }
