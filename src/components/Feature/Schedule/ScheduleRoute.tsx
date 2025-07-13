@@ -204,7 +204,7 @@ const ScheduleRoute = () => {
           alt={'no-schedule-root'}
           width={293}
           height={158}
-          style={{ marginLeft: '130px' }}
+          style={{ marginLeft: '100px' }}
         />
         <div className={styles.noText}>여행 루트가 비어 있습니다.</div>
         <br />
