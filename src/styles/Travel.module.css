@@ -278,7 +278,7 @@
     padding: 20px;
     border-radius: 8px;
     width: fit-content;
-    max-width: 1465px;
+    max-width: 1400px;
     height: auto;
     margin: auto;
 }
@@ -313,12 +313,13 @@
     display: flex;
     align-items: center;
     color: #000;
-    font-size: 32px;
+    font-size: 25px;
+    height:30px;
     font-style: normal;
     font-weight: 600;
     line-height: normal;
     font-family: 'Noto Sans KR', sans-serif;
-    margin-left: 228px;
+    margin-left: 260px;
 }
 
 .detailTitleIcon {
@@ -429,7 +430,8 @@
 .sliderTextPDetail {
     color: #848282;
     font-family: 'Noto Sans KR', sans-serif;
-    font-size: 18px;
+    font-size: 14px;
+    height:17px;
     font-weight: 500;
     margin-top: 5px;
     text-align: left;
@@ -503,10 +505,9 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    max-width: 749px;
     height: 512px;
     margin: 0 auto;
-    width: 749px;
+    width: 648px;
 }
 
 .countryCityDistrict {
@@ -527,12 +528,14 @@
     font-style: normal;
     font-weight: 500;
     line-height: normal;
-    margin-bottom: 15px;
+    margin-top:20px;
     font-family: 'Noto Sans KR', sans-serif;
 }
 
 .scrollbar {
     overflow-y: auto;
+    margin-top: 71px;
+    margin-bottom: 45px;
 }
 
 .addressLabel,
@@ -542,6 +545,7 @@
     display: flex;
     align-items: center;
     font-size: 18px;
+    height: 32px;
     color: #2d2d2d;
     font-weight: 505;
 }
@@ -577,6 +581,7 @@
 .buttonContainer {
     display: flex;
     margin-top: 20px;
+    margin-right: 63px;
 }
 
 .bookmarkBtn,
