@@ -140,6 +140,8 @@ const TravelDetailPage = () => {
     }
   }, [isExpanded, data]);
 
+
+
   const toggleBookmark = async (bookmarkStatus: boolean) => {
     if (!isAuthenticated) {
       setShowLoginModal(true);
@@ -228,8 +230,8 @@ const TravelDetailPage = () => {
       return null;
     }
   };
-
-  const formatDescriptionWithParagraphs = (text: string, applyMargin: boolean = false) => {
+  
+  const formatDescriptionWithParagraphs = (text: string, applyMargin: boolean = false, marginLeftValue: string = '65px') => {
     const normalizedText = text.replace(/<br\s*\/?>/gi, '\n');
     const paragraphs = normalizedText.split(/\n+/);
     const hasMultipleLines = paragraphs.length > 1;
@@ -241,13 +243,14 @@ const TravelDetailPage = () => {
       </React.Fragment>
     ));
 
-    // applyMargin이 true이고 여러 줄이 있을 때만 marginLeft 적용
     if (applyMargin && hasMultipleLines) {
-      return <span style={{ marginLeft: '80px' }}>{content}</span>;
+      return <span style={{ marginLeft: marginLeftValue }}>{content}</span>;
     }
 
     return content;
   };
+
+
 
   const handleExpandClick = () => {
     setIsExpanded(!isExpanded);
@@ -319,8 +322,7 @@ const TravelDetailPage = () => {
                       <Image
                         src={image.imageUrl}
                         alt={image.imageName}
-                        layout='responsive'
-                        width={649}
+                        width={749}
                         height={433}
                       />
                     </div>
@@ -358,7 +360,7 @@ const TravelDetailPage = () => {
                     target='_blank'
                     rel='noopener noreferrer'
                   >
-                    {homepageUrl}
+                    {formatDescriptionWithParagraphs(homepageUrl, true, '80px')}
                   </a>
                 </div>
               )}

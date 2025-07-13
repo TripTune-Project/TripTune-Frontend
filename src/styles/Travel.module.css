@@ -336,8 +336,10 @@
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    padding-top:40px;
-    padding-bottom: 40px;
+}
+
+.sliderImageContainer img {
+    height: 433px !important;
 }
 
 .sliderButton {
@@ -502,7 +504,7 @@
     display: flex;
     flex-direction: column;
     max-width: 749px;
-    height: 530px;
+    height: 512px;
     margin: 0 auto;
     width: 749px;
 }
