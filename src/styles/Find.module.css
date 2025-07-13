@@ -5,12 +5,12 @@
   font-style: normal;
   font-weight: 400;
   line-height: normal;
-  margin: 2rem 0;
+  margin-bottom: 2rem;
   text-align: center;
 }
 
 .pageContainer {
-  margin-top:108px;
+  margin-top:69px;
   margin-left: 40%;
   width: 550px;
   height: 630px;
@@ -76,8 +76,9 @@
 .findText {
   display: flex;
   width: 100%;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
   flex-shrink: 0;
   color: #848282;
   font-family:
@@ -105,6 +106,16 @@
   box-sizing: border-box;
 }
 
+.inputError {
+  padding: 12px;
+  width: 100%;
+  border-radius: 5px;
+  border: 1px solid #ff0000;
+  font-size: 16px;
+  box-sizing: border-box;
+  background-color: #fff5f5;
+}
+
 .errorText {
   color: red;
   font-family:
@@ -112,6 +123,8 @@
     sans-serif;
   font-size: 14px;
   margin-top: 5px;
+  width: 400px;
+  max-width: 100%;
 }
 
 .submitButton {

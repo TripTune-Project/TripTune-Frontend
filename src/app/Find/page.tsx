@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, Suspense } from 'react';
 import Head from 'next/head';
+import { useForm } from 'react-hook-form';
 import { requestFindPassword } from '@/apis/Login/findApi';
 import VerificationLoading from '@/components/Common/VerificationLoading';
 import DataLoading from '@/components/Common/DataLoading';
@@ -12,22 +13,24 @@ import type { AlertColor, SnackbarCloseReason } from '@mui/material';
 import Image from 'next/image';
 import triptuneIcon from '../../../public/assets/images/로고/triptuneIcon-removebg.png';
 
+interface FindPasswordFormData {
+  email: string;
+}
+
 function FindPage() {
-  const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState<AlertColor>('success');
   const [loading, setLoading] = useState(false);
-  const [isEmailValid, setIsEmailValid] = useState(false);
 
-  useEffect(() => {
-    setIsEmailValid(validateEmail(email) === true);
-  }, [email]);
-
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm<FindPasswordFormData>({
+    mode: 'onChange',
+  });
 
   const handleAlertClose = (
     event: React.SyntheticEvent<any, Event> | Event,
@@ -37,20 +40,10 @@ function FindPage() {
     setAlertOpen(false);
   };
 
-  const handleFindPasswordSubmit = async (
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
-    e.preventDefault();
-    if (!isEmailValid) {
-      setErrorMessage('유효한 이메일을 입력해주세요.');
-      setAlertSeverity('error');
-      setAlertOpen(true);
-      return;
-    }
-
+  const onSubmit = async (data: FindPasswordFormData) => {
     setLoading(true);
     try {
-      const response = await requestFindPassword(email);
+      const response = await requestFindPassword(data.email);
       if (response.success) {
         setMessage('이메일을 확인한 후 비밀번호를 재설정해 주시기 바랍니다.');
         setErrorMessage('');
@@ -82,7 +75,7 @@ function FindPage() {
 
       <div className={styles.pageContainer}>
         <h1 className={styles.FindTitle}>비밀번호 찾기</h1>
-        <form onSubmit={handleFindPasswordSubmit} className={styles.inputGroup}>
+        <form onSubmit={handleSubmit(onSubmit)} className={styles.inputGroup}>
           <span className={styles.findText}>
             <Image
               className={styles.emailInputIcon}
@@ -95,16 +88,20 @@ function FindPage() {
           <input
             type='email'
             id='email'
-            value={email}
-            onChange={handleEmailChange}
-            required
             placeholder='이메일 주소 입력'
-            className={styles.input}
+            {...register('email', {
+              required: '이메일을 입력해주세요.',
+              validate: validateEmail,
+            })}
+            className={errors.email ? styles.inputError : styles.input}
           />
+          {errors.email && (
+            <p className={styles.errorText}>{errors.email.message}</p>
+          )}
           <button
             type='submit'
-            className={`${styles.submitButton} ${!isEmailValid ? styles.disabledButton : ''}`}
-            disabled={!isEmailValid || loading}
+            className={`${styles.submitButton} ${!isValid ? styles.disabledButton : ''}`}
+            disabled={!isValid || loading}
           >
             {loading ? <VerificationLoading /> : '비밀번호 찾기'}
           </button>

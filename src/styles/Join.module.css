@@ -36,7 +36,6 @@
   line-height: normal;
   text-align: center;
   margin-bottom: 2rem;
-  margin-top: 2rem;
 }
 
 .inputGroup {
@@ -64,7 +63,7 @@
   font-family:
     Noto Sans KR,
     sans-serif;
-  font-size: 16px;
+  font-size: 12px;
   height: 55px;
   border: 1px solid red;
   padding-left: 15px;
@@ -76,8 +75,10 @@
   font-family:
     Noto Sans KR,
     sans-serif;
-  font-size: 14px;
+  font-size: 12px;
   margin-top: 5px;
+  word-wrap: break-word;
+  max-width: 400px;
 }
 
 .submitButton {
