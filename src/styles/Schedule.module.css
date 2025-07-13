@@ -75,12 +75,10 @@
     width: 100%;
     min-width: 180px;
     max-width: 260px;
-    border: 1px solid #e0e7ef;
     border-radius: 8px;
-    font-size: 1rem;
+    font-size: 14px;
     padding: 8px 12px;
     margin-left: 0;
-    background: #f7f8fb;
 }
 
 .datePickerContainer {
@@ -170,7 +168,7 @@
 }
 
 .scheduleImg {
-    width: 100vw;
+    width: 100%;
     height: 220px;
     object-fit: cover;
     filter: brightness(0.92);
@@ -257,7 +255,7 @@
 .tabContainer {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 0px;
 }
 
 .scheduleCounter,
@@ -435,7 +433,7 @@
 }
 
 .pageContainer {
-    width: 538px;
+    width: 470px;
     height: 100%;
     flex-shrink: 0;
     display: flex;
@@ -443,9 +441,11 @@
 }
 
 .tabContainer {
+    margin-left: 0px;
     margin-top: 21px;
     display: inline-flex;
     margin-bottom: 10px;
+    gap: 0px;
 }
 
 .tabButton {
@@ -468,6 +468,11 @@
     border: 1px solid #848282;
     border-bottom: 3px solid #74a5da;
     cursor: pointer;
+    margin-right: -1px;
+}
+
+.tabButton:last-child {
+    margin-right: 0;
 }
 
 .tabButton.activeTab {
@@ -477,11 +482,12 @@
 }
 
 .inputGroup {
-    padding: 15px;
     display: flex;
     border-bottom: 2px solid #d9d9d9;
     width: 400px;
-    margin: 0 38px;
+    margin-top:39px;
+    margin-bottom:17px;
+    margin-left:36px;
 }
 
 .input {
@@ -604,18 +610,6 @@
     align-items: center;
 }
 
-.placeThumbnail {
-    width: 100px;
-    height: 100px;
-    border-radius: 8px;
-    overflow: hidden;
-    background-color: #f0f0f0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 15px;
-}
-
 .placeInfo {
     flex: 1;
     display: flex;
@@ -633,9 +627,9 @@
     margin-bottom: 10px;
     position: relative;
     transition: box-shadow 0.3s ease;
-    margin-left: 10%;
+    margin-left: 7%;
     height: 95px;
-    width: 400px;
+    width: 401px;
 }
 
 .indexCircle {
@@ -671,18 +665,6 @@
     flex: 1; /* 남은 공간을 채움 */
 }
 
-.placeThumbnail {
-    width: 100px;
-    height: 100px;
-    border-radius: 8px;
-    overflow: hidden;
-    background-color: #f0f0f0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 10px;
-}
-
 .placeInfo {
     display: flex;
     flex-direction: column;
@@ -690,16 +672,13 @@
 }
 
 .placeName {
-    font-size: 16px;
+    margin-top: 16px;
+    margin-bottom:16px;
+    font-size: 12px;
+    height:15px;
     font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.placeDetailAddress {
-    font-size: 14px;
-    color: #555;
-    display: flex;
-    align-items: center;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: #333;
 }
 
 .placeItem {
@@ -744,19 +723,6 @@
     margin-top: -22px;
 }
 
-.placeThumbnail {
-    width: 100px;
-    height: 100px;
-    border-radius: 8px;
-    overflow: hidden;
-    background-color: #f0f0f0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 15px;
-    margin-top: 12px;
-}
-
 .placeInfo {
     flex: 1;
     display: flex;
@@ -770,19 +736,11 @@
     object-fit: cover;
 }
 
-.placeDetailAddress {
-    display: flex;
-    align-items: center;
-    font-size: 14px;
-    color: #555;
-}
-
 .placeThumbnail {
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     border-radius: 8px;
     overflow: hidden;
-    background-color: #f0f0f0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -848,9 +806,14 @@
 
 .placeAddress,
 .placeDetailAddress {
-    font-size: 14px;
+    font-size: 10px;
     color: #555;
-    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+}
+
+.placeDetailAddress {
+    margin-top: -10px;
 }
 
 .addButton {
@@ -876,15 +839,6 @@
     background: none;
     border: none;
     cursor: pointer;
-}
-
-.placeName {
-    font-family: 'Noto Sans KR', sans-serif;
-    margin-left: 0;
-    font-size: 16px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 5px;
 }
 
 .distanceInfo {
@@ -918,10 +872,11 @@
 
 .travelSearchContainerSearch input,
 .travelSearchContainer input {
-    width: 355px;
+    width: 334px;
+    height:41px;
     padding: 10px 15px;
-    font-size: 16px;
-    border-radius: 18px;
+    font-size: 12px;
+    border-radius: 10px;
     border: 1px solid #ccc;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
@@ -1257,7 +1212,7 @@
     height: 40px;
     font-size: 17px;
     border-radius: 8px;
-    /*background-color: #f7f8fb;*/
+    background-color: transparent;
     /*border: 1px solid #e0e7ef;*/
     border: none;
     /*box-shadow: none;*/
