@@ -163,7 +163,7 @@ const JoinForm = () => {
               checked={isAgreed}
               onChange={handleAgreementChange}
             />
-            <label>개인정보 수집 및 이용 동의</label>
+            <label className={styles.isAgree}>개인정보 수집 및 이용 동의</label>
           </div>
           <button
             type='submit'

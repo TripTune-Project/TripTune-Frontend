@@ -1,300 +1,323 @@
 .joinBackground {
-  margin: 0;
-  padding: 0;
-  flex-shrink: 0;
-  position: relative;
-  width: 100%;
-  display: flex;
-  justify-content: center;
+    margin: 0;
+    padding: 0;
+    flex-shrink: 0;
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 .joinContainer {
-  margin-top:69px;
-  margin-left:58px;
-  margin-bottom: 108px;
-  width: 550px;
-  height: 630px;
-  flex-shrink: 0;
-  border-radius: 30px 0px;
-  background: #ffffff;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 2rem 1rem;
-  box-sizing: border-box;
+    margin-top: 69px;
+    margin-left: 58px;
+    margin-bottom: 108px;
+    width: 550px;
+    height: 630px;
+    flex-shrink: 0;
+    border-radius: 30px 0px;
+    background: #ffffff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+    box-sizing: border-box;
 }
 
 .joinTitle {
-  color: #000;
-  font-family:
-    Noto Sans KR,
-    serif;
-  font-size: 1.625rem;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  text-align: center;
-  margin-bottom: 2rem;
+    color: #000;
+    font-family: Noto Sans KR, serif;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 26px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 120%; /* 31.2px */
 }
 
 .inputGroup {
-  width: 100%;
-  min-width: 400px;
-  height: auto;
-  flex-shrink: 0;
-  margin-bottom: 15px;
-  position: relative;
+    width: 100%;
+    min-width: 400px;
+    height: auto;
+    flex-shrink: 0;
+    margin-bottom: 15px;
+    position: relative;
 }
 
 .input {
-  width: 100%;
-  height: 48px;
-  border: 1px solid #848282;
-  border-radius: 5px;
-  background: #ffffff;
-  font-size: 14px;
-  padding-left: 15px;
-  box-sizing: border-box;
+    width: 100%;
+    height: 48px;
+    border: 1px solid #848282;
+    border-radius: 5px;
+    background: #ffffff;
+    padding-left: 15px;
+    box-sizing: border-box;
+    color: #C4C4C4;
+    font-family: NOto Sans KR, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 145%; /* 20.3px */
 }
 
 .inputError {
-  width: 100%;
-  font-family:
-    Noto Sans KR,
+    width: 100%;
+    font-family: Noto Sans KR,
     sans-serif;
-  font-size: 12px;
-  height: 55px;
-  border: 1px solid red;
-  padding-left: 15px;
-  box-sizing: border-box;
+    font-size: 12px;
+    height: 55px;
+    border: 1px solid red;
+    padding-left: 15px;
+    box-sizing: border-box;
 }
 
 .errorText {
-  color: red;
-  font-family:
-    Noto Sans KR,
+    color: red;
+    font-family: Noto Sans KR,
     sans-serif;
-  font-size: 12px;
-  margin-top: 5px;
-  word-wrap: break-word;
-  max-width: 400px;
+    font-size: 12px;
+    margin-top: 5px;
+    word-wrap: break-word;
+    max-width: 400px;
 }
 
 .submitButton {
-  width: 100%;
-  height: 55px;
-  background-color: #a7cdcc;
-  color: #ffffff;
-  font-size: 18px;
-  border: none;
-  cursor: pointer;
-  margin-top: 20px;
-  font-weight: 700;
+    width: 100%;
+    height: 55px;
+    background-color: #a7cdcc;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+    text-align: center;
+    font-family: NOto Sans KR, sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 140%; /* 22.4px */
 }
 
 .submitButton:disabled {
-  background-color: #cccccc;
-  color: #666666;
-  cursor: not-allowed;
-  opacity: 0.6;
+    background-color: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+    opacity: 0.6;
 }
 
 .notificationMessage {
-  font-size: 14px;
-  margin-top: 5px;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.isAgree {
+    color: #333;
+    text-align: center;
+    font-family: Noto Sans KR, serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 145%; /* 20.3px */
 }
 
 .checkboxGroup {
-  margin-top: 15px;
-  display: flex;
-  align-items: center;
-  width: 100%;
-  max-width: 400px;
-  flex-wrap: wrap;
-  gap:2px;
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    flex-wrap: wrap;
+    gap: 2px;
 }
 
 .emailGroup {
-  margin: 15px 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  max-width: 500px;
-  height: auto;
-  min-height: 55px;
-  flex-wrap: nowrap;
-  gap: 0;
+    margin: 15px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    min-height: 55px;
+    flex-wrap: nowrap;
+    gap: 0;
 }
 
 .emailInput {
-  flex: 1;
-  min-width: 65%;
-  height: 55px;
-  border: 1px solid #848282;
-  border-radius: 5px;
-  background: #ffffff;
-  font-size: 16px;
-  padding-left: 15px;
-  box-sizing: border-box;
+    flex: 1;
+    min-width: 295px;
+    height: 48px;
+    border: 1px solid #848282;
+    border-radius: 5px;
+    background: #ffffff;
+    padding-left: 15px;
+    box-sizing: border-box;
+    color: #C4C4C4;
+    font-family: Noto Sans KR, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 145%; /* 20.3px */
 }
 
 .emailButton {
-  width: 106px;
-  height: 55px;
-  background-color: #363636;
-  color: #ffffff;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-  margin-left: 10px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 106px;
+    width: 98px;
+    height: 48px;
+    background-color: #363636;
+    border: none;
+    cursor: pointer;
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 106px;
+    color: #FFF;
+    font-family: NOto Sans KR, sans-serif;
+    text-align: center;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 145%; /* 20.3px */
 }
 
 .emailButton:disabled {
-  background-color: #cccccc;
-  color: #666666;
-  cursor: not-allowed;
-  opacity: 0.6;
+    background-color: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+    opacity: 0.6;
 }
 
 .verifiedText {
-  color: #57c5b6;
-  font-family:
-    Noto Sans KR,
+    color: #57c5b6;
+    font-family: Noto Sans KR,
     sans-serif;
-  font-size: 14px;
-  margin-top: 5px;
+    font-size: 14px;
+    margin-top: 5px;
 }
 
 .inputVerification {
-  flex: 1;
-  min-width: 65%;
-  height: 55px;
-  border: 1px solid #848282;
-  border-radius: 5px;
-  background: #ffffff;
-  font-size: 16px;
-  padding-left: 15px;
-  box-sizing: border-box;
+    flex: 1;
+    min-width: 65%;
+    height: 55px;
+    border: 1px solid #848282;
+    border-radius: 5px;
+    background: #ffffff;
+    font-size: 16px;
+    padding-left: 15px;
+    box-sizing: border-box;
 }
 
 .verifyButton {
-  width: 106px;
-  height: 55px;
-  background-color: #57c5b6;
-  color: #ffffff;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-  margin-left: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 106px;
+    width: 106px;
+    height: 55px;
+    background-color: #57c5b6;
+    color: #ffffff;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 106px;
 }
 
 .verifyButton:disabled {
-  background-color: #cccccc;
-  color: #666666;
-  cursor: not-allowed;
-  opacity: 0.6;
+    background-color: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+    opacity: 0.6;
 }
 
 .verifiedButton {
-  width: 106px;
-  height: 55px;
-  background-color: #57c5b6;
-  color: #ffffff;
-  font-size: 16px;
-  border: none;
-  cursor: not-allowed;
-  margin-left: 10px;
-  font-weight: 700;
-  opacity: 0.8;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 106px;
+    width: 106px;
+    height: 55px;
+    background-color: #57c5b6;
+    color: #ffffff;
+    font-size: 16px;
+    border: none;
+    cursor: not-allowed;
+    margin-left: 10px;
+    font-weight: 700;
+    opacity: 0.8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 106px;
 }
 
 /* 반응형 미디어 쿼리 */
 @media screen and (max-width: 768px) {
-  .joinContainer {
-    width: 95%;
-    padding: 1.5rem 0.8rem;
-  }
+    .joinContainer {
+        width: 95%;
+        padding: 1.5rem 0.8rem;
+    }
 
-  .joinTitle {
-    font-size: 2rem;
-    margin-top: 1.5rem;
-    margin-bottom: 1.5rem;
-  }
+    .joinTitle {
+        font-size: 2rem;
+        margin-top: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
 
-  .emailGroup {
-    flex-direction: column;
-    align-items: stretch;
-    height: auto;
-    gap: 10px;
-  }
+    .emailGroup {
+        flex-direction: column;
+        align-items: stretch;
+        height: auto;
+        gap: 10px;
+    }
 
-  .emailInput,
-  .inputVerification {
-    width: 100%;
-    margin-bottom: 10px;
-    min-width: 100%;
-  }
+    .emailInput,
+    .inputVerification {
+        width: 100%;
+        margin-bottom: 10px;
+        min-width: 100%;
+    }
 
-  .emailButton,
-  .verifyButton {
-    width: 100%;
-    margin-left: 0;
-  }
+    .emailButton,
+    .verifyButton {
+        width: 100%;
+        margin-left: 0;
+    }
 
-  .submitButton,
-  .emailButton,
-  .verifyButton {
-    height: 50px;
-  }
+    .submitButton,
+    .emailButton,
+    .verifyButton {
+        height: 50px;
+    }
 }
 
 @media screen and (max-width: 480px) {
-  .joinContainer {
-    width: 100%;
-    border-radius: 15px 0;
-    padding: 1rem 0.5rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  }
+    .joinContainer {
+        width: 100%;
+        border-radius: 15px 0;
+        padding: 1rem 0.5rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
 
-  .joinTitle {
-    font-size: 1.8rem;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-  }
+    .joinTitle {
+        font-size: 1.8rem;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
 
-  .input,
-  .inputError,
-  .emailInput,
-  .inputVerification,
-  .emailButton,
-  .verifyButton {
-    height: 45px;
-    font-size: 14px;
-  }
+    .input,
+    .inputError,
+    .emailInput,
+    .inputVerification,
+    .emailButton,
+    .verifyButton {
+        height: 45px;
+        font-size: 14px;
+    }
 
-  .submitButton {
-    height: 45px;
-    font-size: 16px;
-  }
+    .submitButton {
+        height: 45px;
+        font-size: 16px;
+    }
 
-  .errorText,
-  .notificationMessage,
-  .verifiedText {
-    font-size: 12px;
-  }
+    .errorText,
+    .notificationMessage,
+    .verifiedText {
+        font-size: 12px;
+    }
 }
