@@ -58,9 +58,8 @@
 .footer {
   margin-top: 3rem;
   padding: 2rem 0;
-  width: 100%;
-  height: auto;
-  min-height: 250px;
+  width: 1920px;
+  height: 324px;
   flex-shrink: 0;
   background: #363636;
   overflow-y: hidden;
@@ -103,7 +102,7 @@
     left: 60%;
     height: 45vh;
   }
-  
+
   .logoImg,
   .logoText,
   .email,
@@ -111,7 +110,7 @@
   .copyright {
     margin-left: 5%;
   }
-  
+
   .logoImg {
     margin-left: 5%;
   }
@@ -121,21 +120,21 @@
   .header {
     min-height: 60px;
   }
-  
+
   .section::before {
     left: 50%;
     border-radius: 0 0 0 100px;
     height: 40vh;
   }
-  
+
   .footer {
     min-height: 200px;
   }
-  
+
   .logoText {
     font-size: 1.8rem;
   }
-  
+
   .logoImg,
   .logoText,
   .email,
@@ -151,21 +150,21 @@
     border-radius: 0 0 0 50px;
     height: 30vh;
   }
-  
+
   .footer {
     min-height: 180px;
     padding: 1.5rem 0;
   }
-  
+
   .logoImg {
     max-width: 140px;
     margin-top: 1rem;
   }
-  
+
   .logoText {
     font-size: 1.5rem;
   }
-  
+
   .logoImg,
   .logoText,
   .email,

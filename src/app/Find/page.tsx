@@ -70,7 +70,10 @@ function FindPage() {
       <Head>
         <title>비밀번호 찾기</title>
         <meta name='description' content='비밀번호 찾기 페이지입니다.' />
-        <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
+        <meta
+          name='viewport'
+          content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'
+        />
       </Head>
 
       <div className={styles.pageContainer}>
@@ -83,21 +86,28 @@ function FindPage() {
               alt='이메일 주소 입력'
             />
             이메일 주소를 입력하면 비밀번호 변경 링크가 전송됩니다.
-          </span><br/>
-          <label htmlFor='email'>이메일</label>
-          <input
-            type='email'
-            id='email'
-            placeholder='이메일 주소 입력'
-            {...register('email', {
-              required: '이메일을 입력해주세요.',
-              validate: validateEmail,
-            })}
-            className={errors.email ? styles.inputError : styles.input}
-          />
-          {errors.email && (
-            <p className={styles.errorText}>{errors.email.message}</p>
-          )}
+          </span>
+          <hr className={styles.hrStyle} />
+          <div className={styles.containEmail}>
+            <label className={styles.labelEmail} htmlFor='email'>
+              이메일
+            </label>
+            <br />
+            <br />
+            <input
+              type='email'
+              id='email'
+              placeholder='이메일 주소 입력'
+              {...register('email', {
+                required: '이메일을 입력해주세요.',
+                validate: validateEmail,
+              })}
+              className={errors.email ? styles.inputError : styles.input}
+            />
+            {errors.email && (
+              <p className={styles.errorText}>{errors.email.message}</p>
+            )}
+          </div>
           <button
             type='submit'
             className={`${styles.submitButton} ${!isValid ? styles.disabledButton : ''}`}
