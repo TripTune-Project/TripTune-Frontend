@@ -47,6 +47,12 @@
     max-width: 400px;
 }
 
+.changePwdForm {
+    margin-top:56px;
+    height:176px;
+    margin-bottom:30px;
+}
+
 .inputGroup {
     width: 400px;
     height: auto;

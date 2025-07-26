@@ -147,44 +147,50 @@ const ChangePassword = () => {
               priority
             />
             <p className={styles.textPlain}>
-              새롭게 설정할 비밀번호를 입력해 주세요.
+              &nbsp;&nbsp; 새롭게 설정할 비밀번호를 입력해 주세요.
             </p>
           </div>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className={styles.inputGroup}>
-              <div>새로운 비밀번호</div>
-              <input
-                type='password'
-                placeholder='새로운 비밀번호 (영문 대/소문자, 숫자, 특수문자 조합 8~15자리)'
-                {...register('password', {
-                  required: '비밀번호를 입력해주세요.',
-                  validate: (value) =>
-                    validatePassword(value) ||
-                    '유효한 비밀번호 형식이 아닙니다.',
-                })}
-                className={errors.password ? styles.inputError : styles.input}
-              />
-              {errors.password && (
-                <p className={styles.errorText}>{errors.password.message}</p>
-              )}
+            <div className={styles.changePwdForm}>
+              <div className={styles.inputGroup}>
+                <div style={{ marginBottom: '9px' }}>새로운 비밀번호</div>
+                <input
+                  type='password'
+                  placeholder='새로운 비밀번호 (영문 대/소문자, 숫자, 특수문자 조합 8~15자리)'
+                  {...register('password', {
+                    required: '비밀번호를 입력해주세요.',
+                    validate: (value) =>
+                      validatePassword(value) ||
+                      '유효한 비밀번호 형식이 아닙니다.',
+                  })}
+                  className={errors.password ? styles.inputError : styles.input}
+                />
+                {errors.password && (
+                  <p className={styles.errorText}>{errors.password.message}</p>
+                )}
+              </div>
+              <br />
+              <div style={{ marginBottom: '9px' }}>비밀번호 재입력</div>
+              <div className={styles.inputGroup}>
+                <input
+                  type='password'
+                  placeholder='비밀번호 재입력'
+                  {...register('rePassword', {
+                    required: '비밀번호 재입력을 해주세요.',
+                    validate: validateRePassword,
+                  })}
+                  className={
+                    errors.rePassword ? styles.inputError : styles.input
+                  }
+                />
+                {errors.rePassword && (
+                  <p className={styles.errorText}>
+                    {errors.rePassword.message}
+                  </p>
+                )}
+              </div>
+              <div style={{ paddingBottom: '150px' }} />
             </div>
-            <br />
-            <div>비밀번호 재입력</div>
-            <div className={styles.inputGroup}>
-              <input
-                type='password'
-                placeholder='비밀번호 재입력'
-                {...register('rePassword', {
-                  required: '비밀번호 재입력을 해주세요.',
-                  validate: validateRePassword,
-                })}
-                className={errors.rePassword ? styles.inputError : styles.input}
-              />
-              {errors.rePassword && (
-                <p className={styles.errorText}>{errors.rePassword.message}</p>
-              )}
-            </div>
-            <div style={{ paddingBottom: '150px' }} />
             <button
               type='submit'
               className={styles.submitButton}
