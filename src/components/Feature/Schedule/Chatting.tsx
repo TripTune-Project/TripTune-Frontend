@@ -71,6 +71,7 @@ const Chatting = ({ onError }: ChattingProps) => {
   const clientRef = useRef<Client | null>(null);
   // 채팅 컨테이너 DOM 참조
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   // 상태 관리
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -85,9 +86,7 @@ const Chatting = ({ onError }: ChattingProps) => {
   // Snackbar 상태 관리
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
-  const [alertSeverity, setAlertSeverity] = useState<
-    'success' | 'error' | 'warning' | 'info'
-  >('info');
+  const [alertSeverity, setAlertSeverity] = useState<'success' | 'error' | 'warning' | 'info'>('info');
 
   /**
    * 알림창 닫기 핸들러
@@ -114,14 +113,21 @@ const Chatting = ({ onError }: ChattingProps) => {
     /**
      * 초기 메시지 로드 함수
      */
+    let isMounted = true;
+
     const loadInitialMessages = async () => {
+      if (!isInitialLoad) return;
+      
       try {
         const response = await fetchScheduleChats(Number(scheduleId), 1);
+        if (!isMounted) return;
+
         if (response.success) {
           setMessages(response.data.content);
           setTotalPages(response.data.totalPages);
           setCurrentPage(1);
           setTimeout(scrollToTop, 0);
+          setIsInitialLoad(false);
         } else {
           setAlertMessage(response.message as string);
           setAlertSeverity('error');
@@ -129,6 +135,7 @@ const Chatting = ({ onError }: ChattingProps) => {
           onError?.(response.message as string);
         }
       } catch (error) {
+        if (!isMounted) return;
         console.error('메시지 로드 실패:', error);
         setAlertMessage('메시지 로드에 실패했습니다.');
         setAlertSeverity('error');
@@ -137,58 +144,63 @@ const Chatting = ({ onError }: ChattingProps) => {
       }
     };
 
-    loadInitialMessages();
-
     // STOMP WebSocket 클라이언트 설정
-    const stompClient = new Client({
-      brokerURL: brokerUrl,
-      connectHeaders: { Authorization: `Bearer ${token}` },
-      reconnectDelay: 5000,
-      heartbeatIncoming: 4000,
-      heartbeatOutgoing: 4000,
-      onConnect: () => {
-        // 채팅 메시지 구독
-        stompClient.subscribe(
-          `/sub/schedules/${scheduleId}/chats`,
-          (message) => {
-            const newMessage: ChatMessage = JSON.parse(message.body);
+    const setupWebSocket = () => {
+      const stompClient = new Client({
+        brokerURL: brokerUrl,
+        connectHeaders: { Authorization: `Bearer ${token}` },
+        reconnectDelay: 5000,
+        heartbeatIncoming: 4000,
+        heartbeatOutgoing: 4000,
+        onConnect: () => {
+          if (!isMounted) return;
 
-            setMessages((prev) => {
-              const combinedMessages = [...prev, newMessage];
-              return combinedMessages.sort(
-                (a, b) =>
-                  new Date(a.timestamp).getTime() -
-                  new Date(b.timestamp).getTime()
-              );
-            });
-          }
-        );
-        // 에러 메시지 구독
-        stompClient.subscribe('/user/queue/errors', (message) => {
-          const errorMessage = JSON.parse(message.body);
-          setAlertMessage(errorMessage.message);
+          stompClient.subscribe(
+            `/sub/schedules/${scheduleId}/chats`,
+            (message) => {
+              if (!isMounted) return;
+              const newMessage: ChatMessage = JSON.parse(message.body);
+
+              setMessages((prev) => {
+                const combinedMessages = [...prev, newMessage];
+                return combinedMessages.sort(
+                  (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+                );
+              });
+            }
+          );
+
+          // 에러 메시지 구독
+          stompClient.subscribe('/user/queue/errors', (message) => {
+            if (!isMounted) return;
+            const errorMessage = JSON.parse(message.body);
+            setAlertMessage(errorMessage.message);
+            setAlertSeverity('error');
+            setAlertOpen(true);
+          });
+        },
+        onStompError: (frame) => {
+          if (!isMounted) return;
+          setAlertMessage(frame.headers['message'] || 'STOMP 에러가 발생했습니다.');
           setAlertSeverity('error');
           setAlertOpen(true);
-        });
-      },
-      onStompError: (frame) => {
-        setAlertMessage(
-          frame.headers['message'] || 'STOMP 에러가 발생했습니다.'
-        );
-        setAlertSeverity('error');
-        setAlertOpen(true);
-      },
-    });
+        },
+      });
 
-    // WebSocket 연결 활성화
-    stompClient.activate();
-    clientRef.current = stompClient;
+      // WebSocket 연결 활성화
+      stompClient.activate();
+      clientRef.current = stompClient;
+    };
 
     // 컴포넌트 언마운트 시 연결 해제
+    loadInitialMessages();
+    setupWebSocket();
+
     return () => {
+      isMounted = false;
       clientRef.current?.deactivate();
     };
-  }, [scheduleId, brokerUrl, token, onError]);
+  }, [scheduleId, isInitialLoad]);
 
   /**
    * 추가 메시지 로드 함수
