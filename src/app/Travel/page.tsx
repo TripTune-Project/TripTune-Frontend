@@ -420,8 +420,8 @@ const TravelPageContent = () => {
                             <Image
                               src={locationIcon}
                               alt='장소'
-                              width={15}
-                              height={21}
+                              width={8}
+                              height={12}
                             />
                             &nbsp;
                             {place.address} {place.detailAddress}
