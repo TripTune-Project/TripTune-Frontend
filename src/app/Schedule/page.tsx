@@ -61,10 +61,19 @@ export default function SchedulePage() {
 
   // 검색어 변경 핸들러
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchKeyword(e.target.value);
-    // 검색어가 비어있을 때 검색 상태를 false로 변경
-    if (!e.target.value.trim()) {
-      setIsSearching(false);
+    const input = e.target.value;
+    const regex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9 ]*$/;
+    
+    if (regex.test(input)) {
+      setSearchKeyword(input);
+      // 검색어가 비어있을 때 검색 상태를 false로 변경
+      if (!input.trim()) {
+        setIsSearching(false);
+      }
+    } else {
+      setAlertMessage('특수문자는 사용할 수 없습니다. 다른 검색어를 입력해 주세요.');
+      setAlertSeverity('warning');
+      setAlertOpen(true);
     }
   };
 
