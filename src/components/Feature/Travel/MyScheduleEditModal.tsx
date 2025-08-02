@@ -125,9 +125,12 @@ const MyScheduleEditModal = ({
         >
           {schedules.length > 0 ? (
             schedules.map((schedule) => (
-              <ScheduleItemContainer key={schedule?.scheduleId}>
+              <ScheduleItemContainer
+                key={schedule?.scheduleId}
+                isSelected={selectedScheduleId === schedule?.scheduleId}
+              >
                 <ScheduleItem>
-                  <div>
+                  <div style={{marginTop: "-10px"}}>
                     <ScheduleName>{schedule?.scheduleName}</ScheduleName>
                     <ScheduleDate>
                       일정: {schedule?.startDate} ~ {schedule?.endDate}
@@ -135,10 +138,9 @@ const MyScheduleEditModal = ({
                     <ScheduleAuthor>작성자: {schedule?.author}</ScheduleAuthor>
                   </div>
                   <StyledCheckbox
-                    type='checkbox'
-                    name='schedule'
-                    checked={selectedScheduleId === schedule?.scheduleId}
+                    type="checkbox"
                     onChange={() => handleCheckboxChange(schedule?.scheduleId)}
+                    checked={selectedScheduleId === schedule?.scheduleId}
                   />
                 </ScheduleItem>
               </ScheduleItemContainer>
@@ -191,9 +193,8 @@ export default MyScheduleEditModal;
 // 스타일 컴포넌트
 const ModalOverlay = styled.div`
   position: fixed;
-  inset: 0;
-  //top: 0;
-  //left: 0;
+  top: -500px;
+  left: 0;
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
@@ -207,10 +208,12 @@ const ModalContainer = styled.div`
   background: #fff;
   border-radius: 30px 0px;
   box-shadow: 0px 8px 24px 0px rgba(0, 0, 0, 0.3);
-  width: 90%;
-  max-width: 500px;
-  padding: 16px;
+  padding: 37px;
   position: relative;
+  width: 503px;
+  height: 557px;
+  flex-shrink: 0;
+  margin: auto;
 `;
 
 const CloseButton = styled.button`
@@ -230,6 +233,8 @@ const Header = styled.div`
 `;
 
 const ModalTitle = styled.h1`
+  font-style: normal;
+  line-height: 130%; /* 26px */
   color: #000;
   font-family: 'Noto Sans KR', sans-serif;
   font-size: 20px;
@@ -239,35 +244,52 @@ const ModalTitle = styled.h1`
 const Divider = styled.hr`
   border: none;
   border-top: 1px solid #ddd;
-  margin: 16px 0;
 `;
 
 const ModalSubtitle = styled.p`
-  color: #000;
   font-family: 'Noto Sans KR', sans-serif;
-  font-size: 15px;
-  font-weight: 500;
+  color: #000;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 505;
+  line-height: 145%; /* 20.3px */
+  
 `;
 
 const Notice = styled.p`
-  color: #f86c6c;
   font-family: 'Noto Sans KR', sans-serif;
   font-size: 10px;
   margin-top: 8px;
+  color: #F86C6C;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 15px */
+  margin-bottom:20px;
 `;
 
 const ScrollableContainer = styled.div`
-  max-height: 400px;
+  max-height: 293px;
   overflow-y: auto;
   padding-right: 8px;
-  border: 1px solid #ddd;
   border-radius: 4px;
   margin-bottom: 16px;
 `;
 
 const ScheduleItemContainer = styled.div`
-  border-bottom: 1px solid #ddd;
   padding: 8px 22px;
+  width: 413px;
+  height: 91px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  border: 2px solid #ddd;
+  margin-bottom:8px;
+  background: rgba(237, 249, 247, 0.30);
+  
+  ${({ isSelected }: { isSelected?: boolean }) =>
+    isSelected &&
+    `
+    border: 2px solid #76ADAC;
+  `}
 `;
 
 const ScheduleItem = styled.div`
@@ -277,28 +299,41 @@ const ScheduleItem = styled.div`
 `;
 
 const ScheduleName = styled.h3`
-  font-size: 16px;
-  font-weight: bold;
+  color: #000;
+  font-family: NOto Sans KR, sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 505;
+  line-height: 150%; /* 18px */
 `;
 
 const ScheduleDate = styled.p`
-  font-size: 14px;
-  color: #555;
+  color: #333;
+  font-family: NOto Sans KR, sans-serif;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 15px */
 `;
 
 const ScheduleAuthor = styled.p`
-  font-size: 14px;
-  color: #555;
+  color: #333;
+  font-family: NOto Sans KR, sans-serif;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 15px */
 `;
 
 const StyledCheckbox = styled.input`
   width: 24px;
   height: 24px;
-  border: 2px solid #76adac;
+  border: 2px solid #ddd;
   border-radius: 50%;
   appearance: none;
   outline: none;
   cursor: pointer;
+  background-color: transparent;
 
   &:checked {
     background-color: #76adac;
@@ -307,15 +342,15 @@ const StyledCheckbox = styled.input`
   }
 
   &:checked::after {
-    content: 'V';
+    content: '✓';
     color: white;
     font-size: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
     position: absolute;
-    top: 0;
-    left: 7px;
+    top: -10%;
+    left: 30%;
   }
 `;
 
@@ -353,5 +388,17 @@ const SelectButton = styled.button`
   padding: 10px 20px;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   font-size: 16px;
-  width: 100%;
+  display: flex;
+  width: 429px;
+  height: 45px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  background: #76ADAC;
+  text-align: center;
+  font-family: NOto Sans KR, sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 140%; /* 22.4px */
 `;
