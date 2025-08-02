@@ -43,3 +43,20 @@ export const validateNickname = (nickname: string): string | true => {
   }
   return true;
 };
+
+/**
+ * 검색어 유효성 검사 및 처리 함수
+ * - 특수문자 제거
+ * - 공백 허용
+ * - 한글, 영문, 숫자 허용
+ * - 입력값 트림 처리
+ *
+ * @param searchTerm 검사할 검색어
+ * @returns {string} 처리된 검색어
+ */
+export const validateSearchTerm = (searchTerm: string): string => {
+  // 앞뒤 공백 제거
+  const trimmed = searchTerm.trim();
+  // 특수문자를 제외한 문자만 허용 (한글, 영문, 숫자, 공백)
+  return trimmed.replace(/[^\w\sㄱ-ㅎㅏ-ㅣ가-힣]/g, '');
+};

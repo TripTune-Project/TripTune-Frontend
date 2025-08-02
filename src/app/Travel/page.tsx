@@ -24,6 +24,8 @@ import locationIcon from '../../../public/assets/images/여행지 탐색/홈화�
 import NoResultLayout from '@/components/Common/NoResult';
 import LoginModal from '@/components/Common/LoginModal';
 import useAuth from '@/hooks/useAuth';
+import { validateSearchTerm } from '@/utils/validation';
+import { createSearchHandlers } from '@/utils/search';
 
 // 여행지 탐색 페이지 주요 컨텐츠 컴포넌트
 const TravelPageContent = () => {
@@ -103,11 +105,11 @@ const TravelPageContent = () => {
 
   useEffect(() => {
     if (keyword) {
-      setSearchTerm(keyword);
+      const validatedKeyword = validateSearchTerm(keyword);
+      setSearchTerm(validatedKeyword);
       setIsSearching(true);
-      setCurrentPage(1);
     }
-  }, [keyword, setSearchTerm, setIsSearching, setCurrentPage]);
+  }, [keyword]);
 
   useEffect(() => {
     if (debouncedSearchTerm.trim()) {
@@ -170,86 +172,30 @@ const TravelPageContent = () => {
     }
   }, [isAuthenticated, isSearching, refetchLocation, refetchSearch, isAuthStateReady]);
 
-  /**
-   * 검색 버튼 클릭 핸들러
-   */
-  const handleSearch = () => {
-    if (searchTerm.trim()) {
+  const showAlert = (message: string) => {
+    setAlertMessage(message);
+    setAlertSeverity('warning');
+    setAlertOpen(true);
+  };
+
+  const { handleInputChange, handleSearch, handleSearchKeyPress } = createSearchHandlers({
+    searchTerm,
+    setSearchTerm,
+    onSearch: () => {
       setIsSearching(true);
       setCurrentPage(1);
       refetchSearch();
-    } else {
-      setAlertMessage('검색어를 입력해주세요.');
-      setAlertSeverity('warning');
-      setAlertOpen(true);
-    }
-  };
-
-  // 특수문자를 제외한 입력만 허용 (띄어쓰기는 허용)
-  const handleSearchInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const input = event.target.value;
-    const regex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9 ]*$/;
-
-    if (regex.test(input)) {
-      setSearchTerm(input);
-    } else {
-      setAlertMessage(
-        '특수문자는 사용할 수 없습니다. 다른 검색어를 입력해 주세요.'
-      );
-      setAlertSeverity('warning');
-      setAlertOpen(true);
-    }
-  };
+    },
+    setIsSearching,
+    showAlert,
+  });
 
   // 검색 입력 포커스 해제 핸들러
   const handleSearchInputBlur = () => {
-    if (searchTerm.trim() === '') {
+    if (!searchTerm.trim()) {
       setIsSearching(false);
       setCurrentPage(1);
       refetchLocation();
-    }
-  };
-
-  // 검색 입력 키 이벤트 핸들러
-  const handleSearchKeyPress = (
-    event: React.KeyboardEvent<HTMLInputElement>
-  ) => {
-    if (event.key === 'Enter') {
-      handleSearch();
-    }
-  };
-
-  const toggleBookmark = async (placeId: number, bookmarkStatus = false) => {
-    if (!isAuthenticated) {
-      setShowLoginModal(true);
-      return;
-    }
-
-    try {
-      if (bookmarkStatus) {
-        await BookMarkDeleteApi(placeId);
-      } else {
-        await BookMarkApi({ placeId });
-      }
-
-      // 북마크 상태 변경 성공 시 즉시 데이터 재조회
-      if (isSearching) {
-        await refetchSearch();
-      } else {
-        await refetchLocation();
-      }
-    } catch (err) {
-      console.error('[토글북마크] 에러 발생 ✖', err);
-      // 에러 발생 시에도 데이터 재조회하여 상태 동기화
-      setTimeout(async () => {
-        if (isSearching) {
-          await refetchSearch();
-        } else {
-          await refetchLocation();
-        }
-      }, 100);
     }
   };
 
@@ -342,7 +288,7 @@ const TravelPageContent = () => {
                   type='text'
                   placeholder='원하는 여행지를 검색하세요.'
                   value={searchTerm}
-                  onChange={handleSearchInputChange}
+                  onChange={handleInputChange}
                   onKeyPress={handleSearchKeyPress}
                   onBlur={handleSearchInputBlur}
                   className={styles.input}

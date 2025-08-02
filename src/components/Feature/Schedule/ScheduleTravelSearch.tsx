@@ -14,6 +14,17 @@ import { truncateText } from '@/utils';
 import { Place } from '@/types/scheduleType';
 import plusTravelSearch from '../../../../public/assets/images/일정 만들기/일정 저장 및 수정/plusIcon.png';
 import minusTravelSearch from '../../../../public/assets/images/일정 만들기/일정 저장 및 수정/minusBtn.png';
+import { validateSearchTerm } from '@/utils/validation';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import { createSearchHandlers } from '@/utils/search';
+
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+  props,
+  ref
+) {
+  return <MuiAlert elevation={6} ref={ref} {...props} />;
+});
 
 const ScheduleTravelSearch = () => {
   // useParams의 반환 타입을 업데이트
@@ -105,28 +116,54 @@ const ScheduleTravelSearch = () => {
     }
   };
   
-  // 검색 버튼 클릭 핸들러
-  const handleSearch = () => {
-    if (searchKeyword.trim()) {
-      setIsSearchLoading(true);
-      setIsSearching(true);
-      setTimeout(() => {
-        setIsSearchLoading(false);
-      }, 500);
-    }
+  // 알림창 상태 관리
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertSeverity, setAlertSeverity] = useState<'success' | 'error' | 'warning' | 'info'>('warning');
+
+  const showAlert = (message: string) => {
+    setAlertMessage(message);
+    setAlertSeverity('warning');
+    setAlertOpen(true);
   };
 
+  const handleAlertClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === 'clickaway') return;
+    setAlertOpen(false);
+  };
+
+  const { handleInputChange, handleSearch, handleSearchKeyPress } = createSearchHandlers({
+    searchTerm: searchKeyword,
+    setSearchTerm: setSearchKeyword,
+    onSearch: () => {
+      setIsSearching(true);
+      setCurrentPage(1);
+    },
+    setIsSearching,
+    showAlert,
+  });
+
   return (
-    <>
-      <div className={styles.travelSearchContainerSearch}>
+    <div className={styles.scheduleSearchContainer}>
+      <div className={styles.searchInputContainer}>
         <input
           ref={inputRef}
-          type='text'
-          placeholder='원하는 여행지를 검색하세요'
+          type="text"
+          placeholder="여행지를 검색해보세요."
           value={searchKeyword}
-          onChange={(e) => setSearchKeyword(e.target.value)}
+          onChange={handleInputChange}
+          onKeyPress={handleSearchKeyPress}
+          className={styles.searchInput}
         />
-        <button onClick={handleSearch}>검색</button>
+        <button
+          onClick={handleSearch}
+          className={styles.searchButton}
+        >
+          검색
+        </button>
       </div>
       <div className={styles.travelList}>
         {isSearching && searchTravelQuery.isLoading ? (
@@ -198,7 +235,21 @@ const ScheduleTravelSearch = () => {
           onPageChange={setCurrentPage}
         />
       )}
-    </>
+      <Snackbar
+        open={alertOpen}
+        autoHideDuration={3000}
+        onClose={handleAlertClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert
+          onClose={handleAlertClose}
+          severity={alertSeverity}
+          sx={{ width: '100%' }}
+        >
+          {alertMessage}
+        </Alert>
+      </Snackbar>
+    </div>
   );
 };
 
