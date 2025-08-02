@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, { useEffect, useState, useCallback, useRef, useMemo } from 'react';
 import { useParams } from 'next/navigation';
 import styles from '@/styles/Schedule.module.css';
 import {
@@ -57,20 +57,35 @@ const ScheduleTravelSearch = () => {
     loadTravelRoutes();
   }, [fetchAndMergeRoutes, scheduleId]);
   
-  // 기본 리스트 쿼리
+  // 기본 리스트 쿼리 - 항상 실행
   const travelListQuery = useScheduleTravelList(
     Number(scheduleId),
     currentPage,
-    !isSearching
+    true
   );
   
-  // 검색 리스트 쿼리
+  // 검색 리스트 쿼리 - 항상 실행
   const searchTravelQuery = useTravelListByLocation(
     Number(scheduleId),
     searchKeyword,
     currentPage,
-    isSearching
+    true
   );
+
+  // 실제 사용할 데이터 선택
+  const travels = useMemo(() => {
+    if (isSearching) {
+      return searchTravelQuery?.data?.data?.content || [];
+    }
+    return travelListQuery?.data?.data?.content || [];
+  }, [isSearching, searchTravelQuery?.data, travelListQuery?.data]);
+
+  const totalPages = useMemo(() => {
+    if (isSearching) {
+      return searchTravelQuery?.data?.data?.totalPages || 0;
+    }
+    return travelListQuery?.data?.data?.totalPages || 0;
+  }, [isSearching, searchTravelQuery?.data, travelListQuery?.data]);
 
   const removeMarker = useCallback((latitude: number, longitude: number) => {
     const markerIndex = markersRef.current.findIndex(
@@ -84,13 +99,6 @@ const ScheduleTravelSearch = () => {
       removedMarker.setMap(null); // setMap을 통해 지도에서 제거
     }
   }, []);
-
-  const travels = isSearching
-    ? searchTravelQuery?.data?.data?.content || []
-    : travelListQuery?.data?.data?.content || [];
-  const totalPages = isSearching
-    ? searchTravelQuery?.data?.data?.totalPages || 0
-    : travelListQuery?.data?.data?.totalPages || 0;
 
   if (travelListQuery.isLoading || searchTravelQuery.isLoading)
     return <DataLoading />;
