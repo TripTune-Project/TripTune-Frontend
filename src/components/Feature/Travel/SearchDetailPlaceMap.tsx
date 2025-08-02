@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 const containerStyle = {
-  width: '1497px',
+  width: '1400px',
   height: '393px',
   margin: '100px auto',
 };

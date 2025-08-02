@@ -48,6 +48,7 @@ interface LayoutProps {
  * - 기본 메타 태그 및 SEO 설정
  * - React Query Provider 설정
  * - Schedule 페이지에 대한 특별 레이아웃 처리
+ * - 인증 페이지에 대한 특별 레이아웃 처리 (헤더만 표시, 푸터 숨김)
  *
  * @param {LayoutProps} props - 레이아웃 프롭스
  * @returns {JSX.Element} 레이아웃 컴포넌트
@@ -55,8 +56,15 @@ interface LayoutProps {
 const Layout = ({ children }: LayoutProps) => {
   // 현재 페이지 경로 가져오기
   const pathname = usePathname();
+
   // Schedule 페이지인지 확인 (Schedule 페이지는 헤더와 푸터가 없음)
   const isSchedulePage = pathname?.includes('/Schedule/');
+
+  // 인증 관련 페이지인지 확인 (헤더는 있지만 푸터는 없음)
+  const isAuthPage = pathname === '/Login' ||
+                     pathname === '/Join' ||
+                     pathname === '/Find' ||
+                     pathname?.startsWith('/Find/');
 
   return (
     <html lang='ko' className={notoSansKR.className}>
@@ -95,8 +103,21 @@ const Layout = ({ children }: LayoutProps) => {
         {/* React Query Provider 래핑 */}
         <QueryClientProvider client={queryClient}>
           {isSchedulePage ? (
-            // Schedule 페이지는 특별한 레이아웃 필요 없음
+            // Schedule 페이지는 헤더와 푸터가 모두 없음
             <>{children}</>
+          ) : isAuthPage ? (
+            // 인증 페이지는 헤더만 있고 푸터는 없음
+            <div className={styles.main}>
+              {/* 헤더 영역 */}
+              <header className={styles.header}>
+                <Header />
+              </header>
+
+              {/* 메인 콘텐츠 영역 */}
+              <main className={styles.section}>
+                <div className={styles.content}>{children}</div>
+              </main>
+            </div>
           ) : (
             // 일반 페이지 레이아웃 (헤더, 메인 콘텐츠, 푸터 포함)
             <div className={styles.main}>

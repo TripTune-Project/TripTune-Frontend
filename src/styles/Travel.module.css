@@ -75,7 +75,7 @@
     font-style: normal;
     font-weight: 400;
     line-height: 145%; /* 20.3px */
-    width: 482px!important;
+    width: 482px !important;
     height: 55px;
     flex-shrink: 0;
     border-radius: 10px;
@@ -333,14 +333,14 @@
 .detailTitle {
     display: flex;
     align-items: center;
-    color: #000;
-    font-size: 25px;
     height: 30px;
     font-style: normal;
-    font-weight: 600;
-    line-height: normal;
     font-family: 'Noto Sans KR', sans-serif;
-    margin-left: 260px;
+    color: #000;
+    font-size: 26px;
+    font-weight: 400;
+    line-height: 120%; /* 31.2px */
+    margin-left:70px;
 }
 
 .detailTitleIcon {
@@ -483,7 +483,6 @@
 }
 
 .sliderButton {
-    background: none;
     border: none;
     color: #333;
     font-size: 24px;
@@ -491,7 +490,7 @@
     padding: 10px 20px;
     -webkit-user-select: none;
     user-select: none;
-    background-color: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.5);
     border-radius: 50%;
 }
 
@@ -537,26 +536,46 @@
     font-size: 16px;
     font-style: normal;
     font-weight: 300;
-    line-height: normal;
     margin-bottom: 10px;
     font-family: 'Noto Sans KR', sans-serif;
+    text-align: center;
+    line-height: 140%; /* 22.4px */
 }
 
 .detailplaceName {
     color: #000;
     height: 46px;
-    font-size: 38px;
     font-style: normal;
-    font-weight: 500;
-    line-height: normal;
     margin-top: 20px;
     font-family: 'Noto Sans KR', sans-serif;
+    text-align: center;
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 120%; /* 38.4px */
 }
 
 .scrollbar {
     overflow-y: auto;
     margin-top: 71px;
     margin-bottom: 45px;
+}
+
+.contentTitle {
+    color: #2D2D2D;
+    font-family: Noto Sans KR, sans-serif;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 505;
+    line-height: 180%; /* 32.4px */
+}
+
+.contentText {
+    color: #555;
+    font-family: Noto Sans KR, sans-serif;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 180%; /* 32.4px */
 }
 
 .addressLabel,
@@ -568,6 +587,10 @@
     font-size: 18px;
     color: #2d2d2d;
     font-weight: 505;
+    font-style: normal;
+    line-height: 180%; /* 32.4px */
+    height:32px;
+
 }
 
 .addressLabel img,
@@ -609,7 +632,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 300px;
     height: 55px;
     padding: 10px 20px;
     border: none;
@@ -618,11 +640,13 @@
     font-family: 'Noto Sans KR', sans-serif;
     gap: 10px;
     margin-left: 30px;
+    width: 250px;
+    flex-shrink: 0;
     text-align: center;
     font-size: 18px;
     font-style: normal;
     font-weight: 700;
-    line-height: normal;
+    line-height: 135%; /* 24.3px */
 }
 
 .bookmarkBtn {
