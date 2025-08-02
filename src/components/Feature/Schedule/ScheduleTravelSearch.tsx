@@ -27,13 +27,16 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
 });
 
 const ScheduleTravelSearch = () => {
-  // useParams의 반환 타입을 업데이트
   const params = useParams();
   const scheduleId = params?.scheduleId as string;
   const [currentPage, setCurrentPage] = useState(1);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const [isSearchLoading, setIsSearchLoading] = useState(false);
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertSeverity, setAlertSeverity] = useState<'success' | 'error' | 'warning' | 'info'>('warning');
+  
   const markersRef = useRef<any[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -46,6 +49,21 @@ const ScheduleTravelSearch = () => {
     fetchAndMergeRoutes,
   } = useTravelStore();
 
+  // 기본 리스트 쿼리
+  const travelListQuery = useScheduleTravelList(
+    Number(scheduleId),
+    currentPage,
+    true
+  );
+  
+  // 검색 리스트 쿼리
+  const searchTravelQuery = useTravelListByLocation(
+    Number(scheduleId),
+    searchKeyword,
+    currentPage,
+    true
+  );
+
   // 여행지 검색과 여행루트 데이터 동기화
   useEffect(() => {
     const loadTravelRoutes = async () => {
@@ -57,21 +75,6 @@ const ScheduleTravelSearch = () => {
     loadTravelRoutes();
   }, [fetchAndMergeRoutes, scheduleId]);
   
-  // 기본 리스트 쿼리 - 항상 실행
-  const travelListQuery = useScheduleTravelList(
-    Number(scheduleId),
-    currentPage,
-    true
-  );
-  
-  // 검색 리스트 쿼리 - 항상 실행
-  const searchTravelQuery = useTravelListByLocation(
-    Number(scheduleId),
-    searchKeyword,
-    currentPage,
-    true
-  );
-
   // 실제 사용할 데이터 선택
   const travels = useMemo(() => {
     if (isSearching) {
@@ -124,11 +127,6 @@ const ScheduleTravelSearch = () => {
     }
   };
   
-  // 알림창 상태 관리
-  const [alertOpen, setAlertOpen] = useState(false);
-  const [alertMessage, setAlertMessage] = useState('');
-  const [alertSeverity, setAlertSeverity] = useState<'success' | 'error' | 'warning' | 'info'>('warning');
-
   const showAlert = (message: string) => {
     setAlertMessage(message);
     setAlertSeverity('warning');
@@ -163,7 +161,7 @@ const ScheduleTravelSearch = () => {
           placeholder="여행지를 검색해보세요."
           value={searchKeyword}
           onChange={handleInputChange}
-          onKeyPress={handleSearchKeyPress}
+          onKeyDown={handleSearchKeyPress}
           className={styles.searchInput}
         />
         <button
