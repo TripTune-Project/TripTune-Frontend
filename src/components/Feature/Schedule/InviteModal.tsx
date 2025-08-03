@@ -60,7 +60,7 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
     return author && author.nickname === loggedInNickname;
   }, [allUsers, loggedInNickname]);
 
-  // loggedInNickname과 동일한 사용자를 최상단에 노출
+  // loggedInNickname과 동일한 사용자를 최상단�� 노출
   const sortedUsers = useMemo(() => {
     return [...allUsers].sort((a, b) => {
       if (a.nickname === loggedInNickname && b.nickname !== loggedInNickname)
@@ -221,43 +221,47 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
           <ModalTitle>공유하기</ModalTitle>
           <CloseButton onClick={onClose}>✕</CloseButton>
         </Header>
+        <Divider />
         {loggedInIsAuthor && (
-          <EmailInputContainer>
-            <EmailInput
-              type='email'
-              placeholder='공유할 사용자의 이메일을 입력하세요.'
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <DropdownWrapper>
-              <DropdownButton onClick={toggleMainDropdown}>
-                {permissions.find((p) => p.value === selectedPermission)?.label}
-                <DropdownIcon>▼</DropdownIcon>
-              </DropdownButton>
-              {isMainDropdownOpen && (
-                <DropdownMenu>
-                  {permissions.slice(0, 4).map((permission) => (
-                    <DropdownItem
-                      key={permission.value}
-                      onClick={() => {
-                        setSelectedPermission(permission.value);
-                        setIsMainDropdownOpen(false);
-                      }}
-                    >
-                      <strong>{permission.label}</strong>
-                      <DropdownDescription>
-                        {permission.description}
-                      </DropdownDescription>
-                      {selectedPermission === permission.value && (
-                        <CheckMark>✔</CheckMark>
-                      )}
-                    </DropdownItem>
-                  ))}
-                </DropdownMenu>
-              )}
-            </DropdownWrapper>
+          <ShareSection>
+            <EmailInputContainer>
+              <EmailInput
+                type='email'
+                placeholder='공유할 사용자의 이메일을 입력하세요.'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <DropdownWrapper>
+                <DropdownButton onClick={toggleMainDropdown}>
+                  {
+                    permissions.find((p) => p.value === selectedPermission)
+                      ?.label
+                  }
+                  <DropdownIcon>▼</DropdownIcon>
+                </DropdownButton>
+                {isMainDropdownOpen && (
+                  <DropdownMenu>
+                    {permissions.slice(0, 4).map((permission) => (
+                      <DropdownItem
+                        key={permission.value}
+                        isSelected={selectedPermission === permission.value}
+                        onClick={() => {
+                          setSelectedPermission(permission.value);
+                          setIsMainDropdownOpen(false);
+                        }}
+                      >
+                        <>{permission.label}</>
+                        <DropdownDescription>
+                          {permission.description}
+                        </DropdownDescription>
+                      </DropdownItem>
+                    ))}
+                  </DropdownMenu>
+                )}
+              </DropdownWrapper>
+            </EmailInputContainer>
             <ShareButton onClick={handleShareClick}>공유</ShareButton>
-          </EmailInputContainer>
+          </ShareSection>
         )}
         <UserListHeader>
           <UserListTitle>공유중인 사용자</UserListTitle>
@@ -279,11 +283,13 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
                       height={38}
                     />
                   </ProfileImageWrapper>
-                  <span>
-                    {user.nickname}
-                    {user.nickname === loggedInNickname ? ' (나)' : ''}
-                  </span>
-                  <UserEmail>{user.email}</UserEmail>
+                  <UserInfoContainer>
+                    <UserName>
+                      {user.nickname}
+                      {user.nickname === loggedInNickname ? ' (나)' : ''}
+                    </UserName>
+                    <UserEmail>{user.email}</UserEmail>
+                  </UserInfoContainer>
                 </UserDetails>
                 {user.role === 'AUTHOR' ? (
                   <AuthorLabel>작성자</AuthorLabel>
@@ -303,6 +309,9 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
                             {permissions.slice(0, 4).map((permission) => (
                               <DropdownItem
                                 key={permission.value}
+                                isSelected={
+                                  user.permission === permission.value
+                                }
                                 onClick={() =>
                                   handlePermissionChange(
                                     user.attendeeId,
@@ -314,9 +323,6 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
                                 <DropdownDescription>
                                   {permission.description}
                                 </DropdownDescription>
-                                {user.permission === permission.value && (
-                                  <CheckMark>✔</CheckMark>
-                                )}
                               </DropdownItem>
                             ))}
                             <hr />
@@ -341,6 +347,7 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
                           <>
                             <DropdownItem
                               key={user.permission}
+                              isSelected={true}
                               onClick={() =>
                                 handlePermissionChange(
                                   user.attendeeId,
@@ -362,7 +369,6 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
                                   )?.description
                                 }
                               </DropdownDescription>
-                              <CheckMark>✔</CheckMark>
                             </DropdownItem>
                             <hr />
                             <DropdownItem
@@ -449,7 +455,7 @@ const ModalContainer = styled.div`
 const Header = styled.div`
   display: flex;
   align-items: center;
-  gap: 10px;
+  margin-left: 37px;
 `;
 
 const CloseButton = styled.button`
@@ -465,35 +471,58 @@ const EmailInputContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 20px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #d9d9d9;
+  background: #fff;
+  height: 47px;
+  flex: 1;
+  margin-top: 21px;
 `;
 
 const EmailInput = styled.input`
   flex: 1;
   padding: 10px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  font-size: 14px;
+  border: none;
+  outline: none;
+  color: #555;
+  font-family:
+    NOto Sans KR,
+    sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 18px */
+  background: transparent;
+
+  &::placeholder {
+    color: #999;
+  }
 `;
 
 const DropdownWrapper = styled.div`
   position: relative;
-  width: 200px;
+  width: 96px;
+  flex-shrink: 0;
 `;
 
 const DropdownButton = styled.button`
-  padding: 10px;
-  width: 100%;
+  padding: 0 10px;
   text-align: left;
-  border-radius: 4px;
-  border: 1px solid #ccc;
   cursor: pointer;
+  width: 96px;
+  height: 31px;
+  flex-shrink: 0;
+  border-radius: 7px;
   background: #edf9f7;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
 `;
 
 const DropdownIcon = styled.span`
-  float: right;
-  margin-top: 2px;
   font-size: 12px;
   color: #888;
 `;
@@ -503,44 +532,75 @@ const DropdownMenu = styled.ul`
   top: 100%;
   left: 0;
   background: #fff;
-  border: 1px solid #ccc;
-  border-radius: 4px;
   list-style: none;
   padding: 5px 0;
   z-index: 10;
-  width: 230px;
+  width: 138px;
+  height: 199px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  border: 1px solid #e8e8e8;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
 `;
 
-const DropdownItem = styled.li`
+const DropdownItem = styled.li<{ isSelected?: boolean }>`
+  width: 120px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 5px;
   padding: 10px 15px;
   cursor: pointer;
   font-size: 14px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   white-space: nowrap;
+  margin-left: 9px;
+  background-color: ${(props) =>
+    props.isSelected ? '#EDF9F7' : 'transparent'};
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
 `;
+
+const DropdownLabel = styled.p``;
 
 const DropdownDescription = styled.p`
-  font-size: 12px;
   color: #666;
-  margin-left: 10px;
-  flex: 1;
-`;
-
-const CheckMark = styled.span`
-  color: #4caf50;
-  font-size: 14px;
-  margin-left: 10px;
+  margin: 2px 0 0 0;
+  font-family:
+    NOto Sans KR,
+    sans-serif;
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 13.5px */
 `;
 
 const ShareButton = styled.button`
-  padding: 10px 20px;
   background-color: #76adac;
   color: #fff;
   border: none;
   cursor: pointer;
   border-radius: 4px;
+  display: flex;
+  width: 67px;
+  height: 47px;
+  padding: 6px 12px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  text-align: center;
+  font-family:
+    NOto Sans KR,
+    sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 145%; /* 20.3px */
+  margin-top: 21px;
 `;
 
 const UserListHeader = styled.div`
@@ -551,11 +611,26 @@ const UserListHeader = styled.div`
 
 const UserListTitle = styled.h3`
   margin: 0;
+  color: #000;
+  font-family:
+    NOto Sans KR,
+    sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 145%; /* 20.3px */
 `;
 
 const NoticeText = styled.p`
-  color: red;
-  font-size: 12px;
+  color: #f86c6c;
+  text-align: center;
+  font-family:
+    NOto Sans KR,
+    sans-serif;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 16.5px */
 `;
 
 const Divider = styled.hr`
@@ -595,24 +670,50 @@ const ProfileImageWrapper = styled.div`
 `;
 
 const UserEmail = styled.span`
-  margin-left: 10px;
-  color: #888;
+  color: #848282;
+  font-family:
+    NOto Sans KR,
+    sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 18px */
+`;
+
+const UserInfoContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+`;
+
+const UserName = styled.span`
+  color: #000;
+  font-family:
+    NOto Sans KR,
+    sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 145%; /* 20.3px */
 `;
 
 const AuthorLabel = styled.span`
   display: flex;
-  width: 89px;
   height: 34px;
   flex-direction: column;
   justify-content: center;
   flex-shrink: 0;
   color: #000;
   text-align: center;
-  font-size: 13px;
   font-style: normal;
-  font-weight: 500;
-  line-height: normal;
-  background-color: whitesmoke;
+  width: 100px;
+  background: #f3f8f8;
+  font-family:
+    NOto Sans KR,
+    sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 150%; /* 18px */
 `;
 
 const ModalTitle = styled.h1`
@@ -620,4 +721,16 @@ const ModalTitle = styled.h1`
   font-family: 'Noto Sans KR', sans-serif;
   font-size: 20px;
   font-weight: 400;
+  font-style: normal;
+  line-height: 130%; /* 26px */
+  width: 74px;
+  height: 26px;
+  margin-left: 5px;
+`;
+
+const ShareSection = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
 `;
