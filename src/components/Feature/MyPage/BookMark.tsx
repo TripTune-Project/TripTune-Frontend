@@ -46,7 +46,12 @@ const BookMark = () => {
       <div className={styles.headerContainer}>
         <div className={styles.leftHeader}>
           <div className={styles.pageTitle}>북마크</div>
-          <div className={styles.totalCount}>전체 개수 {places.length}</div>
+          <div className={styles.totalCount}>
+            전체
+            <span className={styles.circleCount} >
+              {places.length}
+            </span>
+          </div>
         </div>
         <div className={styles.rightHeader}>
           <select
@@ -85,9 +90,6 @@ const BookMark = () => {
               </div>
               <div className={styles.placeInfo}>
                 <div className={styles.placeName}>{place.placeName}</div>
-                <p className={styles.placeAddress}>
-                  {`${place.country} / ${place.city} / ${place.district}`}
-                </p>
                 <p className={styles.placeDetailAddress}>
                   <Image src={locationIcon} alt='장소' width={15} height={21} />
                   {` ${place.address} ${place.detailAddress ?? ''}`}

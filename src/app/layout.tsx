@@ -64,7 +64,8 @@ const Layout = ({ children }: LayoutProps) => {
   const isAuthPage = pathname === '/Login' ||
                      pathname === '/Join' ||
                      pathname === '/Find' ||
-                     pathname?.startsWith('/Find/');
+                     pathname?.startsWith('/Find/') ||
+                     pathname === '/MyPage';
 
   return (
     <html lang='ko' className={notoSansKR.className}>

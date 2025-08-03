@@ -51,8 +51,6 @@ export default LoginModal;
 const ModalOverlay = styled.div`
   position: fixed;
   inset : 0;
-  /*top: 0;*/
-  /*left: 0;*/
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
@@ -79,18 +77,23 @@ const ModalContent = styled.div`
 
 const Title = styled.h2`
   margin-top: 25px;
-  font-size: 18px;
-  font-weight: bold;
   margin-bottom: 10px;
+  color: #000;
+  font-family: NOto Sans KR, sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 505;
+  line-height: 140%; /* 22.4px */
 `;
 
 const Description = styled.p`
   color: #666;
-  font-size: 15px;
   font-style: normal;
   font-weight: 400;
-  line-height: normal;
   margin-bottom: 40px;
+  font-family: NOto Sans KR, sans-serif;
+  font-size: 14px;
+  line-height: 145%; /* 20.3px */
 `;
 
 const ButtonContainer = styled.div`
@@ -110,9 +113,15 @@ const CancelButton = styled(BaseButton)`
   height: 40px;
   width: 153px;
   background: #f0f0f0;
-  color: #333;
   border: 1px solid #ccc;
-
+  color: #000;
+  text-align: center;
+  font-family: NOto Sans KR, sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 145%; /* 20.3px */
+  
   &:hover {
     background: #e0e0e0;
   }
@@ -122,7 +131,13 @@ const ConfirmButton = styled(BaseButton)`
   height: 40px;
   width: 153px;
   background: #76adac;
-  color: #fff;
+  color: #FFF;
+  text-align: center;
+  font-family: NOto Sans KR, sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 145%; /* 20.3px */
   border: none;
 
   &:hover {
