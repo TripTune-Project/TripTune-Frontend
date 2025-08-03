@@ -190,6 +190,11 @@ const MyScheduleEditModal = ({
 
 export default MyScheduleEditModal;
 
+// 스타일 컴포넌트용 인터페이스
+interface ScheduleItemContainerProps {
+  isSelected: boolean;
+}
+
 // 스타일 컴포넌트
 const ModalOverlay = styled.div`
   position: fixed;
@@ -275,7 +280,7 @@ const ScrollableContainer = styled.div`
   margin-bottom: 16px;
 `;
 
-const ScheduleItemContainer = styled.div`
+const ScheduleItemContainer = styled.div<ScheduleItemContainerProps>`
   padding: 8px 22px;
   width: 413px;
   height: 91px;
@@ -285,11 +290,11 @@ const ScheduleItemContainer = styled.div`
   margin-bottom:8px;
   background: rgba(237, 249, 247, 0.30);
   
-  ${({ isSelected }: { isSelected?: boolean }) =>
+  ${({ isSelected }) =>
     isSelected &&
     `
     border: 2px solid #76ADAC;
-  `}
+    `}
 `;
 
 const ScheduleItem = styled.div`
