@@ -914,30 +914,58 @@
 }
 
 .placeName {
-  color: #2c2c2c;
-  font-size: 14px;
   font-style: normal;
-  line-height: normal;
-  font-weight: 505;
   font-family: 'Noto Sans KR', sans-serif;
   margin-top: 10px;
+  color: #000;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 150%; /* 18px */
 }
 
-.placeAddress,
 .placeDetailAddress {
   margin: 0;
-  color: #868686;
-  font-size: 12px;
   font-style: normal;
-  font-weight: 300;
-  line-height: normal;
   padding-bottom: 7px;
+  color: #666;
+  font-family: NOto Sans KR, sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 150%; /* 15px */
 }
 
-.sortOption,
-.totalCount {
+.circleCount {
+  display: flex;
+  width: 42px;
+  height: 26px;
+  padding: 6px 12px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  border-radius: 15px;
+  background: #74A5DA;
+  color: #FFF;
+  text-align: center;
+  font-family: NOto Sans KR, sans-serif;
   font-size: 14px;
-  color: #555;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 145%; /* 20.3px */
+}
+
+.totalCount {
+  color: #666;
+  text-align: center;
+  font-family: NOto Sans KR, sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 505;
+  line-height: 140%; /* 22.4px */
+  margin-left: 200px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .bookmarkGrid {
@@ -948,16 +976,16 @@
 }
 
 .pageTitle {
-  margin-left: 200px;
-  font-size: 24px;
+  margin-left: 170px;
   margin-bottom: 5px;
   margin-top: 36px;
-}
-
-.totalCount {
-  font-size: 14px;
-  color: #555;
-  margin-left: 200px;
+  color: #000;
+  text-align: center;
+  font-family: NOto Sans KR, sans-serif;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 130%; /* 26px */
 }
 
 .orderSelect {
@@ -987,11 +1015,6 @@
   text-align: left;
 }
 
-.totalCount {
-  font-size: 14px;
-  color: #555;
-}
-
 .rightHeader {
   text-align: right;
 }
@@ -1005,9 +1028,6 @@
 }
 
 .bookmarkCard {
-  background: #ffffff;
-  border: 1px solid #d9d9d9;
-  border-radius: 10px;
   overflow: hidden;
   cursor: pointer;
   transition:
@@ -1015,6 +1035,12 @@
     box-shadow 0.2s ease;
   display: flex;
   flex-direction: column;
+  width: 228px;
+  height: 207px;
+  flex-shrink: 0;
+  border-radius: 10px 0;
+  border: 1px solid #D9D9D9;
+  background: #FFF;
 }
 
 .bookmarkCard:hover {
@@ -1023,13 +1049,15 @@
 }
 
 .imageContainer {
-  width: 100%;
-  height: 122px;
   background-color: #f0f0f0;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  width: 226px;
+  height: 121px;
+  flex-shrink: 0;
+  border-radius: 9px 0 0 0;
 }
 
 .thumbnailImage {
