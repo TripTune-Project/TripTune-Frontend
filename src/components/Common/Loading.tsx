@@ -15,4 +15,4 @@ const Loading: React.FC<LoadingProps> = ({ size = 'medium', text }) => {
   );
 };
 
-export default Loading; 
+export default Loading;

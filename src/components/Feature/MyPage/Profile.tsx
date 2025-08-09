@@ -140,13 +140,13 @@ const Profile = () => {
   };
 
   return (
-    <div className={styles.flexColumnF}>
-      <span className={styles.profileManagement4}>프로필 관리</span>
-      <div className={styles.profileBox}>
+    <div className={styles.mypageflexColumn}>
+      <span className={styles.mypageTitle}>프로필 관리</span>
+      <div className={styles.mypageContentBox}>
         <div className={styles.flexRowAeb}>
-          <span className={styles.profileImage}>프로필 이미지</span>
+          <span className={styles.profileImgText}>프로필 이미지</span>
           <Image
-            className={styles.rectangle7}
+            className={styles.profileImg}
             src={userData?.profileImage ?? ProfileBasicImg}
             alt='프로필 이미지'
             width={95}
@@ -155,7 +155,7 @@ const Profile = () => {
           />
           <button
             type='button'
-            className={styles.change}
+            className={styles.changeProfileImg}
             onClick={handleFileClick}
           >
             변경
@@ -205,7 +205,7 @@ const Profile = () => {
               <span className={styles.testUser}>{userData?.nickname}</span>
               <button
                 type='button'
-                className={styles.change3}
+                className={styles.changeNickname}
                 onClick={handleEdit}
               >
                 변경
