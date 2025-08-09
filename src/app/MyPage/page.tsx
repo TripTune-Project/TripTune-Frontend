@@ -84,7 +84,7 @@ const MyPage = () => {
         <title>{metaTags.title}</title>
         <meta name='description' content={metaTags.description} />
       </Head>
-      <div className={styles.rectangle2}>
+      <div className={styles.mypageBox}>
         <div className={styles.flexColumnDb}>
           <span
             className={`${styles.tab} ${

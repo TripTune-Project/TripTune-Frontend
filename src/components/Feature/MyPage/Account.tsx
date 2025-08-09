@@ -201,9 +201,9 @@ const Account = () => {
   const isPasswordSaveDisabled = !nowPassword || !newPassword || !rePassword;
 
   return (
-    <div className={styles.flexColumnC}>
-      <div className={styles.accountManagementTitle}>계정 관리</div>
-      <div className={styles.rectangleC}>
+    <div className={styles.mypageflexColumn}>
+      <div className={styles.mypageTitle}>계정 관리</div>
+      <div className={styles.mypageContentBox}>
         <div className={styles.formRow}>
           <div className={styles.rowLabel}>이메일</div>
           <div className={styles.rowField}>

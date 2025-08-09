@@ -9,6 +9,7 @@ import locationIcon from '../../../../public/assets/images/여행지 탐색/홈�
 import styles from '@/styles/Mypage.module.css';
 import DataLoading from '@/components/Common/DataLoading';
 import { BookmarkPlace } from '@/types/myPage';
+import { truncateText } from '@/utils';
 
 const BookMark = () => {
   const router = useRouter();
@@ -45,7 +46,9 @@ const BookMark = () => {
     <div className={styles.listContainer}>
       <div className={styles.headerContainer}>
         <div className={styles.leftHeader}>
-          <div className={styles.pageTitle}>북마크</div>
+          <div className={styles.mypageTitle}
+          style={{marginLeft:"200px", marginTop:"36px"}}
+          >북마크</div>
           <div className={styles.totalCount}>
             전체
             <span className={styles.circleCount} >
@@ -89,10 +92,12 @@ const BookMark = () => {
                 )}
               </div>
               <div className={styles.placeInfo}>
-                <div className={styles.placeName}>{place.placeName}</div>
+                <div className={styles.placeName}>
+                  {` ${truncateText(`${place.placeName}`, 10)}`}
+                </div>
                 <p className={styles.placeDetailAddress}>
                   <Image src={locationIcon} alt='장소' width={15} height={21} />
-                  {` ${place.address} ${place.detailAddress ?? ''}`}
+                  {` ${truncateText(`${place.address} ${place.detailAddress ?? ''}`, 16)}`}
                 </p>
               </div>
             </div>
