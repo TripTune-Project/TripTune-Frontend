@@ -168,7 +168,13 @@ const TravelPageContent = () => {
 
       return () => clearTimeout(timer);
     }
-  }, [isAuthenticated, isSearching, refetchLocation, refetchSearch, isAuthStateReady]);
+  }, [
+    isAuthenticated,
+    isSearching,
+    refetchLocation,
+    refetchSearch,
+    isAuthStateReady,
+  ]);
 
   /**
    * 검색 버튼 클릭 핸들러

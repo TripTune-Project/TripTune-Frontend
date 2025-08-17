@@ -93,11 +93,11 @@ const BookMark = () => {
               </div>
               <div className={styles.placeInfo}>
                 <div className={styles.placeName}>
-                  {` ${truncateText(`${place.placeName}`, 10)}`}
+                  {` ${truncateText(`${place.placeName}`, 21)}`}
                 </div>
                 <p className={styles.placeDetailAddress}>
                   <Image src={locationIcon} alt='장소' width={15} height={21} />
-                  {` ${truncateText(`${place.address} ${place.detailAddress ?? ''}`, 16)}`}
+                  {` ${truncateText(`${place.address} ${place.detailAddress ?? ''}`, 21)}`}
                 </p>
               </div>
             </div>
