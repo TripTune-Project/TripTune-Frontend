@@ -113,15 +113,6 @@
     font-size: 0;
 }
 
-.flexColumnC {
-    position: absolute;
-    /*width: 75.02%;*/
-    height: 83.49%;
-    top: 6.16%;
-    left: 20.24%;
-    font-size: 0;
-}
-
 .profileBox {
     margin-top: 20px;
     position: relative;
@@ -141,27 +132,11 @@
     line-height: 130%; /* 26px */
 }
 
-.profileManagement4 {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    width: 98px;
-    height: 24px;
-    margin: 0 0 0 0;
-    color: #000000;
-    font-size: 20px;
-    font-weight: 400;
-    line-height: 24px;
-    text-align: center;
-    white-space: nowrap;
-}
-
 .flexRowAeb {
     position: relative;
-    width: 627.614px;
+    width: 628px;
     height: 97px;
-    margin: 35px 0 0 33px;
+    margin: 0 0 0 33px;
 }
 
 .profileImgText {
@@ -240,51 +215,9 @@
     line-height: 145%; /* 20.3px */
 }
 
-.flexRowCc {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: relative;
-    width: 222.278px;
-    height: 18px;
-    margin: 59px 0 0 33px;
-}
-
-.id {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    position: relative;
-    width: 42.735px;
-    height: 18px;
-    color: #000000;
-    font-size: 15px;
-    font-weight: 505;
-    line-height: 18px;
-    text-align: center;
-    white-space: nowrap;
-}
-
-.user {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    position: relative;
-    width: 57.997px;
-    height: 18px;
-    color: #000000;
-    font-size: 15px;
-    font-weight: 400;
-    line-height: 18px;
-    text-align: center;
-    white-space: nowrap;
-}
-
 .flexRowCc8 {
     position: relative;
-    width: 653.696px;
+    width: 654px;
     height: 50px;
     margin: 37px 0 0 33px;
 }
@@ -294,34 +227,19 @@
     width: 488px;
     height: 47px;
     border-radius: 5px;
-    /*background: #f9f9f9;*/
     font-size: 16px;
     padding-left: 15px;
 }
 
 .input {
-    /*width: 100%;*/
     max-width: 480px;
     height: 47px;
     border-radius: 5px;
     font-size: 16px;
     padding: 0 10px;
     box-sizing: border-box;
-    /*font-size: 16px;*/
-    /*padding: 10px;*/
-    /*background: #f9f9f9;*/
-    /*border: 1px solid #ccc;*/
-    /*border-radius: 5px;*/
     flex: 1;
     width: 480px;
-    /*max-width: 400px;*/
-    /*height: 47px;*/
-    /*border-radius: 5px;*/
-    /*background: #f9f9f9;*/
-    /*font-size: 16px;*/
-    /*padding: 0 10px;*/
-    /*border: 1px solid #ccc;*/
-    /*box-sizing: border-box;*/
 }
 
 .inputError,
@@ -349,49 +267,6 @@
     sans-serif;
     font-size: 14px;
     margin-top: 5px;
-}
-
-.nickname {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    width: 42.735px;
-    height: 18px;
-    top: 12px;
-    left: 0;
-    color: #000000;
-    font-size: 15px;
-    font-weight: 505;
-    line-height: 18px;
-    text-align: center;
-    white-space: nowrap;
-}
-
-.rectangleB {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    width: 81px;
-    height: 47.968px;
-    margin: 187px 0 0 834px;
-    background: #76adac;
-}
-
-.save {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    position: relative;
-    width: 81px;
-    height: 47.028px;
-    color: #ffffff;
-    font-size: 15px;
-    font-weight: 700;
-    line-height: 18.153px;
-    text-align: center;
 }
 
 /* 프로필 사진 관련 팝업 */
@@ -446,13 +321,6 @@
     font-size: 14px;
     display: block;
     width: 100%;
-}
-
-.nickname {
-    position: relative;
-    width: 878px;
-    height: 47px;
-    margin: 52px 0 0 33px;
 }
 
 .editButton {
@@ -968,6 +836,9 @@
     font-size: 10px;
     font-weight: 400;
     line-height: 150%; /* 15px */
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
 .circleCount {
@@ -1002,7 +873,7 @@
     align-items: center;
     gap: 8px;
     line-height: 140%; /* 22.4px */
-    margin-top:23px;
+    margin-top: 23px;
 }
 
 .bookmarkGrid {
@@ -1010,19 +881,6 @@
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
     margin-left: 200px;
-}
-
-.pageTitle {
-    margin-left: 170px;
-    margin-bottom: 5px;
-    margin-top: 36px;
-    color: #000;
-    text-align: center;
-    font-family: NOto Sans KR, sans-serif;
-    font-size: 20px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 130%; /* 26px */
 }
 
 .orderSelect {
@@ -1056,14 +914,6 @@
     text-align: right;
 }
 
-.orderSelect {
-    padding: 5px 10px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background: #fff;
-}
-
 .bookmarkCard {
     overflow: hidden;
     cursor: pointer;
@@ -1077,11 +927,6 @@
     border-radius: 10px 0;
     border: 1px solid #D9D9D9;
     background: #FFF;
-}
-
-.bookmarkCard:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .imageContainer {
@@ -1106,13 +951,5 @@
     padding: 10px;
     display: flex;
     flex-direction: column;
-    gap: 5px;
-}
-
-.placeDetailAddress {
-    font-size: 12px;
-    color: #333;
-    display: flex;
-    align-items: center;
     gap: 5px;
 }
