@@ -186,7 +186,7 @@ const HomePageRecommendTravel = () => {
                     <div className={styles.noImage}>이미지 없음</div>
                   )}
                   <p className={styles.sliderTextP}>
-                    {truncateText(item.placeName, 10)}
+                    {truncateText(item.placeName, 21)}
                   </p>
                   <p className={styles.sliderTextPDetail}>
                     <Image
@@ -195,7 +195,10 @@ const HomePageRecommendTravel = () => {
                       width={15}
                       height={21}
                     />
-                    &nbsp;{item.address} {item.detailAddress}
+                    {truncateText(
+                      `${item.address} ${item.detailAddress ?? ''}`,
+                      21
+                    )}
                   </p>
                 </div>
               </SwiperSlide>

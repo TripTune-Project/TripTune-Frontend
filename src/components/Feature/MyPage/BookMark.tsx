@@ -6,23 +6,43 @@ import { useMyPageBookMarkList } from '@/hooks/useMyPage';
 import { useMyPageBookMarkStore } from '@/store/myPageBookMarkStore';
 import NoResultLayout from '@/components/Common/NoResult';
 import locationIcon from '../../../../public/assets/images/여행지 탐색/홈화면/placeHome_mapIcon.png';
+import moreBtn from '../../../../public/assets/images/일정 만들기/일정 목록 조회/moreBtn.png';
 import styles from '@/styles/Mypage.module.css';
 import DataLoading from '@/components/Common/DataLoading';
 import { BookmarkPlace } from '@/types/myPage';
 import { truncateText } from '@/utils';
+import { BookMarkDeleteApi } from '@/apis/BookMark/bookMarkApi';
 
 const BookMark = () => {
   const router = useRouter();
   const { currentPage, setCurrentPage } = useMyPageBookMarkStore();
 
   const [sort, setSort] = useState<'newest' | 'oldest' | 'name'>('newest');
-  const { data: myPageBookMarkData, isLoading } = useMyPageBookMarkList(
+  const [activeDeleteMenu, setActiveDeleteMenu] = useState<number | null>(null);
+  
+  const { data: myPageBookMarkData, isLoading, refetch } = useMyPageBookMarkList(
     currentPage,
     sort
   );
 
   const handleDetailClick = (placeId: number) => {
     router.push(`/Travel/${placeId}`);
+  };
+
+  const handleToggleDeleteMenu = (placeId: number, e: React.MouseEvent) => {
+    e.stopPropagation(); // 부모 클릭 이벤트 방지
+    setActiveDeleteMenu(activeDeleteMenu === placeId ? null : placeId);
+  };
+
+  const handleDeleteBookmark = async (placeId: number, e: React.MouseEvent) => {
+    e.stopPropagation(); // 부모 클릭 이벤트 방지
+    try {
+      await BookMarkDeleteApi(placeId);
+      setActiveDeleteMenu(null);
+      await refetch(); // 북마크 목록 새로고침
+    } catch (error) {
+      console.error('북마크 삭제 실패:', error);
+    }
   };
 
   if (isLoading) {
@@ -77,6 +97,28 @@ const BookMark = () => {
               className={styles.bookmarkCard}
               onClick={() => handleDetailClick(place.placeId)}
             >
+              {/* 옵션 메뉴 */}
+              <div className={styles.hoverMenu}>
+                <div
+                  className={styles.threeDots}
+                  onClick={(e) =>
+                    handleToggleDeleteMenu(place.placeId, e)
+                  }
+                >
+                  <Image src={moreBtn} alt={'moreBtn'} width={14} height={2} />
+                </div>
+                {activeDeleteMenu === place.placeId && (
+                  <div className={styles.deleteMenu}>
+                    <button
+                      className={styles.deleteButton}
+                      onClick={(e) => handleDeleteBookmark(place.placeId, e)}
+                    >
+                      북마크 삭제
+                    </button>
+                  </div>
+                )}
+              </div>
+              
               <div className={styles.imageContainer}>
                 {place.thumbnailUrl ? (
                   <Image
@@ -93,11 +135,11 @@ const BookMark = () => {
               </div>
               <div className={styles.placeInfo}>
                 <div className={styles.placeName}>
-                  {` ${truncateText(`${place.placeName}`, 10)}`}
+                  {` ${truncateText(`${place.placeName}`, 21)}`}
                 </div>
                 <p className={styles.placeDetailAddress}>
                   <Image src={locationIcon} alt='장소' width={15} height={21} />
-                  {` ${truncateText(`${place.address} ${place.detailAddress ?? ''}`, 16)}`}
+                  {` ${truncateText(`${place.address} ${place.detailAddress ?? ''}`, 21)}`}
                 </p>
               </div>
             </div>
