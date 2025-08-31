@@ -40,25 +40,25 @@ export default function SchedulePage() {
   // 무한 스크롤을 위한 관찰자 요소 참조
   const observerRef = useRef<HTMLDivElement | null>(null);
   const [isIntersecting, setIsIntersecting] = useState(false);
-
+  
   // 모달 및 메뉴 상태 관리
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeDeleteMenu, setActiveDeleteMenu] = useState<number | null>(null);
   const [selectedScheduleId, setSelectedScheduleId] = useState<number | null>(
-    null
+    null,
   );
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const [selectedTab, setSelectedTab] = useState<'all' | 'share'>('all');
-
+  
   // 알림 상태 관리
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertSeverity, setAlertSeverity] = useState<
     'success' | 'error' | 'warning' | 'info'
   >('info');
-
+  
   // 검색어 변경 핸들러
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
@@ -76,7 +76,7 @@ export default function SchedulePage() {
       setAlertOpen(true);
     }
   };
-
+  
   // 검색 아이콘 클릭 핸들러
   const handleSearchClick = () => {
     if (searchKeyword.trim()) {
@@ -85,7 +85,7 @@ export default function SchedulePage() {
       setIsSearching(false);
     }
   };
-
+  
   // 내 일정 목록 조회 쿼리 (전체 탭 선택 & 검색 중이 아닐 때)
   const {
     data: allScheduleData,
@@ -95,7 +95,7 @@ export default function SchedulePage() {
     hasNextPage: hasNextAllPage,
     isFetchingNextPage: isFetchingNextAllPage,
   } = useScheduleList(selectedTab === 'all' && !isSearching && !!isAuthenticated);
-
+  
   // 공유받은 일정 목록 조회 쿼리 (공유 탭 선택 & 검색 중이 아닐 때)
   const {
     data: sharedScheduleData,
@@ -105,7 +105,7 @@ export default function SchedulePage() {
     hasNextPage: hasNextSharedPage,
     isFetchingNextPage: isFetchingNextSharedPage,
   } = useSharedScheduleList(selectedTab === 'share' && !isSearching && !!isAuthenticated);
-
+  
   // 일정 검색 쿼리 (검색 중일 때)
   const {
     data: searchData,
@@ -113,28 +113,28 @@ export default function SchedulePage() {
     hasNextPage: hasNextSearchPage,
     isFetchingNextPage: isFetchingNextSearchPage,
   } = useScheduleListSearch(searchKeyword, selectedTab, isSearching && !!isAuthenticated);
-
+  
   // 현재 상태에 따른 무한 스크롤 페이지네이션 함수 선택
   const fetchNextPage = isSearching
     ? fetchNextSearchPage
     : selectedTab === 'all'
       ? fetchNextAllPage
       : fetchNextSharedPage;
-
+  
   // 현재 상태에 따른 다음 페이지 존재 여부 확인
   const hasNextPage = isSearching
     ? hasNextSearchPage
     : selectedTab === 'all'
       ? hasNextAllPage
       : hasNextSharedPage;
-
+  
   // 현재 상태에 따른 페이지 로딩 상태 확인
   const isFetchingNextPage = isSearching
     ? isFetchingNextSearchPage
     : selectedTab === 'all'
       ? isFetchingNextAllPage
       : isFetchingNextSharedPage;
-
+  
   // 무한 스크롤을 위한 Intersection Observer 설정 및 다음 페이지 로드 로직
   useEffect(() => {
     // IntersectionObserver 콜백 함수 정의
@@ -151,17 +151,17 @@ export default function SchedulePage() {
     const observer = new IntersectionObserver(handleObserver, {
       root: null, // viewport 기준
       rootMargin: '0px',
-      threshold: 0.2 // 20% 이상 보이면 콜백 실행
+      threshold: 0.2, // 20% 이상 보이면 콜백 실행
     });
-  
+    
     // 현재 관찰 대상 요소
     const currentObserverRef = observerRef.current;
-  
+    
     // 관찰 대상이 있으면 관찰 시작
     if (currentObserverRef) {
       observer.observe(currentObserverRef);
     }
-  
+    
     // 컴포넌트 언마운트 시 관찰 중지
     return () => {
       if (currentObserverRef) {
@@ -170,7 +170,7 @@ export default function SchedulePage() {
       observer.disconnect();
     };
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
-
+  
   // 로그인 상태에 따른 스크롤 제어
   useEffect(() => {
     if (!isAuthenticated) {
@@ -180,7 +180,7 @@ export default function SchedulePage() {
       document.body.style.overflow = 'auto';
     };
   }, [isAuthenticated]);
-
+  
   // API 에러 처리
   useEffect(() => {
     if (isAllScheduleError || isSharedScheduleError) {
@@ -189,14 +189,14 @@ export default function SchedulePage() {
       setAlertOpen(true);
     }
   }, [isAllScheduleError, isSharedScheduleError]);
-
+  
   /**
    * 새 일정 모달 열기 핸들러
    */
   const handleOpenModal = () => {
     setIsModalOpen(true);
   };
-
+  
   /**
    * 일정 옵션 메뉴 토글 핸들러
    * @param scheduleId 선택한 일정 ID
@@ -204,14 +204,14 @@ export default function SchedulePage() {
    */
   const handleToggleDeleteMenu = (
     scheduleId: number,
-    event: React.MouseEvent
+    event: React.MouseEvent,
   ) => {
     event.stopPropagation();
     setActiveDeleteMenu((prevId) =>
-      prevId === scheduleId ? null : scheduleId
+      prevId === scheduleId ? null : scheduleId,
     );
   };
-
+  
   /**
    * 일정 삭제 확인 핸들러
    * 삭제 모달에서 확인 버튼 클릭 시 실행
@@ -237,7 +237,7 @@ export default function SchedulePage() {
       }
     }
   };
-
+  
   /**
    * 일정 삭제 버튼 클릭 핸들러
    * 삭제 확인 모달을 표시
@@ -246,14 +246,14 @@ export default function SchedulePage() {
     event.stopPropagation();
     setIsDeleteModalOpen(true);
   };
-
+  
   /**
    * 공유받은 일정 나가기 핸들러
    * @param scheduleId 나갈 일정 ID
    */
   const handleLeaveSchedule = async (scheduleId: number) => {
     if (!scheduleId) return;
-
+    
     try {
       const response = await leaveSchedule(scheduleId);
       if (response.success) {
@@ -272,7 +272,7 @@ export default function SchedulePage() {
       setAlertOpen(true);
     }
   };
-
+  
   /**
    * 일정 상세 페이지로 이동하는 핸들러
    * 옵션 메뉴가 열려 있지 않을 때만 동작
@@ -284,7 +284,7 @@ export default function SchedulePage() {
       router.push(`/Schedule/${scheduleId}`);
     }
   };
-
+  
   /**
    * 알림창 닫기 핸들러
    * @param event 이벤트 객체
@@ -292,12 +292,12 @@ export default function SchedulePage() {
    */
   const handleAlertClose = (
     event?: React.SyntheticEvent | Event,
-    reason?: string
+    reason?: string,
   ) => {
     if (reason === 'clickaway') return;
     setAlertOpen(false);
   };
-
+  
   /**
    * 일정 목록 렌더링 함수
    * 데이터 상태에 따라 일정 목록 또는 빈 상태 화면을 렌더링
@@ -308,7 +308,7 @@ export default function SchedulePage() {
    */
   const renderSchedules = (
     scheduleListData: ApiResponse<ScheduleList>[] | undefined,
-    isSearching: boolean
+    isSearching: boolean,
   ) => {
     // 데이터가 없거나 모든 페이지에 데이터가 없는 경우
     if (!scheduleListData || scheduleListData.length === 0 || !scheduleListData[0]?.data) {
@@ -317,7 +317,7 @@ export default function SchedulePage() {
         <div className={styles.noScheduleContainer}>
           <Image
             src={NoscheduleIcon}
-            alt='일정 없음 아이콘'
+            alt="일정 없음 아이콘"
             width={286}
             height={180}
           />
@@ -325,19 +325,19 @@ export default function SchedulePage() {
         </div>
       );
     }
-  
+    
     // 모든 페이지의 일정을 하나의 배열로 합침
     const allSchedules: Schedule[] = scheduleListData.flatMap(
-      (page) => page.data?.content || []
+      (page) => page.data?.content || [],
     );
-  
+    
     // 일정이 없는 경우
     if (allSchedules.length === 0) {
       return (
         <div className={styles.noScheduleContainer}>
           <Image
             src={NoscheduleIcon}
-            alt='일정 없음 아이콘'
+            alt="일정 없음 아이콘"
             width={286}
             height={180}
           />
@@ -348,7 +348,7 @@ export default function SchedulePage() {
         </div>
       );
     }
-  
+    
     // 일정 목록 렌더링
     return allSchedules.map((schedule: Schedule) => (
       <div
@@ -400,7 +400,7 @@ export default function SchedulePage() {
         {schedule.thumbnailUrl ? (
           <Image
             src={schedule.thumbnailUrl}
-            alt='여행 루트 이미지'
+            alt="여행 루트 이미지"
             className={styles.scheduleImage}
             width={414}
             height={174}
@@ -418,7 +418,7 @@ export default function SchedulePage() {
           </div>
           <Image
             src={schedule.author?.profileUrl ?? ''}
-            alt='프로필 이미지'
+            alt="프로필 이미지"
             className={styles.scheduleImageProfile}
             width={38}
             height={38}
@@ -427,39 +427,39 @@ export default function SchedulePage() {
       </div>
     ));
   };
-
+  
   if (isAllScheduleLoading || isSharedScheduleLoading) {
     return <DataLoading />;
   }
-
+  
   if (isLoading) {
     return <DataLoading />;
   }
-
+  
   if (!isAuthenticated) {
     return <LoginModal />;
   }
-
+  
   if (isAllScheduleError || isSharedScheduleError) {
     return <div>일정 목록을 불러오는 중 오류가 발생했습니다.</div>;
   }
-
+  
   return (
     <div className={styles.schedule}>
       <Head>
         <title>최근 일정 - 나만의 여행 계획 보기</title>
         <meta
-          name='description'
-          content='여행 일정 관리 페이지에서 최근 계획을 확인하고 수정해보세요. 여행 계획을 관리하고 원하는 일정을 검색할 수 있습니다.'
+          name="description"
+          content="여행 일정 관리 페이지에서 최근 계획을 확인하고 수정해보세요. 여행 계획을 관리하고 원하는 일정을 검색할 수 있습니다."
         />
-        <meta name='viewport' content='width=device-width, initial-scale=1' />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <div className={styles.scheduleTop}>
         <div className={styles.scheduleView}>
           <Image
             className={styles.scheduleImg}
             src={ScheduleImage}
-            alt='일정 목록 이미지'
+            alt="일정 목록 이미지"
             priority
           />
           <div className={styles.overlay} />
@@ -494,7 +494,7 @@ export default function SchedulePage() {
                 {allScheduleData?.pages[0]?.data?.totalElements ?? 0}
               </span>
             </div>
-
+            &nbsp;&nbsp;&nbsp;
             <div
               className={`${styles.scheduleCounterShare} ${selectedTab === 'share' ? styles.activeTab : ''}`}
               onClick={() => setSelectedTab('share')}
@@ -507,11 +507,11 @@ export default function SchedulePage() {
               </span>
             </div>
           </div>
-
+          
           <div className={styles.travelSearchContainer}>
             <input
-              type='text'
-              placeholder='일정을 검색하세요.'
+              type="text"
+              placeholder="일정을 검색하세요."
               value={searchKeyword}
               onChange={handleSearchChange}
             />
@@ -522,7 +522,7 @@ export default function SchedulePage() {
               <Image
                 style={{ marginLeft: '-5px' }}
                 src={searchIcon}
-                alt='돋보기'
+                alt="돋보기"
                 width={21}
                 height={21}
               />
@@ -536,7 +536,7 @@ export default function SchedulePage() {
               : selectedTab === 'all'
                 ? allScheduleData?.pages as ApiResponse<ScheduleList>[]
                 : sharedScheduleData?.pages as ApiResponse<ScheduleList>[],
-            isSearching
+            isSearching,
           )}
         </div>
         <div
@@ -558,7 +558,7 @@ export default function SchedulePage() {
           />
         )}
         {isModalOpen && (
-          <CalendarLayout mode='create' onClose={() => setIsModalOpen(false)} />
+          <CalendarLayout mode="create" onClose={() => setIsModalOpen(false)} />
         )}
       </div>
       <Snackbar

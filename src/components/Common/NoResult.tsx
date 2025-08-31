@@ -20,7 +20,8 @@ export default function NoResultLayout() {
   } else if (isBookmarkPage) {
     containerStyles = {
       width: '948px',
-      height: '524px',
+      height: '490px',
+      borderRadius : '20px'
     };
   } else if (isSchedulePage) {
     containerStyles = {
@@ -72,7 +73,6 @@ export default function NoResultLayout() {
         alt={isBookmarkPage ? 'empty-bookmark' : 'no-schedule-root'}
         width={isBookmarkPage ? 206 : 69}
         height={isBookmarkPage ? 118 : 69}
-        style={{ marginLeft: isBookmarkPage ? '120px' : '0' }}
       />
       
       <div style={styles.noText}>

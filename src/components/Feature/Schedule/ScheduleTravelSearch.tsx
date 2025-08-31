@@ -27,7 +27,7 @@ const ScheduleTravelSearch = () => {
   const [isSearchLoading, setIsSearchLoading] = useState(false);
   const markersRef = useRef<any[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
-  
+
   // 알림 관련 상태 추가
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
@@ -52,14 +52,14 @@ const ScheduleTravelSearch = () => {
     };
     loadTravelRoutes();
   }, [fetchAndMergeRoutes, scheduleId]);
-  
+
   // 기본 리스트 쿼리
   const travelListQuery = useScheduleTravelList(
     Number(scheduleId),
     currentPage,
     !isSearching
   );
-  
+
   // 검색 리스트 쿼리
   const searchTravelQuery = useTravelListByLocation(
     Number(scheduleId),
@@ -111,21 +111,23 @@ const ScheduleTravelSearch = () => {
       addPlaceToRoute(place);
     }
   };
-  
+
   // 검색어 변경 핸들러 - 특수문자 제한 추가
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
     const regex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9 ]*$/;
-    
+
     if (regex.test(input)) {
       setSearchKeyword(input);
     } else {
-      setAlertMessage('특수문자는 사용할 수 없습니다. 다른 검색어를 입력해 주세요.');
+      setAlertMessage(
+        '특수문자는 사용할 수 없습니다. 다른 검색어를 입력해 주세요.'
+      );
       setAlertSeverity('warning');
       setAlertOpen(true);
     }
   };
-  
+
   // 검색 버튼 클릭 핸들러
   const handleSearch = () => {
     if (searchKeyword.trim()) {
@@ -143,12 +145,14 @@ const ScheduleTravelSearch = () => {
         <input
           ref={inputRef}
           type='text'
-          placeholder='원하는 여행지를 검색하세요'
+          placeholder='원하는 여행지를 검색하세요.'
           value={searchKeyword}
           onChange={handleSearchInputChange}
           onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
         />
-        <button onClick={handleSearch}>검색</button>
+        <button onClick={handleSearch} className={styles.searchButton}>
+          검색
+        </button>
       </div>
       <div className={styles.travelList}>
         {isSearching && searchTravelQuery.isLoading ? (

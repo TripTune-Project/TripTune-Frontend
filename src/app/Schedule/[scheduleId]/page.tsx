@@ -196,11 +196,11 @@ export default function ScheduleDetailPage() {
             </Link>
           </li>
         </ul>
-        <button className={styles.scheduleUpdateBtn} onClick={handleShareClick}>
+        <button className={styles.scheduleShareBtn} onClick={handleShareClick}>
           공유
         </button>
         <button
-          className={styles.scheduleShareBtn}
+          className={styles.scheduleUpdateBtn}
           onClick={handleSaveSchedule}
         >
           저장

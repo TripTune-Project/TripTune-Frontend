@@ -426,8 +426,8 @@ const TravelPageContent = () => {
                             <Image
                               src={locationIcon}
                               alt='장소'
-                              width={8}
-                              height={12}
+                              width={7}
+                              height={11}
                             />
                             &nbsp;
                             {place.address} {place.detailAddress}

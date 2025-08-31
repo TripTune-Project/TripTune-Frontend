@@ -203,32 +203,50 @@
 }
 
 .scheduleExplainDiv {
-    font-size: 1.6rem;
-    font-weight: 700;
     margin-bottom: 10px;
     color: #FFFFFF;
     letter-spacing: -1px;
+    text-align: center;
+    font-family: NOto Sans KR, sans-serif;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 125%; /* 30px */
 }
 
 .scheduleExplainP {
-    font-size: 1.05rem;
-    font-weight: 400;
     margin-bottom: 18px;
     color: #ffffff;
+    text-align: center;
+    font-family: NOto Sans KR, sans-serif;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 135%; /* 24.3px */
 }
 
 .createAddButton {
-    width: 180px;
-    height: 44px;
-    font-size: 1rem;
-    border-radius: 22px;
     color: #fff;
-    background: #222;
-    font-weight: 600;
     border: none;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     transition: background 0.2s;
     margin-top: 8px;
+    display: flex;
+    width: 254px;
+    height: 48px;
+    padding: 10px 20px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    border-radius: 50px;
+    background: #000;
+    text-align: center;
+    font-family: NOto Sans KR, sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 140%; /* 22.4px */
 }
 
 .createAddButton:hover {
@@ -253,9 +271,19 @@
 }
 
 .tabContainer {
-    display: flex;
+    width:401px;
     align-items: center;
-    gap: 0px;
+    gap: 0;
+    margin-top: 21px;
+    margin-left:30px;
+    margin-bottom: 10px;
+    display: inline-flex;
+    font-family: Noto Sans KR, sans-serif;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 125%; /* 27.5px */
+
 }
 
 .scheduleCounter,
@@ -267,7 +295,7 @@
     margin: 0 10px 0 0;
     padding: 8px 22px;
     border-radius: 8px;
-    border:none;
+    border: none;
     color: #222;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     transition: border 0.2s, color 0.2s;
@@ -277,15 +305,17 @@
 .scheduleCounter.activeTab,
 .scheduleCounterShare.activeTab {
     color: #76adac;
-    border:none;
+    border: none;
+    width:54px;
+    height:34px;
 }
 
 .scheduleCounter .counterNumber,
 .scheduleCounterShare .counterNumber {
+    width:54px;
+    height:34px;
     display: inline-block;
     background-color: #666;
-    font-size: 0.98rem;
-    font-weight: 700;
     color: #fff;
     padding: 3px 12px;
     border-radius: 16px;
@@ -337,7 +367,7 @@
 .threeDots {
     position: absolute;
     top: 25px;
-    right: 10px;
+    right: 30px;
     padding: 5px;
     display: flex;
     justify-content: center;
@@ -384,21 +414,28 @@
 }
 
 .scheduleContent {
-    padding: 12px;
+    padding: 13px 23px;
 }
 
 .scheduleName {
-    font-weight: bold;
-    font-size: 20px;
     margin-left: 23px;
     margin-top: 18px;
     margin-bottom: 15px;
+    color: #000;
+    font-family: Noto Sans KR, sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%; /* 22.4px */
 }
 
 .scheduleDates {
-    color: #555;
     font-size: 16px;
-    margin-left: 23px;
+    color: #333;
+    font-family: Noto Sans KR, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%; /* 16.5px */
 }
 
 .emptyMessage {
@@ -410,26 +447,44 @@
 }
 
 /* 일정만들기 : 일정 기본 틀 */
-.scheduleUpdateBtn,
-.scheduleShareBtn {
-    background-color: #76adac;
-    color: #ffffff;
-    padding: 12px 24px;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    width: 89px;
-    height: 52px;
+.scheduleUpdateBtn {
+    display: inline-flex;
+    width: 81px;
+    height: 44px;
+    padding: 6px 12px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
     flex-shrink: 0;
-    font-family: 'Noto Sans KR', sans-serif;
-    transition: background-color 0.3s ease;
-    margin-left: -500px;
+    background: #004A55;
+    color: #FFF;
+    text-align: center;
+    font-family: Noto Sans KR, sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    margin-left: -300px;
 }
 
 .scheduleShareBtn {
-    margin-left: -300px;
-    background-color: #f5f5f5;
-    color: #000000;
+    margin-left: -500px;
+    display: flex;
+    width: 81px;
+    height: 44px;
+    padding: 6px 12px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    background: #F5F5F5;
+    color: #000;
+    text-align: center;
+    font-family: Noto Sans KR, sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%; /* 22.4px */
 }
 
 .pageContainer {
@@ -440,17 +495,9 @@
     flex-direction: column;
 }
 
-.tabContainer {
-    margin-left: 0px;
-    margin-top: 21px;
-    display: inline-flex;
-    margin-bottom: 10px;
-    gap: 0px;
-}
-
 .tabButton {
     display: flex;
-    width: 230px;
+    width: 200px;
     height: 60px;
     flex-direction: column;
     align-items: center;
@@ -485,9 +532,9 @@
     display: flex;
     border-bottom: 2px solid #d9d9d9;
     width: 400px;
-    margin-top:39px;
-    margin-bottom:17px;
-    margin-left:36px;
+    margin-top: 39px;
+    margin-bottom: 17px;
+    margin-left: 36px;
 }
 
 .input {
@@ -673,9 +720,9 @@
 
 .placeName {
     margin-top: 16px;
-    margin-bottom:16px;
+    margin-bottom: 16px;
     font-size: 12px;
-    height:15px;
+    height: 15px;
     font-weight: bold;
     font-family: 'Noto Sans KR', sans-serif;
     color: #333;
@@ -818,7 +865,7 @@
 
 .addButton {
     width: 34px;
-    height: 80px;
+    height: 71px;
     color: #74a5da;
     background-color: #f5f5f5;
     font-size: 24px;
@@ -866,19 +913,20 @@
     justify-content: center;
     margin-bottom: 20px;
     margin-top: 0;
-    margin-right: 0;
+    margin-right: 23px;
     gap: 10px;
 }
 
 .travelSearchContainerSearch input,
 .travelSearchContainer input {
     width: 334px;
-    height:41px;
+    height: 41px;
     padding: 10px 15px;
     font-size: 12px;
     border-radius: 10px;
     border: 1px solid #ccc;
     transition: all 0.3s ease;
+    margin-left:30px;
 }
 
 .travelSearchContainerSearch input:focus,
@@ -895,6 +943,8 @@
     cursor: pointer;
     font-size: 16px;
     transition: all 0.3s ease;
+    background-color : #74a5da;
+    color: white;
 }
 
 .travelList {
@@ -922,6 +972,12 @@
     padding: 14px;
     background-color: #ffffff;
     border-bottom: 1px solid #e0e0e0;
+    color: #000;
+    font-family: Noto Sans KR, sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 130%; /* 26px */
 }
 
 .headerMenu {
@@ -1168,51 +1224,56 @@
     justify-content: center;
     margin-top: 30px;
     color: #555;
-    width: 90vw;
-    height: 559px;
+    width: 1297px;
+    height: 600px;
     flex-shrink: 0;
     border: 1px solid #d9d9d9;
     background-color: #ffffff;
 }
 
 .noScheduleMessage {
-    font-size: 22px;
-    font-weight: bold;
-    color: #333;
     margin-bottom: 10px;
+    color: #666;
+    text-align: center;
+    font-family: Noto Sans KR, sans-serif;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 135%; /* 24.3px */
 }
 
 .noScheduleSubMessage {
-    font-size: 18px;
-    color: #777;
+    color: #666;
+    text-align: center;
+    font-family: Noto Sans KR, sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%; /* 22.4px */
 }
 
 .travelSearchContainer {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    margin-top: 0;
-    margin-bottom: 0;
-    margin-left: auto;
-    margin-right: 0;
+    margin: 0 0 0 auto;
     gap: 8px;
-    background: #fff;
-    border-radius: 12px;
     box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.06);
     padding: 10px 20px;
-    max-width: 460px;
+    width: 471px;
+    height: 50px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    border: 1px solid #D9D9D9;
+    background: #FFF;
 }
 
 .travelSearchContainer input {
-    /*width: 220px;*/
     height: 40px;
     font-size: 17px;
     border-radius: 8px;
     background-color: transparent;
-    /*border: 1px solid #e0e7ef;*/
     border: none;
-    /*box-shadow: none;*/
-    /*padding: 0 16px;*/
     margin-right: 0;
 }
 
@@ -1258,7 +1319,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 417px;
+    width: 416px;
     height: 308px;
     display: flex;
     justify-content: center;

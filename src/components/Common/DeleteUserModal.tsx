@@ -81,48 +81,64 @@ const Divider = styled.hr`
 
 const Info = styled.div`
   position: relative;
-  width: 429px;
+  width: 433px;
   margin: 26px auto;
-  font-size: 15px;
-  line-height: 18px;
   color: #000000;
+  font-family: NOto Sans KR, sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 505;
+  line-height: 145%; /* 20.3px */
 `;
 
 const Card = styled.div`
+  margin-top:9px;
   position: relative;
-  width: 429px;
-  height: 155px;
-  margin: 14px 0;
+  width: 433px;
+  height: 162px;
+  flex-shrink: 0;
   background: rgba(237, 249, 247, 0.3);
   border: 2px solid #76adac;
   border-radius: 10px;
-  color: #333333;
+  padding:12px 9px;
+  color: #333;
+  font-family: NOto Sans KR, sans-serif;
   font-size: 11px;
-  line-height: 23px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 210%; /* 23.1px */
 `;
 
 const PasswordSection = styled.div`
   position: relative;
-  width: 429px;
+  width: 433px;
   margin: 29px auto;
 `;
 
 const PasswordLabel = styled.div`
-  font-size: 14px;
-  font-weight: 600;
   color: #000000;
   margin-bottom: 8px;
+  font-family: NOto Sans KR, sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 18px */
 `;
 
 const PasswordNotice = styled.div`
-  font-size: 10px;
-  color: #f86c6c;
   margin-bottom: 10px;
+  color: #F86C6C;
+  font-family: NOto Sans KR, sans-serif;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 15px */
+  width:435px;
 `;
 
 const PasswordInput = styled.div`
   position: relative;
-  width: 429px;
+  width: 433px;
   height: 40px;
   margin-top: 9px;
   border: 1px solid #838282;
@@ -141,36 +157,33 @@ const InputField = styled.input`
 
 const DeactivateButton = styled.button`
   position: relative;
-  width: 429px;
-  height: 40px;
+  width: 433px;
+  height: 45px;
   margin: 15px auto;
   cursor: pointer;
   background: #76adac;
   color: #ffffff;
-  font-size: 15px;
-  font-weight: 700;
   border: none;
   border-radius: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 10px 20px;
+  gap: 10px;
+  flex-shrink: 0;
+  text-align: center;
+  font-family: NOto Sans KR, sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 140%; /* 22.4px */
 
   &:hover {
     background: #5d8c8b;
   }
 `;
 
-const LitsItem = styled.li`
-  margin-top: 12px;
-  margin-left: 20px;
-  line-height: 1.6;
-`;
-
-const LitsItemLast = styled.div`
-  margin-top: 12px;
-  margin-left: 35px;
-  line-height: 1.6;
-`;
+const ListItem = styled.li``;
 
 interface DeleteUserModalProps {
   isOpen: boolean;
@@ -226,18 +239,11 @@ const DeleteUserModal = ({
         <Info>
           <div>탈퇴 전 안내 사항</div>
           <Card>
-            <LitsItem>
-              닉네임, 프로필 사진, 이메일을 포함한 개인정보를 삭제합니다.
-            </LitsItem>
-            <LitsItem>작성한 일정, 채팅, 북마크 기록 모두 삭제합니다.</LitsItem>
-            <LitsItem>
-              계정 탈퇴 진행 시 삭제한 데이터를 복구할 수 없습니다.
-            </LitsItem>
-            <LitsItem>
-              계정 탈퇴 처리 후에는 계정을 되돌릴 수 없으며, 해당 이메일은
-              영구적으로 삭제되어
-            </LitsItem>
-            <LitsItemLast>재가입이 불가됩니다.</LitsItemLast>
+            <li>닉네임, 프로필 사진, 이메일을 포함한 개인정보를 삭제합니다.</li>
+            <li>작성한 일정, 채팅, 북마크 기록 모두 삭제합니다.</li>
+            <li>계정 탈퇴 진행 시 삭제한 데이터를 복구할 수 없습니다.</li>
+            <li>계정 탈퇴 처리 후 동일한 이메일로 재가입이 불가능하며 계정을 되돌릴 수 없습니다.</li>
+            <li>계정 탈퇴 처리 후 연동된 소셜 계정 정보도 사라지며 소셜 로그인으로 기존 계정 이용이 불가능합니다.</li>
           </Card>
         </Info>
         <PasswordSection>

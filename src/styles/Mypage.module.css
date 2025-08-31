@@ -227,19 +227,32 @@
     width: 488px;
     height: 47px;
     border-radius: 5px;
-    font-size: 16px;
     padding-left: 15px;
+    box-sizing: border-box;
+    flex: 1;
+    background: #F9F9F9;
+    color: #848282;
+    font-family: NOto Sans KR, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 145%; /* 20.3px */
 }
 
 .input {
-    max-width: 480px;
+    width: 564px;
     height: 47px;
     border-radius: 5px;
-    font-size: 16px;
     padding: 0 10px;
     box-sizing: border-box;
     flex: 1;
-    width: 480px;
+    background: #F9F9F9;
+    color: #848282;
+    font-family: NOto Sans KR, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 145%; /* 20.3px */
 }
 
 .inputError,
@@ -724,19 +737,22 @@
 }
 
 .requestBtn {
-    width: 106px;
-    height: 55px;
-    background-color: #363636;
-    color: #ffffff;
-    font-size: 15px;
-    font-weight: 400;
-    border: none;
-    cursor: pointer;
-    margin-left: 10px;
     display: flex;
-    align-items: center;
+    width: 102px;
+    height: 47px;
+    padding: 8px 12px;
     justify-content: center;
-    min-width: 106px;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    background: #F5F5F5;
+    color: #333;
+    text-align: center;
+    font-family: NOto Sans KR, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 145%; /* 20.3px */
 }
 
 .requestBtn:disabled {
@@ -747,19 +763,23 @@
 }
 
 .verifyBtn {
-    width: 106px;
-    height: 55px;
-    background-color: #57c5b6;
-    color: #ffffff;
-    font-size: 16px;
-    font-weight: 700;
-    border: none;
-    cursor: pointer;
-    margin-left: 10px;
-    display: flex;
-    align-items: center;
+    display: inline-flex;
+    width: 102px;
+    height: 47px;
+    padding: 8px 14px;
     justify-content: center;
-    min-width: 106px;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    border: 1.5px solid #76ADAC;
+    background: #FFF;
+    color: #76ADAC;
+    text-align: center;
+    font-family: NOto Sans KR, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 505;
+    line-height: 145%; /* 20.3px */
 }
 
 .verifyBtn:disabled {

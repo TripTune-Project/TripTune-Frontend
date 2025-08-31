@@ -139,7 +139,7 @@ const ScheduleRoute = () => {
         <div className={styles.placeInfo}>
           <div className={styles.placeName}>{place.placeName}</div>
           <p className={styles.placeDetailAddress}>
-            <Image src={locationIcon} alt='장소' width={15} height={21} />
+            <Image src={locationIcon} alt='장소' width={7} height={11} />
             &nbsp;{place.address} {place.detailAddress ?? ''}
           </p>
         </div>

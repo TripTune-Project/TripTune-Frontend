@@ -138,7 +138,7 @@ const BookMark = () => {
                   {` ${truncateText(`${place.placeName}`, 21)}`}
                 </div>
                 <p className={styles.placeDetailAddress}>
-                  <Image src={locationIcon} alt='장소' width={15} height={21} />
+                  <Image src={locationIcon} alt='장소' width={7} height={11} />
                   {` ${truncateText(`${place.address} ${place.detailAddress ?? ''}`, 21)}`}
                 </p>
               </div>
