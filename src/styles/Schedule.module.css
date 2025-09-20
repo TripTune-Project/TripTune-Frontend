@@ -167,13 +167,6 @@
     background: #f7f8fb;
 }
 
-.scheduleImg {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-    filter: brightness(0.92);
-}
-
 .overlay {
     display: none;
 }
@@ -185,6 +178,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    background: url('/assets/images/일정 만들기/일정 목록 조회/computer.png') center/cover no-repeat;
 }
 
 .scheduleText {
@@ -271,11 +265,11 @@
 }
 
 .tabContainer {
-    width:401px;
+    width: 401px;
     align-items: center;
     gap: 0;
     margin-top: 21px;
-    margin-left:30px;
+    margin-left: 30px;
     margin-bottom: 10px;
     display: inline-flex;
     font-family: Noto Sans KR, sans-serif;
@@ -306,14 +300,14 @@
 .scheduleCounterShare.activeTab {
     color: #76adac;
     border: none;
-    width:54px;
-    height:34px;
+    width: 54px;
+    height: 34px;
 }
 
 .scheduleCounter .counterNumber,
 .scheduleCounterShare .counterNumber {
-    width:54px;
-    height:34px;
+    width: 54px;
+    height: 34px;
     display: inline-block;
     background-color: #666;
     color: #fff;
@@ -430,7 +424,7 @@
 }
 
 .scheduleDates {
-    font-size: 16px;
+    font-size: 14px;
     color: #333;
     font-family: Noto Sans KR, sans-serif;
     font-style: normal;
@@ -926,7 +920,7 @@
     border-radius: 10px;
     border: 1px solid #ccc;
     transition: all 0.3s ease;
-    margin-left:30px;
+    margin-left: 30px;
 }
 
 .travelSearchContainerSearch input:focus,
@@ -943,7 +937,7 @@
     cursor: pointer;
     font-size: 16px;
     transition: all 0.3s ease;
-    background-color : #74a5da;
+    background-color: #74a5da;
     color: white;
 }
 
