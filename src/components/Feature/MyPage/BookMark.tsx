@@ -6,7 +6,7 @@ import { useMyPageBookMarkList } from '@/hooks/useMyPage';
 import { useMyPageBookMarkStore } from '@/store/myPageBookMarkStore';
 import NoResultLayout from '@/components/Common/NoResult';
 import locationIcon from '../../../../public/assets/images/여행지 탐색/홈화면/placeHome_mapIcon.png';
-import moreBtn from '../../../../public/assets/images/일정 만들기/일정 목록 조회/moreBtn.png';
+import bookmarkIcon from '../../../../public/assets/images/마이페이지/bookmarkIcon.png';
 import styles from '@/styles/Mypage.module.css';
 import DataLoading from '@/components/Common/DataLoading';
 import { BookmarkPlace } from '@/types/myPage';
@@ -97,7 +97,7 @@ const BookMark = () => {
               className={styles.bookmarkCard}
               onClick={() => handleDetailClick(place.placeId)}
             >
-              {/* 옵션 메뉴 */}
+               {/*옵션 메뉴*/}
               <div className={styles.hoverMenu}>
                 <div
                   className={styles.threeDots}
@@ -105,7 +105,9 @@ const BookMark = () => {
                     handleToggleDeleteMenu(place.placeId, e)
                   }
                 >
-                  <Image src={moreBtn} alt={'moreBtn'} width={14} height={2} />
+                  <div className={styles.bookmarkIconBox}>
+                    <Image src={bookmarkIcon} alt={'bookmarkIcon'} width={14} height={2} />
+                  </div>
                 </div>
                 {activeDeleteMenu === place.placeId && (
                   <div className={styles.deleteMenu}>

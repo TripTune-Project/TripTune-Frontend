@@ -991,6 +991,21 @@
     z-index: 100;
 }
 
+.bookmarkIconBox {
+    display: flex;
+    width: 23px;
+    height: 23px;
+    padding: 5px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    border-radius: 5px;
+    border: 1px solid #E8E8E8;
+    background: #FFF;
+}
+
 .deleteButton {
     background-color: #f44336;
     color: #ffffff;
