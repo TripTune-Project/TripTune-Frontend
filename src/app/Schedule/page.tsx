@@ -394,12 +394,6 @@ export default function SchedulePage() {
       </Head>
       <div className={styles.scheduleTop}>
         <div className={styles.scheduleView}>
-          <Image
-            className={styles.scheduleImg}
-            src={ScheduleImage}
-            alt="일정 목록 이미지"
-            priority
-          />
           <div className={styles.overlay} />
           <div className={styles.scheduleContent}>
             <div className={styles.scheduleText}>
