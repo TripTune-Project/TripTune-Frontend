@@ -26,10 +26,8 @@ const Account = () => {
   const router = useRouter();
   const { userData, fetchUserData } = useMyPage();
 
-
   const [emailRequestLoading, setEmailRequestLoading] = useState(false);
   const [emailConfirmLoading, setEmailConfirmLoading] = useState(false);
-
   const [emailRequestSuccess, setEmailRequestSuccess] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -85,10 +83,13 @@ const Account = () => {
       setAlertMessage('인증 요청이 성공적으로 완료되었습니다.');
       setAlertSeverity('success');
       setAlertOpen(true);
-      setEmailRequestSuccess(true); // 요청 성공 여부는 UI 알림으로 남겨두지만, 버튼 비활성화에는 사용하지 않음
+      setEmailRequestSuccess(true);
     } catch (error: any) {
       console.error('이메일 인증 요청 실패:', error.message);
-      if (error.message === '이미 존재하는 이메일입니다.' || error.message === '이미 가입되어 있는 이메일입니다.') {
+      if (
+        error.message === '이미 존재하는 이메일입니다.' ||
+        error.message === '이미 가입되어 있는 이메일입니다.'
+      ) {
         setAlertMessage('이미 가입되어 있는 이메일입니다.');
       } else {
         setAlertMessage('이메일 인증 요청에 실패했습니다.');
@@ -131,7 +132,7 @@ const Account = () => {
       setAlertOpen(true);
       return;
     }
-    
+
     try {
       await changeEmail(data.email);
       setAlertMessage('이메일이 성공적으로 변경되었습니다.');
@@ -204,29 +205,22 @@ const Account = () => {
     <div className={styles.mypageflexColumn}>
       <div className={styles.mypageTitle}>계정 관리</div>
       <div className={styles.mypageContentBox}>
-        <div className={styles.formRow}>
+        {/* 이메일 */}
+        <div className={styles.formRowEmail}>
           <div className={styles.rowLabel}>이메일</div>
-          <div className={styles.rowField}>
+          <div className={styles.rowFieldColumn}>
             {isEditing ? (
               <div className={styles.emailEditingContainer}>
                 <div className={styles.emailRow}>
                   <input
-                    type='text'
-                    placeholder='이메일'
+                    type="text"
+                    placeholder="이메일"
                     defaultValue={userData?.email || ''}
                     {...register('email', { validate: validateEmail })}
                     className={errors.email ? styles.inputError : styles.input}
-                    onInput={(e) => {
-                      // 복사 붙여넣기 이벤트 감지
-                      const target = e.target as HTMLInputElement;
-                      if (target.value) {
-                        // 입력값이 있을 때 form의 값 업데이트
-                        register('email').onChange(e);
-                      }
-                    }}
                   />
                   <button
-                    type='button'
+                    type="button"
                     className={styles.requestBtn}
                     onClick={() => {
                       const emailData: AccountEmailFormData = {
@@ -235,7 +229,11 @@ const Account = () => {
                       };
                       handleEmailVerification(emailData);
                     }}
-                    disabled={emailRequestLoading || emailConfirmLoading || isEmailVerified}
+                    disabled={
+                      emailRequestLoading ||
+                      emailConfirmLoading ||
+                      isEmailVerified
+                    }
                   >
                     {emailRequestLoading ? (
                       <VerificationLoading />
@@ -244,29 +242,22 @@ const Account = () => {
                     )}
                   </button>
                 </div>
-                {errors.email && (
-                  <p className={styles.errorText}>{errors.email.message}</p>
-                )}
                 <div className={styles.emailRow}>
                   <input
-                    type='text'
-                    placeholder='인증 코드 입력'
+                    type="text"
+                    placeholder="인증 코드 입력"
                     {...register('verificationCode', {
                       required: '인증 코드를 입력해주세요.',
                     })}
                     className={
-                      errors.verificationCode ? styles.inputError : styles.input
+                      errors.verificationCode
+                        ? styles.inputError
+                        : styles.input
                     }
-                    onInput={(e) => {
-                      const target = e.target as HTMLInputElement;
-                      if (target.value) {
-                        register('verificationCode').onChange(e);
-                      }
-                    }}
                     disabled={isEmailVerified}
                   />
                   <button
-                    type='button'
+                    type="button"
                     className={styles.verifyBtn}
                     onClick={handleSubmit((data) => {
                       const emailData: AccountEmailFormData = {
@@ -275,16 +266,21 @@ const Account = () => {
                       };
                       handleEmailVerificationConfirm(emailData);
                     })}
-                    disabled={emailRequestLoading || emailConfirmLoading || isEmailVerified}
+                    disabled={
+                      emailRequestLoading ||
+                      emailConfirmLoading ||
+                      isEmailVerified
+                    }
                   >
-                    {isEmailVerified ? '인증 완료' : (emailConfirmLoading ? <VerificationLoading /> : '인증 확인')}
+                    {isEmailVerified ? (
+                      '인증 완료'
+                    ) : emailConfirmLoading ? (
+                      <VerificationLoading />
+                    ) : (
+                      '인증 확인'
+                    )}
                   </button>
                 </div>
-                {errors.verificationCode && (
-                  <p className={styles.errorText}>
-                    {errors.verificationCode.message}
-                  </p>
-                )}
                 <div className={styles.actionRow}>
                   <button
                     className={styles.cancelBtn}
@@ -308,9 +304,9 @@ const Account = () => {
                 </div>
               </div>
             ) : (
-              <>
+              <div className={styles.emailRow}>
                 <input
-                  type='text'
+                  type="text"
                   value={userData?.email || ''}
                   readOnly
                   className={styles.input}
@@ -318,52 +314,42 @@ const Account = () => {
                 {!isEditingPwd && (
                   <button
                     className={styles.editBtn}
-                    onClick={() => {
-                      if (!isEditingPwd) setIsEditing(true);
-                    }}
+                    onClick={() => setIsEditing(true)}
                     disabled={isEditingPwd}
                   >
                     변경
                   </button>
                 )}
-              </>
+              </div>
             )}
           </div>
         </div>
-        <div className={styles.formRow}>
+
+        {/* 비밀번호 */}
+        <div className={styles.formRowPwd}>
           <div className={styles.rowLabel}>비밀번호</div>
-          <div className={styles.rowField}>
+          <div className={styles.rowFieldColumn}>
             {isEditingPwd ? (
               <div className={styles.passwordEditingContainer}>
                 <input
-                  type='password'
-                  placeholder='현재 비밀번호'
+                  type="password"
+                  placeholder="현재 비밀번호"
                   {...register('nowPassword', { validate: validatePassword })}
                   className={
                     errors.nowPassword ? styles.inputError : styles.input
                   }
                 />
-                {errors.nowPassword && (
-                  <p className={styles.errorText}>
-                    {errors.nowPassword.message}
-                  </p>
-                )}
                 <input
-                  type='password'
-                  placeholder='새 비밀번호 (영문 대/소문자, 숫자, 특수문자 8-15자리)'
+                  type="password"
+                  placeholder="새 비밀번호 (영문 대/소문자, 숫자, 특수문자 8-15자리)"
                   {...register('newPassword', { validate: validatePassword })}
                   className={
                     errors.newPassword ? styles.inputError : styles.input
                   }
                 />
-                {errors.newPassword && (
-                  <p className={styles.errorText}>
-                    {errors.newPassword.message}
-                  </p>
-                )}
                 <input
-                  type='password'
-                  placeholder='비밀번호 재입력'
+                  type="password"
+                  placeholder="비밀번호 재입력"
                   {...register('rePassword', {
                     validate: (value) =>
                       value === watch('newPassword') ||
@@ -373,14 +359,6 @@ const Account = () => {
                     errors.rePassword ? styles.inputError : styles.input
                   }
                 />
-                <li>
-                  소셜 로그인 회원의 경우 [로그인 {'>'} 비밀번호 찾기] 를 통해 이메일로 전송된 링크에서 비밀번호 설정이 가능합니다.
-                </li>
-                {errors.rePassword && (
-                  <p className={styles.errorText}>
-                    {errors.rePassword.message}
-                  </p>
-                )}
                 <div className={styles.actionRow}>
                   <button
                     className={styles.cancelBtn}
@@ -405,29 +383,28 @@ const Account = () => {
                 </div>
               </div>
             ) : (
-              <>
+              <div className={styles.emailRow}>
                 <input
-                  type='text'
-                  value='비밀번호 변경'
+                  type="text"
+                  value="비밀번호 변경"
                   readOnly
                   className={styles.input}
                 />
                 {!isEditing && (
                   <button
                     className={styles.editBtn}
-                    onClick={() => {
-                      if (!isEditing) setIsEditingPwd(true);
-                    }}
+                    onClick={() => setIsEditingPwd(true)}
                     disabled={isEditing}
                   >
                     변경
                   </button>
                 )}
-              </>
+              </div>
             )}
           </div>
         </div>
       </div>
+
       <div className={styles.accountTermination} onClick={openModal}>
         계정 탈퇴
       </div>
