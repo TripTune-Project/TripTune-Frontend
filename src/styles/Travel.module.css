@@ -555,8 +555,10 @@
 
 .scrollbar {
     overflow-y: auto;
+    max-height: 250px;
     margin-top: 71px;
     margin-bottom: 45px;
+    padding-right: 12px;
 }
 
 .contentTitle {
@@ -575,6 +577,7 @@
     font-style: normal;
     font-weight: 300;
     line-height: 180%; /* 32.4px */
+    word-break: break-all; /* 긴 주소, 전화번호 처리 */
 }
 
 .addressLabel,
@@ -587,9 +590,9 @@
     color: #2d2d2d;
     font-weight: 505;
     font-style: normal;
-    line-height: 180%; /* 32.4px */
     height: 32px;
-
+    line-height: 180%; /* 32.4px */
+    margin-bottom: 10px; /* 간격 통일 */
 }
 
 .addressLabel img,
