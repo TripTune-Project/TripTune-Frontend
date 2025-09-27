@@ -18,7 +18,6 @@ const BookMark = () => {
   const { currentPage, setCurrentPage } = useMyPageBookMarkStore();
 
   const [sort, setSort] = useState<'newest' | 'oldest' | 'name'>('newest');
-  const [activeDeleteMenu, setActiveDeleteMenu] = useState<number | null>(null);
   
   const { data: myPageBookMarkData, isLoading, refetch } = useMyPageBookMarkList(
     currentPage,
@@ -29,16 +28,11 @@ const BookMark = () => {
     router.push(`/Travel/${placeId}`);
   };
 
-  const handleToggleDeleteMenu = (placeId: number, e: React.MouseEvent) => {
-    e.stopPropagation(); // 부모 클릭 이벤트 방지
-    setActiveDeleteMenu(activeDeleteMenu === placeId ? null : placeId);
-  };
-
+  // 북마크 삭제 함수
   const handleDeleteBookmark = async (placeId: number, e: React.MouseEvent) => {
     e.stopPropagation(); // 부모 클릭 이벤트 방지
     try {
       await BookMarkDeleteApi(placeId);
-      setActiveDeleteMenu(null);
       await refetch(); // 북마크 목록 새로고침
     } catch (error) {
       console.error('북마크 삭제 실패:', error);
@@ -97,28 +91,12 @@ const BookMark = () => {
               className={styles.bookmarkCard}
               onClick={() => handleDetailClick(place.placeId)}
             >
-               {/*옵션 메뉴*/}
-              <div className={styles.hoverMenu}>
-                <div
-                  className={styles.threeDots}
-                  onClick={(e) =>
-                    handleToggleDeleteMenu(place.placeId, e)
-                  }
-                >
-                  <div className={styles.bookmarkIconBox}>
-                    <Image src={bookmarkIcon} alt={'bookmarkIcon'} width={14} height={2} />
-                  </div>
-                </div>
-                {activeDeleteMenu === place.placeId && (
-                  <div className={styles.deleteMenu}>
-                    <button
-                      className={styles.deleteButton}
-                      onClick={(e) => handleDeleteBookmark(place.placeId, e)}
-                    >
-                      북마크 삭제
-                    </button>
-                  </div>
-                )}
+              {/* 북마크 아이콘 = 삭제 버튼 */}
+              <div
+                className={styles.bookmarkIconBox}
+                onClick={(e) => handleDeleteBookmark(place.placeId, e)}
+              >
+                <Image src={bookmarkIcon} alt={'bookmarkIcon'} width={14} height={14} />
               </div>
               
               <div className={styles.imageContainer}>
