@@ -202,12 +202,16 @@ const TravelDetailPage = () => {
       <div className={styles.useTimeLabel}>
         <Image width={18} height={18} src={timeIcon} alt='입실 시간' />
         <p className={styles.contentTitle}>입실시간</p>
-        <span className={styles.contentText}>{formatDescriptionWithParagraphs(checkInTime, true)}</span>
+        <span className={styles.contentText}>
+          {formatDescriptionWithParagraphs(checkInTime, true)}
+        </span>
       </div>
       <div className={styles.useTimeLabel}>
         <Image width={18} height={18} src={timeIcon} alt='퇴실 시간' />
         <p className={styles.contentTitle}>퇴실시간</p>
-        <span className={styles.contentText}>{formatDescriptionWithParagraphs(checkOutTime, true)}</span>
+        <span className={styles.contentText}>
+          {formatDescriptionWithParagraphs(checkOutTime, true)}
+        </span>
       </div>
     </div>
   );
@@ -337,49 +341,115 @@ const TravelDetailPage = () => {
           ) : (
             <div className={styles.noImage}>이미지가 없습니다.</div>
           )}
+          {/* 오른쪽 정보 영역 */}
           <div className={styles.rightSection}>
             <p className={styles.countryCityDistrict}>
               {country} &gt; {city} &gt; {district}
             </p>
             <div className={styles.detailplaceName}>{placeName}</div>
-            <div className={styles.scrollbar}>
-              <div className={styles.addressLabel}>
-                <Image width={14} height={21} src={locationIcon} alt='주소' />
-                <p className={styles.contentTitle}> 주소 </p>
-                <span className={styles.contentText}> {address} </span>
-              </div>
-              {renderTimeContent(checkInTime, checkOutTime, useTime)}
-              {homepageUrl && (
-                <div className={styles.homepageLabel}>
-                  <Image
-                    width={18}
-                    height={18}
-                    src={homePageIcon}
-                    alt='홈페이지'
-                  />
-                  <p className={styles.contentTitle}> 홈페이지 </p>
-                  <a
-                    className={styles.contentText}
-                    href={homepageUrl}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                  >
-                    {formatDescriptionWithParagraphs(homepageUrl, true, '80px')}
-                  </a>
+
+            {/* ← 이 래퍼가 내부 스크롤 담당 */}
+            <div className={styles.detailsScroll}>
+              <dl className={styles.detailsGrid}>
+                <div className={styles.detailRow}>
+                  <dt className={styles.label}>
+                    <Image
+                      width={14}
+                      height={21}
+                      src={locationIcon}
+                      alt='주소'
+                    />
+                    <span className={styles.labelText}>주소</span>
+                  </dt>
+                  <dd className={styles.value}>{address}</dd>
                 </div>
-              )}
-              {phoneNumber && (
-                <div className={styles.phoneLabel}>
-                  <Image
-                    width={36}
-                    height={28}
-                    src={phoneIcon}
-                    alt='문의 및 안내'
-                  />
-                  <p> 문의 및 안내 </p> {phoneNumber}
-                </div>
-              )}
+
+                {/* 시간이 길어도 이 영역에서만 스크롤됨 */}
+                {checkInTime || checkOutTime ? (
+                  <>
+                    <div className={styles.detailRow}>
+                      <dt className={styles.label}>
+                        <Image
+                          width={18}
+                          height={18}
+                          src={timeIcon}
+                          alt='입실시간'
+                        />
+                        <span className={styles.labelText}>입실시간</span>
+                      </dt>
+                      <dd className={styles.value}>{checkInTime}</dd>
+                    </div>
+                    <div className={styles.detailRow}>
+                      <dt className={styles.label}>
+                        <Image
+                          width={18}
+                          height={18}
+                          src={timeIcon}
+                          alt='퇴실시간'
+                        />
+                        <span className={styles.labelText}>퇴실시간</span>
+                      </dt>
+                      <dd className={styles.value}>{checkOutTime}</dd>
+                    </div>
+                  </>
+                ) : useTime ? (
+                  <div className={styles.detailRow}>
+                    <dt className={styles.label}>
+                      <Image
+                        width={18}
+                        height={18}
+                        src={timeIcon}
+                        alt='이용시간'
+                      />
+                      <span className={styles.labelText}>이용시간</span>
+                    </dt>
+                    <dd className={styles.value}>
+                      {formatDescriptionWithParagraphs(useTime)}
+                    </dd>
+                  </div>
+                ) : null}
+
+                {homepageUrl && (
+                  <div className={styles.detailRow}>
+                    <dt className={styles.label}>
+                      <Image
+                        width={18}
+                        height={18}
+                        src={homePageIcon}
+                        alt='홈페이지'
+                      />
+                      <span className={styles.labelText}>홈페이지</span>
+                    </dt>
+                    <dd className={styles.value}>
+                      <a
+                        href={homepageUrl}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                      >
+                        {homepageUrl}
+                      </a>
+                    </dd>
+                  </div>
+                )}
+
+                {phoneNumber && (
+                  <div className={styles.detailRow}>
+                    <dt className={styles.label}>
+                      <Image
+                        width={16}
+                        height={16}
+                        src={phoneIcon}
+                        alt='문의 및 안내'
+                      />
+                      <span className={styles.labelText}>문의 및 안내</span>
+                    </dt>
+                    <dd className={styles.value}>{phoneNumber}</dd>
+                  </div>
+                )}
+              </dl>
             </div>
+
+            {/* 하단 고정 버튼 */}
             <div className={styles.buttonContainer}>
               <button
                 onClick={handleBookmarkToggle}
@@ -392,7 +462,7 @@ const TravelDetailPage = () => {
                   src={bookmarkStatus ? detailBookMark : detailBookMarkNo}
                   alt='북마크'
                 />
-                {bookmarkStatus ? `북마크 해제` : `북마크`}
+                {bookmarkStatus ? '북마크 해제' : '북마크'}
               </button>
               <button onClick={handleScheduleAdd} className={styles.chooseBtn}>
                 <Image

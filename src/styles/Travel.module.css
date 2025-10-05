@@ -1,56 +1,6 @@
-/* 페이지내이션 */
-.paginationContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 28px;
-    padding: 10px;
-    gap: 5px;
-}
-
-.pageButton {
-    padding: 5px 10px;
-    border: 1px solid #dddddd;
-    background-color: #ffffff;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.pageButton:hover {
-    background-color: #f0f0f0;
-}
-
-.pageButton.active {
-    background-color: #0070f3;
-    color: #ffffff;
-    border: 1px solid #0070f3;
-}
-
-.navButton {
-    padding: 5px 10px;
-    border: 1px solid #dddddd;
-    background-color: #ffffff;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.navButton:hover {
-    background-color: #f0f0f0;
-}
-
-.navButton.disabled {
-    background-color: #f9f9f9;
-    color: #ccc;
-    cursor: not-allowed;
-}
-
-.ellipsis {
-    padding: 5px;
-    font-size: 16px;
-    color: #999;
-}
-
-/* 여행지 탐색 기본, 검색 */
+/******************************
+ * 공통 스타일
+ ******************************/
 .container {
     padding: 39px;
     display: flex;
@@ -71,14 +21,11 @@
     padding: 11px;
     flex: 1;
     color: #555;
-    font-family: NOto Sans KR, sans-serif;
+    font-family: Noto Sans KR, sans-serif;
     font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 145%; /* 20.3px */
+    line-height: 145%;
     width: 482px !important;
     height: 55px;
-    flex-shrink: 0;
     border-radius: 10px;
     border: 1px solid #D9D9D9;
     background: #FFF;
@@ -96,10 +43,10 @@
     justify-content: center;
     text-align: center;
     font-style: normal;
-    font-family: NOto Sans KR, sans-serif;
+    font-family: Noto Sans KR, sans-serif;
     font-size: 16px;
     font-weight: 700;
-    line-height: 140%; /* 22.4px */
+    line-height: 140%;
     width: 79px;
     height: 55px;
     padding: 16px 22px;
@@ -107,6 +54,9 @@
     gap: 10px;
 }
 
+/******************************
+ * 여행지 리스트 스타일
+ ******************************/
 .placeList {
     list-style: none;
     padding: 0;
@@ -128,7 +78,6 @@
     border-radius: 10px 0;
     background: #FFF;
     box-shadow: 4px 4px 24px 0 rgba(217, 217, 217, 0.57);
-
 }
 
 .placeThumbnail {
@@ -138,31 +87,16 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #f0f0f0;
+    background: #f0f0f0;
     border-radius: 8px;
     overflow: hidden;
 }
 
 .thumbnailImage {
-    border-radius: 8px;
     width: 95px;
     height: 95px;
-    /*padding: 5px;*/
     object-fit: cover;
-}
-
-.noImage {
-    position: relative;
-    width: 749px;
-    height: 512px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     border-radius: 8px;
-    background-color: #e0e0e0;
-    border: 1px dashed #ccc;
-    color: #888;
-    font-size: 18px;
 }
 
 .placeInfo {
@@ -171,7 +105,6 @@
     display: flex;
     flex-direction: column;
     height: 90px;
-    /*background: red;*/
 }
 
 .placeName {
@@ -181,31 +114,22 @@
     margin-top: 10px;
     font-size: 12px;
     font-style: normal;
-    line-height: 150%; /* 18px */
+    line-height: 150%;
 }
 
-.placeAddress,
-.placeDetailAddress {
+.placeAddress, .placeDetailAddress {
     color: #868686;
-    font-style: normal;
-    font-weight: 300;
+    font: 300 12px/150% "Noto Sans KR", sans-serif;
     margin: 0;
-    font-size: 12px;
     padding-bottom: 7px;
-    font-family: NOto Sans KR, sans-serif;
-    line-height: 150%; /* 18px */
 }
 
 .placeDetailAddress {
     display: flex;
     align-items: center;
-    padding: 0;
-    color: #868686;
-    font-family: NOto Sans KR, sans-serif;
-    font-style: normal;
-    font-weight: 300;
     font-size: 10px;
-    line-height: 150%; /* 15px */
+    line-height: 150%;
+    padding: 0;
 }
 
 .bookmarkButton {
@@ -217,25 +141,17 @@
     cursor: pointer;
 }
 
-.timeAndDistance {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 10px;
-}
-
 .distanceInfo {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
     color: #868686;
-    font-family: NOto Sans KR, sans-serif;
-    font-size: 10px;
-    font-style: normal;
-    font-weight: 300;
-    line-height: 150%; /* 15px */
+    font: 300 10px/150% "Noto Sans KR", sans-serif;
 }
 
+/******************************
+ * 지도 스타일
+ ******************************/
 .mapContainer {
     margin-left: 55px;
     width: 1202px;
@@ -253,34 +169,78 @@
     margin: 0;
     text-align: left;
     flex: 1;
+    font: bold 28px "Noto Sans KR", sans-serif;
 }
 
 .mylocation {
     margin: 0;
-    text-align: right;
     padding: 10px 20px;
-    background-color: #4caf50;
-    color: #ffffff;
+    background: #4caf50;
+    color: #fff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color .3s;
 }
 
 .mylocation:hover {
-    background-color: #45a049;
+    background: #45a049;
 }
 
 .errorMessage {
     color: red;
     text-align: center;
     padding: 10px;
-    background-color: #ffe0e0;
+    background: #ffe0e0;
     border: 1px solid #ffcccc;
     border-radius: 4px;
 }
 
-/* 여행지 탐색 상세 조회 */
+/******************************
+ * 페이지네이션 스타일
+ ******************************/
+.paginationContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 28px;
+    padding: 10px;
+    gap: 5px;
+}
+
+.pageButton, .navButton {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    background: #fff;
+    cursor: pointer;
+    transition: background-color .3s;
+}
+
+.pageButton:hover, .navButton:hover {
+    background: #f0f0f0;
+}
+
+.pageButton.active {
+    background: #0070f3;
+    color: #fff;
+    border-color: #0070f3;
+}
+
+.navButton.disabled {
+    background: #f9f9f9;
+    color: #ccc;
+    cursor: not-allowed;
+}
+
+.ellipsis {
+    padding: 5px;
+    font-size: 16px;
+    color: #999;
+}
+
+/******************************
+ * 여행지 상세 페이지 스타일
+ ******************************/
 .travelDetailContent {
     display: flex;
     flex-direction: column;
@@ -291,68 +251,17 @@
 .topSection {
     margin: 50px auto;
     display: flex;
-    flex-wrap: wrap;
-    width: auto;
+    gap: 0;
+    flex-wrap: nowrap;
+    align-items: stretch;
 }
 
-.infoSection {
-    background-color: #f3f8f8;
-    padding: 20px;
-    border-radius: 8px;
-    width: fit-content;
-    max-width: 1400px;
-    height: auto;
-    margin: auto;
-}
-
-.infoText {
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 16px;
-    color: #333;
-    font-weight: normal;
-    overflow: hidden;
-    -webkit-box-orient: vertical;
-    white-space: pre-line;
-}
-
-.expandButton {
-    background: none;
-    border: none;
-    color: #0070f3;
-    cursor: pointer;
-    font-size: 14px;
-    margin-left: 5px;
-    font-weight: bold;
-    transition: color 0.3s ease;
-}
-
-.expandButton:hover {
-    text-decoration: underline;
-    color: #0056b3;
-}
-
-.detailTitle {
-    display: flex;
-    align-items: center;
-    height: 30px;
-    font-style: normal;
-    font-family: 'Noto Sans KR', sans-serif;
-    color: #000;
-    font-size: 26px;
-    font-weight: 400;
-    line-height: 120%; /* 31.2px */
-    margin-left: 262px;
-}
-
-.detailTitleIcon {
-    width: 36px;
-    height: 27px;
-    flex-shrink: 0;
-    margin-right: 10px;
+.topSection > * {
+    margin: 0 !important;
 }
 
 .sliderImageContainer {
-    background-color: #f0f0f0;
+    background: #f0f0f0;
     width: 100%;
     height: 512px;
     display: flex;
@@ -365,42 +274,184 @@
     height: 433px !important;
 }
 
+.noImage {
+    position: relative;
+    width: 749px;
+    height: 512px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: #e0e0e0;
+    border: 1px dashed #ccc;
+    color: #888;
+    font-size: 18px;
+}
+
 .sliderButton {
-    background: none;
     border: none;
     color: #333;
     font-size: 24px;
     cursor: pointer;
     padding: 10px 20px;
-    -webkit-user-select: none;
     user-select: none;
-    background-color: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, .5);
     border-radius: 50%;
 }
 
 .sliderButton:hover {
-    background-color: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, .8);
 }
 
-.travelSearch,
-.travelSearchDetail {
-    font-size: 28px;
-    font-weight: bold;
-    font-family: 'Noto Sans KR', sans-serif;
+.rightSection {
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    height: 512px;
+    width: 648px;
+    margin: 0;
+    overflow: hidden;
+    padding: 0 20px 20px 20px;
+    flex: 0 0 648px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
 }
 
-.travelSearchDetail {
-    margin-top: 30px;
+.countryCityDistrict {
+    color: #636363;
+    height: 19px;
+    font-style: normal;
+    font: 300 16px/140% "Noto Sans KR", sans-serif;
+    margin: 40px 10px 0 40px;
+}
+
+.detailplaceName {
+    color: #000;
+    height: 46px;
+    font-style: normal;
+    font: 400 32px/120% "Noto Sans KR", sans-serif;
+    margin-top: 20px;
+    margin-left: 40px;
+}
+
+.detailsScroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+.detailsGrid {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    column-gap: 12px;
+    row-gap: 12px;
+    padding: 0 20px 0 0;
+    margin: 40px;
+}
+
+.detailRow {
+    display: contents;
+}
+
+.label {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.labelText {
+    font: 500 18px/1.6 "Noto Sans KR", sans-serif;
+    color: #2D2D2D;
+}
+
+.value {
+    font: 300 18px/1.8 "Noto Sans KR", sans-serif;
+    color: #555;
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
+
+.value a {
+    color: #00f;
+    text-decoration: none;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
+
+.buttonContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    flex-shrink: 0;
+    margin: 16px 0 0 -14px;
+}
+
+.bookmarkBtn {
+    background-color: #74a5da;
+    color: #ffffff;
+    transition: background-color 0.3s ease;
+}
+
+.chooseBtn {
+    background-color: #76adac;
+    color: #ffffff;
+    transition: background-color 0.3s ease;
+}
+
+.bookmarkBtn, .chooseBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 55px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    gap: 10px;
+    margin-left: 30px;
+    width: 250px;
+    flex-shrink: 0;
     text-align: center;
+    font-style: normal;
+    font: 700 18px/135% "Noto Sans KR", sans-serif;
+    color: #fff;
+    transition: background-color .3s ease;
 }
 
-.description {
-    margin: 10px 0;
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 18px;
+.detailTitle {
+    display: flex;
+    align-items: center;
+    height: 30px;
+    margin-left: 262px;
+    color: #000;
+    font: 400 26px/120% "Noto Sans KR", sans-serif;
+}
+
+.detailTitleIcon {
+    width: 36px;
+    height: 27px;
+    flex-shrink: 0;
+    margin-right: 10px;
+}
+
+.infoSection {
+    background: #f3f8f8;
+    padding: 20px;
+    border-radius: 8px;
+    width: fit-content;
+    max-width: 1400px;
+    margin: auto;
+}
+
+.infoText {
+    font: 400 16px "Noto Sans KR", sans-serif;
     color: #333;
-    line-height: 1.6;
-    position: relative;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    white-space: pre-line;
 }
 
 .expandButton {
@@ -408,16 +459,31 @@
     border: none;
     color: #0070f3;
     cursor: pointer;
-    padding: 0;
-    font-size: 16px;
-    margin-left: 5px;
+    font-size: 14px;
     font-weight: bold;
-    transition: color 0.3s;
+    margin-left: 5px;
+    transition: color .3s ease;
 }
 
 .expandButton:hover {
-    color: #0056b3;
     text-decoration: underline;
+    color: #0056b3;
+}
+
+/******************************
+ * 기타 컴포넌트
+ ******************************/
+.travelSearchDetail {
+    font: bold 28px "Noto Sans KR", sans-serif;
+    margin-top: 30px;
+    text-align: center;
+}
+
+.description {
+    margin: 10px 0;
+    font: 18px/1.6 "Noto Sans KR", sans-serif;
+    color: #333;
+    position: relative;
 }
 
 .recommendedDestinations {
@@ -427,9 +493,7 @@
 .chooseRecomend {
     margin: 20px 0;
     color: #000;
-    font-size: 24px;
-    font-weight: 600;
-    font-family: 'Noto Sans KR', sans-serif;
+    font: 600 24px "Noto Sans KR", sans-serif;
 }
 
 .sliderImg {
@@ -441,9 +505,7 @@
 
 .sliderTextP {
     color: #000;
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 20px;
-    font-weight: 500;
+    font: 500 20px "Noto Sans KR", sans-serif;
     margin-top: 10px;
     text-align: left;
     padding-left: 10px;
@@ -451,10 +513,8 @@
 
 .sliderTextPDetail {
     color: #848282;
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 14px;
+    font: 500 14px "Noto Sans KR", sans-serif;
     height: 17px;
-    font-weight: 500;
     margin-top: 5px;
     text-align: left;
     margin-left: 30px;
@@ -483,22 +543,6 @@
     cursor: grabbing;
 }
 
-.sliderButton {
-    border: none;
-    color: #333;
-    font-size: 24px;
-    cursor: pointer;
-    padding: 10px 20px;
-    -webkit-user-select: none;
-    user-select: none;
-    background: rgba(255, 255, 255, 0.5);
-    border-radius: 50%;
-}
-
-.sliderButton:hover {
-    background-color: rgba(255, 255, 255, 0.8);
-}
-
 .imgSliderExplain {
     display: flex;
     justify-content: space-between;
@@ -520,54 +564,13 @@
     color: #0070f3;
 }
 
-.rightSection {
-    background-color: #ffffff;
-    padding: 0 0 20px 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    height: 512px;
-    margin: 0 auto;
-    width: 648px;
-}
-
-.countryCityDistrict {
-    color: #636363;
-    height: 19px;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 300;
-    margin-bottom: 10px;
-    font-family: 'Noto Sans KR', sans-serif;
-    line-height: 140%; /* 22.4px */
-}
-
-.detailplaceName {
-    color: #000;
-    height: 46px;
-    font-style: normal;
-    margin-top: 20px;
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 32px;
-    font-weight: 400;
-    line-height: 120%; /* 38.4px */
-}
-
-.scrollbar {
-    overflow-y: auto;
-    max-height: 250px;
-    margin-top: 71px;
-    margin-bottom: 45px;
-    padding: 0 30px;
-}
-
 .contentTitle {
     color: #2D2D2D;
     font-family: Noto Sans KR, sans-serif;
     font-size: 18px;
     font-style: normal;
     font-weight: 505;
-    line-height: 180%; /* 32.4px */
+    line-height: 180%;
 }
 
 .contentText {
@@ -577,8 +580,8 @@
     font-size: 18px;
     font-style: normal;
     font-weight: 300;
-    line-height: 180%; /* 32.4px */
-    word-break: break-all; /* 긴 주소, 전화번호 처리 */
+    line-height: 180%;
+    word-break: break-all;
 }
 
 .addressLabel,
@@ -592,8 +595,8 @@
     font-weight: 505;
     font-style: normal;
     height: 32px;
-    line-height: 180%; /* 32.4px */
-    margin-bottom: 10px; /* 간격 통일 */
+    line-height: 180%;
+    margin-bottom: 10px;
 }
 
 .addressLabel img,
@@ -621,54 +624,17 @@
     text-decoration: none;
     font-family: 'Noto Sans KR', sans-serif;
     font-size: 18px;
-    line-height: 180%; /* 32.4px */
-    display: inline-block; /* 줄바꿈 허용 */
-    max-width: 350px; /* 원하는 최대 너비 설정 */
-    white-space: normal; /* 줄바꿈 가능하게 */
-    word-break: break-all; /* 단어 길면 강제 줄바꿈 */
-    overflow-wrap: break-word; /* 최신 브라우저 호환용 */
+    line-height: 180%;
+    display: inline-block;
+    max-width: 350px;
+    white-space: normal;
+    word-break: break-all;
+    overflow-wrap: break-word;
 }
 
-.buttonContainer {
-    display: flex;
-    margin-top: 20px;
-    margin-right: 63px;
-}
-
-.bookmarkBtn,
-.chooseBtn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 55px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-family: 'Noto Sans KR', sans-serif;
-    gap: 10px;
-    margin-left: 30px;
-    width: 250px;
-    flex-shrink: 0;
-    text-align: center;
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 135%; /* 24.3px */
-}
-
-.bookmarkBtn {
-    background-color: #74a5da;
-    color: #ffffff;
-    transition: background-color 0.3s ease;
-}
-
-.chooseBtn {
-    background-color: #76adac;
-    color: #ffffff;
-    transition: background-color 0.3s ease;
-}
-
+/******************************
+ * 반응형
+ ******************************/
 .travelContainer {
     display: flex;
     flex-direction: column;
@@ -684,26 +650,15 @@
     flex: 1;
 }
 
-.travelList {
-    background-color: var(--color-background);
+.travelList, .travelMap, .travelFilter {
+    background: var(--color-background);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-md);
     padding: var(--spacing-4);
-    overflow-y: auto;
 }
 
 .travelMap {
-    background-color: var(--color-background);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-md);
     min-height: 400px;
-}
-
-.travelFilter {
-    background-color: var(--color-background);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-md);
-    padding: var(--spacing-4);
 }
 
 @media screen and (max-width: var(--breakpoint-md)) {
@@ -713,5 +668,9 @@
 
     .travelContainer {
         padding: var(--spacing-2);
+    }
+
+    .topSection {
+        flex-wrap: wrap;
     }
 }
