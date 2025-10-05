@@ -315,6 +315,10 @@ const TravelPageContent = () => {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
+  if (!isAuthStateReady) {
+    return <DataLoading />;
+  }
+
   return (
     <>
       <Head>
