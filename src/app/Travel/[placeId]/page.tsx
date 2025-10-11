@@ -352,10 +352,10 @@ const TravelDetailPage = () => {
             <div className={styles.detailsScroll}>
               <dl className={styles.detailsGrid}>
                 <div className={styles.detailRow}>
-                  <dt className={styles.label}>
+                  <dt className={styles.label} style={{alignItems: 'center'}}>
                     <Image
-                      width={14}
-                      height={21}
+                      width={18}
+                      height={18}
                       src={locationIcon}
                       alt='주소'
                     />
@@ -436,8 +436,8 @@ const TravelDetailPage = () => {
                   <div className={styles.detailRow}>
                     <dt className={styles.label}>
                       <Image
-                        width={16}
-                        height={16}
+                        width={18}
+                        height={18}
                         src={phoneIcon}
                         alt='문의 및 안내'
                       />
