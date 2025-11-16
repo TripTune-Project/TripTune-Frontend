@@ -70,7 +70,7 @@ export const updateExistingSchedule = async (
     scheduleName: schedule.scheduleName,
     startDate: schedule.startDate,
     endDate: schedule.endDate,
-    travelRoutes: schedule.travelRoutes,
+    travelRoutes: schedule.travelRoute,
   };
   return await patch(url, requestBody, { requiresAuth: true });
 };
