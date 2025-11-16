@@ -123,7 +123,7 @@ export default function ScheduleDetailPage() {
       startDate: scheduleDetail.startDate || '',
       endDate: scheduleDetail.endDate || '',
       scheduleId: Number(scheduleId),
-      travelRoute: transformedRoute,
+      travelRoutes: transformedRoute,
     };
 
     const response = await updateExistingSchedule(data);

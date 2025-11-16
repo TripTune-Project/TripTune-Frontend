@@ -98,7 +98,7 @@ export interface UpdateSchedule {
   scheduleName: string;
   startDate: string;
   endDate: string;
-  travelRoute?: ScheduleTravelRoute[];
+  travelRoutes?: ScheduleTravelRoute[];
 }
 
 // 여행 일정
