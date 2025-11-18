@@ -129,7 +129,7 @@ const fetchData = async <T>(
   isRetry: boolean = false
 ): Promise<T> => {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
-  //const baseUrl = 'https://www.triptune.site' // 로컬에서만
+  //const baseUrl = 'https://www.triptune.co.kr' // 로컬에서만
   const url = `${baseUrl}${endpoint}`;
 
   // 헤더 설정
