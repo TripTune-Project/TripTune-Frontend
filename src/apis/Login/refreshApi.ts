@@ -4,6 +4,7 @@ import Cookies from 'js-cookie';
 
 export const refreshApi = async (): Promise<{
   accessToken: string;
+  nickname: string;
 }> => {
   try {
     const response = await post<{
@@ -22,15 +23,13 @@ export const refreshApi = async (): Promise<{
       }
     );
 
-    const { accessToken } = response.data;
-    // const { accessToken, nickname } = response.data;
+    const { accessToken, nickname } = response.data;
 
     const { setEncryptedCookie } = saveLocalContent();
     setEncryptedCookie('accessToken', accessToken);
-    // setEncryptedCookie('nickname', nickname);
+    setEncryptedCookie('nickname', nickname);
 
-    // return { accessToken, nickname };
-    return { accessToken };
+    return { accessToken, nickname };
   } catch (error: unknown) {
     console.error('리프레시 중 오류 발생:', error);
     if (error instanceof Error) {
