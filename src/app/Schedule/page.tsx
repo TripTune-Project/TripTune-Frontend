@@ -143,7 +143,7 @@ export default function SchedulePage() {
       }
       observer.disconnect();
     };
-  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage, isSearching, selectedTab]);
 
   useEffect(() => {
     if (!isAuthenticated) {
