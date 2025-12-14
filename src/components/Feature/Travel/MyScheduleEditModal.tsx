@@ -114,8 +114,9 @@ const MyScheduleEditModal = ({
         <ScrollableContainer
           onScroll={(e) => {
             const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+            const tolerance = 1;
             if (
-              scrollHeight - scrollTop === clientHeight &&
+              scrollHeight - scrollTop <= clientHeight + tolerance &&
               hasNextPage &&
               !isFetchingNextPage
             ) {
