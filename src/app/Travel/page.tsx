@@ -385,9 +385,7 @@ const TravelPageContent = () => {
                             />
                           ) : (
                             <div className={styles.noImage}>
-                              이미지
-                              <br />
-                              없음
+                              이미지 없음
                             </div>
                           )}
                         </div>
