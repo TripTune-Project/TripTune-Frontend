@@ -185,12 +185,15 @@ const ScheduleTravelSearch = () => {
                       16
                     )}
                   </p>
-                  <p className={styles.placeDetailAddress}>
+                  <p
+                    className={styles.placeDetailAddress}
+                    style={{ marginTop: '-8px' }}
+                  >
                     <Image
                       src={locationIcon}
                       alt='장소'
-                      width={15}
-                      height={21}
+                      width={8}
+                      height={12}
                     />
                     &nbsp;
                     {truncateText(
