@@ -25,7 +25,7 @@ export default function NoResultLayout() {
     };
   } else if (isSchedulePage) {
     containerStyles = {
-      width: '1297px',
+      // width: '1297px',
       height: '600px',
       // marginLeft: '-208px',
     };

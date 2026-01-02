@@ -35,7 +35,16 @@ const CalendarLayout = ({
   );
   const [scheduleName, setScheduleName] = useState<string>(travelName);
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
-  
+
+  // 모달이 열렸을 때 배경 스크롤 방지
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);
+
   useEffect(() => {
     if (mode === 'create') {
       setIsFormValid(
