@@ -61,12 +61,6 @@ const Pagination = ({
       aria-label='Pagination Navigation'
     >
       {renderNavButton(
-        () => onPageChange(1),
-        currentPage === 1,
-        '«',
-        'First Page'
-      )}
-      {renderNavButton(
         () => onPageChange(currentPage - 1),
         currentPage === 1,
         '‹',
@@ -79,12 +73,6 @@ const Pagination = ({
         currentPage === totalPages,
         '›',
         'Next Page'
-      )}
-      {renderNavButton(
-        () => onPageChange(totalPages),
-        currentPage === totalPages,
-        '»',
-        'Last Page'
       )}
     </div>
   );
