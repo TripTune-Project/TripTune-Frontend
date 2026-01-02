@@ -16,6 +16,7 @@ import plusTravelSearch from '../../../../public/assets/images/일정 만들기/
 import minusTravelSearch from '../../../../public/assets/images/일정 만들기/일정 저장 및 수정/minusBtn.png';
 import Snackbar from '@mui/material/Snackbar';
 import Alert, { AlertColor } from '@mui/material/Alert';
+import NoResult from '@/components/Common/NoResult';
 
 const ScheduleTravelSearch = () => {
   // useParams의 반환 타입을 업데이트
@@ -217,7 +218,9 @@ const ScheduleTravelSearch = () => {
               </li>
             ))}
           </ul>
-        ) : null}
+        ) : (
+          <NoResult />
+        )}
       </div>
       {totalPages > 0 && (
         <Pagination
