@@ -7,6 +7,7 @@ import { createNewSchedule } from '@/apis/Schedule/scheduleApi';
 import { useTravelStore } from '@/store/scheduleStore';
 import Image from 'next/image';
 import triptuneIcon from '../../../public/assets/images/로고/triptuneIcon-removebg.png';
+import scheduleDateIcon from '../../../public/assets/images/일정 만들기/일정 생성/scheduleDate_dateIcon.png';
 
 registerLocale('ko', ko);
 
@@ -132,12 +133,12 @@ const CalendarLayout = ({
         <button className={styles.closeButton} onClick={onClose}>
           &times;
         </button>
-        <h2 className={styles.detailTitle}>
+        <h2 className={styles.detailTitle} style={{ marginRight: '300px' }}>
           <Image src={triptuneIcon} alt='일정만들기' width={40} priority />
           &nbsp; {mode === 'create' ? '일정 만들기' : '일정 수정'}
         </h2>
         {mode === 'create' && (
-          <div className={styles.inputGroup}>
+          <div className={styles.inputGroup} style={{ marginLeft: '0px' }}>
             <label>여행 이름</label>
             <input
               type='text'
@@ -148,10 +149,11 @@ const CalendarLayout = ({
             />
           </div>
         )}
-        <div className={styles.inputGroup}>
+        <div className={styles.inputGroup} style={{ marginLeft: '0px' }}>
           <label>여행 날짜</label>&nbsp;&nbsp;
           {startDate?.toLocaleDateString('ko-KR')} ~{' '}
           {endDate?.toLocaleDateString('ko-KR')}
+          <Image src={scheduleDateIcon} alt='일정만들기' width={20} priority />
         </div>
         <div className={styles.datePickerContainer}>
           <DatePicker
