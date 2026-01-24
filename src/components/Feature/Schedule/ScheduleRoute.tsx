@@ -122,18 +122,18 @@ const ScheduleRoute = () => {
             height={66}
           />
         )}
-        <div className={styles.placeThumbnail}>
+        <div className={styles.placeThumbnail} style={{ width: '60px', height: '60px', minWidth: '60px' }}>
           {place.thumbnailUrl ? (
             <Image
               src={place.thumbnailUrl}
               alt={place.placeName}
-              width={150}
-              height={150}
+              width={60}
+              height={60}
               className={styles.thumbnailImage}
               priority
             />
           ) : (
-            <div className={styles.noImage}>이미지 없음</div>
+            <div className={styles.noImage} style={{ width: '60px', height: '60px', fontSize: '8px' }}>이미지 없음</div>
           )}
         </div>
         <div className={styles.placeInfo}>

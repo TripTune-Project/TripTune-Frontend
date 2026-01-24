@@ -1,19 +1,42 @@
 /* 일정 만들기 1/3 분할 */
 .layoutContainer {
-    display: inline-flex;
+    display: flex;
     width: 100%;
     max-width: 1920px;
-    height: 989px;
+    height: calc(100vh - 75px);
     overflow-x: hidden;
 }
 
-.leftSection,
-.centerSection,
-.rightSection {
+.leftSection {
+    background-color: #ffffff;
+    width: 470px;
+    min-width: 470px;
+    max-width: 470px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.centerSection {
     background-color: #ffffff;
     flex: 1;
-    display: inline-flex;
+    min-width: 0;
+    display: flex;
     align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.rightSection {
+    background-color: #f3f3f3;
+    width: 470px;
+    min-width: 470px;
+    max-width: 470px;
+    display: flex;
+    align-items: flex-start;
     justify-content: center;
     flex-shrink: 0;
     overflow-x: hidden;
@@ -269,17 +292,16 @@
 }
 
 .tabContainer {
-    width: auto;
-    align-items: center;
-    gap: 24px;
-    margin-top: 0;
+    width: 399px;
+    display: flex;
+    margin-top: 37px;
+    margin-left: 36px;
     margin-bottom: 0;
-    display: inline-flex;
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 22px;
+    font-family: 'Inter', 'Noto Sans KR', sans-serif;
+    font-size: 14px;
     font-style: normal;
-    font-weight: 500;
-    line-height: 125%;
+    font-weight: 400;
+    line-height: 145%;
 }
 
 .scheduleCounter,
@@ -464,8 +486,8 @@
 
 /* 일정만들기 : 일정 기본 틀 */
 .scheduleUpdateBtn {
-    display: inline-flex;
-    width: 81px;
+    display: flex;
+    width: 74px;
     height: 44px;
     padding: 6px 12px;
     justify-content: center;
@@ -475,16 +497,21 @@
     background: #004A55;
     color: #FFF;
     text-align: center;
-    font-family: Noto Sans KR, sans-serif;
+    font-family: 'Inter', 'Noto Sans KR', sans-serif;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
-    margin-left: -300px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.scheduleUpdateBtn:hover {
+    background: #003840;
 }
 
 .scheduleShareBtn {
-    margin-left: -500px;
     display: flex;
     width: 81px;
     height: 44px;
@@ -496,44 +523,54 @@
     background: #F5F5F5;
     color: #000;
     text-align: center;
-    font-family: Noto Sans KR, sans-serif;
+    font-family: 'Inter', 'Noto Sans KR', sans-serif;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
-    line-height: 140%; /* 22.4px */
+    line-height: 140%;
+    border: none;
+    cursor: pointer;
+    margin-right: 14px;
+    transition: background-color 0.2s ease;
+}
+
+.scheduleShareBtn:hover {
+    background: #e8e8e8;
 }
 
 .pageContainer {
     width: 470px;
-    height: 100%;
+    height: calc(100vh - 75px);
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
     overflow-x: hidden;
+    overflow-y: auto;
     box-sizing: border-box;
+    background-color: #ffffff;
 }
 
 .tabButton {
     display: flex;
-    width: 200px;
-    height: 60px;
+    width: 199.5px;
+    height: 48px;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
     flex-shrink: 0;
     color: #848282;
-    font-family: Noto Sans KR,
-    sans-serif;
-    font-size: 16px;
+    font-family: 'Inter', 'Noto Sans KR', sans-serif;
+    font-size: 14px;
     font-style: normal;
     font-weight: 400;
-    line-height: normal;
+    line-height: 145%;
     background-color: #ffffff;
-    border: 1px solid #848282;
-    border-bottom: 3px solid #74a5da;
+    border: 1px solid #d9d9d9;
+    border-bottom: 2.5px solid #74a5da;
     cursor: pointer;
     margin-right: -1px;
+    box-sizing: border-box;
 }
 
 .tabButton:last-child {
@@ -541,18 +578,62 @@
 }
 
 .tabButton.activeTab {
-    border: 3px solid #74a5da;
+    border: 2.5px solid #74a5da;
     border-bottom: none;
     color: #000;
+    background-color: #ffffff;
 }
 
 .inputGroup {
     display: flex;
+    align-items: center;
     border-bottom: 2px solid #d9d9d9;
-    width: 400px;
-    margin-top: 39px;
-    margin-bottom: 17px;
+    width: 399px;
+    height: 36px;
+    margin-top: 35px;
+    margin-bottom: 0;
     margin-left: 36px;
+    padding-bottom: 8px;
+    position: relative;
+}
+
+.inputGroup:first-of-type {
+    margin-top: 35px;
+}
+
+.inputGroup:nth-of-type(2) {
+    margin-top: 37px;
+}
+
+.inputGroup label {
+    font-family: 'Inter', 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 145%;
+    color: #000;
+    white-space: nowrap;
+    min-width: 70px;
+}
+
+.inputGroup .inputField {
+    flex: 1;
+    border: none;
+    font-family: 'Inter', 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 145%;
+    color: #000;
+    background: transparent;
+    padding: 0;
+    margin-left: 30px;
+}
+
+.inputGroup .inputField::placeholder {
+    color: #c4c4c4;
+}
+
+.inputGroup .inputField:focus {
+    outline: none;
 }
 
 .input {
@@ -683,38 +764,42 @@
 }
 
 .placeItemSearch {
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    padding: 10px 15px;
-    border: 1px solid #dddddd;
-    border-radius: 8px;
+    padding: 9px 12px;
+    border: 1px solid #e8e8e8;
+    border-radius: 10px 0 10px 0;
     background-color: #ffffff;
     margin-bottom: 10px;
     position: relative;
     transition: box-shadow 0.3s ease;
-    margin-left: 7%;
-    height: 95px;
+    margin-left: 35px;
+    height: 97px;
     width: 401px;
+    box-shadow: 4px 4px 24px 0px rgba(217, 217, 217, 0.57);
+    box-sizing: border-box;
 }
 
 .indexCircle {
-    width: 30px;
-    height: 30px;
+    width: 31px;
+    height: 31px;
     border-radius: 50%;
     background-color: #74a5da;
     color: white;
     display: flex;
     justify-content: center;
     align-items: center;
+    font-family: 'Inter', sans-serif;
     font-size: 14px;
-    font-weight: bold;
-    margin-left: -30px;
+    font-weight: 600;
+    line-height: 145%;
+    margin-left: -35px;
 }
 
 .routeVector {
     position: absolute;
-    left: -40px;
-    top: 80%;
+    left: -50px;
+    top: 75%;
 }
 
 .indexLine {
@@ -737,31 +822,36 @@
 }
 
 .placeName {
-    margin-top: 16px;
-    margin-bottom: 16px;
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-family: 'Inter', 'Noto Sans KR', sans-serif;
     font-size: 12px;
-    height: 15px;
-    font-weight: bold;
-    font-family: 'Noto Sans KR', sans-serif;
-    color: #333;
+    font-weight: 505;
+    line-height: 150%;
+    color: #2c2c2c;
 }
 
 .placeItem {
     display: flex;
     align-items: center;
-    border-radius: 8px;
+    border-radius: 10px;
     padding: 10px;
     background-color: #ffffff;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     position: relative;
-    transition: box-shadow 0.3s ease;
-    margin-left: 40px;
-    height: 95px;
-    width: calc(100% - 60px);
-    max-width: 400px;
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+    margin-left: 50px;
+    height: 77px;
+    width: calc(100% - 70px);
+    max-width: 337px;
     border: 1px solid #e8e8e8;
-    cursor: pointer;
+    cursor: grab;
     box-sizing: border-box;
+    box-shadow: 4px 4px 20px 0px rgba(217, 217, 217, 0.57);
+}
+
+.placeItem:active {
+    cursor: grabbing;
 }
 
 .placeItem:after,
@@ -779,15 +869,15 @@
 .placeItem:after {
     border-color: rgba(255, 255, 255, 0);
     border-right-color: #ffffff;
-    border-width: 21px;
-    margin-top: -21px;
+    border-width: 15px;
+    margin-top: -15px;
 }
 
 .placeItem:before {
     border-color: rgba(232, 232, 232, 0);
     border-right-color: #e8e8e8;
-    border-width: 22px;
-    margin-top: -22px;
+    border-width: 16px;
+    margin-top: -16px;
 }
 
 .placeInfo {
@@ -806,65 +896,70 @@
 .placeThumbnail {
     width: 80px;
     height: 80px;
-    border-radius: 8px;
+    min-width: 80px;
+    border-radius: 10px;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 15px;
+    margin-right: 17px;
 }
 
 .noImage {
-    width: 100%;
-    height: 174px;
-    position: relative;
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: #e0e0e0;
-    color: #888;
-    font-size: 14px;
+    color: #999;
+    font-family: 'Inter', 'Noto Sans KR', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 150%;
 }
 
 .deleteZoneContent {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: gray;
+    gap: 8px;
+    color: #c3c4c6;
     width: 100%;
-    max-width: 400px;
     height: 49px;
     flex-shrink: 0;
     border-radius: 5px;
     border: 2px dashed #d1d5db;
     background: #f9fafb;
-    margin: auto;
     box-sizing: border-box;
+    font-family: 'Inter', 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 145%;
+    transition: all 0.2s ease;
 }
 
 .deleteZone {
     position: relative;
     z-index: 1000;
-    width: 100%;
-    max-width: 400px;
-    margin-left: 40px;
+    width: 399px;
+    margin-left: 36px;
+    margin-top: 20px;
     box-sizing: border-box;
 }
 
-.deleteZone.trashGray {
-    width: 100%;
-    max-width: 400px;
+.deleteZone.trashGray .deleteZoneContent {
     border: 2px dashed #d1d5db;
     background: #f9fafb;
+    color: #c3c4c6;
 }
 
-.deleteZone.trashRed {
-    width: 100%;
-    max-width: 400px;
+.deleteZone.trashRed .deleteZoneContent {
     border: 2px dashed #f86c6c;
     background: #ffffff;
-    transform: scale(1.05);
-    transition: all 0.2s ease;
+    color: #f86c6c;
+    transform: scale(1.02);
 }
 
 .placeInfo {
@@ -876,21 +971,29 @@
 
 .placeAddress,
 .placeDetailAddress {
+    font-family: 'Inter', 'Noto Sans KR', sans-serif;
     font-size: 10px;
-    color: #555;
+    font-weight: 300;
+    line-height: 150%;
+    color: #868686;
     display: flex;
     align-items: center;
+    margin: 0;
+}
+
+.placeAddress {
+    margin-bottom: 4px;
 }
 
 .placeDetailAddress {
-    margin-top: 8px;
+    margin-top: 0;
 }
 
 .addButton {
     width: 34px;
     height: 71px;
     color: #74a5da;
-    background-color: #f5f5f5;
+    background-color: transparent;
     font-size: 24px;
     font-weight: bold;
     text-align: center;
@@ -899,7 +1002,13 @@
     align-items: center;
     justify-content: center;
     position: absolute;
-    right: 20px;
+    right: 12px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.addButton:hover {
+    transform: scale(1.05);
 }
 
 .bookmarkButton {
@@ -923,59 +1032,114 @@
 .travelSearchContainer {
     display: flex;
     align-items: center;
-    justify-content: right;
-    margin-top: -57px;
-    margin-bottom: 17px;
-    margin-right: -340px;
-    gap: 20px;
+    justify-content: center;
+    gap: 7px;
+    margin: 18px 35px 20px 35px;
 }
 
 .travelSearchContainerSearch {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 20px;
-    margin-top: 0;
-    margin-right: 23px;
-    gap: 10px;
+    gap: 7px;
+    margin: 18px 35px 20px 35px;
 }
 
 .travelSearchContainerSearch input,
 .travelSearchContainer input {
     width: 334px;
     height: 41px;
-    padding: 10px 15px;
+    padding: 10px 18px;
+    font-family: 'Inter', 'Noto Sans KR', sans-serif;
     font-size: 12px;
+    font-weight: 400;
+    line-height: 150%;
+    color: #555;
     border-radius: 10px;
-    border: 1px solid #ccc;
-    transition: all 0.3s ease;
-    margin-left: 30px;
+    border: 1px solid #d9d9d9;
+    background-color: #ffffff;
+    transition: border-color 0.2s ease;
+    box-sizing: border-box;
+    margin: 0;
+}
+
+.travelSearchContainerSearch input::placeholder,
+.travelSearchContainer input::placeholder {
+    color: #555;
 }
 
 .travelSearchContainerSearch input:focus,
 .travelSearchContainer input:focus {
     border-color: #74a5da;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     outline: none;
 }
 
-.travelSearchContainerSearch button {
-    width: 67px;
-    height: 47px;
+.travelSearchContainerSearch button,
+.searchButton {
+    width: 60px;
+    height: 41px;
     border: none;
     cursor: pointer;
-    font-size: 16px;
-    transition: all 0.3s ease;
+    font-family: 'Inter', 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 145%;
     background-color: #74a5da;
-    color: white;
+    color: #ffffff;
+    transition: background-color 0.2s ease;
+}
+
+.travelSearchContainerSearch button:hover,
+.searchButton:hover {
+    background-color: #5a8fc4;
 }
 
 .travelList {
     list-style-type: none;
     padding: 0;
     margin: 0;
-    display: grid;
-    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: calc(100vh - 400px);
+}
+
+.travelList ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* 페이지 상단 헤더 (메뉴바) */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 75px;
+    padding: 0 37px;
+    background-color: #ffffff;
+    border-bottom: 2px solid #76adac;
+    box-sizing: border-box;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.headerMenu {
+    flex: 1;
+    flex-shrink: 0;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    display: flex;
+    align-items: center;
+}
+
+.headerMenu li {
+    display: flex;
+    align-items: center;
 }
 
 /* 일정만들기 3번 : 채팅 */
@@ -983,38 +1147,27 @@
     display: flex;
     align-self: flex-start;
     flex-direction: column;
-    width: 538px;
-    height: 850px;
+    width: 470px;
+    height: calc(100vh - 75px);
     overflow: hidden;
+    background-color: #f3f3f3;
 }
 
-.header {
+.chatHeader {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    padding: 14px;
+    padding: 18px 14px;
+    height: 61px;
     background-color: #ffffff;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: none;
     color: #000;
-    font-family: Noto Sans KR, sans-serif;
+    font-family: 'Inter', 'Noto Sans KR', sans-serif;
     font-size: 20px;
     font-style: normal;
     font-weight: 400;
-    line-height: 130%; /* 26px */
-}
-
-.headerMenu {
-    width: 100%;
-    flex-shrink: 0;
-    color: #757575;
-    font-style: normal;
-    font-weight: 500;
-    letter-spacing: -0.32px;
-    padding: 0;
-    list-style: none;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    line-height: 130%;
+    box-sizing: border-box;
 }
 
 .chatTitle {
@@ -1052,66 +1205,89 @@
 }
 
 .messageContainer {
-    display: inline-flex;
+    display: flex;
     flex-direction: column;
     overflow-y: auto;
     flex-grow: 1;
-    padding: 10px;
-    background-color: #e0e0e0;
-    border-bottom: 1px solid #e0e0e0;
-    height: 72vh;
+    padding: 20px 26px;
+    background-color: #f3f3f3;
+    border-bottom: none;
 }
 
 .sentMessage,
 .receiveMessage {
     background-color: #ffffff;
-    border-radius: 16px;
-    padding: 12px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-    font-size: 14px;
+    border-radius: 10px 10px 10px 0;
+    padding: 10px 14px;
+    font-family: 'Inter', 'Noto Sans KR', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 190%;
+    color: #333;
     align-self: flex-start;
+    max-width: 280px;
+    word-break: break-word;
 }
 
 .receiveMessage {
     align-self: flex-end;
     background-color: #76adac;
     color: #ffffff;
+    border-radius: 10px 10px 0 10px;
 }
 
 .inputContainer {
     display: flex;
-    padding: 16px;
-    border-top: 1px solid #e0e0e0;
+    flex-direction: column;
+    padding: 14px;
     background-color: #ffffff;
-    border-radius: 0 0 12px 12px;
-    gap: 12px;
-    flex-wrap: wrap;
+    border-radius: 10px;
+    margin: 0 14px 22px 14px;
+    min-height: 140px;
+    box-sizing: border-box;
 }
 
 .messageInput {
     flex-grow: 1;
-    padding: 12px;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    font-size: 14px;
-    transition: border-color 0.3s ease;
-    min-width: 200px;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 0;
+    font-family: 'Inter', 'Noto Sans KR', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 190%;
+    color: #333;
     background-color: #ffffff;
+    resize: none;
+    min-height: 85px;
+}
+
+.messageInput::placeholder {
+    color: #999;
 }
 
 .messageInput:focus {
-    border-color: #74a5da;
     outline: none;
 }
 
 .sendButton {
-    background-color: #74a5da;
+    align-self: flex-end;
+    background-color: #76adac;
     color: #ffffff;
-    padding: 12px 20px;
+    padding: 6px 12px;
+    width: 69px;
+    height: 35px;
     border: none;
-    border-radius: 8px;
+    font-family: 'Inter', 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 145%;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.2s ease;
+}
+
+.sendButton:hover {
+    background-color: #629a99;
 }
 
 .userList {
@@ -1545,94 +1721,111 @@
 }
 
 .dateSeparator {
-    width: 500px;
+    width: 100%;
+    max-width: 418px;
     color: #555;
-    text-align: justify;
+    text-align: center;
     justify-content: center;
-    font-size: 16px;
+    font-family: 'Inter', 'Noto Sans KR', sans-serif;
+    font-size: 14px;
     font-style: normal;
     font-weight: 400;
-    line-height: 25px;
-    display: inline-flex;
+    line-height: 145%;
+    display: flex;
     align-items: center;
-    margin: auto;
+    margin: 15px auto;
     gap: 10px;
 }
 
 .dateHr {
     flex: 1;
     border: none;
-    border-top: 1px solid #ccc;
-    height: 1px;
+    border-top: 1.5px solid #ccc;
+    height: 0;
 }
 
 .dateText {
+    font-family: 'Inter', 'Noto Sans KR', sans-serif;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 400;
+    line-height: 145%;
     color: #555;
     white-space: nowrap;
+    padding: 2px 22px;
+    background-color: #f3f3f3;
 }
 
 .userInfo {
     display: flex;
-    align-items: center;
-    margin-bottom: 5px;
+    align-items: flex-end;
+    margin-bottom: 4px;
 }
 
 .nickname {
-    font-weight: bold;
-    font-size: 14px;
-    color: #333;
-    margin-left: 10px;
+    font-family: 'Inter', 'Noto Sans KR', sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 150%;
+    color: #000;
+    margin-left: 9px;
 }
 
 .profileImage {
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     object-fit: cover;
 }
 
 .timestamp {
-    font-size: 12px;
-    color: #888;
+    font-family: 'Inter', 'Noto Sans KR', sans-serif;
+    font-size: 9px;
+    font-weight: 400;
+    line-height: 150%;
+    color: #848282;
     margin-left: 10px;
     display: block;
     text-align: right;
-    margin-top: 5px;
+    margin-top: 4px;
 }
 
 .noResults {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     color: #555;
-    font-size: 16px;
+    font-family: 'Inter', 'Noto Sans KR', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 150%;
     text-align: center;
-    margin: 20px 0;
+    margin: 40px 0;
     padding: 10px;
+    min-height: 300px;
 }
 
 .noText {
-    margin-top: 60px;
+    margin-top: 30px;
+    margin-bottom: 10px;
     color: #666;
     text-align: center;
-    font-size: 20px;
+    font-family: 'Inter', 'Noto Sans KR', sans-serif;
+    font-size: 14px;
     font-style: normal;
     font-weight: 600;
-    line-height: normal;
+    line-height: 145%;
 }
 
-.leftSection {
-    background-color: #ffffff;
-    flex: 1;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    overflow-y: auto; /* 여행 루트 내부 스크롤 허용 */
-    overflow-x: hidden;
-}
+/* 중복 제거됨 - 상단에서 정의 */
 
 .routeListContainer {
-    height: 500px;
+    max-height: calc(100vh - 400px);
     overflow-y: auto;
     overflow-x: hidden;
     width: 100%;
     box-sizing: border-box;
+    padding: 10px 0;
+    list-style: none;
+    margin: 0;
 }

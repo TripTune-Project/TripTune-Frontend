@@ -301,7 +301,7 @@ const Chatting = ({ onError }: ChattingProps) => {
 
   return (
     <div className={styles.chatContainer}>
-      <div className={styles.header}>그룹 채팅</div>
+      <div className={styles.chatHeader}>그룹채팅</div>
       <div
         className={styles.messageContainer}
         ref={chatContainerRef}
