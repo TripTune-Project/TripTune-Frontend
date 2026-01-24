@@ -3,8 +3,8 @@ import { useTravelStore } from '@/store/scheduleStore';
 
 // 맵 컨테이너의 스타일
 const containerStyle = {
-  width: '844px',
-  height: '850px',
+  width: '980px',
+  height: '825px',
   alignSelf: 'flex-start',
 };
 
