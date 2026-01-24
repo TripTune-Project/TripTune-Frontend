@@ -253,73 +253,73 @@
 
 .createContainer {
     margin: 0 auto;
-    width: 1296px;
+    width: 1297px;
     height: fit-content;
     background: none;
     box-shadow: none;
     border-radius: 0;
-    padding-top: 77px;
+    padding-top: 67px;
 }
 
 .tabAndSearchContainer {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 20px;
+    margin-bottom: 0;
 }
 
 .tabContainer {
-    width: 401px;
+    width: auto;
     align-items: center;
-    gap: 0;
-    margin-top: 21px;
-    margin-bottom: 10px;
+    gap: 24px;
+    margin-top: 0;
+    margin-bottom: 0;
     display: inline-flex;
-    font-family: Noto Sans KR, sans-serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 22px;
     font-style: normal;
-    font-weight: 700;
-    line-height: 125%; /* 27.5px */
-
+    font-weight: 500;
+    line-height: 125%;
 }
 
 .scheduleCounter,
 .scheduleCounterShare {
-    display: contents;
+    display: inline-flex;
     align-items: center;
-    font-size: 1.08rem;
-    font-weight: 600;
-    margin: 0 10px 0 0;
-    padding: 8px 22px;
-    border-radius: 8px;
+    font-size: 22px;
+    font-weight: 500;
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
     border: none;
-    color: #222;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    transition: border 0.2s, color 0.2s;
+    color: #666;
+    background: none;
+    box-shadow: none;
+    transition: color 0.2s;
     cursor: pointer;
+    gap: 8px;
 }
 
 .scheduleCounter.activeTab,
 .scheduleCounterShare.activeTab {
     color: #76adac;
-    border: none;
-    width: 54px;
-    height: 34px;
+    font-weight: 700;
 }
 
 .scheduleCounter .counterNumber,
 .scheduleCounterShare .counterNumber {
     width: 54px;
     height: 34px;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     background-color: #666;
     color: #fff;
-    padding: 3px 12px;
-    border-radius: 16px;
-    margin-left: 8px;
-    min-width: 24px;
-    text-align: center;
-    box-shadow: none;
+    padding: 6px 12px;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: 700;
+    box-sizing: border-box;
 }
 
 .scheduleCounter.activeTab .counterNumber,
@@ -345,7 +345,6 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin-left: 150px;
 }
 
 .deleteModal {
@@ -362,25 +361,26 @@
 }
 
 .threeDots {
-    position: absolute;
-    top: 25px;
-    right: 30px;
+    position: relative;
     padding: 5px;
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
+    flex-shrink: 0;
 }
 
 .deleteMenu {
     position: absolute;
-    top: 40px;
-    right: 10px;
+    top: 100%;
+    right: 0;
     background-color: #ffffff;
     border: 1px solid #dddddd;
     padding: 10px;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     z-index: 100;
+    white-space: nowrap;
 }
 
 .deleteButton {
@@ -394,45 +394,64 @@
 
 .scheduleImage {
     object-fit: cover;
-    width: 414px;
+    width: 100%;
     height: 174px;
     border-radius: 0;
-    margin-right: 0;
 }
 
 .scheduleImageProfile {
     height: 38px;
     width: 38px;
-    margin-top: -40px;
-    margin-right: 15px;
     border-radius: 50%;
-    object-fit: contain;
-    float: right;
+    object-fit: cover;
+    flex-shrink: 0;
 }
 
 .scheduleContent {
-    padding: 13px 23px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 23px;
+    height: 75px;
+    box-sizing: border-box;
+}
+
+.scheduleHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 23px;
+    height: 58px;
+    box-sizing: border-box;
 }
 
 .scheduleName {
-    margin-left: 23px;
-    margin-top: 18px;
-    margin-bottom: 15px;
     color: #000;
-    font-family: Noto Sans KR, sans-serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
-    line-height: 140%; /* 22.4px */
+    line-height: 140%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+    max-width: calc(100% - 40px);
 }
 
 .scheduleDates {
     font-size: 14px;
     color: #333;
-    font-family: Noto Sans KR, sans-serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-style: normal;
     font-weight: 400;
-    line-height: 150%; /* 16.5px */
+    line-height: 145%;
+}
+
+.scheduleDatesWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
 .emptyMessage {
@@ -796,7 +815,7 @@
 }
 
 .noImage {
-    width: 414px;
+    width: 100%;
     height: 174px;
     position: relative;
     display: flex;
@@ -1226,13 +1245,14 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-top: 30px;
+    margin-top: 17px;
     color: #555;
     width: 1297px;
     height: 600px;
     flex-shrink: 0;
     border: 1px solid #d9d9d9;
     background-color: #ffffff;
+    box-sizing: border-box;
 }
 
 .noScheduleMessage {
@@ -1259,76 +1279,72 @@
 .travelSearchContainer {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: space-between;
     margin: 0 0 0 auto;
     gap: 8px;
-    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.06);
-    padding: 10px 20px;
-    width: 371px;
+    padding: 0 15px;
+    width: 471px;
     height: 50px;
     flex-shrink: 0;
     border-radius: 10px;
     border: 1px solid #D9D9D9;
     background: #FFF;
+    box-sizing: border-box;
 }
 
 .travelSearchContainer input {
-    height: 40px;
-    font-size: 17px;
-    border-radius: 8px;
+    flex: 1;
+    height: 100%;
+    font-size: 16px;
+    font-family: 'Noto Sans KR', sans-serif;
     background-color: transparent;
     border: none;
-    margin-left: -2px;
+    outline: none;
+    color: #555;
+}
+
+.travelSearchContainer input::placeholder {
+    color: #555;
 }
 
 .travelSearchContainer button {
-    width: 44px;
-    background-color: transparent;;
-    height: 40px;
+    width: 21px;
+    height: 21px;
+    background-color: transparent;
     border: none;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-left: 8px;
-    margin-right: 0;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    padding: 0;
     cursor: pointer;
 }
 
 .scheduleList {
-    margin-top: 40px;
+    margin-top: 17px;
     margin-left: 0;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    grid-template-columns: repeat(3, 416px);
+    gap: 24px;
 }
 
 .scheduleItem {
-    width: 414px;
+    width: 416px;
     height: 308px;
     border: 1px solid #d9d9d9;
     background: #ffffff;
     position: relative;
     display: flex;
     flex-direction: column;
-    margin-bottom: 20px;
     transition: box-shadow 0.3s ease;
     flex-shrink: 0;
-    border-radius: 8px;
+    border-radius: 10px 10px 10px 10px;
     cursor: pointer;
-    margin-right: 0;
+    overflow: hidden;
+    box-sizing: border-box;
 }
 
 .hoverMenu {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 416px;
-    height: 308px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: opacity 0.3s ease;
+    display: none;
 }
 
 .deleteButton,

@@ -299,15 +299,15 @@ export default function SchedulePage() {
         className={styles.scheduleItem}
         onClick={(e) => handleDetailClick(e, schedule.scheduleId as number)}
       >
-        <div>
-          <div className={styles.hoverMenu}>
+        <div className={styles.scheduleHeader}>
+          <div className={styles.scheduleName}>{schedule.scheduleName}</div>
+          <div className={styles.threeDots}>
             <div
-              className={styles.threeDots}
               onClick={(e) =>
                 handleToggleDeleteMenu(schedule.scheduleId as number, e)
               }
             >
-              <Image src={moreBtn} alt={'moreBtn'} width={14} height={2} />
+              <Image src={moreBtn} alt={'moreBtn'} width={26} height={19} />
             </div>
             {activeDeleteMenu === schedule.scheduleId && (
               <div className={styles.deleteMenu}>
@@ -334,7 +334,6 @@ export default function SchedulePage() {
               </div>
             )}
           </div>
-          <div className={styles.scheduleName}>{schedule.scheduleName}</div>
         </div>
         {schedule.thumbnailUrl ? (
           <Image
@@ -348,11 +347,13 @@ export default function SchedulePage() {
           <div className={styles.noImage}>이미지 없음</div>
         )}
         <div className={styles.scheduleContent}>
-          <div className={styles.scheduleDates}>
-            일정 : {schedule.startDate} ~ {schedule.endDate}
-          </div>
-          <div className={styles.scheduleDates}>
-            수정일 : {schedule.sinceUpdate}
+          <div className={styles.scheduleDatesWrapper}>
+            <div className={styles.scheduleDates}>
+              일정 : {schedule.startDate} ~ {schedule.endDate}
+            </div>
+            <div className={styles.scheduleDates}>
+              수정일 : {schedule.sinceUpdate}
+            </div>
           </div>
           <Image
             src={schedule.author?.profileUrl ?? ''}
@@ -426,7 +427,6 @@ export default function SchedulePage() {
                 {allScheduleData?.pages[0]?.data?.totalElements ?? 0}
               </span>
             </div>
-            &nbsp;&nbsp;&nbsp;
             <div
               className={`${styles.scheduleCounterShare} ${selectedTab === 'share' ? styles.activeTab : ''}`}
               onClick={() => setSelectedTab('share')}
@@ -452,7 +452,6 @@ export default function SchedulePage() {
               title="일정 검색"
             >
               <Image
-                style={{ marginLeft: '-5px' }}
                 src={searchIcon}
                 alt="돋보기"
                 width={21}
