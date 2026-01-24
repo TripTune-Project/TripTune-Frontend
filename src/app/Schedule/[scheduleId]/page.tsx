@@ -188,9 +188,9 @@ export default function ScheduleDetailPage() {
               <Image
                 src={MainLogoImage}
                 alt='로고'
-                width={184}
-                height={58}
-                style={{ marginLeft: '118px' }}
+                width={141}
+                height={52}
+                style={{ marginLeft: '14px' }}
                 priority
               />
             </Link>

@@ -25,9 +25,9 @@ export default function NoResultLayout() {
     };
   } else if (isSchedulePage) {
     containerStyles = {
-      // width: '1297px',
+      width: '1297px',
       height: '600px',
-      // marginLeft: '-208px',
+      marginTop: '17px',
     };
   }
   
@@ -71,8 +71,8 @@ export default function NoResultLayout() {
       <Image
         src={isBookmarkPage ? emtpyBookmarkIcon : AlertIcon}
         alt={isBookmarkPage ? 'empty-bookmark' : 'no-schedule-root'}
-        width={isBookmarkPage ? 206 : 69}
-        height={isBookmarkPage ? 118 : 69}
+        width={isBookmarkPage ? 206 : 80}
+        height={isBookmarkPage ? 118 : 80}
       />
       
       <div style={styles.noText}>
