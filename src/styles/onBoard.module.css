@@ -188,10 +188,12 @@
 
 .viewTitleSmall {
     margin-left: 27px;
+    margin-top: 8px;
     font-size: 14px;
-    line-height: 20px;
-    width: 250px;
-    height: 70px;
+    font-weight: 400;
+    line-height: 1.45;
+    color: #555;
+    width: 180px;
 }
 
 .buttonContainer {
@@ -247,20 +249,25 @@
 
 .onBoardNoChooseBtn,
 .onBoardChooseBtn {
-    width: 90px;
-    height: 38px;
+    min-width: 66px;
+    height: 31px;
+    padding: 5px 20px;
     border-radius: 40px;
     border: none;
-    background: #e8e8e8;
-    margin-left: 10px;
+    background: #f7f8fb;
+    margin-left: 6px;
     cursor: pointer;
     transition: background-color 0.3s;
     font-size: 14px;
+    font-weight: 400;
+    line-height: 1.45;
+    color: #555;
 }
 
 .onBoardChooseBtn {
     background: #a7cdcc;
     color: #ffffff;
+    font-weight: 700;
 }
 
 .onBoardChooseBtn:hover,
@@ -272,13 +279,13 @@
     margin-top: 39px;
     flex: 1;
     width: 305px;
-    height: 341px;
-    border-radius: 0 0 30px 0;
+    height: 311px;
+    border-radius: 30px 0 30px 0;
     background: #ffffff;
     text-align: center;
     margin-left: 40px;
-    border: 1px solid #e0e0e0;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
 }
 
 .sliderImg {
@@ -306,32 +313,34 @@
     color: #000;
     font-family: 'Noto Sans KR', sans-serif;
     font-size: 16px;
-    height: 19px;
-    font-weight: 500;
-    line-height: normal;
-    margin-top: 10px;
+    font-weight: 400;
+    line-height: 1.4;
+    margin-top: 22px;
     text-align: left;
-    margin-left: 30px;
+    margin-left: 27px;
+    margin-right: 27px;
 }
 
 .sliderTextPDetail {
     color: #848282;
     font-family: 'Noto Sans KR', sans-serif;
     font-size: 14px;
-    height:17px;
-    font-weight: 500;
-    line-height: normal;
-    margin-top: 5px;
+    font-weight: 400;
+    line-height: 1.45;
+    margin-top: 18px;
+    margin-bottom: 22px;
     text-align: left;
-    margin-left: 15px;
+    margin-left: 27px;
+    margin-right: 27px;
     display: flex;
     align-items: center;
+    gap: 6px;
 }
 
 .sliderTextPDetail img {
     vertical-align: middle;
     display: inline-block;
-    margin-right: 5px;
+    flex-shrink: 0;
 }
 
 .sliderContainer {
@@ -398,15 +407,14 @@
 }
 
 .viewTitle {
-    margin-top: 15px;
+    margin-top: 22px;
     margin-left: 27px;
-    color: #555;
-    font-family: Noto Sans KR,
-    sans-serif;
-    font-size: 19px;
+    color: #333;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 16px;
     font-style: normal;
-    font-weight: 700;
-    line-height: normal;
+    font-weight: 600;
+    line-height: 1.4;
 }
 
 .viewTitle:hover {
