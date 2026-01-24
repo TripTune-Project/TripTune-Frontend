@@ -800,7 +800,7 @@
 
 .routeVector {
     position: absolute;
-    left: -50px;
+    left: -44px;
     top: 75%;
 }
 
@@ -1824,8 +1824,7 @@
     overflow-x: hidden;
     width: 100%;
     box-sizing: border-box;
-    padding: 10px 0;
+    padding: 10px 0 10px 20px;
     list-style: none;
-    margin: 0;
-    margin-left: 47px;
+    margin-left: 23px;
 }
