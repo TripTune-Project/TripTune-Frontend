@@ -60,9 +60,7 @@ const BookMark = () => {
     <div className={styles.listContainer}>
       <div className={styles.headerContainer}>
         <div className={styles.leftHeader}>
-          <div className={styles.mypageTitle}
-          style={{marginLeft:"200px", marginTop:"36px"}}
-          >북마크</div>
+          <div className={styles.mypageTitle}>북마크</div>
           <div className={styles.totalCount}>
             전체
             <span className={styles.circleCount} >
