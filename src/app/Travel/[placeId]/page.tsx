@@ -30,42 +30,68 @@ import useAuth from '@/hooks/useAuth';
 
 const StyledSwiperContainer = styled.div`
   position: relative;
-  width: 749px;
-  height: 512px;
+  width: 340px;
+  height: 220px;
+  border-radius: 10px 0 0 10px;
+  overflow: hidden;
+
+  .swiper {
+    width: 100%;
+    height: 100%;
+  }
+
+  .swiper-slide {
+    width: 100%;
+    height: 100%;
+  }
 `;
 
 const StyledSwiperButtonPrev = styled.button`
   position: absolute;
   top: 50%;
-  left: 0;
+  left: 10px;
   transform: translateY(-50%);
   border: none;
   cursor: pointer;
   z-index: 10;
   user-select: none;
-  width: 50px;
-  height: 50px;
+  width: 36px;
+  height: 36px;
+  background-color: rgba(255, 255, 255, 0.8);
   background-image: url('/assets/images/여행지 탐색/상세화면/placeDetail_imageLeftBtn.png');
-  background-size: contain;
+  background-size: 16px;
   background-repeat: no-repeat;
   background-position: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 1);
+  }
 `;
 
 const StyledSwiperButtonNext = styled.button`
   position: absolute;
   top: 50%;
-  right: 0;
+  right: 10px;
   transform: translateY(-50%);
   border: none;
   cursor: pointer;
   z-index: 10;
   user-select: none;
-  width: 50px;
-  height: 50px;
+  width: 36px;
+  height: 36px;
+  background-color: rgba(255, 255, 255, 0.8);
   background-image: url('/assets/images/여행지 탐색/상세화면/placeDetail_imageRightBtn.png');
-  background-size: contain;
+  background-size: 16px;
   background-repeat: no-repeat;
   background-position: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 1);
+  }
 `;
 
 const fetchTravelDetailData = async (
@@ -183,7 +209,7 @@ const TravelDetailPage = () => {
 
   const UseTimeUI = ({ useTime }: { useTime: string }) => (
     <div className={styles.useTimeLabel}>
-      <Image width={18} height={18} src={timeIcon} alt='이용 시간' />
+      <Image width={16} height={16} src={timeIcon} alt='이용 시간' />
       <p className={styles.contentTitle}>이용시간</p>
       <p className={styles.contentText}>
         {formatDescriptionWithParagraphs(useTime, true)}
@@ -200,14 +226,14 @@ const TravelDetailPage = () => {
   }) => (
     <div>
       <div className={styles.useTimeLabel}>
-        <Image width={18} height={18} src={timeIcon} alt='입실 시간' />
+        <Image width={16} height={16} src={timeIcon} alt='입실 시간' />
         <p className={styles.contentTitle}>입실시간</p>
         <span className={styles.contentText}>
           {formatDescriptionWithParagraphs(checkInTime, true)}
         </span>
       </div>
       <div className={styles.useTimeLabel}>
-        <Image width={18} height={18} src={timeIcon} alt='퇴실 시간' />
+        <Image width={16} height={16} src={timeIcon} alt='퇴실 시간' />
         <p className={styles.contentTitle}>퇴실시간</p>
         <span className={styles.contentText}>
           {formatDescriptionWithParagraphs(checkOutTime, true)}
@@ -328,8 +354,9 @@ const TravelDetailPage = () => {
                       <Image
                         src={image.imageUrl}
                         alt={image.imageName}
-                        width={749}
-                        height={433}
+                        width={340}
+                        height={220}
+                        style={{ objectFit: 'cover', width: '100%', height: '100%' }}
                       />
                     </div>
                   </SwiperSlide>
@@ -352,10 +379,10 @@ const TravelDetailPage = () => {
             <div className={styles.detailsScroll}>
               <dl className={styles.detailsGrid}>
                 <div className={styles.detailRow}>
-                  <dt className={styles.label} style={{alignItems: 'center'}}>
+                  <dt className={styles.label}>
                     <Image
-                      width={18}
-                      height={18}
+                      width={16}
+                      height={16}
                       src={locationIcon}
                       alt='주소'
                     />
@@ -370,8 +397,8 @@ const TravelDetailPage = () => {
                     <div className={styles.detailRow}>
                       <dt className={styles.label}>
                         <Image
-                          width={18}
-                          height={18}
+                          width={16}
+                          height={16}
                           src={timeIcon}
                           alt='입실시간'
                         />
@@ -382,8 +409,8 @@ const TravelDetailPage = () => {
                     <div className={styles.detailRow}>
                       <dt className={styles.label}>
                         <Image
-                          width={18}
-                          height={18}
+                          width={16}
+                          height={16}
                           src={timeIcon}
                           alt='퇴실시간'
                         />
@@ -396,8 +423,8 @@ const TravelDetailPage = () => {
                   <div className={styles.detailRow}>
                     <dt className={styles.label}>
                       <Image
-                        width={18}
-                        height={18}
+                        width={16}
+                        height={16}
                         src={timeIcon}
                         alt='이용시간'
                       />
@@ -413,8 +440,8 @@ const TravelDetailPage = () => {
                   <div className={styles.detailRow}>
                     <dt className={styles.label}>
                       <Image
-                        width={18}
-                        height={18}
+                        width={16}
+                        height={16}
                         src={homePageIcon}
                         alt='홈페이지'
                       />
@@ -436,8 +463,8 @@ const TravelDetailPage = () => {
                   <div className={styles.detailRow}>
                     <dt className={styles.label}>
                       <Image
-                        width={18}
-                        height={18}
+                        width={16}
+                        height={16}
                         src={phoneIcon}
                         alt='문의 및 안내'
                       />

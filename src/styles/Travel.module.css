@@ -246,14 +246,17 @@
     flex-direction: column;
     margin: 0;
     padding: 0;
+    background: linear-gradient(180deg, #E8F5E9 0%, #FFF 15%);
+    min-height: 100vh;
 }
 
 .topSection {
-    margin: 50px auto;
+    margin: 50px auto 40px;
     display: flex;
     gap: 0;
     flex-wrap: nowrap;
     align-items: stretch;
+    max-width: 1400px;
 }
 
 .topSection > * {
@@ -263,29 +266,33 @@
 .sliderImageContainer {
     background: #f0f0f0;
     width: 100%;
-    height: 512px;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    border-radius: 10px 0 0 10px;
 }
 
 .sliderImageContainer img {
-    height: 433px !important;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .noImage {
     position: relative;
-    width: 749px;
-    height: 512px;
+    width: 340px;
+    height: 220px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 8px;
-    background: #e0e0e0;
+    border-radius: 10px 0 0 10px;
+    background: linear-gradient(135deg, #E8F5E9 0%, #f5f5f5 100%);
     border: 1px dashed #ccc;
-    color: #888;
+    color: #666;
     font-size: 14px;
+    font-family: 'Noto Sans KR', sans-serif;
 }
 
 .sliderButton {
@@ -307,46 +314,55 @@
     background-color: #ffffff;
     display: flex;
     flex-direction: column;
-    height: 512px;
-    width: 648px;
+    height: auto;
+    min-height: 220px;
+    width: 460px;
     margin: 0;
     overflow: hidden;
-    padding: 0 20px 20px 20px;
-    flex: 0 0 648px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
+    padding: 25px 30px;
+    flex: 0 0 460px;
+    border-radius: 0 10px 10px 0;
+    box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 .countryCityDistrict {
     color: #636363;
-    height: 19px;
     font-style: normal;
-    font: 300 16px/140% "Noto Sans KR", sans-serif;
-    margin: 40px 10px 0 40px;
+    font: 300 14px/140% "Noto Sans KR", sans-serif;
+    margin: 0 0 8px 0;
 }
 
 .detailplaceName {
     color: #000;
-    height: 46px;
     font-style: normal;
-    font: 400 32px/120% "Noto Sans KR", sans-serif;
-    margin-top: 20px;
-    margin-left: 40px;
+    font: 500 24px/130% "Noto Sans KR", sans-serif;
+    margin: 0 0 20px 0;
 }
 
 .detailsScroll {
     flex: 1;
     min-height: 0;
     overflow-y: auto;
-    padding-right: 8px;
+    padding-right: 4px;
+    margin-bottom: 15px;
+}
+
+.detailsScroll::-webkit-scrollbar {
+    width: 4px;
+}
+
+.detailsScroll::-webkit-scrollbar-thumb {
+    background: #D9D9D9;
+    border-radius: 2px;
 }
 
 .detailsGrid {
     display: grid;
-    grid-template-columns: 150px 1fr;
-    column-gap: 12px;
-    row-gap: 12px;
-    padding: 0 20px 0 0;
-    margin: 40px;
+    grid-template-columns: 100px 1fr;
+    column-gap: 15px;
+    row-gap: 10px;
+    padding: 0;
+    margin: 0;
 }
 
 .detailRow {
@@ -355,17 +371,17 @@
 
 .label {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     gap: 8px;
 }
 
 .labelText {
-    font: 500 18px/1.6 "Noto Sans KR", sans-serif;
+    font: 500 14px/1.6 "Noto Sans KR", sans-serif;
     color: #2D2D2D;
 }
 
 .value {
-    font: 300 18px/1.8 "Noto Sans KR", sans-serif;
+    font: 400 14px/1.6 "Noto Sans KR", sans-serif;
     color: #555;
     white-space: pre-wrap;
     word-break: break-word;
@@ -373,101 +389,117 @@
 }
 
 .value a {
-    color: #00f;
+    color: #0066CC;
     text-decoration: none;
     word-break: break-word;
     overflow-wrap: anywhere;
+    transition: color 0.2s;
+}
+
+.value a:hover {
+    color: #004499;
+    text-decoration: underline;
 }
 
 .buttonContainer {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    gap: 12px;
+    justify-content: flex-start;
     align-items: center;
     width: 100%;
     flex-shrink: 0;
-    margin: 16px 0 0 -14px;
+    margin-top: auto;
 }
 
 .bookmarkBtn {
-    background-color: #74a5da;
+    background-color: #74A5DA;
     color: #ffffff;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.2s ease;
+}
+
+.bookmarkBtn:hover {
+    background-color: #5A8FC4;
 }
 
 .chooseBtn {
-    background-color: #76adac;
+    background-color: #76ADAC;
     color: #ffffff;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.2s ease;
+}
+
+.chooseBtn:hover {
+    background-color: #5A9392;
 }
 
 .bookmarkBtn, .chooseBtn {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 55px;
+    height: 45px;
     padding: 10px 20px;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
-    gap: 10px;
-    margin-left: 30px;
-    width: 250px;
-    flex-shrink: 0;
+    gap: 8px;
+    flex: 1;
+    max-width: 200px;
     text-align: center;
-    font-style: normal;
-    font: 700 18px/135% "Noto Sans KR", sans-serif;
+    font: 600 14px/135% "Noto Sans KR", sans-serif;
     color: #fff;
-    transition: background-color .3s ease;
 }
 
 .detailTitle {
     display: flex;
     align-items: center;
     height: 30px;
-    margin-left: 262px;
+    max-width: 1400px;
+    margin: 0 auto 20px;
+    padding: 0 20px;
     color: #000;
-    font: 400 26px/120% "Noto Sans KR", sans-serif;
+    font: 500 22px/120% "Noto Sans KR", sans-serif;
 }
 
 .detailTitleIcon {
-    width: 36px;
-    height: 27px;
+    width: 28px;
+    height: 21px;
     flex-shrink: 0;
     margin-right: 10px;
 }
 
 .infoSection {
-    background: #f3f8f8;
-    padding: 20px;
-    border-radius: 8px;
-    width: fit-content;
-    max-width: 1400px;
-    margin: auto;
+    background: #F3F8F8;
+    padding: 30px 40px;
+    border-radius: 15px;
+    width: calc(100% - 40px);
+    max-width: 1360px;
+    margin: 0 auto 40px;
+    box-sizing: border-box;
 }
 
 .infoText {
-    font: 400 16px "Noto Sans KR", sans-serif;
+    font: 400 15px/1.8 "Noto Sans KR", sans-serif;
     color: #333;
     overflow: hidden;
     -webkit-box-orient: vertical;
     white-space: pre-line;
+    margin: 0;
 }
 
 .expandButton {
     background: none;
     border: none;
-    color: #0070f3;
+    color: #76ADAC;
     cursor: pointer;
     font-size: 14px;
-    font-weight: bold;
-    margin-left: 5px;
-    transition: color .3s ease;
+    font-weight: 600;
+    margin-top: 15px;
+    padding: 0;
+    transition: color .2s ease;
+    font-family: 'Noto Sans KR', sans-serif;
 }
 
 .expandButton:hover {
-    text-decoration: underline;
-    color: #0056b3;
+    color: #5A9392;
 }
 
 /******************************
@@ -566,22 +598,23 @@
 
 .contentTitle {
     color: #2D2D2D;
-    font-family: Noto Sans KR, sans-serif;
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 505;
-    line-height: 180%;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 160%;
+    margin: 0;
+    min-width: 80px;
 }
 
 .contentText {
-    min-width: 240px;
+    min-width: 200px;
     color: #555;
-    font-family: Noto Sans KR, sans-serif;
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 300;
-    line-height: 180%;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 160%;
     word-break: break-all;
+    margin: 0;
 }
 
 .addressLabel,
@@ -590,13 +623,13 @@
 .phoneLabel {
     display: flex;
     align-items: center;
-    font-size: 18px;
+    font-size: 14px;
     color: #2d2d2d;
-    font-weight: 505;
-    font-style: normal;
-    height: 32px;
-    line-height: 180%;
-    margin-bottom: 10px;
+    font-weight: 500;
+    height: auto;
+    line-height: 160%;
+    margin-bottom: 8px;
+    gap: 8px;
 }
 
 .addressLabel img,
@@ -605,31 +638,36 @@
 .phoneLabel img {
     width: 16px;
     height: 16px;
-    margin-right: 8px;
     object-fit: contain;
+    flex-shrink: 0;
 }
 
 .addressLabel p,
 .useTimeLabel p,
 .homepageLabel p,
 .phoneLabel p {
-    width: 150px;
-    height: 27px;
+    min-width: 80px;
+    margin: 0;
 }
 
 .homepageLabel a {
-    color: #00f;
-    font-style: normal;
-    font-weight: 300;
+    color: #0066CC;
+    font-weight: 400;
     text-decoration: none;
     font-family: 'Noto Sans KR', sans-serif;
-    font-size: 18px;
-    line-height: 180%;
+    font-size: 14px;
+    line-height: 160%;
     display: inline-block;
-    max-width: 350px;
+    max-width: 280px;
     white-space: normal;
     word-break: break-all;
     overflow-wrap: break-word;
+    transition: color 0.2s;
+}
+
+.homepageLabel a:hover {
+    color: #004499;
+    text-decoration: underline;
 }
 
 /******************************
