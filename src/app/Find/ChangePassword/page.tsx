@@ -135,28 +135,25 @@ const ChangePassword = () => {
       <div className={styles.loginBackground}>
         <div className={styles.loginContainer}>
           <div className={styles.loginTitle}>비밀번호 재설정</div>
-          <div
-            className={styles.inputGroup}
-            style={{ borderBottom: '2px solid #76ADAC' }}
-          >
+          <div className={styles.changePwdInfoSection}>
             <Image
               src={triptuneIcon}
               alt='로고'
-              width={31}
-              height={20}
+              width={24}
+              height={18}
               priority
             />
-            <p className={styles.textPlain}>
-              &nbsp;&nbsp; 새롭게 설정할 비밀번호를 입력해 주세요.
+            <p className={styles.changePwdInfoText}>
+              새롭게 설정할 비밀번호를 입력해주세요.
             </p>
           </div>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className={styles.changePwdForm}>
               <div className={styles.inputGroup}>
-                <div style={{ marginBottom: '9px' }}>새로운 비밀번호</div>
+                <div className={styles.changePwdLabel}>새로운 비밀번호</div>
                 <input
                   type='password'
-                  placeholder='새로운 비밀번호 (영문 대/소문자, 숫자, 특수문자 조합 8~15자리)'
+                  placeholder='비밀번호 (영문 대/소문자, 숫자, 특수문자 조합 8~15자리)'
                   {...register('password', {
                     required: '비밀번호를 입력해주세요.',
                     validate: (value) =>
@@ -169,9 +166,8 @@ const ChangePassword = () => {
                   <p className={styles.errorText}>{errors.password.message}</p>
                 )}
               </div>
-              <br />
-              <div style={{ marginBottom: '9px' }}>비밀번호 재입력</div>
               <div className={styles.inputGroup}>
+                <div className={styles.changePwdLabel}>비밀번호 재입력</div>
                 <input
                   type='password'
                   placeholder='비밀번호 재입력'
@@ -189,7 +185,6 @@ const ChangePassword = () => {
                   </p>
                 )}
               </div>
-              <div style={{ paddingBottom: '150px' }} />
             </div>
             <button
               type='submit'

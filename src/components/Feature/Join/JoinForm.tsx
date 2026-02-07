@@ -117,7 +117,7 @@ const JoinForm = () => {
           />
           <div className={styles.inputGroup}>
             <input
-              placeholder='닉네임 (영문 대/소문자, 숫자 조합 4 ~ 15자리)'
+              placeholder='닉네임 (영문 대/소문자, 숫자 조합 4~15자리)'
               {...register('nickname', {
                 required: '닉네임을 입력해주세요.',
                 validate: validateNickname,
@@ -131,7 +131,7 @@ const JoinForm = () => {
           <div className={styles.inputGroup}>
             <input
               type='password'
-              placeholder='비밀번호 (영문 대/소문자, 숫자, 특수문자 조합 8 ~ 15자리)'
+              placeholder='비밀번호 (영문 대/소문자, 숫자, 특수문자 조합 8~15자리)'
               {...register('password', {
                 required: '비밀번호를 입력해주세요.',
                 validate: validatePassword,
