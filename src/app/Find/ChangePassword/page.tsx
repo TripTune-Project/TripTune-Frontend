@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState, Suspense } from 'react';
 import { useForm } from 'react-hook-form';
-import Head from 'next/head';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Snackbar, Alert } from '@mui/material';
@@ -109,29 +108,6 @@ const ChangePassword = () => {
 
   return (
     <>
-      <Head>
-        <title>Reset Password | TripTune</title>
-        <meta
-          name='description'
-          content='Reset your TripTune account password securely. Follow the steps to set a new password and regain access to your account.'
-        />
-        <meta
-          name='keywords'
-          content='reset password, change password, TripTune, account security'
-        />
-        <meta property='og:title' content='Reset Password | TripTune' />
-        <meta
-          property='og:description'
-          content='Reset your TripTune account password securely. Follow the steps to set a new password and regain access to your account.'
-        />
-        <meta property='og:image' content='/assets/Logo.png' />
-        <meta
-          property='og:url'
-          content='https://www.triptune.site/Find/ChangePassword'
-        />
-        <meta name='viewport' content='width=device-width, initial-scale=1' />
-        <link rel='icon' href='/public/assets/favicon.ico' />
-      </Head>
       <div className={styles.loginBackground}>
         <div className={styles.loginContainer}>
           <div className={styles.loginTitle}>비밀번호 재설정</div>

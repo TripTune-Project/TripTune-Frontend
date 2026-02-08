@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Head from 'next/head';
 import LogoutModal from '@/components/Common/LogoutModal';
 import styles from '@/styles/Mypage.module.css';
 import Profile from '@/components/Feature/MyPage/Profile';
@@ -80,10 +79,6 @@ const MyPage = () => {
 
   return (
     <div className={styles.mainContainer}>
-      <Head>
-        <title>{metaTags.title}</title>
-        <meta name='description' content={metaTags.description} />
-      </Head>
       <div className={styles.mypageBox}>
         <div className={styles.flexColumnDb}>
           <span

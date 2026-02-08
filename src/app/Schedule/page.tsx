@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import Head from 'next/head';
 import styles from '@/styles/Schedule.module.css';
 import DataLoading from '@/components/Common/DataLoading';
 import Image from 'next/image';
@@ -385,14 +384,6 @@ export default function SchedulePage() {
 
   return (
     <div className={styles.schedule}>
-      <Head>
-        <title>최근 일정 - 나만의 여행 계획 보기</title>
-        <meta
-          name="description"
-          content="여행 일정 관리 페이지에서 최근 계획을 확인하고 수정해보세요."
-        />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-      </Head>
       <div className={styles.scheduleTop}>
         <div className={styles.scheduleView}>
           <div className={styles.overlay} />

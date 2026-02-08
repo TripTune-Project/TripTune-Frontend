@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import 'swiper/css';
@@ -47,31 +46,6 @@ const Home = () => {
 
   return (
     <div className={styles.onBoard}>
-      {/* SEO 및 메타 태그 설정 */}
-      <Head>
-        <title>TripTune - Explore and Plan Your Travel</title>
-        <meta
-          name='description'
-          content='Discover top travel destinations and plan your trips with TripTune. Start your journey with personalized travel plans and recommendations.'
-        />
-        <meta
-          name='keywords'
-          content='travel, trip planning, explore destinations, TripTune, travel ideas, itinerary'
-        />
-        <meta
-          property='og:title'
-          content='TripTune - Explore and Plan Your Travel'
-        />
-        <meta
-          property='og:description'
-          content='Discover top travel destinations and plan your trips with TripTune. Start your journey with personalized travel plans and recommendations.'
-        />
-        <meta property='og:image' content='/assets/Logo.png' />
-        <meta property='og:url' content='https://www.triptune.site' />
-        <meta name='viewport' content='width=device-width, initial-scale=1' />
-        <link rel='icon' href='/favicon.ico' />
-      </Head>
-
       {/* 메인 배경 및 중앙 컨텐츠 */}
       <div className={styles.heroSection}>
         <Image

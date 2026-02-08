@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import Head from 'next/head';
 import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -318,13 +317,6 @@ const TravelDetailPage = () => {
 
   return (
     <>
-      <Head>
-        <title>{placeName} - 여행지 상세 정보</title>
-        <meta
-          name='description'
-          content={`${placeName}의 상세 정보를 확인하세요.`}
-        />
-      </Head>
       {showLoginModal && <LoginModal />}
       <div className={styles.travelDetailContent}>
         <div className={styles.topSection}>

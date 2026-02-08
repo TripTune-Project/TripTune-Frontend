@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { usePathname } from 'next/navigation';
-import Head from 'next/head';
 import Script from 'next/script';
 import Header from './header';
 import styles from '@/styles/Layout.module.css';
@@ -70,19 +69,16 @@ const Layout = ({ children }: LayoutProps) => {
 
   return (
     <html lang='ko' className={notoSansKR.className}>
-      {/* 페이지 헤드 및 메타 태그 설정 */}
-      <Head>
-        <title>TripTune</title>
+      <head>
+        <title>TripTune - 여행 계획 플랫폼</title>
+        <meta name="description" content="TripTune은 여행자들을 위한 일정 플랫폼 서비스 입니다." />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta
-          http-equiv='Content-Security-Policy'
+          httpEquiv='Content-Security-Policy'
           content='upgrade-insecure-requests'
         />
-        <meta
-          name='description'
-          content='TripTune은 여행자들을 위한 일정 플랫폼 서비스 입니다.'
-        />
         <link rel='icon' href='/favicon.ico' />
-      </Head>
+      </head>
       <body>
         {/* Google Analytics 스크립트 - 초기 로딩 블로킹 방지 */}
         {GA4_MEASUREMENT_ID && (

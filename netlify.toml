@@ -5,6 +5,10 @@
   command = "npm run build"
   publish = ".next"
 
+# Next.js 플러그인 설정 (빌드 전에 위치)
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
 # 보안 헤더 설정
 [[headers]]
   for = "/*"
@@ -121,7 +125,3 @@
 [context.deploy-preview]
   [context.deploy-preview.environment]
     NODE_ENV = "development"
-
-# Next.js 플러그인 설정
-[[plugins]]
-  package = "@netlify/plugin-nextjs"

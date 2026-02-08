@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import Head from 'next/head';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
@@ -173,14 +172,6 @@ export default function ScheduleDetailPage() {
 
   return (
     <>
-      <Head>
-        <title>일정 상세 페이지 - 지도와 함께 만드는 나만의 일정</title>
-        <meta
-          name='description'
-          content='지도를 활용하여 여행지와 일정을 관리하고 저장할 수 있는 페이지입니다. 원하는 위치를 추가하고 일정을 계획해 보세요.'
-        />
-        <meta name='viewport' content='width=device-width, initial-scale=1' />
-      </Head>
       <header className={styles.header}>
         <ul className={styles.headerMenu}>
           <li>

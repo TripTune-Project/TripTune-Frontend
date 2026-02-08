@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Head from 'next/head';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -32,22 +31,6 @@ const HomeLink = styled.a`
 export default function Custom500() {
   return (
     <Container>
-      <Head>
-        <title>500 - Internal Server Error | Your Website Name</title>
-        <meta
-          name='description'
-          content='An internal server error occurred. Please try again later or contact support.'
-        />
-        <meta name='robots' content='noindex, follow' />
-        <meta property='og:title' content='500 - Internal Server Error' />
-        <meta
-          property='og:description'
-          content='An internal server error occurred. Please try again later or contact support.'
-        />
-        <meta property='og:image' content='/assets/Logo.png' />
-        <meta property='og:url' content='https://www.triptune.site/500' />
-        <meta name='viewport' content='width=device-width, initial-scale=1' />
-      </Head>
       <ErrorCode>500</ErrorCode>
       <ErrorMessage>Internal Server Error</ErrorMessage>
       <Link href='/' passHref>
