@@ -23,8 +23,4 @@ export const defaultMetadata: Metadata = {
   icons: {
     icon: '/favicon.ico',
   },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-  },
 };

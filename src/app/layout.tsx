@@ -23,13 +23,17 @@ const GA4_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID;
 export const metadata = {
   title: 'TripTune - 여행 계획 플랫폼',
   description: 'TripTune은 여행자들을 위한 일정 플랫폼 서비스 입니다.',
-  viewport: 'width=device-width, initial-scale=1',
   icons: {
     icon: '/favicon.ico',
   },
   other: {
     'Content-Security-Policy': 'upgrade-insecure-requests',
   },
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
 };
 
 /**
