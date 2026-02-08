@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import Header from './header';
 import styles from '@/styles/Layout.module.css';
@@ -11,14 +11,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // Google Analytics 측정 ID 환경 변수에서 가져오기
 const GA4_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID;
-
-// Google Analytics 초기화 (ID가 있는 경우에만 실행)
-if (GA4_MEASUREMENT_ID) {
-  ReactGA.initialize(GA4_MEASUREMENT_ID);
-}
-
-// React Query 클라이언트 인스턴스 생성
-const queryClient = new QueryClient();
 
 /**
  * ClientLayout 컴포넌트 Props 인터페이스
@@ -39,6 +31,18 @@ interface ClientLayoutProps {
  * @returns {JSX.Element} 레이아웃 컴포넌트
  */
 export default function ClientLayout({ children }: ClientLayoutProps) {
+  // SSR 안전한 QueryClient 인스턴스 (컴포넌트별 단일 인스턴스)
+  const [queryClient] = useState(() => new QueryClient());
+
+  // Google Analytics 초기화 (클라이언트에서만 1회 실행)
+  const gaInitialized = useRef(false);
+  useEffect(() => {
+    if (GA4_MEASUREMENT_ID && !gaInitialized.current) {
+      ReactGA.initialize(GA4_MEASUREMENT_ID);
+      gaInitialized.current = true;
+    }
+  }, []);
+
   // 현재 페이지 경로 가져오기
   const pathname = usePathname();
 

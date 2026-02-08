@@ -124,4 +124,4 @@
 
 [context.deploy-preview]
   [context.deploy-preview.environment]
-    NODE_ENV = "development"
+    NODE_ENV = "production"
