@@ -3,11 +3,12 @@
 import React from 'react';
 import { usePathname } from 'next/navigation';
 import Head from 'next/head';
+import Script from 'next/script';
 import Header from './header';
 import styles from '@/styles/Layout.module.css';
 import Image from 'next/image';
 import ReactGA from 'react-ga4';
-import FooterLogoImage from '../../public/assets/images/로고/triptuneLogoWhite.png';
+import FooterLogoImage from '../../public/assets/images/로고/triptuneLogoWhite.webp';
 import '@/styles/global.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Noto_Sans_KR } from 'next/font/google';
@@ -81,26 +82,31 @@ const Layout = ({ children }: LayoutProps) => {
           content='TripTune은 여행자들을 위한 일정 플랫폼 서비스 입니다.'
         />
         <link rel='icon' href='/favicon.ico' />
-
-        {/* Google Analytics 스크립트 */}
-        <script
-          async
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA4_MEASUREMENT_ID}`}
-        ></script>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${GA4_MEASUREMENT_ID}', {
-                page_path: window.location.pathname,
-              });
-            `,
-          }}
-        />
       </Head>
       <body>
+        {/* Google Analytics 스크립트 - 초기 로딩 블로킹 방지 */}
+        {GA4_MEASUREMENT_ID && (
+          <>
+            <Script
+              strategy="afterInteractive"
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA4_MEASUREMENT_ID}`}
+            />
+            <Script
+              id="google-analytics"
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', '${GA4_MEASUREMENT_ID}', {
+                    page_path: window.location.pathname,
+                  });
+                `,
+              }}
+            />
+          </>
+        )}
         {/* React Query Provider 래핑 */}
         <QueryClientProvider client={queryClient}>
           {isSchedulePage ? (

@@ -8,7 +8,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import styles from '@/styles/onBoard.module.css';
-import HomeImage from '../../public/assets/images/메인화면/ocean_title.png';
+import HomeImage from '../../public/assets/images/메인화면/ocean_title.webp';
 import HomePageSearch from '@/components/Feature/Home/HomePageSearch';
 import HomePagePopularTravel from '@/components/Feature/Home/HomePagePopularTravel';
 import HomePageRecommendTravel from '@/components/Feature/Home/HomePageRecommendTravel';
@@ -34,12 +34,8 @@ const Home = () => {
   };
 
   // 버튼 아이콘 상태 관리
-  const [scheduleIcon, setScheduleIcon] = useState(
-    '/assets/images/메인화면/scheduleIcon.png'
-  );
-  const [travelIcon, setTravelIcon] = useState(
-    '/assets/images/메인화면/travelIcon.png'
-  );
+  const [isScheduleHover, setIsScheduleHover] = useState(false);
+  const [isTravelHover, setIsTravelHover] = useState(false);
 
   // 페이지 로드 시 overflow 스타일 설정
   useEffect(() => {
@@ -78,6 +74,15 @@ const Home = () => {
 
       {/* 메인 배경 및 중앙 컨텐츠 */}
       <div className={styles.heroSection}>
+        <Image
+          src={HomeImage}
+          alt="TripTune 메인 히어로 이미지"
+          fill
+          priority
+          sizes="100vw"
+          style={{ objectFit: 'cover' }}
+          quality={90}
+        />
         <div className={styles.heroTextArea}>
           <div className={styles.heroTitle}>모두의 아이디어로 완성되는 여행</div>
           <div className={styles.heroSubtitle}><b>TripTune</b>과 함께 즐겁고 새로운 여행 계획을 세워보세요.</div>
@@ -99,14 +104,8 @@ const Home = () => {
             <div
               className={styles.viewBtnSchedule}
               onClick={handleScheduleClick}
-              onMouseEnter={() =>
-                setScheduleIcon(
-                  '/assets/images/메인화면/selectScheduleIcon.png'
-                )
-              }
-              onMouseLeave={() =>
-                setScheduleIcon('/assets/images/메인화면/scheduleIcon.png')
-              }
+              onMouseEnter={() => setIsScheduleHover(true)}
+              onMouseLeave={() => setIsScheduleHover(false)}
             >
               <div className={styles.viewTitle}>일정 만들기</div>
               <p className={styles.viewTitleSmall}>
@@ -114,7 +113,7 @@ const Home = () => {
               </p>
               <div className={styles.iconContainer}>
                 <Image
-                  src={scheduleIcon}
+                  src={isScheduleHover ? '/assets/images/메인화면/selectScheduleIcon.webp' : '/assets/images/메인화면/scheduleIcon.webp'}
                   className={styles.time}
                   alt='일정 만들기'
                   width={68}
@@ -126,14 +125,8 @@ const Home = () => {
             <div
               className={styles.viewBtnTravel}
               onClick={handleTravelClick}
-              onMouseEnter={() =>
-                setTravelIcon(
-                  '/assets/images/메인화면/selectTravelIcon.png'
-                )
-              }
-              onMouseLeave={() =>
-                setTravelIcon('/assets/images/메인화면/travelIcon.png')
-              }
+              onMouseEnter={() => setIsTravelHover(true)}
+              onMouseLeave={() => setIsTravelHover(false)}
             >
               <div className={styles.viewTitle}>여행지 탐색</div>
               <p className={styles.viewTitleSmall}>
@@ -141,7 +134,7 @@ const Home = () => {
               </p>
               <div className={styles.iconContainer}>
                 <Image
-                  src={travelIcon}
+                  src={isTravelHover ? '/assets/images/메인화면/selectTravelIcon.webp' : '/assets/images/메인화면/travelIcon.webp'}
                   className={styles.travel}
                   alt='여행지 탐색'
                   width={68}

@@ -166,7 +166,15 @@ const fetchData = async <T>(
   }
 
   try {
+    // 타임아웃 설정 (10초)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+    requestOptions.signal = controller.signal;
+
     const response = await fetch(url, requestOptions);
+    clearTimeout(timeoutId);
+
     const data = await response.json();
 
     // 응답 성공 여부 확인
@@ -215,8 +223,20 @@ const fetchData = async <T>(
     }
 
     return data as T;
-  } catch (error) {
-    // 콘솔 로깅 제거하여 중복 알림 방지
+  } catch (error: any) {
+    // AbortError (타임아웃) 처리
+    if (error.name === 'AbortError') {
+      console.error(`⏱️ API 타임아웃: ${endpoint}`);
+      throw new Error('요청 시간이 초과되었습니다. 네트워크 연결을 확인해주세요.');
+    }
+
+    // 네트워크 에러 처리
+    if (error instanceof TypeError && error.message.includes('fetch')) {
+      console.error(`🌐 네트워크 에러: ${endpoint}`, error.message);
+      throw new Error('네트워크 연결에 실패했습니다. 인터넷 연결을 확인해주세요.');
+    }
+
+    // 기타 에러는 그대로 전달
     throw error;
   }
 };
