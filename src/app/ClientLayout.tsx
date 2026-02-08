@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import Header from './header';
-import styles from '@/styles/Layout.module.css';
+import styles from '../styles/Layout.module.css';
 import Image from 'next/image';
 import ReactGA from 'react-ga4';
 import FooterLogoImage from '../../public/assets/images/로고/triptuneLogoWhite.webp';

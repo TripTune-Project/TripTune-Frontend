@@ -5,11 +5,11 @@ import { useForm } from 'react-hook-form';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Snackbar, Alert } from '@mui/material';
-import styles from '@/styles/Login.module.css';
+import styles from '../../../styles/Login.module.css';
 import triptuneIcon from '../../../../public/assets/images/로고/triptuneIcon-removebg.png';
-import VerificationLoading from '@/components/Common/VerificationLoading';
-import { validatePassword } from '@/utils/validation';
-import DataLoading from '@/components/Common/DataLoading';
+import VerificationLoading from '../../../components/Common/VerificationLoading';
+import { validatePassword } from '../../../utils/validation';
+import DataLoading from '../../../components/Common/DataLoading';
 import { AlertColor } from '@mui/material/Alert';
 import Cookies from 'js-cookie';
 
