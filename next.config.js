@@ -5,13 +5,6 @@ const nextConfig = {
   compiler: {
     styledComponents: true,
   },
-  webpack(config) {
-    config.module.rules.push({
-      test: /\.svg$/,
-      use: ['@svgr/webpack'],
-    });
-    return config;
-  },
   images: {
     remotePatterns: [
       {
@@ -31,7 +24,6 @@ const nextConfig = {
       {
         source: '/apis/:path*',
         destination: 'https://www.triptune.site/api/:path*',
-        // destination: 'http://13.209.177.247:8080/api/:path*',
       },
     ];
   },

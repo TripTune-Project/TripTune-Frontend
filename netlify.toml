@@ -2,8 +2,11 @@
 # TripTune Frontend 보안 및 성능 최적화
 
 [build]
-  command = "npm run build"
+  command = "rm -rf .next && npm run build"
   publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "18"
 
 # Next.js 플러그인 설정 (빌드 전에 위치)
 [[plugins]]
