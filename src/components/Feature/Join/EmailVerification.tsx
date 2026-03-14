@@ -118,7 +118,7 @@ const EmailVerification = ({
   };
 
   return (
-    <>
+    <div className={styles.emailVerificationSection}>
       <div className={styles.emailGroup}>
         <input
           placeholder='이메일 인증'
@@ -144,11 +144,11 @@ const EmailVerification = ({
           {isVerificationComplete ? '인증 완료' : (requestLoading ? <VerificationLoading /> : '인증 요청')}
         </button>
       </div>
-      {errors.email && (
+      {errors.email?.message && (
         <div className={styles.errorText}>{errors.email.message}</div>
       )}
       {isVerificationSent && !isVerificationComplete && (
-        <div className={styles.emailGroup}>
+        <div className={styles.emailGroupSecond}>
           <input
             placeholder='인증 코드 입력'
             {...register('authCode', {
@@ -173,7 +173,7 @@ const EmailVerification = ({
           </button>
         </div>
       )}
-      {errors.authCode && (
+      {isVerificationSent && !isVerificationComplete && errors.authCode?.message && (
         <div className={styles.errorText}>{errors.authCode.message}</div>
       )}
       <Snackbar
@@ -190,7 +190,7 @@ const EmailVerification = ({
           {notificationMessage}
         </Alert>
       </Snackbar>
-    </>
+    </div>
   );
 };
 

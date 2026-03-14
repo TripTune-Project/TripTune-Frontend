@@ -124,7 +124,7 @@ const JoinForm = () => {
               })}
               className={errors.nickname ? styles.inputError : styles.input}
             />
-            {errors.nickname && (
+            {errors.nickname?.message && (
               <p className={styles.errorText}>{errors.nickname.message}</p>
             )}
           </div>
@@ -138,7 +138,7 @@ const JoinForm = () => {
               })}
               className={errors.password ? styles.inputError : styles.input}
             />
-            {errors.password && (
+            {errors.password?.message && (
               <p className={styles.errorText}>{errors.password.message}</p>
             )}
           </div>
@@ -153,7 +153,7 @@ const JoinForm = () => {
               })}
               className={errors.rePassword ? styles.inputError : styles.input}
             />
-            {errors.rePassword && (
+            {errors.rePassword?.message && (
               <p className={styles.errorText}>{errors.rePassword.message}</p>
             )}
           </div>

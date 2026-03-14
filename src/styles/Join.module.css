@@ -46,6 +46,10 @@
     position: relative;
 }
 
+.inputGroup:has(.errorText) {
+    margin-bottom: 0;
+}
+
 .input {
     width: 100%;
     height: 50px;
@@ -92,9 +96,11 @@
 .errorText {
     color: #E74C3C;
     font-family: 'Noto Sans KR', sans-serif;
-    font-size: 13px;
-    margin-top: 6px;
+    font-size: 12px;
+    margin-top: 4px;
+    margin-bottom: 12px;
     word-wrap: break-word;
+    line-height: 140%;
 }
 
 .submitButton {
@@ -154,6 +160,11 @@
     gap: 8px;
 }
 
+.emailVerificationSection {
+    width: 100%;
+    margin-bottom: 16px;
+}
+
 .emailGroup {
     display: flex;
     justify-content: space-between;
@@ -163,6 +174,18 @@
     min-height: 50px;
     flex-wrap: nowrap;
     gap: 10px;
+}
+
+.emailGroupSecond {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    min-height: 50px;
+    flex-wrap: nowrap;
+    gap: 10px;
+    margin-top: 16px;
 }
 
 .emailInput {
