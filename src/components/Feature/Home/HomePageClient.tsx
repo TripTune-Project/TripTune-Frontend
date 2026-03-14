@@ -42,14 +42,6 @@ const HomePageClient = () => {
   return (
     <div className={styles.onBoard}>
       <div className={styles.heroSection}>
-        <Image
-          src='/assets/images/메인화면/ocean_title.png'
-          alt='메인 배경 이미지'
-          fill
-          priority
-          sizes='100vw'
-          style={{ objectFit: 'cover', zIndex: 0 }}
-        />
         <div className={styles.heroTextArea}>
           <div className={styles.heroTitle}>모두의 아이디어로 완성되는 여행</div>
           <div className={styles.heroSubtitle}><b>TripTune</b>과 함께 즐겁고 새로운 여행 계획을 세워보세요.</div>

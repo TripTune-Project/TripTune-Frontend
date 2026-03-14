@@ -22,6 +22,12 @@ const GA4_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID;
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang='ko' className={notoSansKR.className}>
+      <head>
+        <link rel='preconnect' href='https://www.triptune.site' />
+        <link rel='dns-prefetch' href='https://www.triptune.site' />
+        <link rel='preconnect' href='https://triptune.s3.ap-northeast-2.amazonaws.com' />
+        <link rel='dns-prefetch' href='https://triptune.s3.ap-northeast-2.amazonaws.com' />
+      </head>
       <body>
         {GA4_MEASUREMENT_ID && (
           <>

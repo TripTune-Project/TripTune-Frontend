@@ -115,7 +115,6 @@ const HomePageRecommendTravel = () => {
       if (response.success) {
         setTravelList(response.data);
       } else {
-        console.error(response.message);
         setTravelList([]);
       }
     },
@@ -133,7 +132,7 @@ const HomePageRecommendTravel = () => {
   return (
     <div className={styles.recommendedDestinations}>
       <h2 className={styles.chooseRecomend}>
-        <Image src={triptuneIcon} alt='홈화면' width='30' priority />
+        <Image src={triptuneIcon} alt='홈화면' width='30' height='30' />
         추천 여행 테마
       </h2>
       <div className={styles.onBoardChips}>
@@ -180,6 +179,7 @@ const HomePageRecommendTravel = () => {
                         alt={item.placeName}
                         width={305}
                         height={203}
+                        sizes='(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 305px'
                       />
                     </>
                   ) : (
