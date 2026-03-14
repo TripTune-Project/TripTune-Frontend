@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     description:
       'Discover top travel destinations and plan your trips with TripTune. Start your journey with personalized travel plans and recommendations.',
     images: [{ url: '/assets/Logo.png' }],
-    url: 'https://www.triptune.site',
+    url: 'https://www.triptune.co.kr',
   },
 };
 
