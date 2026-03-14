@@ -29,12 +29,13 @@ interface HomeRecommendTravelResponse {
 }
 
 const StyledSwiperContainer = styled.div`
-  overflow: hidden;
+  overflow-x: clip;
+  overflow-y: visible;
   position: relative;
   width: 100%;
   max-width: 1356px;
   margin: 0 auto;
-  padding: 0;
+  padding: 0 40px 8px 0;
 `;
 
 const StyledSwiperButtonPrev = styled.div`
@@ -65,7 +66,7 @@ const StyledSwiperButtonNext = styled.div`
   top: 50%;
   width: 60px;
   height: 60px;
-  right: -20px;
+  right: -30px;
   transform: translateY(-50%);
   background: none;
   border: none;
@@ -115,7 +116,6 @@ const HomePageRecommendTravel = () => {
       if (response.success) {
         setTravelList(response.data);
       } else {
-        console.error(response.message);
         setTravelList([]);
       }
     },
@@ -133,7 +133,7 @@ const HomePageRecommendTravel = () => {
   return (
     <div className={styles.recommendedDestinations}>
       <h2 className={styles.chooseRecomend}>
-        <Image src={triptuneIcon} alt='홈화면' width='30' priority />
+        <Image src={triptuneIcon} alt='홈화면' width='30' height='30' />
         추천 여행 테마
       </h2>
       <div className={styles.onBoardChips}>
@@ -161,8 +161,8 @@ const HomePageRecommendTravel = () => {
             slidesPerView={4}
             spaceBetween={25}
             navigation={{
-              nextEl: '.swiper-button-next',
-              prevEl: '.swiper-button-prev',
+              nextEl: '.recommend-swiper-button-next',
+              prevEl: '.recommend-swiper-button-prev',
             }}
             loop
           >
@@ -180,6 +180,7 @@ const HomePageRecommendTravel = () => {
                         alt={item.placeName}
                         width={305}
                         height={203}
+                        sizes='(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 305px'
                       />
                     </>
                   ) : (
@@ -203,8 +204,8 @@ const HomePageRecommendTravel = () => {
                 </div>
               </SwiperSlide>
             ))}
-            <StyledSwiperButtonPrev className='swiper-button-prev' />
-            <StyledSwiperButtonNext className='swiper-button-next' />
+            <StyledSwiperButtonPrev className='recommend-swiper-button-prev' />
+            <StyledSwiperButtonNext className='recommend-swiper-button-next' />
           </Swiper>
         </StyledSwiperContainer>
       ) : (

@@ -38,12 +38,13 @@ interface HomePopularTravelResponse {
  * 스와이퍼 컨테이너 스타일 컴포넌트
  */
 const StyledSwiperContainer = styled.div`
-  overflow: hidden;
+  overflow-x: clip;
+  overflow-y: visible;
   position: relative;
   width: 100%;
   max-width: 1356px;
   margin: 0 auto;
-  padding: 0;
+  padding: 0 0 8px 0;
 `;
 
 /**
@@ -80,7 +81,7 @@ const StyledSwiperButtonNext = styled.div`
   top: 50%;
   width: 60px;
   height: 60px;
-  right: -20px;
+  right: -30px;
   transform: translateY(-50%);
   background: none;
   border: none;
@@ -148,7 +149,6 @@ const HomePagePopularTravel = () => {
       if (response.success) {
         setTravelList(response.data);
       } else {
-        console.error(response.message);
         setTravelList([]);
       }
     },
@@ -172,7 +172,7 @@ const HomePagePopularTravel = () => {
     <div className={styles.recommendedDestinations}>
       {/* 인기 여행지 제목 */}
       <h2 className={styles.chooseRecomend}>
-        <Image src={triptuneIcon} alt='홈화면' width='30' priority />
+        <Image src={triptuneIcon} alt='홈화면' width='30' height='30' />
         인기 여행지
       </h2>
 
@@ -205,8 +205,8 @@ const HomePagePopularTravel = () => {
             slidesPerView={4}
             spaceBetween={25}
             navigation={{
-              nextEl: '.swiper-button-next',
-              prevEl: '.swiper-button-prev',
+              nextEl: '.popular-swiper-button-next',
+              prevEl: '.popular-swiper-button-prev',
             }}
             loop
           >
@@ -225,6 +225,7 @@ const HomePagePopularTravel = () => {
                         alt={item.placeName}
                         width={305}
                         height={203}
+                        sizes='(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 305px'
                       />
                     </>
                   ) : (
@@ -249,8 +250,8 @@ const HomePagePopularTravel = () => {
               </SwiperSlide>
             ))}
             {/* 네비게이션 버튼 */}
-            <StyledSwiperButtonPrev className='swiper-button-prev' />
-            <StyledSwiperButtonNext className='swiper-button-next' />
+            <StyledSwiperButtonPrev className='popular-swiper-button-prev' />
+            <StyledSwiperButtonNext className='popular-swiper-button-next' />
           </Swiper>
         </StyledSwiperContainer>
       ) : (
