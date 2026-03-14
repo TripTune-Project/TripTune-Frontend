@@ -78,7 +78,7 @@ const LoginForm = () => {
       <div className={styles.loginBackground}>
         <div className={styles.loginContainer}>
           <div className={styles.loginTitle}>로그인</div>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(onSubmit)} className={styles.loginForm}>
             <div className={styles.inputGroup}>
               <input
                 placeholder='이메일'

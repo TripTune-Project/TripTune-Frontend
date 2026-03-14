@@ -37,13 +37,19 @@
     line-height: 120%;
 }
 
+.loginForm {
+    width: 100%;
+}
+
 .errorText {
     color: #E74C3C;
     font-family: 'Noto Sans KR', sans-serif;
-    font-size: 13px;
+    font-size: 12px;
     margin-top: 6px;
+    margin-bottom: 12px;
     word-wrap: break-word;
     max-width: 400px;
+    line-height: 140%;
 }
 
 .changePwdForm {
@@ -85,6 +91,10 @@
     flex-shrink: 0;
     margin-bottom: 16px;
     position: relative;
+}
+
+.inputGroup:has(.errorText) {
+    margin-bottom: 0;
 }
 
 .textPlain {
@@ -149,6 +159,8 @@
     border-radius: 8px;
     cursor: pointer;
     margin-top: 24px;
+    padding: 0 20px;
+    box-sizing: border-box;
     font-family: 'Noto Sans KR', sans-serif;
     text-align: center;
     font-size: 16px;
