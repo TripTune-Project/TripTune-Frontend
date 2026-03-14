@@ -14,8 +14,9 @@ export default function NoResultLayout() {
   
   if (isTravelPage) {
     containerStyles = {
-      width: '35vw',
-      height: '97vh',
+      width: '100%',
+      height: '400px',
+      borderRadius: '10px',
     };
   } else if (isBookmarkPage) {
     containerStyles = {

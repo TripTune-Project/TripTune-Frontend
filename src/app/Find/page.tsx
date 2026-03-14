@@ -76,46 +76,46 @@ function FindPage() {
         />
       </Head>
 
-      <div className={styles.pageContainer}>
-        <h1 className={styles.FindTitle}>비밀번호 찾기</h1>
-        <form onSubmit={handleSubmit(onSubmit)} className={styles.inputGroup}>
-          <span className={styles.findText}>
-            <Image
-              className={styles.emailInputIcon}
-              src={triptuneIcon}
-              alt='이메일 주소 입력'
-            />
-            이메일 주소를 입력하면 비밀번호 변경 링크가 전송됩니다.
-          </span>
-          <hr className={styles.hrStyle} />
-          <div className={styles.containEmail}>
-            <label className={styles.labelEmail} htmlFor='email'>
-              이메일
-            </label>
-            <br />
-            <br />
-            <input
-              type='email'
-              id='email'
-              placeholder='이메일 주소 입력'
-              {...register('email', {
-                required: '이메일을 입력해주세요.',
-                validate: validateEmail,
-              })}
-              className={errors.email ? styles.inputError : styles.input}
-            />
-            {errors.email && (
-              <p className={styles.errorText}>{errors.email.message}</p>
-            )}
-          </div>
-          <button
-            type='submit'
-            className={`${styles.submitButton} ${!isValid ? styles.disabledButton : ''}`}
-            disabled={!isValid || loading}
-          >
-            {loading ? <VerificationLoading /> : '비밀번호 찾기'}
-          </button>
-        </form>
+      <div className={styles.findBackground}>
+        <div className={styles.pageContainer}>
+          <h1 className={styles.FindTitle}>비밀번호 찾기</h1>
+          <form onSubmit={handleSubmit(onSubmit)} className={styles.inputGroup}>
+            <span className={styles.findText}>
+              <Image
+                className={styles.emailInputIcon}
+                src={triptuneIcon}
+                alt='이메일 주소 입력'
+              />
+              이메일 주소를 입력하면 비밀번호 변경 링크가 전송됩니다.
+            </span>
+            <hr className={styles.hrStyle} />
+            <div className={styles.containEmail}>
+              <label className={styles.labelEmail} htmlFor='email'>
+                이메일
+              </label>
+              <input
+                type='email'
+                id='email'
+                placeholder='이메일 주소 입력'
+                {...register('email', {
+                  required: '이메일을 입력해주세요.',
+                  validate: validateEmail,
+                })}
+                className={errors.email ? styles.inputError : styles.input}
+              />
+              {errors.email && (
+                <p className={styles.errorText}>{errors.email.message}</p>
+              )}
+            </div>
+            <button
+              type='submit'
+              className={`${styles.submitButton} ${!isValid ? styles.disabledButton : ''}`}
+              disabled={!isValid || loading}
+            >
+              {loading ? <VerificationLoading /> : '비밀번호 찾기'}
+            </button>
+          </form>
+        </div>
       </div>
 
       <Snackbar

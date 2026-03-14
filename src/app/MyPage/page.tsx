@@ -117,9 +117,9 @@ const MyPage = () => {
             북마크
           </span>
           <span className={styles.logout} onClick={openModal}>
+            <span className={styles.logoutIcon} />
             로그아웃
           </span>
-          <div className={styles.logoutIcon} />
           <LogoutModal
             isOpen={isModalOpen}
             onClose={closeModal}

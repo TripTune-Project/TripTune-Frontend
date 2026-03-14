@@ -1,9 +1,13 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 const containerStyle = {
-  width: '1400px',
-  height: '393px',
-  margin: '100px auto',
+  width: 'calc(100% - 40px)',
+  maxWidth: '1360px',
+  height: '300px',
+  margin: '0 auto 60px',
+  borderRadius: '15px',
+  overflow: 'hidden',
+  boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
 };
 
 interface MapProps {

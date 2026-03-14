@@ -41,9 +41,9 @@ const StyledSwiperContainer = styled.div`
   overflow: hidden;
   position: relative;
   width: 100%;
-  max-width: 1850px;
+  max-width: 1356px;
   margin: 0 auto;
-  padding: 0 30px;
+  padding: 0;
 `;
 
 /**

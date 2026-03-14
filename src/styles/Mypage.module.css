@@ -3,23 +3,31 @@
     padding: 0;
     flex-shrink: 0;
     position: relative;
+    display: flex;
+    justify-content: center;
+    min-height: calc(100vh - 80px);
+    background: linear-gradient(180deg, #E8F5E9 0%, #FFF 30%);
 }
 
 .mypageBox {
     position: relative;
     width: 1265px;
-    height: 680px;
-    margin: 63px 0 0 326px;
+    min-height: 680px;
+    margin: 63px auto;
     background: #FFF;
-    box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.30);
+    box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.15);
+    border-radius: 20px;
+    display: flex;
 }
 
 .flexColumnDb {
-    position: absolute;
-    height: 602.398px;
-    top: 42px;
-    right: 1045px;
-    left: -10px;
+    position: relative;
+    width: 220px;
+    min-height: 100%;
+    padding: 42px 0;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #E8E8E8;
 }
 
 .profileManagement,
@@ -29,17 +37,18 @@
 .accountManagementActive,
 .bookmarkManagementActive,
 .accountManagementTitle {
-    margin: 0 0 0 41px;
     display: flex;
-    position: relative;
     align-items: center;
-    width: 163px;
-    height: 45px;
+    width: 100%;
+    height: 49px;
+    padding: 10px 20px 10px 30px;
     color: #000000;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 400;
-    text-align: center;
+    text-align: left;
     white-space: nowrap;
+    box-sizing: border-box;
+    font-family: 'Noto Sans KR', sans-serif;
 }
 
 .accountManagementTitle {
@@ -49,122 +58,107 @@
 .profileManagementActive,
 .accountManagementActive,
 .bookmarkManagementActive {
-    background-color: #edf9f7;
-    color: #004a55;
-    font-weight: bold;
-    display: flex;
-    height: 49px;
-    padding: 10px 20px;
-    align-items: center;
-    gap: 10px;
-    align-self: stretch;
+    background-color: #EDF9F7;
+    color: #004A55;
+    font-weight: 700;
+    border-left: 4px solid #76ADAC;
+    padding-left: 26px;
 }
 
 .tab {
-    padding: 10px 20px;
     cursor: pointer;
-    border-radius: 8px;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, color 0.2s;
 }
 
 .tab:hover {
-    background-color: #e1e5ea;
+    background-color: #F5F5F5;
 }
 
 .logout {
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 8px;
     position: absolute;
-    width: 56px;
-    height: 18px;
-    top: 587px;
-    left: 67px;
+    bottom: 40px;
+    left: 30px;
     font-weight: 400;
-    text-align: center;
     white-space: nowrap;
     cursor: pointer;
-    color: #000;
-    font-family: NOto Sans KR, sans-serif;
-    font-size: 16px;
-    font-style: normal;
-    line-height: 140%; /* 22.4px */
+    color: #E74C3C;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    line-height: 140%;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.logout:hover {
+    background-color: #FEE2E2;
 }
 
 .logoutIcon {
-    position: absolute;
-    width: 14.398px;
-    height: 14.5px;
-    top: 587.898px;
-    left: 41px;
-    background: url('/assets/images/마이페이지/logoutIcon.png');
-    background-size: cover;
-    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    background: url('/assets/images/마이페이지/logoutIcon.png') no-repeat center;
+    background-size: contain;
 }
 
 /* 마이페이지 프로필 관리 */
 .mypageflexColumn {
-    position: absolute;
-    height: 602px;
-    top: 50px;
-    right: 60px;
-    left: 257px;
-    font-size: 0;
+    flex: 1;
+    padding: 42px 60px;
+    display: flex;
+    flex-direction: column;
 }
 
 .profileBox {
     margin-top: 20px;
     position: relative;
-    width: 948px;
-    height: 552px;
-    border: 1px solid #e0e0e0;
+    width: 100%;
+    height: auto;
+    border: 1px solid #E8E8E8;
     border-radius: 20px;
 }
 
 .mypageTitle {
     color: #000;
     text-align: left;
-    font-family: NOto Sans KR, sans-serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 20px;
-    font-style: normal;
     font-weight: 400;
-    line-height: 130%; /* 26px */
+    line-height: 130%;
+    margin-bottom: 0;
 }
 
 .flexRowAeb {
-    position: relative;
-    width: 628px;
-    height: 97px;
-    margin: 0 0 0 33px;
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    width: 100%;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #E8E8E8;
 }
 
 .profileImgText {
-    display: flex;
-    position: absolute;
-    width: 89px;
-    height: 18px;
-    top: 0;
-    left: 0;
-    text-align: center;
-    white-space: nowrap;
-    font-family: NOto Sans KR, sans-serif;
+    min-width: 100px;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 16px;
-    font-style: normal;
-    font-weight: 505;
-    line-height: 140%; /* 22.4px */
+    font-weight: 500;
+    line-height: 140%;
+    color: #000;
+    padding-top: 30px;
 }
 
 .profileImg {
-    position: absolute;
     width: 95px;
     height: 95px;
-    object-fit: contain;
-    top: 0;
-    left: 165px;
+    object-fit: cover;
     background: #ffffff;
-    border: 1px solid #d9d9d9;
+    border: 1px solid #D9D9D9;
     border-radius: 50%;
     flex-shrink: 0;
+    cursor: pointer;
 }
 
 .changeProfileImg,
@@ -172,86 +166,75 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    position: absolute;
-    top: 0;
     width: 71px;
     height: 40px;
     padding: 6px 12px;
-    gap: 10px;
     flex-shrink: 0;
-    background: #f5f5f5;
+    background: #F5F5F5;
     font-weight: 400;
     text-align: center;
-    left: 680px;
     color: #333;
-    font-family: NOto Sans KR, sans-serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 14px;
-    font-style: normal;
-    line-height: 145%; /* 20.3px */
+    line-height: 145%;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
-.changeProfileImg {
-    left: 283px;
+.changeProfileImg:hover,
+.changeNickname:hover {
+    background: #E8E8E8;
 }
 
 .fileUploadMessage {
     display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    position: absolute;
-    width: 348px;
-    height: 40px;
-    top: 57px;
-    left: 280px;
+    flex-direction: column;
+    align-items: flex-start;
     font-weight: 400;
     text-align: left;
-    text-overflow: initial;
-    overflow: hidden;
     color: #848282;
-    font-family: NOto Sans KR, sans-serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 14px;
-    font-style: normal;
-    line-height: 145%; /* 20.3px */
+    line-height: 180%;
+    margin-left: 20px;
 }
 
 .flexRowCc8 {
-    position: relative;
-    width: 654px;
-    height: 50px;
-    margin: 37px 0 0 33px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    padding-top: 30px;
 }
 
 .input,
 .inputProfile {
-    width: 488px;
+    width: 100%;
+    max-width: 480px;
     height: 47px;
     border-radius: 5px;
-    padding-left: 15px;
+    padding: 0 15px;
     box-sizing: border-box;
-    flex: 1;
     background: #F9F9F9;
-    color: #848282;
-    font-family: NOto Sans KR, sans-serif;
+    color: #333;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 14px;
-    font-style: normal;
     font-weight: 400;
-    line-height: 145%; /* 20.3px */
+    line-height: 145%;
+    border: 1px solid #E8E8E8;
+    outline: none;
+    transition: border-color 0.2s;
 }
 
-.input {
-    width: 564px;
-    height: 47px;
-    border-radius: 5px;
-    padding: 0 10px;
-    box-sizing: border-box;
-    flex: 1;
-    background: #F9F9F9;
+.input:focus,
+.inputProfile:focus {
+    border-color: #76ADAC;
+}
+
+.input::placeholder,
+.inputProfile::placeholder {
     color: #848282;
-    font-family: NOto Sans KR, sans-serif;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 145%; /* 20.3px */
 }
 
 .inputError,
@@ -373,29 +356,19 @@
 .testUser {
     display: flex;
     align-items: center;
-    position: absolute;
-    width: 488px;
-    height: 45px;
-    top: 0;
-    left: 166px;
-    /*color: #000000;*/
-    /*font-size: 14px;*/
+    width: 100%;
+    max-width: 480px;
+    height: 47px;
     font-weight: 400;
-    text-align: center;
-    white-space: nowrap;
-    /*background-color: #f5f5f5;*/
-    padding-left: 10px;
-    flex-grow: 1;
-    /*font-size: 15px;*/
-    /*font-weight: 400;*/
-    color: #000;
-    /*text-align: center;*/
-    /* Regular/Regular(16px-140%) */
-    font-family: NOto Sans KR, sans-serif;
+    padding: 0 15px;
+    color: #333;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 16px;
-    font-style: normal;
-    /*font-weight: 400;*/
-    line-height: 140%; /* 22.4px */
+    line-height: 140%;
+    background: #F9F9F9;
+    border: 1px solid #E8E8E8;
+    border-radius: 5px;
+    box-sizing: border-box;
 }
 
 .rectangle6 {
@@ -411,43 +384,55 @@
 }
 
 .nicknameLabel {
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 15px;
+    min-width: 100px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 16px;
     font-weight: 500;
+    color: #000;
 }
 
 .nicknameText {
     flex-grow: 1;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 400;
 }
 
 .saveBtn {
     width: 81px;
     height: 47px;
-    background-color: #76adac;
+    background-color: #76ADAC;
     color: white;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
     border-radius: 5px;
     cursor: pointer;
     border: none;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: background-color 0.2s;
+}
+
+.saveBtn:hover {
+    background-color: #5A8F8E;
+}
+
+.saveBtn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
 }
 
 .nicknameEditContainer {
-    width: fit-content;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
     gap: 10px;
+    flex: 1;
 }
 
 .nicknameDisplay {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
+    flex: 1;
 }
 
 /* 마이페이지 계정 관리 */
@@ -512,32 +497,30 @@
 .accountTermination {
     display: flex;
     align-items: center;
-    justify-content: center;
-    position: absolute;
-    width: 72px;
-    height: 22px;
-    top: 585px;
-    left: 850px;
+    gap: 5px;
+    margin-top: 20px;
+    margin-left: auto;
     color: #666666;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 400;
-    text-align: center;
     white-space: nowrap;
     cursor: pointer;
-    font-family: NOto Sans KR, sans-serif;
-    font-style: normal;
-    line-height: 135%; /* 24.3px */
+    font-family: 'Noto Sans KR', sans-serif;
+    line-height: 135%;
+    transition: color 0.2s;
+}
+
+.accountTermination:hover {
+    color: #333;
+}
+
+.accountTermination::after {
+    content: '>';
+    margin-left: 5px;
 }
 
 .deleteUserVector {
-    position: absolute;
-    width: 1%;
-    height: 2%;
-    top: 590px;
-    left: 98%;
-    background: url('/assets/images/마이페이지/Vector.png') no-repeat center;
-    background-size: contain;
-    cursor: pointer;
+    display: none;
 }
 
 .authentication {
@@ -658,14 +641,13 @@
     margin-top: 21px;
     display: flex;
     flex-direction: column;
-    width: 949px;
-    border: 1px solid #e8e8e8;
+    width: 100%;
+    border: 1px solid #E8E8E8;
     border-radius: 20px;
     box-sizing: border-box;
-    height: 490px;
+    min-height: 400px;
     padding: 45px;
-    align-items: flex-start;
-    gap: 30px;
+    gap: 0;
     flex-shrink: 0;
     background: #FFF;
 }
@@ -681,16 +663,21 @@
     align-items: flex-start;
     justify-content: flex-start;
     gap: 20px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #E8E8E8;
 }
 
 .rowLabel {
-    width: 150px;
+    min-width: 100px;
     font-size: 16px;
     font-weight: 500;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: flex-start;
-    text-align: center;
+    text-align: left;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: #000;
+    padding-top: 12px;
 }
 
 .rowFieldColumn {
@@ -710,9 +697,10 @@
 /* 비밀번호 전용 라인 */
 .formRowPwd {
   display: flex;
-  align-items: flex-start; /* 라벨을 첫 줄에 맞춤 */
+  align-items: flex-start;
   justify-content: flex-start;
   gap: 20px;
+  padding-top: 30px;
 }
 
 /* 오른쪽 필드 */
@@ -741,13 +729,19 @@
 .cancelBtn {
     width: 81px;
     height: 47px;
-    margin-left: 10px;
-    background-color: #f5f5f5;
+    background-color: #F5F5F5;
     color: #333;
-    font-size: 15px;
-    font-weight: 700;
+    font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
     border: none;
+    border-radius: 5px;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: background-color 0.2s;
+}
+
+.cancelBtn:hover {
+    background-color: #E8E8E8;
 }
 
 .emailEditingContainer {
@@ -822,13 +816,13 @@
     flex-direction: column;
     gap: 10px;
     width: 100%;
-    height: 220px;
 }
 
 .actionRow {
     display: flex;
     gap: 10px;
-    margin-left: 490px;
+    justify-content: flex-end;
+    margin-top: 10px;
 }
 
 .fixedText {
@@ -923,45 +917,50 @@
 .totalCount {
     color: #666;
     text-align: center;
-    font-family: NOto Sans KR, sans-serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 16px;
-    font-style: normal;
-    font-weight: 505;
-    margin-left: 200px;
+    font-weight: 500;
     display: flex;
     align-items: center;
-    gap: 8px;
-    line-height: 140%; /* 22.4px */
-    margin-top: 23px;
+    gap: 10px;
+    line-height: 140%;
+    margin-top: 15px;
 }
 
 .bookmarkGrid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
-    margin-left: 200px;
+    margin-top: 20px;
 }
 
 .orderSelect {
-    padding: 5px 10px;
+    padding: 8px 30px 8px 12px;
     font-size: 14px;
-    border: 1px solid #ccc;
+    border: 1px solid #D9D9D9;
     border-radius: 5px;
-    background: #fff;
-    margin-top: 22px;
+    background: #FFF url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L2 4h8z'/%3E%3C/svg%3E") no-repeat right 10px center;
+    appearance: none;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: #333;
+}
+
+.orderSelect:focus {
+    outline: none;
+    border-color: #76ADAC;
 }
 
 .listContainer {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
+    flex: 1;
+    padding: 42px 60px;
     box-sizing: border-box;
 }
 
 .headerContainer {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 20px;
 }
 
@@ -969,24 +968,34 @@
     text-align: left;
 }
 
+.leftHeader .mypageTitle {
+    margin-left: 0 !important;
+    margin-top: 0 !important;
+}
+
 .rightHeader {
     text-align: right;
+    padding-top: 10px;
 }
 
 .bookmarkCard {
     overflow: hidden;
     cursor: pointer;
-    transition: transform 0.2s ease,
-    box-shadow 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
     display: flex;
     flex-direction: column;
-    width: 228px;
+    width: 100%;
     height: 207px;
     flex-shrink: 0;
-    border-radius: 10px 0;
+    border-radius: 10px;
     border: 1px solid #D9D9D9;
     background: #FFF;
-    position: relative; /* three dots 메뉴를 위해 추가 */
+    position: relative;
+}
+
+.bookmarkCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* three dots 메뉴 스타일 추가 */
@@ -1054,4 +1063,25 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+}
+
+/* 빈 상태 스타일 */
+.bookmarkGrid > div:only-child {
+    grid-column: 1 / -1;
+}
+
+/* 북마크 이미지 컨테이너 */
+.imageContainer {
+    width: 100%;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: #F5F5F5;
+}
+
+/* 북마크 아이콘 호버 효과 */
+.bookmarkIconBox:hover {
+    background: #F5F5F5;
 }
