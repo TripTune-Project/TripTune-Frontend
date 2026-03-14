@@ -47,6 +47,7 @@ const HomePageClient = () => {
           alt='메인 배경 이미지'
           fill
           priority
+          sizes='100vw'
           style={{ objectFit: 'cover', zIndex: 0 }}
         />
         <div className={styles.heroTextArea}>

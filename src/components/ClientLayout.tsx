@@ -4,16 +4,9 @@ import React, { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import Header from '@/app/header';
-import ReactGA from 'react-ga4';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import styles from '@/styles/Layout.module.css';
 import FooterLogoImage from '../../public/assets/images/로고/triptuneLogoWhite.png';
-
-const GA4_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID;
-
-if (GA4_MEASUREMENT_ID) {
-  ReactGA.initialize(GA4_MEASUREMENT_ID);
-}
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(() => new QueryClient());
