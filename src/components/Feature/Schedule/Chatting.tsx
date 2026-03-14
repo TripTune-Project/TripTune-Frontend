@@ -13,17 +13,18 @@ import Cookies from 'js-cookie';
 
 /**
  * 날짜 포맷팅 함수
- * YYYY-MM-DD 형식으로 날짜를 변환
+ * YYYY년 M월 D일 요일 형식으로 날짜를 변환
  *
  * @param timestamp ISO 형식의 날짜 문자열
  * @returns 포맷된 날짜 문자열
  */
 const formatDate = (timestamp: string) => {
   const date = new Date(timestamp);
-  return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date
-    .getDate()
-    .toString()
-    .padStart(2, '0')}`;
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const dayOfWeek = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'][date.getDay()];
+  return `${year}년 ${month}월 ${day}일 ${dayOfWeek}`;
 };
 
 /**
@@ -341,14 +342,29 @@ const Chatting = ({ onError }: ChattingProps) => {
               <div
                 className={
                   msg.nickname === userNickname
-                    ? styles.receiveMessage
-                    : styles.sentMessage
+                    ? styles.messageWithTimeRight
+                    : styles.messageWithTimeLeft
                 }
               >
-                <span>{msg.message}</span>
-                <span className={styles.timestamp}>
-                  {formatTimestamp(msg.timestamp)}
-                </span>
+                {msg.nickname === userNickname && (
+                  <span className={styles.timestamp}>
+                    {formatTimestamp(msg.timestamp)}
+                  </span>
+                )}
+                <div
+                  className={
+                    msg.nickname === userNickname
+                      ? styles.receiveMessage
+                      : styles.sentMessage
+                  }
+                >
+                  <span>{msg.message}</span>
+                </div>
+                {msg.nickname !== userNickname && (
+                  <span className={styles.timestamp}>
+                    {formatTimestamp(msg.timestamp)}
+                  </span>
+                )}
               </div>
             </div>
           );

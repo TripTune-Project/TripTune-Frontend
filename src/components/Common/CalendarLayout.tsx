@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import styles from '@/styles/Schedule.module.css';
@@ -127,7 +128,7 @@ const CalendarLayout = ({
     }
   };
   
-  return (
+  const modal = (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContainer}>
         <button className={styles.closeButton} onClick={onClose}>
@@ -179,6 +180,10 @@ const CalendarLayout = ({
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined'
+    ? createPortal(modal, document.body)
+    : null;
 };
 
 export default CalendarLayout;
