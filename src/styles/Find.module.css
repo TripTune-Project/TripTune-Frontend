@@ -53,9 +53,10 @@
     font-style: normal;
     font-weight: 400;
     color: #555;
-    font-size: 15px;
-    line-height: 160%;
+    font-size: 14px;
+    line-height: 140%;
     margin-bottom: 24px;
+    white-space: nowrap;
 }
 
 .containEmail {

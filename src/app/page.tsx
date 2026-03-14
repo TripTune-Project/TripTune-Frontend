@@ -92,7 +92,7 @@ const Home = () => {
         <div className={styles.textContent}>
           <span className={styles.textSchedule}>일정</span>을 직접 만들고
           <br />
-          <span className={styles.textEtc}>여러</span>{' '}
+          <span>여러</span>{' '}
           <span className={styles.textTravel}>여행지</span>를 만나보세요!
           <div className={styles.buttonContainer}>
             {/* 일정 만들기 버튼 */}
