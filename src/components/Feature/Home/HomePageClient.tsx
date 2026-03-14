@@ -55,7 +55,7 @@ const HomePageClient = () => {
         <div className={styles.textContent}>
           <span className={styles.textSchedule}>일정</span>을 직접 만들고
           <br />
-          <span>여러</span>{' '}
+          <span style={{marginLeft:"15px"}}>여러</span>{' '}
           <span className={styles.textTravel}>여행지</span>를 만나보세요!
           <div className={styles.buttonContainer}>
             <div
