@@ -35,7 +35,7 @@ const StyledSwiperContainer = styled.div`
   width: 100%;
   max-width: 1356px;
   margin: 0 auto;
-  padding: 0 40px 8px 0;
+  padding: 0 70px 8px 0;
 `;
 
 const StyledSwiperButtonPrev = styled.div`
@@ -66,7 +66,7 @@ const StyledSwiperButtonNext = styled.div`
   top: 50%;
   width: 60px;
   height: 60px;
-  right: -30px;
+  right: -10px;
   transform: translateY(-50%);
   background: none;
   border: none;
@@ -204,9 +204,9 @@ const HomePageRecommendTravel = () => {
                 </div>
               </SwiperSlide>
             ))}
-            <StyledSwiperButtonPrev className='recommend-swiper-button-prev' />
-            <StyledSwiperButtonNext className='recommend-swiper-button-next' />
           </Swiper>
+          <StyledSwiperButtonPrev className='recommend-swiper-button-prev' />
+          <StyledSwiperButtonNext className='recommend-swiper-button-next' />
         </StyledSwiperContainer>
       ) : (
         !loading && <p className={styles.noData}>데이터가 없습니다.</p>
