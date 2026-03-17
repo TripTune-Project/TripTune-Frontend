@@ -1,12 +1,11 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import styled from 'styled-components';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import { Navigation, Pagination } from 'swiper/modules';
+import { Navigation } from 'swiper/modules';
 import styles from '@/styles/onBoard.module.css';
 import locationIcon from '../../../../public/assets/images/메인화면/main_slideMapIcon.png';
 import triptuneIcon from '../../../../public/assets/images/로고/triptuneIcon-removebg.png';
@@ -20,7 +19,7 @@ import { truncateText } from '@/utils';
 interface TravelItem {
   placeId: number;
   address: string;
-  detailAddress: string;
+  detailAddress: string | null;
   placeName: string;
   thumbnailUrl: string | null;
 }
@@ -106,14 +105,20 @@ const StyledSwiperButtonNext = styled.div`
  * - 스와이퍼를 통한 여행지 목록 슬라이드 구현
  * - 여행지 상세 페이지로 이동 기능 제공
  */
-const HomePagePopularTravel = () => {
+interface HomePagePopularTravelProps {
+  initialData?: TravelItem[];
+}
+
+const HomePagePopularTravel = ({ initialData }: HomePagePopularTravelProps) => {
   const router = useRouter();
   // 선택된 도시 상태
   const [selectedCity, setSelectedCity] = useState<string>('전체');
   // 여행지 목록 상태
-  const [travelList, setTravelList] = useState<TravelItem[]>([]);
+  const [travelList, setTravelList] = useState<TravelItem[]>(initialData ?? []);
   // 로딩 상태
   const [loading, setLoading] = useState<boolean>(false);
+  // 초기 데이터 유무 확인 (마운트 시점 고정)
+  const hasInitialData = useRef((initialData?.length ?? 0) > 0);
 
   /**
    * 도시 이름과 API 요청 코드 매핑 객체
@@ -155,9 +160,11 @@ const HomePagePopularTravel = () => {
     [cityMapping]
   );
 
-  // 컴포넌트 마운트 시 초기 데이터 로드
+  // 초기 데이터가 없을 때만 API 호출
   useEffect(() => {
-    handleCityClick('전체');
+    if (!hasInitialData.current) {
+      handleCityClick('전체');
+    }
   }, [handleCityClick]);
 
   /**
@@ -201,7 +208,7 @@ const HomePagePopularTravel = () => {
           {/* 여행지 슬라이더 */}
           <Swiper
             style={{ overflow: 'visible' }}
-            modules={[Navigation, Pagination]}
+            modules={[Navigation]}
             slidesPerView={4}
             spaceBetween={25}
             navigation={{
@@ -211,7 +218,7 @@ const HomePagePopularTravel = () => {
             loop
           >
             {/* 여행지 아이템 목록 */}
-            {travelList.map((item) => (
+            {travelList.map((item, index) => (
               <SwiperSlide key={item.placeId}>
                 <div
                   className={styles.imgSliderContainer}
@@ -226,6 +233,7 @@ const HomePagePopularTravel = () => {
                         width={305}
                         height={203}
                         sizes='(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 305px'
+                        priority={index === 0}
                       />
                     </>
                   ) : (

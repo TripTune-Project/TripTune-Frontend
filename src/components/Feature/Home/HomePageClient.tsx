@@ -14,7 +14,20 @@ const HomePageRecommendTravel = dynamic(
   () => import('@/components/Feature/Home/HomePageRecommendTravel')
 );
 
-const HomePageClient = () => {
+interface TravelItem {
+  placeId: number;
+  address: string;
+  detailAddress: string | null;
+  placeName: string;
+  thumbnailUrl: string | null;
+}
+
+interface HomePageClientProps {
+  popularInitialData?: TravelItem[];
+  recommendInitialData?: TravelItem[];
+}
+
+const HomePageClient = ({ popularInitialData, recommendInitialData }: HomePageClientProps) => {
   const router = useRouter();
 
   const handleScheduleClick = () => {
@@ -108,8 +121,8 @@ const HomePageClient = () => {
         </div>
       </div>
 
-      <HomePagePopularTravel />
-      <HomePageRecommendTravel />
+      <HomePagePopularTravel initialData={popularInitialData} />
+      <HomePageRecommendTravel initialData={recommendInitialData} />
     </div>
   );
 };

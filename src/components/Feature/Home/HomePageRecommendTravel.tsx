@@ -1,12 +1,11 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import styled from 'styled-components';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import { Navigation, Pagination } from 'swiper/modules';
+import { Navigation } from 'swiper/modules';
 import styles from '@/styles/onBoard.module.css';
 import locationIcon from '../../../../public/assets/images/메인화면/main_slideMapIcon.png';
 import triptuneIcon from '../../../../public/assets/images/로고/triptuneIcon-removebg.png';
@@ -84,11 +83,16 @@ const StyledSwiperButtonNext = styled.div`
   }
 `;
 
-const HomePageRecommendTravel = () => {
+interface HomePageRecommendTravelProps {
+  initialData?: TravelItem[];
+}
+
+const HomePageRecommendTravel = ({ initialData }: HomePageRecommendTravelProps) => {
   const router = useRouter();
   const [selectedTheme, setSelectedTheme] = useState<string>('전체');
-  const [travelList, setTravelList] = useState<TravelItem[]>([]);
+  const [travelList, setTravelList] = useState<TravelItem[]>(initialData ?? []);
   const [loading, setLoading] = useState<boolean>(false);
+  const hasInitialData = useRef((initialData?.length ?? 0) > 0);
 
   const themeMapping = useMemo(
     () => ({
@@ -123,7 +127,9 @@ const HomePageRecommendTravel = () => {
   );
 
   useEffect(() => {
-    handleThemeClick('전체');
+    if (!hasInitialData.current) {
+      handleThemeClick('전체');
+    }
   }, [handleThemeClick]);
 
   const handleDetailClick = (placeId: number) => {
@@ -157,7 +163,7 @@ const HomePageRecommendTravel = () => {
         <StyledSwiperContainer>
           <Swiper
             style={{ overflow: 'visible' }}
-            modules={[Navigation, Pagination]}
+            modules={[Navigation]}
             slidesPerView={4}
             spaceBetween={25}
             navigation={{
@@ -166,7 +172,7 @@ const HomePageRecommendTravel = () => {
             }}
             loop
           >
-            {travelList.map((item) => (
+            {travelList.map((item, index) => (
               <SwiperSlide key={item.placeId}>
                 <div
                   className={styles.imgSliderContainer}
@@ -181,6 +187,7 @@ const HomePageRecommendTravel = () => {
                         width={305}
                         height={203}
                         sizes='(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 305px'
+                        priority={index === 0}
                       />
                     </>
                   ) : (
