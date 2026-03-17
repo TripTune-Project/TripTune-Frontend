@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import styled from 'styled-components';
@@ -83,16 +83,11 @@ const StyledSwiperButtonNext = styled.div`
   }
 `;
 
-interface HomePageRecommendTravelProps {
-  initialData?: TravelItem[];
-}
-
-const HomePageRecommendTravel = ({ initialData }: HomePageRecommendTravelProps) => {
+const HomePageRecommendTravel = () => {
   const router = useRouter();
   const [selectedTheme, setSelectedTheme] = useState<string>('전체');
-  const [travelList, setTravelList] = useState<TravelItem[]>(initialData ?? []);
+  const [travelList, setTravelList] = useState<TravelItem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const hasInitialData = useRef((initialData?.length ?? 0) > 0);
 
   const themeMapping = useMemo(
     () => ({
@@ -127,9 +122,7 @@ const HomePageRecommendTravel = ({ initialData }: HomePageRecommendTravelProps) 
   );
 
   useEffect(() => {
-    if (!hasInitialData.current) {
-      handleThemeClick('전체');
-    }
+    handleThemeClick('전체');
   }, [handleThemeClick]);
 
   const handleDetailClick = (placeId: number) => {
@@ -172,7 +165,7 @@ const HomePageRecommendTravel = ({ initialData }: HomePageRecommendTravelProps) 
             }}
             loop
           >
-            {travelList.map((item, index) => (
+            {travelList.map((item) => (
               <SwiperSlide key={item.placeId}>
                 <div
                   className={styles.imgSliderContainer}
@@ -187,7 +180,6 @@ const HomePageRecommendTravel = ({ initialData }: HomePageRecommendTravelProps) 
                         width={305}
                         height={203}
                         sizes='(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 305px'
-                        priority={index === 0}
                       />
                     </>
                   ) : (

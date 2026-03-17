@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import styled from 'styled-components';
@@ -105,20 +105,14 @@ const StyledSwiperButtonNext = styled.div`
  * - 스와이퍼를 통한 여행지 목록 슬라이드 구현
  * - 여행지 상세 페이지로 이동 기능 제공
  */
-interface HomePagePopularTravelProps {
-  initialData?: TravelItem[];
-}
-
-const HomePagePopularTravel = ({ initialData }: HomePagePopularTravelProps) => {
+const HomePagePopularTravel = () => {
   const router = useRouter();
   // 선택된 도시 상태
   const [selectedCity, setSelectedCity] = useState<string>('전체');
   // 여행지 목록 상태
-  const [travelList, setTravelList] = useState<TravelItem[]>(initialData ?? []);
+  const [travelList, setTravelList] = useState<TravelItem[]>([]);
   // 로딩 상태
   const [loading, setLoading] = useState<boolean>(false);
-  // 초기 데이터 유무 확인 (마운트 시점 고정)
-  const hasInitialData = useRef((initialData?.length ?? 0) > 0);
 
   /**
    * 도시 이름과 API 요청 코드 매핑 객체
@@ -160,11 +154,9 @@ const HomePagePopularTravel = ({ initialData }: HomePagePopularTravelProps) => {
     [cityMapping]
   );
 
-  // 초기 데이터가 없을 때만 API 호출
+  // 컴포넌트 마운트 시 초기 데이터 로드
   useEffect(() => {
-    if (!hasInitialData.current) {
-      handleCityClick('전체');
-    }
+    handleCityClick('전체');
   }, [handleCityClick]);
 
   /**
@@ -218,7 +210,7 @@ const HomePagePopularTravel = ({ initialData }: HomePagePopularTravelProps) => {
             loop
           >
             {/* 여행지 아이템 목록 */}
-            {travelList.map((item, index) => (
+            {travelList.map((item) => (
               <SwiperSlide key={item.placeId}>
                 <div
                   className={styles.imgSliderContainer}
@@ -233,7 +225,6 @@ const HomePagePopularTravel = ({ initialData }: HomePagePopularTravelProps) => {
                         width={305}
                         height={203}
                         sizes='(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 305px'
-                        priority={index === 0}
                       />
                     </>
                   ) : (
