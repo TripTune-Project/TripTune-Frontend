@@ -1,16 +1,22 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, lazy, Suspense } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import styles from '@/styles/Header.module.css';
-import LogoutModal from '@/components/Common/LogoutModal';
-import { Alert, Snackbar, Button } from '@mui/material';
 import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
 import LoginIcon from '../../public/assets/images/메인화면/main_loginBtn.png';
 import MainLogoImage from '../../public/assets/images/로고/triptuneLogo-removebg.png';
 import { logoutApi } from '@/apis/Login/logoutApi';
 import useAuth from '@/hooks/useAuth';
+
+const LogoutModal = dynamic(() => import('@/components/Common/LogoutModal'), {
+  ssr: false,
+});
+const MuiSnackbar = lazy(() => import('@mui/material/Snackbar'));
+const MuiAlert = lazy(() => import('@mui/material/Alert'));
+const MuiButton = lazy(() => import('@mui/material/Button'));
 
 /**
  * Header 컴포넌트 - 앱 상단 헤더 및 네비게이션 바 구현
@@ -118,33 +124,41 @@ const Header = () => {
             // 로그인 상태이고 닉네임이 있는 경우: 사용자 이름과 로그아웃 버튼 표시
             <div className={styles.navLogin}>
               {nickname} 님
-              <Button onClick={openModal} variant='text' size='large'>
-                로그아웃
-              </Button>
-              <LogoutModal
-                isOpen={isModalOpen}
-                onClose={closeModal}
-                onConfirm={handleLogout}
-              />
+              <Suspense fallback={<button onClick={openModal}>로그아웃</button>}>
+                <MuiButton onClick={openModal} variant='text' size='large'>
+                  로그아웃
+                </MuiButton>
+              </Suspense>
+              {isModalOpen && (
+                <LogoutModal
+                  isOpen={isModalOpen}
+                  onClose={closeModal}
+                  onConfirm={handleLogout}
+                />
+              )}
             </div>
           )}
         </nav>
       </div>
 
       {/* 알림 메시지 Snackbar */}
-      <Snackbar
-        open={alertOpen}
-        autoHideDuration={3000}
-        onClose={handleAlertClose}
-      >
-        <Alert
-          onClose={handleAlertClose}
-          severity='error'
-          sx={{ width: '100%' }}
-        >
-          {alertMessage}
-        </Alert>
-      </Snackbar>
+      {alertOpen && (
+        <Suspense fallback={null}>
+          <MuiSnackbar
+            open={alertOpen}
+            autoHideDuration={3000}
+            onClose={handleAlertClose}
+          >
+            <MuiAlert
+              onClose={handleAlertClose}
+              severity='error'
+              sx={{ width: '100%' }}
+            >
+              {alertMessage}
+            </MuiAlert>
+          </MuiSnackbar>
+        </Suspense>
+      )}
     </header>
   );
 };

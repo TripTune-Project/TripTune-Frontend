@@ -1,10 +1,11 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, lazy, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import searchIcon from '../../../../public/assets/images/메인화면/main_searchIcon.png';
 import styles from '@/styles/onBoard.module.css';
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
+
+const Snackbar = lazy(() => import('@mui/material/Snackbar'));
+const Alert = lazy(() => import('@mui/material/Alert'));
 
 /**
  * HomePageSearch 컴포넌트 - 홈페이지 검색 기능 구현
@@ -112,20 +113,24 @@ const HomePageSearch = () => {
           style={{ filter: 'brightness(0) invert(1)' }}
         />
       </button>
-      <Snackbar
-        open={alertOpen}
-        autoHideDuration={3000}
-        onClose={handleAlertClose}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <Alert
-          onClose={handleAlertClose}
-          severity={alertSeverity}
-          sx={{ width: '100%' }}
-        >
-          {alertMessage}
-        </Alert>
-      </Snackbar>
+      {alertOpen && (
+        <Suspense fallback={null}>
+          <Snackbar
+            open={alertOpen}
+            autoHideDuration={3000}
+            onClose={handleAlertClose}
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          >
+            <Alert
+              onClose={handleAlertClose}
+              severity={alertSeverity}
+              sx={{ width: '100%' }}
+            >
+              {alertMessage}
+            </Alert>
+          </Snackbar>
+        </Suspense>
+      )}
     </>
   );
 };

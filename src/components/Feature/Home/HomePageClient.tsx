@@ -1,11 +1,16 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
+import Image, { StaticImageData } from 'next/image';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import styles from '@/styles/onBoard.module.css';
 import HomePageSearch from '@/components/Feature/Home/HomePageSearch';
+
+import scheduleIconDefault from '../../../../public/assets/images/메인화면/scheduleIcon.png';
+import scheduleIconHover from '../../../../public/assets/images/메인화면/selectScheduleIcon.png';
+import travelIconDefault from '../../../../public/assets/images/메인화면/travelIcon.png';
+import travelIconHover from '../../../../public/assets/images/메인화면/selectTravelIcon.png';
 
 const HomePagePopularTravel = dynamic(
   () => import('@/components/Feature/Home/HomePagePopularTravel')
@@ -25,12 +30,8 @@ const HomePageClient = () => {
     router.push('/Travel');
   };
 
-  const [scheduleIcon, setScheduleIcon] = useState(
-    '/assets/images/메인화면/scheduleIcon.png'
-  );
-  const [travelIcon, setTravelIcon] = useState(
-    '/assets/images/메인화면/travelIcon.png'
-  );
+  const [scheduleIcon, setScheduleIcon] = useState<StaticImageData>(scheduleIconDefault);
+  const [travelIcon, setTravelIcon] = useState<StaticImageData>(travelIconDefault);
 
   useEffect(() => {
     document.body.style.overflow = 'auto';
@@ -61,12 +62,8 @@ const HomePageClient = () => {
             <div
               className={styles.viewBtnSchedule}
               onClick={handleScheduleClick}
-              onMouseEnter={() =>
-                setScheduleIcon('/assets/images/메인화면/selectScheduleIcon.png')
-              }
-              onMouseLeave={() =>
-                setScheduleIcon('/assets/images/메인화면/scheduleIcon.png')
-              }
+              onMouseEnter={() => setScheduleIcon(scheduleIconHover)}
+              onMouseLeave={() => setScheduleIcon(scheduleIconDefault)}
             >
               <div className={styles.viewTitle}>일정 만들기</div>
               <p className={styles.viewTitleSmall}>직접 일정을 만들어보세요!</p>
@@ -83,12 +80,8 @@ const HomePageClient = () => {
             <div
               className={styles.viewBtnTravel}
               onClick={handleTravelClick}
-              onMouseEnter={() =>
-                setTravelIcon('/assets/images/메인화면/selectTravelIcon.png')
-              }
-              onMouseLeave={() =>
-                setTravelIcon('/assets/images/메인화면/travelIcon.png')
-              }
+              onMouseEnter={() => setTravelIcon(travelIconHover)}
+              onMouseLeave={() => setTravelIcon(travelIconDefault)}
             >
               <div className={styles.viewTitle}>여행지 탐색</div>
               <p className={styles.viewTitleSmall}>

@@ -7,7 +7,7 @@ import '@/styles/global.css';
 
 const notoSansKR = Noto_Sans_KR({
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700', '800'],
+  weight: ['400', '500', '600', '700', '800'],
   display: 'swap',
 });
 
@@ -23,11 +23,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang='ko' className={notoSansKR.className}>
       <head>
-        <link rel='preload' href='/assets/images/메인화면/ocean_title.png' as='image' />
         <link rel='preconnect' href='https://www.triptune.co.kr' />
         <link rel='dns-prefetch' href='https://www.triptune.co.kr' />
         <link rel='preconnect' href='https://triptune.s3.ap-northeast-2.amazonaws.com' />
         <link rel='dns-prefetch' href='https://triptune.s3.ap-northeast-2.amazonaws.com' />
+        {GA4_MEASUREMENT_ID && (
+          <link rel='preconnect' href='https://www.googletagmanager.com' />
+        )}
       </head>
       <body>
         {GA4_MEASUREMENT_ID && (
