@@ -23,7 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang='ko' className={notoSansKR.className}>
       <head>
-        <link rel='preload' href='/assets/images/메인화면/ocean_title.png' as='image' />
+        <link rel='preload' href='/assets/images/메인화면/ocean_title.webp' as='image' type='image/webp' />
         <link rel='preconnect' href='https://www.triptune.co.kr' />
         <link rel='dns-prefetch' href='https://www.triptune.co.kr' />
         <link rel='preconnect' href='https://triptune.s3.ap-northeast-2.amazonaws.com' />
@@ -34,9 +34,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <>
             <Script
               src={`https://www.googletagmanager.com/gtag/js?id=${GA4_MEASUREMENT_ID}`}
-              strategy='afterInteractive'
+              strategy='lazyOnload'
             />
-            <Script id='gtag-init' strategy='afterInteractive'>
+            <Script id='gtag-init' strategy='lazyOnload'>
               {`
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}

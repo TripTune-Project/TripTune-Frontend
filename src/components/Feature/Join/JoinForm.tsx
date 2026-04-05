@@ -106,7 +106,7 @@ const JoinForm = () => {
     <div className={styles.joinBackground}>
       <div className={styles.joinContainer}>
         <h3 className={styles.joinTitle}>회원가입</h3>
-        <form onSubmit={handleSubmit(onSubmit, onError)}>
+        <form onSubmit={handleSubmit(onSubmit, onError)} className={styles.joinForm}>
           <EmailVerification
             register={register}
             getValues={getValues}
