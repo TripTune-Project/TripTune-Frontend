@@ -6,28 +6,42 @@
     display: flex;
     justify-content: center;
     min-height: calc(100vh - 80px);
-    background: linear-gradient(180deg, #E8F5E9 0%, #FFF 30%);
+    background: #FFF;
+    overflow: hidden;
+}
+
+.mainContainer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 76%;
+    height: 516px;
+    background: linear-gradient(253.95deg, #EDF9F7 3.98%, #F1F5FF 98.44%);
+    border-bottom-left-radius: 200px;
+    z-index: 0;
+    pointer-events: none;
 }
 
 .mypageBox {
     position: relative;
+    z-index: 1;
     width: 1265px;
     min-height: 680px;
     margin: 63px auto;
     background: #FFF;
-    box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.15);
-    border-radius: 20px;
+    box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.30);
     display: flex;
 }
 
 .flexColumnDb {
     position: relative;
-    width: 220px;
+    width: 249px;
     min-height: 100%;
-    padding: 42px 0;
+    padding: 42px 5px 42px 51px;
     display: flex;
     flex-direction: column;
-    border-right: 1px solid #E8E8E8;
+    gap: 8px;
 }
 
 .profileManagement,
@@ -41,13 +55,14 @@
     align-items: center;
     width: 100%;
     height: 49px;
-    padding: 10px 20px 10px 30px;
+    padding: 10px 20px;
     color: #000000;
     font-size: 16px;
     font-weight: 400;
     text-align: left;
     white-space: nowrap;
     box-sizing: border-box;
+    border-radius: 10px;
     font-family: 'Noto Sans KR', sans-serif;
 }
 
@@ -60,46 +75,42 @@
 .bookmarkManagementActive {
     background-color: #EDF9F7;
     color: #004A55;
-    font-weight: 700;
-    border-left: 4px solid #76ADAC;
-    padding-left: 26px;
+    font-weight: 600;
 }
 
 .tab {
     cursor: pointer;
-    transition: background-color 0.3s, color 0.2s;
+    transition: background-color 0.3s;
 }
 
 .tab:hover {
-    background-color: #F5F5F5;
+    background-color: #f0f0f0;
 }
 
 .logout {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 5px;
     position: absolute;
     bottom: 40px;
-    left: 30px;
+    left: 51px;
     font-weight: 400;
     white-space: nowrap;
     cursor: pointer;
-    color: #E74C3C;
+    color: #000;
     font-family: 'Noto Sans KR', sans-serif;
-    font-size: 14px;
+    font-size: 16px;
     line-height: 140%;
-    padding: 8px 12px;
-    border-radius: 8px;
-    transition: background-color 0.2s;
+    transition: color 0.2s;
 }
 
 .logout:hover {
-    background-color: #FEE2E2;
+    color: #666;
 }
 
 .logoutIcon {
-    width: 16px;
-    height: 16px;
+    width: 14.4px;
+    height: 14.5px;
     background: url('/assets/images/마이페이지/logoutIcon.png') no-repeat center;
     background-size: contain;
 }
@@ -136,8 +147,6 @@
     align-items: flex-start;
     gap: 20px;
     width: 100%;
-    padding-bottom: 30px;
-    border-bottom: 1px solid #E8E8E8;
 }
 
 .profileImgText {
@@ -187,6 +196,13 @@
     background: #E8E8E8;
 }
 
+.profileImageActions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
 .fileUploadMessage {
     display: flex;
     flex-direction: column;
@@ -197,7 +213,6 @@
     font-family: 'Noto Sans KR', sans-serif;
     font-size: 14px;
     line-height: 180%;
-    margin-left: 20px;
 }
 
 .flexRowCc8 {
@@ -205,7 +220,6 @@
     align-items: center;
     gap: 20px;
     width: 100%;
-    padding-top: 30px;
 }
 
 .input,
@@ -249,10 +263,8 @@
     padding-left: 15px;
 }
 
-.inputProfile,
-.inputProfileError,
 .inputErrorText {
-    margin-left: 160px;
+    margin-left: 0;
 }
 
 .errorText,
@@ -422,8 +434,7 @@
 
 .nicknameEditContainer {
     display: flex;
-    align-items: flex-start;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: 10px;
     flex: 1;
 }
@@ -498,10 +509,10 @@
     display: flex;
     align-items: center;
     gap: 5px;
-    margin-top: 20px;
+    margin-top: auto;
     margin-left: auto;
     color: #666666;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 400;
     white-space: nowrap;
     cursor: pointer;
@@ -642,12 +653,27 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    border: 1px solid #E8E8E8;
+    border: 1px solid #e0e0e0;
     border-radius: 20px;
     box-sizing: border-box;
     min-height: 400px;
     padding: 45px;
-    gap: 0;
+    gap: 50px;
+    flex-shrink: 0;
+    background: #FFF;
+}
+
+.mypageContentBoxAccount {
+    margin-top: 21px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    border: 1px solid #e8e8e8;
+    border-radius: 20px;
+    box-sizing: border-box;
+    min-height: 490px;
+    padding: 45px;
+    gap: 30px;
     flex-shrink: 0;
     background: #FFF;
 }
@@ -663,8 +689,6 @@
     align-items: flex-start;
     justify-content: flex-start;
     gap: 20px;
-    padding-bottom: 30px;
-    border-bottom: 1px solid #E8E8E8;
 }
 
 .rowLabel {
@@ -700,7 +724,6 @@
   align-items: flex-start;
   justify-content: flex-start;
   gap: 20px;
-  padding-top: 30px;
 }
 
 /* 오른쪽 필드 */
@@ -854,7 +877,7 @@
     width: 100%;
     height: 120px;
     object-fit: cover;
-    border-radius: 8px;
+    border-top-left-radius: 9px;
 }
 
 .noImage {
@@ -864,11 +887,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 8px;
+    border-top-left-radius: 9px;
     background-color: #e0e0e0;
-    border: 1px dashed #ccc;
-    color: #888;
-    font-size: 14px;
+    color: #999;
+    font-size: 13px;
+    font-weight: 500;
 }
 
 .placeName {
@@ -984,10 +1007,10 @@
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     display: flex;
     flex-direction: column;
-    width: 100%;
+    width: 228px;
     height: 207px;
     flex-shrink: 0;
-    border-radius: 10px;
+    border-radius: 10px 0 10px 0;
     border: 1px solid #D9D9D9;
     background: #FFF;
     position: relative;
@@ -1073,15 +1096,40 @@
 /* 북마크 이미지 컨테이너 */
 .imageContainer {
     width: 100%;
-    height: 120px;
+    height: 121px;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    background: #F5F5F5;
+    border-top-left-radius: 9px;
 }
 
 /* 북마크 아이콘 호버 효과 */
 .bookmarkIconBox:hover {
     background: #F5F5F5;
+}
+
+/* 비편집 상태 값 텍스트 */
+.readOnlyValue {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    min-height: 47px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: #000;
+    line-height: 140%;
+}
+
+/* 비밀번호 힌트 텍스트 */
+.passwordHint {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #848282;
+    line-height: 145%;
+    margin: 0;
+    padding-left: 20px;
+    list-style-type: disc;
 }

@@ -204,7 +204,7 @@ const Account = () => {
   return (
     <div className={styles.mypageflexColumn}>
       <div className={styles.mypageTitle}>계정 관리</div>
-      <div className={styles.mypageContentBox}>
+      <div className={styles.mypageContentBoxAccount}>
         {/* 이메일 */}
         <div className={styles.formRowEmail}>
           <div className={styles.rowLabel}>이메일</div>
@@ -305,12 +305,7 @@ const Account = () => {
               </div>
             ) : (
               <div className={styles.emailRow}>
-                <input
-                  type="text"
-                  value={userData?.email || ''}
-                  readOnly
-                  className={styles.input}
-                />
+                <span className={styles.readOnlyValue}>{userData?.email || ''}</span>
                 {!isEditingPwd && (
                   <button
                     className={styles.editBtn}
@@ -359,6 +354,9 @@ const Account = () => {
                     errors.rePassword ? styles.inputError : styles.input
                   }
                 />
+                <ul className={styles.passwordHint}>
+                  <li>소셜 로그인 회원의 경우 [로그인 &gt; 비밀번호 찾기] 를 통해 이메일로 전송된 링크에서 비밀번호 설정이 가능합니다.</li>
+                </ul>
                 <div className={styles.actionRow}>
                   <button
                     className={styles.cancelBtn}
@@ -384,12 +382,7 @@ const Account = () => {
               </div>
             ) : (
               <div className={styles.emailRow}>
-                <input
-                  type="text"
-                  value="비밀번호 변경"
-                  readOnly
-                  className={styles.input}
-                />
+                <span className={styles.readOnlyValue}>비밀번호 변경</span>
                 {!isEditing && (
                   <button
                     className={styles.editBtn}

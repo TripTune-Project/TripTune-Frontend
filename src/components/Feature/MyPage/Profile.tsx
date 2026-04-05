@@ -124,7 +124,6 @@ const Profile = () => {
         setAlertSeverity('success');
         setAlertOpen(true);
         await fetchUserData();
-        window.history.go(0);
         setIsEditing(false);
       } else {
         setAlertMessage(response.message || '닉네임 변경에 실패했습니다.');
@@ -153,17 +152,19 @@ const Profile = () => {
             height={95}
             onClick={handleFileClick}
           />
-          <button
-            type='button'
-            className={styles.changeProfileImg}
-            onClick={handleFileClick}
-          >
-            변경
-          </button>
-          <span className={styles.fileUploadMessage}>
-            • PNG, JPG, JPEG의 확장자 파일만 업로드 가능합니다.
-            <br />• 이미지는 5MB 이하만 업로드 가능합니다.
-          </span>
+          <div className={styles.profileImageActions}>
+            <button
+              type='button'
+              className={styles.changeProfileImg}
+              onClick={handleFileClick}
+            >
+              변경
+            </button>
+            <span className={styles.fileUploadMessage}>
+              • PNG, JPG, JPEG의 확장자 파일만 업로드 가능합니다.
+              <br />• 이미지는 5MB 이하만 업로드 가능합니다.
+            </span>
+          </div>
         </div>
         <div className={styles.flexRowCc8}>
           <span className={styles.nicknameLabel}>닉네임</span>
@@ -172,37 +173,39 @@ const Profile = () => {
               onSubmit={handleSubmit(handleSave)}
               className={styles.nicknameEditContainer}
             >
-              <input
-                {...register('nickname', {
-                  required: '닉네임을 입력해주세요.',
-                  validate: validateNickname,
-                })}
-                placeholder='닉네임 (영문 대/소문자, 숫자 조합 4 ~ 15자리)'
-                className={
-                  errors.nickname
-                    ? styles.inputProfileError
-                    : styles.inputProfile
-                }
-              />
+              <div className={styles.emailRow}>
+                <input
+                  {...register('nickname', {
+                    required: '닉네임을 입력해주세요.',
+                    validate: validateNickname,
+                  })}
+                  placeholder='닉네임 (영문 대/소문자, 숫자 조합 4 ~ 15자리)'
+                  className={
+                    errors.nickname
+                      ? styles.inputProfileError
+                      : styles.input
+                  }
+                />
+                <button
+                  type='button'
+                  className={styles.cancelBtn}
+                  onClick={handleCancel}
+                >
+                  취소
+                </button>
+                <button type='submit' className={styles.saveBtn}>
+                  저장
+                </button>
+              </div>
               {errors.nickname && (
                 <p className={styles.inputErrorText}>
                   {errors.nickname.message}
                 </p>
               )}
-              <button
-                type='button'
-                className={styles.cancelBtn}
-                onClick={handleCancel}
-              >
-                취소
-              </button>
-              <button type='submit' className={styles.saveBtn}>
-                저장
-              </button>
             </form>
           ) : (
             <div className={styles.nicknameDisplay}>
-              <span className={styles.testUser}>{userData?.nickname}</span>
+              <span className={styles.readOnlyValue}>{userData?.nickname}</span>
               <button
                 type='button'
                 className={styles.changeNickname}

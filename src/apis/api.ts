@@ -1,3 +1,4 @@
+
 import { refreshApi } from './Login/refreshApi';
 import Cookies from 'js-cookie';
 
@@ -128,8 +129,8 @@ const fetchData = async <T>(
   options?: FetchOptions,
   isRetry: boolean = false
 ): Promise<T> => {
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
-  //const baseUrl = 'https://www.triptune.co.kr' // 로컬에서만
+  // const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
+  const baseUrl = 'https://www.triptune.co.kr' // 로컬에서만
   const url = `${baseUrl}${endpoint}`;
 
   // 헤더 설정

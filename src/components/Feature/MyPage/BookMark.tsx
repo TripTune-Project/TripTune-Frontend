@@ -40,7 +40,11 @@ const BookMark = () => {
   };
 
   if (isLoading) {
-    return <DataLoading />;
+    return (
+      <div className={styles.listContainer}>
+        <DataLoading />
+      </div>
+    );
   }
 
   const places: BookmarkPlace[] = myPageBookMarkData?.data?.content || [];

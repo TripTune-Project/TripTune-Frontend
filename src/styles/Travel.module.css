@@ -278,9 +278,9 @@
 }
 
 .pageButton.active {
-    background: #76ADAC;
+    background: #4B71EA;
     color: #fff;
-    border-color: #76ADAC;
+    border-color: #4B71EA;
 }
 
 .navButton.disabled {
