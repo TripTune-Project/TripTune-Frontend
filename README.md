@@ -22,10 +22,13 @@ src/
   ├── apis/           # API 호출 관련 코드
   │   ├── BookMark/   # 북마크 관련 API
   │   ├── Home/       # 홈 화면 관련 API
+  │   ├── Join/       # 회원가입 관련 API
   │   ├── Login/      # 인증 관련 API
   │   ├── MyPage/     # 마이페이지 관련 API
   │   ├── Schedule/   # 일정 관련 API
-  │   └── Travel/     # 여행 정보 관련 API
+  │   ├── Travel/     # 여행 정보 관련 API
+  │   ├── Verify/     # 이메일 인증 관련 API
+  │   └── api.ts      # API 공통 설정
   ├── app/            # Next.js 라우팅 및 페이지
   │   ├── Travel/     # 여행지 상세/추천 페이지
   │   ├── Schedule/   # 여행 일정 관리 페이지
@@ -37,6 +40,7 @@ src/
   │   ├── Feature/    # 주요 기능별 컴포넌트
   │   └── Common/     # 공통 컴포넌트 (모달, 로딩 등)
   ├── hooks/          # 커스텀 훅
+  ├── mocks/          # MSW 모의 서버
   ├── store/          # 상태 관리(zustand)
   ├── styles/         # 스타일 파일
   ├── types/          # 타입 정의
@@ -178,8 +182,7 @@ Netlify, Vercel 등으로 배포 시:
 - **상태 관리**: Zustand, React Query (TanStack Query)
 - **스타일링**: MUI, styled-components, emotion
 - **지도 서비스**: Google Maps
-- **차트 및 시각화**: Chart.js
-- **폼 관리**: React Hook Form, Yup
+- **폼 관리**: React Hook Form
 - **테스팅**: Jest, React Testing Library
 - **실시간 통신**: WebSocket (STOMP)
 
@@ -201,7 +204,7 @@ Netlify, Vercel 등으로 배포 시:
   - 복잡한 로직에 대한 설명 추가
 
 - **브랜치 전략**
-  - main: 배포 브랜치
+  - master: 배포 브랜치
   - develop: 개발 브랜치
   - feature/[기능명]: 기능 개발 브랜치
 
@@ -217,7 +220,7 @@ Netlify, Vercel 등으로 배포 시:
 
 ## 버전 정보 / 변경 이력(Changelog)
 
-- v1.0.0 (2024-04) - 최초 릴리즈
+- v0.1.0 (2024-04) - 최초 릴리즈
   - 일정 관리 기능
   - 여행지 검색 및 추천
   - 사용자 인증 및 계정 관리
@@ -260,14 +263,14 @@ Netlify, Vercel 등으로 배포 시:
 ```
 ├── cypress/
 │   ├── e2e/              # E2E 테스트 파일
-│   ├── support/          # Cypress 지원 파일
-│   │   ├── commands.ts   # 커스텀 명령어
-│   │   └── e2e.ts        # E2E 테스트 설정
-│   └── fixtures/         # 테스트 데이터
+│   └── support/          # Cypress 지원 파일
+│       ├── commands.ts   # 커스텀 명령어
+│       └── e2e.ts        # E2E 테스트 설정
+├── cypress.env.json      # Cypress 환경 변수
 ├── src/
-│   ├── __tests__/       # 통합 테스트 파일
-│   └── mocks/           # MSW 모의 서버
-└── jest.config.js       # Jest 설정
+│   ├── **/*.test.{ts,tsx} # 통합 테스트 파일 (각 모듈 내 위치)
+│   └── mocks/            # MSW 모의 서버
+└── jest.config.js        # Jest 설정
 ```
 
 ### 테스트 실행 전 준비사항
