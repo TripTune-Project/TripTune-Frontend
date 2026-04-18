@@ -40,7 +40,7 @@ const StyledSwiperContainer = styled.div`
 
 const StyledSwiperButtonPrev = styled.div`
   position: absolute;
-  top: 50%;
+  top: 165px;
   width: 60px;
   height: 60px;
   left: 10px;
@@ -63,7 +63,7 @@ const StyledSwiperButtonPrev = styled.div`
 
 const StyledSwiperButtonNext = styled.div`
   position: absolute;
-  top: 50%;
+  top: 165px;
   width: 60px;
   height: 60px;
   right: -10px;
@@ -132,7 +132,7 @@ const HomePageRecommendTravel = () => {
 
   return (
     <div className={styles.recommendedDestinations}>
-      <h2 className={styles.chooseRecomend}>
+      <h2 className={styles.chooseRecomend} style={{ marginTop: '100px' }}>
         <Image src={triptuneIcon} alt='홈화면' width='30' height='30' />
         추천 여행 테마
       </h2>
@@ -169,6 +169,7 @@ const HomePageRecommendTravel = () => {
             {travelList.map((item) => (
               <SwiperSlide key={item.placeId}>
                 <div
+                    style={{ marginBottom: '180px' }}
                   className={styles.imgSliderContainer}
                   onClick={() => handleDetailClick(item.placeId)}
                 >
