@@ -40,7 +40,7 @@ const formatTimestamp = (timestamp: string) => {
   const minutes = date.getMinutes().toString().padStart(2, '0');
   const ampm = hours >= 12 ? '오후' : '오전';
   const formattedHours = hours % 12 || 12;
-  return `${ampm} ${formattedHours}시 ${minutes}분`;
+  return `${ampm} ${formattedHours} : ${minutes}`;
 };
 
 /**
