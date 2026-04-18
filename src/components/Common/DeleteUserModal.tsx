@@ -183,7 +183,17 @@ const DeactivateButton = styled.button`
   }
 `;
 
-const ListItem = styled.li``;
+const CardList = styled.ul`
+  margin: 0;
+  padding-left: 18px;
+  list-style: disc;
+`;
+
+const NoticeList = styled.ul`
+  margin: 0;
+  padding-left: 18px;
+  list-style: disc;
+`;
 
 interface DeleteUserModalProps {
   isOpen: boolean;
@@ -239,24 +249,28 @@ const DeleteUserModal = ({
         <Info>
           <div>탈퇴 전 안내 사항</div>
           <Card>
-            <li>닉네임, 프로필 사진, 이메일을 포함한 개인정보를 삭제합니다.</li>
-            <li>작성한 일정, 채팅, 북마크 기록 모두 삭제합니다.</li>
-            <li>계정 탈퇴 진행 시 삭제한 데이터를 복구할 수 없습니다.</li>
-            <li>계정 탈퇴 처리 후 동일한 이메일로 재가입이 불가능하며 계정을 되돌릴 수 없습니다.</li>
-            <li>계정 탈퇴 처리 후 연동된 소셜 계정 정보도 사라지며 소셜 로그인으로 기존 계정 이용이 불가능합니다.</li>
+            <CardList>
+              <li>닉네임, 프로필 사진, 이메일을 포함한 개인정보를 삭제합니다.</li>
+              <li>작성한 일정, 채팅, 북마크 기록 모두 삭제합니다.</li>
+              <li>계정 탈퇴 진행 시 삭제한 데이터를 복구할 수 없습니다.</li>
+              <li>계정 탈퇴 처리 후 동일한 이메일로 재가입이 불가능하며 계정을 되돌릴 수 없습니다.</li>
+              <li>계정 탈퇴 처리 후 연동된 소셜 계정 정보도 사라지며 소셜 로그인으로 기존 계정 이용이 불가능합니다.</li>
+            </CardList>
           </Card>
         </Info>
         <PasswordSection>
           <PasswordLabel>비밀번호</PasswordLabel>
           <PasswordNotice>
-            <li>
-              현재 비밀번호를 입력하고 탈퇴하기를 누르면 위 내용에 동의하는
-              것으로 간주됩니다.
-            </li>
-            <li>
-              소셜 로그인 회원의 경우 [로그인 {'>'} 비밀번호 찾기]를 통해
-              비밀번호를 설정한 후 탈퇴를 진행해주세요.
-            </li>
+            <NoticeList>
+              <li>
+                현재 비밀번호를 입력하고 탈퇴하기를 누르면 위 내용에 동의하는
+                것으로 간주됩니다.
+              </li>
+              <li>
+                소셜 로그인 회원의 경우 [로그인 {'>'} 비밀번호 찾기]를 통해
+                비밀번호를 설정한 후 탈퇴를 진행해주세요.
+              </li>
+            </NoticeList>
           </PasswordNotice>
           <PasswordInput>
             <InputField
