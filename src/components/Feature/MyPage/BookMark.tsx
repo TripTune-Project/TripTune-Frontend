@@ -12,12 +12,16 @@ import DataLoading from '@/components/Common/DataLoading';
 import { BookmarkPlace } from '@/types/myPage';
 import { truncateText } from '@/utils';
 import { BookMarkDeleteApi } from '@/apis/BookMark/bookMarkApi';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 const BookMark = () => {
   const router = useRouter();
   const { currentPage, setCurrentPage } = useMyPageBookMarkStore();
 
   const [sort, setSort] = useState<'newest' | 'oldest' | 'name'>('newest');
+  const [alertOpen, setAlertOpen] = useState<boolean>(false);
+  const [alertMessage, setAlertMessage] = useState<string>('');
   
   const { data: myPageBookMarkData, isLoading, refetch } = useMyPageBookMarkList(
     currentPage,
@@ -35,7 +39,10 @@ const BookMark = () => {
       await BookMarkDeleteApi(placeId);
       await refetch(); // 북마크 목록 새로고침
     } catch (error) {
-      console.error('북마크 삭제 실패:', error);
+      const message =
+        error instanceof Error ? error.message : '북마크 삭제에 실패했습니다.';
+      setAlertMessage(message);
+      setAlertOpen(true);
     }
   };
 
@@ -139,6 +146,20 @@ const BookMark = () => {
           onPageChange={handlePageChange}
         />
       )}
+      <Snackbar
+        open={alertOpen}
+        autoHideDuration={3000}
+        onClose={() => setAlertOpen(false)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert
+          onClose={() => setAlertOpen(false)}
+          severity='error'
+          sx={{ width: '100%' }}
+        >
+          {alertMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

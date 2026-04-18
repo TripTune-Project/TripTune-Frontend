@@ -1234,28 +1234,29 @@
 
 .inputContainer {
     display: flex;
-    flex-direction: column;
-    padding: 14px;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
     background-color: #ffffff;
     border-radius: 10px;
     margin: 0 14px 22px 14px;
-    min-height: 140px;
     box-sizing: border-box;
 }
 
 .messageInput {
     flex-grow: 1;
-    padding: 12px 16px;
-    border: none;
-    border-radius: 0;
+    height: 35px;
+    padding: 0 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
     font-family: 'Inter', 'Noto Sans KR', sans-serif;
     font-size: 12px;
     font-weight: 400;
-    line-height: 190%;
+    line-height: 33px;
     color: #333;
     background-color: #ffffff;
-    resize: none;
-    min-height: 85px;
+    box-sizing: border-box;
 }
 
 .messageInput::placeholder {
@@ -1264,20 +1265,26 @@
 
 .messageInput:focus {
     outline: none;
+    border-color: #76adac;
 }
 
 .sendButton {
-    align-self: flex-end;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-color: #76adac;
     color: #ffffff;
-    padding: 6px 12px;
+    padding: 0 12px;
     width: 69px;
     height: 35px;
     border: none;
+    border-radius: 5px;
     font-family: 'Inter', 'Noto Sans KR', sans-serif;
     font-size: 14px;
     font-weight: 400;
-    line-height: 145%;
+    line-height: 1;
+    text-align: center;
     cursor: pointer;
     transition: background-color 0.2s ease;
 }

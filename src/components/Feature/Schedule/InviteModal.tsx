@@ -106,31 +106,43 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
   };
 
   const handleShareClick = async () => {
-    const response = await shareSchedule(
-      Number(scheduleId),
-      email,
-      selectedPermission as 'ALL' | 'EDIT' | 'CHAT' | 'READ'
-    );
+    try {
+      const response = await shareSchedule(
+        Number(scheduleId),
+        email,
+        selectedPermission as 'ALL' | 'EDIT' | 'CHAT' | 'READ'
+      );
 
-    if (response.success) {
-      setAlertMessage('공유가 완료되었습니다.');
-      setAlertSeverity('success');
-      setAlertOpen(true);
+      if (response.success) {
+        setAlertMessage('공유가 완료되었습니다.');
+        setAlertSeverity('success');
+        setAlertOpen(true);
 
-      try {
-        const updatedResponse = await fetchScheduleAttendees(
-          Number(scheduleId)
-        );
-        if (updatedResponse.success) {
-          setAllUsers(updatedResponse.data || []);
-        } else {
-          console.error('참석자 정보 업데이트 실패:', updatedResponse.message);
+        try {
+          const updatedResponse = await fetchScheduleAttendees(
+            Number(scheduleId)
+          );
+          if (updatedResponse.success) {
+            setAllUsers(updatedResponse.data || []);
+          } else {
+            console.error('참석자 정보 업데이트 실패:', updatedResponse.message);
+          }
+        } catch (error) {
+          console.error('참석자 정보 갱신 중 오류 발생:', error);
         }
-      } catch (error) {
-        console.error('참석자 정보 갱신 중 오류 발생:', error);
+        setEmail('');
+        setSelectedPermission('EDIT');
+      } else {
+        setAlertMessage(response.message || '공유에 실패했습니다.');
+        setAlertSeverity('error');
+        setAlertOpen(true);
       }
-      setEmail('');
-      setSelectedPermission('EDIT');
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : '공유에 실패했습니다.';
+      setAlertMessage(message);
+      setAlertSeverity('error');
+      setAlertOpen(true);
     }
   };
 
@@ -173,34 +185,54 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
 
   // 일정 내보내기
   const handleQuitSchedule = async (attendeeId: number) => {
-    const response = await quitSchedule(Number(scheduleId), attendeeId);
-    if (response.success) {
-      setAlertMessage('일정에서 내보내졌습니다.');
-      setAlertSeverity('success');
+    try {
+      const response = await quitSchedule(Number(scheduleId), attendeeId);
+      if (response.success) {
+        setAlertMessage('일정에서 내보내졌습니다.');
+        setAlertSeverity('success');
+        setAlertOpen(true);
+        setAllUsers((prevUsers) =>
+          prevUsers.filter((user) => user.role === 'AUTHOR')
+        );
+      } else {
+        setAlertMessage(response.message || '내보내기에 실패했습니다.');
+        setAlertSeverity('error');
+        setAlertOpen(true);
+      }
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : '내보내기에 실패했습니다.';
+      setAlertMessage(message);
+      setAlertSeverity('error');
       setAlertOpen(true);
-      setAllUsers((prevUsers) =>
-        prevUsers.filter((user) => user.role === 'AUTHOR')
-      );
     }
   };
 
   // 일정 나가기
   const handleLeaveSchedule = async () => {
-    const response = await leaveSchedule(Number(scheduleId));
-    if (response.success) {
-      setAlertMessage('일정에서 나갔습니다.');
-      setAlertSeverity('success');
-      setAlertOpen(true);
-      setAllUsers((prevUsers) =>
-        prevUsers.filter((user) => user.role === 'AUTHOR')
-      );
-      onClose();
-    } else {
-      setAlertMessage('일정 나가기 실패');
+    try {
+      const response = await leaveSchedule(Number(scheduleId));
+      if (response.success) {
+        setAlertMessage('일정에서 나갔습니다.');
+        setAlertSeverity('success');
+        setAlertOpen(true);
+        setAllUsers((prevUsers) =>
+          prevUsers.filter((user) => user.role === 'AUTHOR')
+        );
+        onClose();
+      } else {
+        setAlertMessage('일정 나가기 실패');
+        setAlertSeverity('error');
+        setAlertOpen(true);
+      }
+      router.push('/Schedule');
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : '일정 나가기에 실패했습니다.';
+      setAlertMessage(message);
       setAlertSeverity('error');
       setAlertOpen(true);
     }
-    router.push('/Schedule');
   };
 
   const handleAlertClose = (
