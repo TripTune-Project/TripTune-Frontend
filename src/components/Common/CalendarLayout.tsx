@@ -9,6 +9,8 @@ import { useTravelStore } from '@/store/scheduleStore';
 import Image from 'next/image';
 import triptuneIcon from '../../../public/assets/images/로고/triptuneIcon-removebg.png';
 import scheduleDateIcon from '../../../public/assets/images/일정 만들기/일정 생성/scheduleDate_dateIcon.png';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 registerLocale('ko', ko);
 
@@ -37,6 +39,8 @@ const CalendarLayout = ({
   );
   const [scheduleName, setScheduleName] = useState<string>(travelName);
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
+  const [alertOpen, setAlertOpen] = useState<boolean>(false);
+  const [alertMessage, setAlertMessage] = useState<string>('');
 
   // 모달이 열렸을 때 배경 스크롤 방지
   useEffect(() => {
@@ -73,7 +77,10 @@ const CalendarLayout = ({
           window.location.href = `/Schedule/${response.data.scheduleId}`;
         }
       } catch (error) {
-        console.error('일정 생성 실패:', error);
+        const message =
+          error instanceof Error ? error.message : '일정 생성에 실패했습니다.';
+        setAlertMessage(message);
+        setAlertOpen(true);
       }
     } else {
       updateScheduleDetail({
@@ -182,7 +189,26 @@ const CalendarLayout = ({
   );
 
   return typeof document !== 'undefined'
-    ? createPortal(modal, document.body)
+    ? createPortal(
+        <>
+          {modal}
+          <Snackbar
+            open={alertOpen}
+            autoHideDuration={3000}
+            onClose={() => setAlertOpen(false)}
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          >
+            <Alert
+              onClose={() => setAlertOpen(false)}
+              severity='error'
+              sx={{ width: '100%' }}
+            >
+              {alertMessage}
+            </Alert>
+          </Snackbar>
+        </>,
+        document.body
+      )
     : null;
 };
 
