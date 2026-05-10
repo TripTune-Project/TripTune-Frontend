@@ -43,10 +43,12 @@ const nextConfig = {
     ];
   },
   async rewrites() {
+    const apiBase = process.env.NEXT_PUBLIC_API_URL;
+    if (!apiBase) return [];
     return [
       {
         source: '/apis/:path*',
-        destination: 'https://www.triptune.co.kr/api/:path*',
+        destination: `${apiBase}/api/:path*`,
       },
     ];
   },
