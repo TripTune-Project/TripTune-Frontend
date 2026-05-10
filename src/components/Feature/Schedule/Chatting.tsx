@@ -29,7 +29,7 @@ const formatDate = (timestamp: string) => {
 
 /**
  * 시간 포맷팅 함수
- * '오전/오후 H시 MM분' 형식으로 시간을 변환
+ * '오전/오후 H:MM' 형식으로 시간을 변환
  *
  * @param timestamp ISO 형식의 날짜 문자열
  * @returns 포맷된 시간 문자열
@@ -40,7 +40,7 @@ const formatTimestamp = (timestamp: string) => {
   const minutes = date.getMinutes().toString().padStart(2, '0');
   const ampm = hours >= 12 ? '오후' : '오전';
   const formattedHours = hours % 12 || 12;
-  return `${ampm} ${formattedHours} : ${minutes}`;
+  return `${ampm} ${formattedHours}:${minutes}`;
 };
 
 /**
