@@ -199,10 +199,7 @@ interface ScheduleItemContainerProps {
 // 스타일 컴포넌트
 const ModalOverlay = styled.div`
   position: fixed;
-  top: -500px;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
