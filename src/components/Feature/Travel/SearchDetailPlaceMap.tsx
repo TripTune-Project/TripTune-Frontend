@@ -2,12 +2,11 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 const containerStyle = {
   width: 'calc(100% - 40px)',
-  maxWidth: '1360px',
-  height: '300px',
-  margin: '0 auto 60px',
-  borderRadius: '15px',
+  maxWidth: '1297px',
+  height: '393px',
+  margin: '0 auto 180px',
+  borderRadius: '0',
   overflow: 'hidden',
-  boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
 };
 
 interface MapProps {

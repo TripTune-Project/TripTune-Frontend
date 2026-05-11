@@ -4,12 +4,11 @@ import styles from '@/styles/Mypage.module.css';
 import { useForm } from 'react-hook-form';
 import { validateNickname } from '@/utils/validation';
 import { useMyPage } from '@/hooks/useMyPage';
-import { nickNameChange } from '@/apis/MyPage/myPageApi';
+import { nickNameChange, profileImageChange } from '@/apis/MyPage/myPageApi';
 import saveLocalContent from '@/utils/saveLocalContent';
 import ProfileBasicImg from '../../../../public/assets/images/마이페이지/profileImage.png';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-import Cookies from 'js-cookie';
 
 const Profile = () => {
   const { setEncryptedCookie } = saveLocalContent();
@@ -68,29 +67,14 @@ const Profile = () => {
         }
         setSelectedImage(file);
         try {
-          const formData = new FormData();
-          formData.append('profileImage', file);
-          const accessToken = Cookies.get('accessToken');
-          const response = await fetch(
-            'https://www.triptune.site/api/profiles',
-            {
-              method: 'PATCH',
-              body: formData,
-              credentials: 'include',
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-              },
-            }
-          );
-
-          const data = await response.json();
-          if (data.success) {
+          const response = await profileImageChange(file);
+          if (response.success) {
             setAlertMessage('프로필 이미지가 성공적으로 변경되었습니다.');
             setAlertSeverity('success');
             setAlertOpen(true);
             await fetchUserData();
           } else {
-            setAlertMessage(data.message || '이미지 변경에 실패했습니다.');
+            setAlertMessage(response.message || '이미지 변경에 실패했습니다.');
             setAlertSeverity('error');
             setAlertOpen(true);
           }

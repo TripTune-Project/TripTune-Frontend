@@ -30,9 +30,11 @@ import useAuth from '@/hooks/useAuth';
 
 const StyledSwiperContainer = styled.div`
   position: relative;
-  width: 340px;
-  height: 220px;
-  border-radius: 10px 0 0 10px;
+  width: 50%;
+  flex: 1 1 50%;
+  height: 512px;
+  background: #f5f5f5;
+  border-radius: 0;
   overflow: hidden;
 
   .swiper {
@@ -49,17 +51,17 @@ const StyledSwiperContainer = styled.div`
 const StyledSwiperButtonPrev = styled.button`
   position: absolute;
   top: 50%;
-  left: 10px;
+  left: 0;
   transform: translateY(-50%);
   border: none;
   cursor: pointer;
   z-index: 10;
   user-select: none;
-  width: 36px;
-  height: 36px;
+  width: 50px;
+  height: 50px;
   background-color: rgba(255, 255, 255, 0.8);
   background-image: url('/assets/images/여행지 탐색/상세화면/placeDetail_imageLeftBtn.png');
-  background-size: 16px;
+  background-size: 22px;
   background-repeat: no-repeat;
   background-position: center;
   border-radius: 50%;
@@ -73,17 +75,17 @@ const StyledSwiperButtonPrev = styled.button`
 const StyledSwiperButtonNext = styled.button`
   position: absolute;
   top: 50%;
-  right: 10px;
+  right: 0;
   transform: translateY(-50%);
   border: none;
   cursor: pointer;
   z-index: 10;
   user-select: none;
-  width: 36px;
-  height: 36px;
+  width: 50px;
+  height: 50px;
   background-color: rgba(255, 255, 255, 0.8);
   background-image: url('/assets/images/여행지 탐색/상세화면/placeDetail_imageRightBtn.png');
-  background-size: 16px;
+  background-size: 22px;
   background-repeat: no-repeat;
   background-position: center;
   border-radius: 50%;
@@ -92,6 +94,21 @@ const StyledSwiperButtonNext = styled.button`
   &:hover {
     background-color: rgba(255, 255, 255, 1);
   }
+`;
+
+const NoImageBox = styled.div`
+  position: relative;
+  width: 50%;
+  flex: 1 1 50%;
+  height: 512px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f5f5;
+  color: #848282;
+  font-size: 22px;
+  font-weight: 400;
+  font-family: 'Noto Sans KR', sans-serif;
 `;
 
 const fetchTravelDetailData = async (
@@ -105,7 +122,7 @@ const TravelDetailPage = () => {
   useEffect(() => {
     document.body.style.overflow = 'auto';
     return () => {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = '';
     };
   }, []);
 
@@ -207,60 +224,6 @@ const TravelDetailPage = () => {
     setIsModalOpen(false);
   };
 
-  const UseTimeUI = ({ useTime }: { useTime: string }) => (
-    <div className={styles.useTimeLabel}>
-      <Image width={16} height={16} src={timeIcon} alt='이용 시간' />
-      <p className={styles.contentTitle}>이용시간</p>
-      <p className={styles.contentText}>
-        {formatDescriptionWithParagraphs(useTime, true)}
-      </p>
-    </div>
-  );
-
-  const CheckInOutUI = ({
-    checkInTime,
-    checkOutTime,
-  }: {
-    checkInTime: string;
-    checkOutTime: string;
-  }) => (
-    <div>
-      <div className={styles.useTimeLabel}>
-        <Image width={16} height={16} src={timeIcon} alt='입실 시간' />
-        <p className={styles.contentTitle}>입실시간</p>
-        <span className={styles.contentText}>
-          {formatDescriptionWithParagraphs(checkInTime, true)}
-        </span>
-      </div>
-      <div className={styles.useTimeLabel}>
-        <Image width={16} height={16} src={timeIcon} alt='퇴실 시간' />
-        <p className={styles.contentTitle}>퇴실시간</p>
-        <span className={styles.contentText}>
-          {formatDescriptionWithParagraphs(checkOutTime, true)}
-        </span>
-      </div>
-    </div>
-  );
-
-  const renderTimeContent = (
-    checkInTime?: string,
-    checkOutTime?: string,
-    useTime?: string
-  ) => {
-    if (checkInTime || checkOutTime) {
-      return (
-        <CheckInOutUI
-          checkInTime={checkInTime ?? ''}
-          checkOutTime={checkOutTime ?? ''}
-        />
-      );
-    } else if (useTime) {
-      return <UseTimeUI useTime={useTime} />;
-    } else {
-      return null;
-    }
-  };
-
   const formatDescriptionWithParagraphs = (
     text: string,
     applyMargin: boolean = false,
@@ -354,9 +317,9 @@ const TravelDetailPage = () => {
                       <Image
                         src={image.imageUrl}
                         alt={image.imageName}
-                        width={340}
-                        height={220}
-                        style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                        fill
+                        style={{ objectFit: 'cover' }}
+                        sizes="(max-width: 1297px) 50vw, 649px"
                       />
                     </div>
                   </SwiperSlide>
@@ -366,7 +329,7 @@ const TravelDetailPage = () => {
               <StyledSwiperButtonNext ref={nextButtonRef} />
             </StyledSwiperContainer>
           ) : (
-            <div className={styles.noImage}>이미지가 없습니다.</div>
+            <NoImageBox>이미지가 없습니다.</NoImageBox>
           )}
           {/* 오른쪽 정보 영역 */}
           <div className={styles.rightSection}>
@@ -382,7 +345,7 @@ const TravelDetailPage = () => {
                   <dt className={styles.label}>
                     <Image
                       width={16}
-                      height={16}
+                      height={24}
                       src={locationIcon}
                       alt='주소'
                     />
@@ -397,8 +360,8 @@ const TravelDetailPage = () => {
                     <div className={styles.detailRow}>
                       <dt className={styles.label}>
                         <Image
-                          width={16}
-                          height={16}
+                          width={18}
+                          height={18}
                           src={timeIcon}
                           alt='입실시간'
                         />
@@ -409,8 +372,8 @@ const TravelDetailPage = () => {
                     <div className={styles.detailRow}>
                       <dt className={styles.label}>
                         <Image
-                          width={16}
-                          height={16}
+                          width={18}
+                          height={18}
                           src={timeIcon}
                           alt='퇴실시간'
                         />
@@ -423,8 +386,8 @@ const TravelDetailPage = () => {
                   <div className={styles.detailRow}>
                     <dt className={styles.label}>
                       <Image
-                        width={16}
-                        height={16}
+                        width={18}
+                        height={18}
                         src={timeIcon}
                         alt='이용시간'
                       />
@@ -440,8 +403,8 @@ const TravelDetailPage = () => {
                   <div className={styles.detailRow}>
                     <dt className={styles.label}>
                       <Image
-                        width={16}
-                        height={16}
+                        width={18}
+                        height={18}
                         src={homePageIcon}
                         alt='홈페이지'
                       />
@@ -464,7 +427,7 @@ const TravelDetailPage = () => {
                     <dt className={styles.label}>
                       <Image
                         width={16}
-                        height={16}
+                        height={18}
                         src={phoneIcon}
                         alt='문의 및 안내'
                       />

@@ -304,17 +304,18 @@
     flex-direction: column;
     margin: 0;
     padding: 0;
-    background: linear-gradient(180deg, #E8F5E9 0%, #FFF 15%);
+    background: transparent;
     min-height: 100vh;
 }
 
 .topSection {
-    margin: 50px auto 40px;
+    margin: 79px auto 55px;
     display: flex;
     gap: 0;
     flex-wrap: nowrap;
     align-items: stretch;
-    max-width: 1400px;
+    width: calc(100% - 40px);
+    max-width: 1297px;
 }
 
 .topSection > * {
@@ -322,14 +323,14 @@
 }
 
 .sliderImageContainer {
-    background: #f0f0f0;
+    background: #f5f5f5;
     width: 100%;
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    border-radius: 10px 0 0 10px;
+    border-radius: 0;
 }
 
 .sliderImageContainer img {
@@ -340,16 +341,16 @@
 
 .noImage {
     position: relative;
-    width: 340px;
-    height: 220px;
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 10px 0 0 10px;
-    background: linear-gradient(135deg, #E8F5E9 0%, #f5f5f5 100%);
-    border: 1px dashed #ccc;
-    color: #666;
-    font-size: 14px;
+    border-radius: 0;
+    background: #f5f5f5;
+    color: #848282;
+    font-size: 22px;
+    font-weight: 400;
     font-family: 'Noto Sans KR', sans-serif;
 }
 
@@ -372,37 +373,43 @@
     background-color: #ffffff;
     display: flex;
     flex-direction: column;
-    height: auto;
-    min-height: 220px;
-    width: 460px;
+    align-items: center;
+    height: 512px;
+    width: 50%;
     margin: 0;
     overflow: hidden;
-    padding: 25px 30px;
-    flex: 0 0 460px;
-    border-radius: 0 10px 10px 0;
-    box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.08);
+    padding: 55px 55px 40px;
+    flex: 1 1 50%;
+    border-radius: 0;
+    box-shadow: none;
+    box-sizing: border-box;
 }
 
 .countryCityDistrict {
     color: #636363;
     font-style: normal;
-    font: 300 14px/140% "Noto Sans KR", sans-serif;
-    margin: 0 0 8px 0;
+    font: 300 16px/140% "Noto Sans KR", sans-serif;
+    margin: 0 0 18px 0;
+    text-align: center;
+    width: 100%;
 }
 
 .detailplaceName {
     color: #000;
     font-style: normal;
-    font: 500 24px/130% "Noto Sans KR", sans-serif;
-    margin: 0 0 20px 0;
+    font: 400 32px/120% "Noto Sans KR", sans-serif;
+    margin: 0 0 50px 0;
+    text-align: center;
+    width: 100%;
 }
 
 .detailsScroll {
     flex: 1;
     min-height: 0;
+    width: 100%;
     overflow-y: auto;
     padding-right: 4px;
-    margin-bottom: 15px;
+    margin-bottom: 25px;
 }
 
 .detailsScroll::-webkit-scrollbar {
@@ -416,8 +423,8 @@
 
 .detailsGrid {
     display: grid;
-    grid-template-columns: 100px 1fr;
-    column-gap: 15px;
+    grid-template-columns: 184px 1fr;
+    column-gap: 0;
     row-gap: 10px;
     padding: 0;
     margin: 0;
@@ -430,16 +437,16 @@
 .label {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 11px;
 }
 
 .labelText {
-    font: 500 14px/1.6 "Noto Sans KR", sans-serif;
+    font: 500 18px/1.8 "Noto Sans KR", sans-serif;
     color: #2D2D2D;
 }
 
 .value {
-    font: 400 14px/1.6 "Noto Sans KR", sans-serif;
+    font: 300 18px/1.8 "Noto Sans KR", sans-serif;
     color: #555;
     white-space: pre-wrap;
     word-break: break-word;
@@ -461,8 +468,8 @@
 
 .buttonContainer {
     display: flex;
-    gap: 12px;
-    justify-content: flex-start;
+    gap: 38px;
+    justify-content: center;
     align-items: center;
     width: 100%;
     flex-shrink: 0;
@@ -493,50 +500,50 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 45px;
-    padding: 10px 20px;
+    width: 250px;
+    height: 55px;
+    padding: 0 20px;
     border: none;
-    border-radius: 5px;
+    border-radius: 0;
     cursor: pointer;
-    gap: 8px;
-    flex: 1;
-    max-width: 200px;
+    gap: 10px;
     text-align: center;
-    font: 600 14px/135% "Noto Sans KR", sans-serif;
+    font: 700 18px/1.4 "Noto Sans KR", sans-serif;
     color: #fff;
 }
 
 .detailTitle {
     display: flex;
     align-items: center;
-    height: 30px;
-    max-width: 1400px;
-    margin: 0 auto 20px;
-    padding: 0 20px;
+    height: 36px;
+    width: calc(100% - 40px);
+    max-width: 1297px;
+    margin: 0 auto 25px;
+    padding: 0;
     color: #000;
-    font: 500 22px/120% "Noto Sans KR", sans-serif;
+    font: 400 26px/120% "Noto Sans KR", sans-serif;
 }
 
 .detailTitleIcon {
-    width: 28px;
-    height: 21px;
+    width: 36px;
+    height: 27px;
     flex-shrink: 0;
-    margin-right: 10px;
+    margin-right: 5px;
 }
 
 .infoSection {
     background: #F3F8F8;
-    padding: 30px 40px;
-    border-radius: 15px;
+    padding: 35px 46px;
+    border-radius: 0;
     width: calc(100% - 40px);
-    max-width: 1360px;
+    max-width: 1297px;
     margin: 0 auto 40px;
     box-sizing: border-box;
 }
 
 .infoText {
-    font: 400 15px/1.8 "Noto Sans KR", sans-serif;
-    color: #333;
+    font: 400 16px/2 "Noto Sans KR", sans-serif;
+    color: #555;
     overflow: hidden;
     -webkit-box-orient: vertical;
     white-space: pre-line;
@@ -546,10 +553,10 @@
 .expandButton {
     background: none;
     border: none;
-    color: #76ADAC;
+    color: #0070F3;
     cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 16px;
+    font-weight: 500;
     margin-top: 15px;
     padding: 0;
     transition: color .2s ease;
@@ -557,7 +564,7 @@
 }
 
 .expandButton:hover {
-    color: #5A9392;
+    color: #0050C7;
 }
 
 /******************************
