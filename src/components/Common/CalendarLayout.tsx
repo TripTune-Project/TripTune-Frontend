@@ -52,12 +52,15 @@ const CalendarLayout = ({
   }, []);
 
   useEffect(() => {
+    const datesValid =
+      startDate !== null && endDate !== null && startDate <= endDate;
     if (mode === 'create') {
-      setIsFormValid(
-        scheduleName.trim() !== '' && startDate !== null && endDate !== null
-      );
+      const startOfToday = new Date();
+      startOfToday.setHours(0, 0, 0, 0);
+      const notPast = startDate !== null && startDate >= startOfToday;
+      setIsFormValid(scheduleName.trim() !== '' && datesValid && notPast);
     } else {
-      setIsFormValid(startDate !== null && endDate !== null);
+      setIsFormValid(datesValid);
     }
   }, [startDate, endDate, scheduleName, mode]);
   
@@ -170,7 +173,7 @@ const CalendarLayout = ({
             onChange={handleDateChange}
             startDate={startDate || undefined}
             endDate={endDate || undefined}
-            minDate={today}
+            minDate={mode === 'create' ? today : undefined}
             selectsRange
             inline
             monthsShown={2}

@@ -180,7 +180,16 @@ const ScheduleTravelSearch = () => {
                   <div className={styles.placeName}>
                     {truncateText(place.placeName, 16)}
                   </div>
-                  <p className={styles.placeDetailAddress}>
+                  <p className={styles.placeAddress}>
+                    {truncateText(
+                      `${place.country} / ${place.city} / ${place.district}`,
+                      16
+                    )}
+                  </p>
+                  <p
+                    className={styles.placeDetailAddress}
+                    style={{ marginTop: '-8px' }}
+                  >
                     <Image
                       src={locationIcon}
                       alt='장소'
