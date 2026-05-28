@@ -62,11 +62,11 @@ const LoginForm = () => {
   };
 
   const handleKakaoLogin = () => {
-    router.push('https://www.triptune.site/oauth2/authorization/kakao');
+    router.push('https://www.triptune.co.kr/oauth2/authorization/kakao');
   };
 
   const handleNaverLogin = () => {
-    router.push('https://www.triptune.site/oauth2/authorization/naver');
+    router.push('https://www.triptune.co.kr/oauth2/authorization/naver');
   };
 
   const handleFindPassword = () => {

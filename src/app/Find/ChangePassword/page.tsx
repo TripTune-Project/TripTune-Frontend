@@ -69,7 +69,7 @@ const ChangePassword = () => {
     try {
       const accessToken = Cookies.get('accessToken');
       const response = await fetch(
-        'https://www.triptune.site/api/members/reset-password',
+        'https://www.triptune.co.kr/api/members/reset-password',
         {
           method: 'PATCH',
           body: JSON.stringify({
@@ -127,7 +127,7 @@ const ChangePassword = () => {
         <meta property='og:image' content='/assets/Logo.png' />
         <meta
           property='og:url'
-          content='https://www.triptune.site/Find/ChangePassword'
+          content='https://www.triptune.co.kr/Find/ChangePassword'
         />
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/public/assets/favicon.ico' />
