@@ -59,17 +59,11 @@ const StyledSwiperButtonPrev = styled.button`
   user-select: none;
   width: 50px;
   height: 50px;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: transparent;
   background-image: url('/assets/images/여행지 탐색/상세화면/placeDetail_imageLeftBtn.png');
   background-size: 22px;
   background-repeat: no-repeat;
   background-position: center;
-  border-radius: 50%;
-  transition: background-color 0.2s;
-
-  &:hover {
-    background-color: rgba(255, 255, 255, 1);
-  }
 `;
 
 const StyledSwiperButtonNext = styled.button`
@@ -83,17 +77,11 @@ const StyledSwiperButtonNext = styled.button`
   user-select: none;
   width: 50px;
   height: 50px;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: transparent;
   background-image: url('/assets/images/여행지 탐색/상세화면/placeDetail_imageRightBtn.png');
   background-size: 22px;
   background-repeat: no-repeat;
   background-position: center;
-  border-radius: 50%;
-  transition: background-color 0.2s;
-
-  &:hover {
-    background-color: rgba(255, 255, 255, 1);
-  }
 `;
 
 const NoImageBox = styled.div`
