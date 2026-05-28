@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 import Image from 'next/image';
 import { useMyScheduleList } from '@/hooks/useSchedule';
@@ -97,7 +98,9 @@ const MyScheduleEditModal = ({
     setAlertOpen(false);
   };
 
-  return (
+  if (typeof document === 'undefined') return null;
+
+  return createPortal(
     <ModalOverlay>
       <ModalContainer>
         <CloseButton onClick={onClose}>✕</CloseButton>
@@ -185,7 +188,8 @@ const MyScheduleEditModal = ({
           {alertMessage}
         </Alert>
       </Snackbar>
-    </ModalOverlay>
+    </ModalOverlay>,
+    document.body
   );
 };
 

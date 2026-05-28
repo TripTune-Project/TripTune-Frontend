@@ -214,7 +214,7 @@ Netlify, Vercel 등으로 배포 시:
 
 - **이메일**: triptunehost@gmail.com
 - **GitHub**: https://github.com/TripTune-Project
-- **웹사이트**: https://www.triptune.site
+- **웹사이트**: https://www.triptune.co.kr
 
 ---
 
