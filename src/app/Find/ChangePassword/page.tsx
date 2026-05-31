@@ -147,7 +147,7 @@ const ChangePassword = () => {
               새롭게 설정할 비밀번호를 입력해주세요.
             </p>
           </div>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(onSubmit)} className={styles.loginForm}>
             <div className={styles.changePwdForm}>
               <div className={styles.inputGroup}>
                 <div className={styles.changePwdLabel}>새로운 비밀번호</div>
