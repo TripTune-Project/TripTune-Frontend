@@ -61,7 +61,7 @@ const StyledSwiperButtonPrev = styled.button`
   height: 50px;
   background-color: transparent;
   background-image: url('/assets/images/여행지 탐색/상세화면/placeDetail_imageLeftBtn.png');
-  background-size: 22px;
+  background-size: 50px;
   background-repeat: no-repeat;
   background-position: center;
 `;
@@ -70,7 +70,8 @@ const StyledSwiperButtonNext = styled.button`
   position: absolute;
   top: 50%;
   right: 0;
-  transform: translateY(-50%);
+  /* 좌우 화살표 모양·크기를 동일하게 맞추기 위해 prev와 같은 이미지를 좌우 반전해 사용 */
+  transform: translateY(-50%) scaleX(-1);
   border: none;
   cursor: pointer;
   z-index: 10;
@@ -78,8 +79,8 @@ const StyledSwiperButtonNext = styled.button`
   width: 50px;
   height: 50px;
   background-color: transparent;
-  background-image: url('/assets/images/여행지 탐색/상세화면/placeDetail_imageRightBtn.png');
-  background-size: 22px;
+  background-image: url('/assets/images/여행지 탐색/상세화면/placeDetail_imageLeftBtn.png');
+  background-size: 50px;
   background-repeat: no-repeat;
   background-position: center;
 `;

@@ -82,14 +82,18 @@ const TravelPageContent = () => {
     !isSearching && isAuthStateReady // 인증 상태가 확정된 후에만 실행
   );
 
+  // 검색어 디바운스 처리 (타이핑 최적화)
+  const debouncedSearchTerm = useDebounce(searchTerm, 800);
+
   // 검색어 기반 여행지 목록 데이터 쿼리
+  // keyword는 디바운스된 값을 사용 → 타이핑 도중 매 글자마다 재조회/로딩 깜빡임 방지
   const {
     data: searchData,
     isLoading: isLoadingSearch,
     refetch: refetchSearch,
   } = useTravelListSearch(
     {
-      keyword: searchTerm,
+      keyword: debouncedSearchTerm,
       latitude: coordinates?.latitude ?? defaultCoordinates.latitude,
       longitude: coordinates?.longitude ?? defaultCoordinates.longitude,
     },
@@ -97,9 +101,6 @@ const TravelPageContent = () => {
     requiresAuth,
     isSearching && isAuthStateReady // 인증 상태가 확정된 후에만 실행
   );
-
-  // 검색어 디바운스 처리 (타이핑 최적화)
-  const debouncedSearchTerm = useDebounce(searchTerm, 800);
 
   useEffect(() => {
     if (keyword) {
@@ -340,10 +341,7 @@ const TravelPageContent = () => {
         <meta name='viewport' content='width=device-width, initial-scale=1' />
       </Head>
       <>
-        {isLoadingLocation || isLoadingSearch ? (
-          <DataLoading />
-        ) : (
-          <div className={styles.container}>
+        <div className={styles.container}>
             {showLoginModal && <LoginModal />}
             <div className={styles.listContainer}>
               <div className={styles.searchContainer}>
@@ -361,6 +359,10 @@ const TravelPageContent = () => {
                   검색
                 </button>
               </div>
+              {isLoadingLocation || isLoadingSearch ? (
+                <DataLoading />
+              ) : (
+                <>
               <ul className={styles.placeList}>
                 {places && places.length > 0 ? (
                   places.map((place) => {
@@ -454,12 +456,13 @@ const TravelPageContent = () => {
                   onPageChange={handlePageChange}
                 />
               )}
+                </>
+              )}
             </div>
             <div className={styles.mapContainer}>
               <SearchPlacesMap places={places || []} />
             </div>
           </div>
-        )}
         <Snackbar
           open={alertOpen}
           autoHideDuration={3000}
