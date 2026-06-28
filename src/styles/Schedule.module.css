@@ -831,6 +831,15 @@
     color: #2c2c2c;
 }
 
+.placeAddress {
+    margin: 0 0 2px 0;
+    font-family: 'Inter', 'Noto Sans KR', sans-serif;
+    font-size: 10px;
+    font-weight: 300;
+    line-height: 150%;
+    color: #868686;
+}
+
 .placeItem {
     display: flex;
     align-items: center;
@@ -894,9 +903,9 @@
 }
 
 .placeThumbnail {
-    width: 60px;
-    height: 60px;
-    min-width: 60px;
+    width: 80px;
+    height: 80px;
+    min-width: 80px;
     border-radius: 10px;
     overflow: hidden;
     display: flex;

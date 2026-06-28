@@ -155,7 +155,10 @@ const ScheduleTravelSearch = () => {
           검색
         </button>
       </div>
-      <div className={styles.travelList}>
+      <div
+        className={styles.travelList}
+        style={{ flex: 1, minHeight: 0, maxHeight: 'none' }}
+      >
         {isSearching && searchTravelQuery.isLoading ? (
           <DataLoading />
         ) : travels.length > 0 ? (
@@ -167,8 +170,8 @@ const ScheduleTravelSearch = () => {
                     <Image
                       src={place.thumbnailUrl}
                       alt={place.placeName}
-                      width={60}
-                      height={60}
+                      width={80}
+                      height={80}
                       className={styles.thumbnailImage}
                       priority
                     />
@@ -186,10 +189,7 @@ const ScheduleTravelSearch = () => {
                       16
                     )}
                   </p>
-                  <p
-                    className={styles.placeDetailAddress}
-                    style={{ marginTop: '-8px' }}
-                  >
+                  <p className={styles.placeDetailAddress}>
                     <Image
                       src={locationIcon}
                       alt='장소'
@@ -219,16 +219,22 @@ const ScheduleTravelSearch = () => {
             ))}
           </ul>
         ) : (
-          <NoResult />
+          // Figma: 일정 편집 검색 패널 - 박스/테두리 없이 아이콘+텍스트만 중앙 표시
+          <NoResult
+            containerStyle={{ width: '100%', height: '518px', border: 'none' }}
+          />
         )}
       </div>
       {totalPages > 0 && (
-        <Pagination
-          total={totalPages * 5}
-          currentPage={currentPage}
-          pageSize={5}
-          onPageChange={setCurrentPage}
-        />
+        // 목록(flex:1)이 위 공간을 채우고 페이지네이션은 패널 하단에서 37px 위에 고정
+        <div style={{ marginTop: '16px', marginBottom: '37px', flexShrink: 0 }}>
+          <Pagination
+            total={totalPages * 5}
+            currentPage={currentPage}
+            pageSize={5}
+            onPageChange={setCurrentPage}
+          />
+        </div>
       )}
       <Snackbar
         open={alertOpen}
