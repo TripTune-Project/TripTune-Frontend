@@ -215,13 +215,27 @@ const ScheduleRoute = () => {
   // 여행 경로와 삭제 드롭존 렌더링
   return (
     <DndProvider backend={HTML5Backend}>
-      <div style={{ position: 'relative', minHeight: '500px' }}>
-        <ul className={styles.routeListContainer}>
+      {/* 좌측 패널(=지도/대화창과 같은 825px) 안에서 입력·탭 아래 남는 공간을 모두 채움
+          → 목록은 가운데에서 스크롤, 삭제 버튼은 패널 하단(지도·대화창과 같은 선)에 고정 */}
+      <div
+        style={{
+          position: 'relative',
+          display: 'flex',
+          flexDirection: 'column',
+          flex: 1,
+          minHeight: 0,
+          paddingBottom: '42px', // Figma: 삭제 버튼이 패널 하단에서 42px 위에 위치
+        }}
+      >
+        <ul
+          className={styles.routeListContainer}
+          style={{ flex: 1, minHeight: 0, maxHeight: 'none' }}
+        >
           {travelRoute.map((place, index) => (
             <PlaceItem key={place.placeId} place={place} index={index} />
           ))}
+          <li ref={ref} style={{ height: '1px', listStyle: 'none' }} />
         </ul>
-        <div ref={ref} style={{ height: '1px', background: 'transparent' }}></div>
         <DeleteDropZone />
       </div>
     </DndProvider>

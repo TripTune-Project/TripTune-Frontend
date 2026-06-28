@@ -4,7 +4,7 @@ import { useTravelStore } from '@/store/scheduleStore';
 // 맵 컨테이너의 스타일
 const containerStyle = {
   width: '980px',
-  height: '870px',
+  height: 'calc(100vh - 75px)', // 헤더 75px 제외, 바닥까지 꽉 채움 (여백 0)
   alignSelf: 'flex-start',
 };
 

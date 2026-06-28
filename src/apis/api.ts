@@ -46,7 +46,6 @@ const getErrorType = (message: string, statusCode?: number): ErrorType => {
     message === '접근 권한이 없습니다.' ||
     message === '페이지를 찾을 수 없습니다.' ||
     message === '여행지 정보를 찾을 수 없습니다.' ||
-    // message === '일정 정보를 찾을 수 없습니다.' ||
     message === '작성자 정보를 찾을 수 없습니다.' ||
     message === '인증되지 않은 사용자입니다. 로그인 후 다시 시도하세요.' ||
     message === '해당 일정에 접근 권한이 없는 사용자 입니다.' ||
@@ -113,8 +112,6 @@ const handleError = async (
 
     case ErrorType.SHOW_MESSAGE:
     default:
-      // 단순 메시지 표시
-      // alert(responseData.message);
       break;
   }
 
@@ -167,7 +164,16 @@ const fetchData = async <T>(
 
   try {
     const response = await fetch(url, requestOptions);
-    const data = await response.json();
+
+    // 응답을 JSON으로 파싱
+    // 서버 미연결/점검, 프록시 오류 등으로 HTML(`<!DOCTYPE ...`)이 내려오면
+    // JSON 파싱이 실패하므로, 사용자에게 안내 메시지를 보여준다.
+    let data: any;
+    try {
+      data = await response.json();
+    } catch {
+      throw new Error('서버와 연결할 수 없습니다. 잠시 후 다시 시도해주세요.');
+    }
 
     // 응답 성공 여부 확인
     if (!response.ok) {

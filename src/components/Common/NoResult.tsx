@@ -3,7 +3,14 @@ import Image from 'next/image';
 import emtpyBookmarkIcon from '../../../public/assets/images/마이페이지/emtpyBookmarkIcon.png';
 import AlertIcon from '../../../public/assets/images/여행지 탐색/홈화면/alertIcon.png';
 
-export default function NoResultLayout() {
+interface NoResultLayoutProps {
+  // 호출부에서 컨테이너 크기를 직접 지정할 때 사용 (예: 일정 편집 사이드바의 좁은 검색 패널)
+  containerStyle?: React.CSSProperties;
+}
+
+export default function NoResultLayout({
+  containerStyle,
+}: NoResultLayoutProps = {}) {
   const pathname = typeof window !== 'undefined' ? window.location.pathname : '';
   const isTravelPage = pathname.includes('/Travel');
   const isBookmarkPage = pathname.includes('/MyPage');
@@ -15,7 +22,7 @@ export default function NoResultLayout() {
   if (isTravelPage) {
     containerStyles = {
       width: '100%',
-      height: '400px',
+      height: '678px', // Figma: 지도(749px) 높이에 맞춰 검색바+간격 아래 박스가 하단 정렬되도록
       borderRadius: '10px',
     };
   } else if (isBookmarkPage) {
@@ -42,6 +49,7 @@ export default function NoResultLayout() {
       border: '1px solid #d9d9d9',
       backgroundColor: '#ffffff',
       ...containerStyles,
+      ...containerStyle, // 호출부에서 넘긴 값이 최우선
     } as React.CSSProperties,
     
     noText: {
