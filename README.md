@@ -60,13 +60,19 @@ src/
 # 패키지 설치
 yarn install
 
-# 개발 서버 실행
+# 개발 서버 실행 (로컬 작업 권장: 포트 5814)
+yarn local
+
+# 개발 서버 실행 (기본 포트 3000)
 yarn dev
 
-# 프로덕션 빌드
-yarn build
+# 타입 검사 / 린트 / 포맷
+yarn typecheck
+yarn lint
+yarn format
 
-# 프로덕션 서버 실행
+# 프로덕션 빌드 및 실행
+yarn build
 yarn start
 ```
 
@@ -177,10 +183,10 @@ Netlify, Vercel 등으로 배포 시:
 
 ## 주요 기술 스택
 
-- **프레임워크**: Next.js 14, React 18
+- **프레임워크**: Next.js 14 (App Router), React 18
 - **언어**: TypeScript
 - **상태 관리**: Zustand, React Query (TanStack Query)
-- **스타일링**: MUI, styled-components, emotion
+- **스타일링**: CSS Modules 중심, MUI 7 · styled-components · emotion 병행
 - **지도 서비스**: Google Maps
 - **폼 관리**: React Hook Form
 - **테스팅**: Jest, React Testing Library
