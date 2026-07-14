@@ -46,7 +46,7 @@
     "sharp": "^0.33.5",
     "sockjs-client": "^1.6.1",
     "styled-components": "^6.1.12",
-    "swiper": "^11.1.7",
+    "swiper": "^14.0.5",
     "zustand": "^4.5.5"
   },
   "devDependencies": {
