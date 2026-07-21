@@ -11,7 +11,7 @@
 - **지도**: Google Maps (`@react-google-maps/api`)
 - **실시간**: WebSocket (STOMP over SockJS) — 공동 편집·채팅·알림
 - **폼**: React Hook Form
-- **테스트**: Jest + React Testing Library(통합), Cypress(E2E), MSW(모의 서버)
+- **테스트**: Jest + React Testing Library(통합), MSW(모의 서버)
 - **패키지 매니저**: yarn
 
 ## 명령어
@@ -24,10 +24,9 @@ yarn typecheck    # tsc --noEmit 타입 검사
 yarn lint         # next lint (ESLint)
 yarn format       # prettier --write .
 yarn test         # Jest 통합 테스트
-yarn test:e2e     # Cypress E2E
 ```
 
-변경 후에는 최소한 `yarn typecheck`로 검증할 것. 기존 테스트 파일(`Travel.integration.test.tsx` 등)에는 이 작업과 무관한 선행 타입 에러가 있으니, 내가 건드린 파일에 한정해 확인한다.
+변경 후에는 최소한 `yarn typecheck`로 검증할 것.
 
 ## 디렉터리 구조
 
