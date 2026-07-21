@@ -1,10 +1,13 @@
 module.exports = {
   preset: 'ts-jest',
-  testEnvironment: 'jsdom',
+  testEnvironment: 'jest-fixed-jsdom',
+  testEnvironmentOptions: {
+    customExportConditions: [''],
+  },
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1',
-    '\\.(css|less|scss|sass)$': 'identity-obj-proxy'
+    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+    '^@/(.*)$': '<rootDir>/src/$1'
   },
   collectCoverageFrom: [
     'src/**/*.{ts,tsx}',
@@ -29,7 +32,7 @@ module.exports = {
   },
   globals: {
     'ts-jest': {
-      tsconfig: 'tsconfig.json',
+      tsconfig: { jsx: 'react-jsx' },
       isolatedModules: true
     }
   },
