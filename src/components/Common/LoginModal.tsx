@@ -25,7 +25,7 @@ const LoginModal = () => {
   }, []);
 
   return (
-    <ModalOverlay style={{ marginTop: '-93px' }}>
+    <ModalOverlay>
       <ModalContent>
         <Title>{MODAL_MESSAGES.loginRequired.title}</Title>
         <Description>
