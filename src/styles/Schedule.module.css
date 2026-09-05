@@ -850,7 +850,6 @@
     position: relative;
     transition: box-shadow 0.3s ease, transform 0.2s ease;
     margin-left: 50px;
-    height: 77px;
     width: calc(100% - 70px);
     max-width: 337px;
     border: 1px solid #e8e8e8;
@@ -1731,6 +1730,7 @@
     align-items: flex-end;
     gap: 6px;
     align-self: flex-start;
+    margin-left: 41px; /* 프로필 32px + 9px: 말풍선을 닉네임 열에 맞춤 (Figma) */
 }
 
 .messageWithTimeRight {
@@ -1777,7 +1777,8 @@
 
 .userInfo {
     display: flex;
-    align-items: flex-end;
+    align-items: flex-start; /* 닉네임을 프로필 상단에 맞춤 (Figma) */
+    height: 18px; /* 닉네임 한 줄 높이. 프로필(32px)은 아래로 넘쳐 말풍선 옆에 걸친다 (Figma) */
     margin-bottom: 4px;
 }
 

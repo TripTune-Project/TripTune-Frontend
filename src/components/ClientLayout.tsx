@@ -19,12 +19,14 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     pathname === '/Find' ||
     pathname?.startsWith('/Find/') ||
     pathname === '/MyPage';
+  // 여행지 탐색은 일정 페이지처럼 푸터 없이 지도가 화면을 채운다 (7/12 회의)
+  const hideFooter = isAuthPage || pathname === '/Travel';
 
   return (
     <QueryClientProvider client={queryClient}>
       {isSchedulePage ? (
         <>{children}</>
-      ) : isAuthPage ? (
+      ) : hideFooter ? (
         <div className={styles.main}>
           <header className={styles.header}>
             <Header />
