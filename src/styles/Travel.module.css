@@ -27,6 +27,7 @@
     position: relative;
     z-index: 1;
     width: 575px; /* Figma 카드 폭 570px + placeList 우측 패딩 5px */
+    min-height: 747px; /* 카드 5개 + 페이지네이션 높이. 로딩 중에도 같은 높이를 유지해 지도/하단이 튀지 않게 */
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
