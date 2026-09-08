@@ -28,7 +28,7 @@ const LoadingSpinner = styled.div`
 
 const Loading = () => {
   return (
-    <LoadingContainer>
+    <LoadingContainer role='status' aria-label='로딩 중'>
       <LoadingSpinner />
     </LoadingContainer>
   );

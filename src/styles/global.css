@@ -26,6 +26,20 @@ body {
     sans-serif;
 }
 
+/* body가 height:100% + overflow-x:hidden 이면 body 자체가 스크롤 컨테이너가 되어
+   window.scrollTo / scrollY 가 동작하지 않는다.
+   - body는 내용 높이만큼 늘어나게 두고(auto)
+   - html은 overflow를 visible로 두어 body의 overflow가 뷰포트로 전파되게 한다.
+   그래야 window가 스크롤러가 되고, 모달의 body.style.overflow='hidden' 잠금도 유효하다. */
+html {
+  overflow: visible;
+}
+
+body {
+  height: auto;
+  min-height: 100%;
+}
+
 /* 반응형 기본 설정 */
 * {
   box-sizing: border-box;
