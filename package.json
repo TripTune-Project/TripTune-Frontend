@@ -13,7 +13,9 @@
     "typecheck": "tsc --noEmit -p ./tsconfig.json",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "cy:open": "cypress open",
+    "cy:run": "cypress run"
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
@@ -64,6 +66,7 @@
     "@types/react": "^18.3.4",
     "@types/react-dom": "^18.3.0",
     "@types/swiper": "^6.0.0",
+    "cypress": "^16.0.0",
     "eslint": "^8",
     "eslint-config-next": "14.2.4",
     "identity-obj-proxy": "^3.0.0",

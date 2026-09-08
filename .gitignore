@@ -54,3 +54,8 @@ next-env.d.ts
 
 # jest
 /.jest-cache
+
+# cypress
+/cypress/videos
+/cypress/screenshots
+/cypress/downloads
