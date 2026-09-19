@@ -1,292 +1,141 @@
 # TripTune (여행 일정 계획 서비스)
 
-## 프로젝트 개요
+여러 사용자가 함께 여행 계획을 세우는 웹 서비스의 프론트엔드.
+Next.js App Router 기반으로 여행지 검색·일정 편집·실시간 채팅·마이페이지를 제공합니다.
 
-**TripTune-Frontend**는 여러 사용자가 함께 여행 계획을 세울 수 있도록 지원하는 웹 서비스의 프론트엔드입니다.  
-Next.js 기반으로 개발되었으며, 여행 일정 작성, 장소 추천, 마이페이지, 소셜 로그인 등 다양한 기능을 제공합니다.
+- 웹사이트: https://www.triptune.co.kr
+- GitHub: https://github.com/TripTune-Project
+- 문의: triptunehost@gmail.com
 
-### 주요 기능
+---
 
-- 실시간 공동 여행 일정 작성 및 관리
-- 여행지 검색 및 추천
-- 채팅을 통한 여행 계획 논의
-- 일정 공유 및 초대
-- 사용자 인증 및 계정 관리
+## 기술 스택
+
+| 영역 | 사용 기술 |
+|---|---|
+| 프레임워크 | Next.js 15 (App Router), React 18 |
+| 언어 | TypeScript (strict) |
+| 상태 관리 | Zustand 4 (전역), TanStack Query 5 (서버 상태·캐싱) |
+| 스타일 | CSS Modules 주력, MUI 7 · styled-components · emotion 병행 |
+| 지도 | Google Maps (`@react-google-maps/api`) |
+| 실시간 | STOMP over SockJS (`@stomp/stompjs`) — 채팅 |
+| 드래그 앤 드롭 | `react-dnd` + HTML5 backend |
+| 폼 | React Hook Form |
+| 테스트 | Jest + React Testing Library, MSW / Cypress (E2E) |
+| 패키지 매니저 | yarn |
+
+---
+
+## 실행
+
+사전 요구사항: Node.js 18.18 이상, yarn.
+
+```bash
+yarn install
+
+yarn local        # 개발 서버, 포트 5814 (로컬 작업 기본)
+yarn dev          # 개발 서버, 포트 3000
+
+yarn typecheck    # tsc --noEmit
+yarn lint         # next lint
+yarn format       # prettier --write .
+
+yarn build && yarn start   # 프로덕션 빌드·실행
+```
+
+변경 후에는 최소한 `yarn typecheck`로 검증합니다.
+
+### 환경 변수
+
+`.env.local`(또는 `.env`)에 아래 키를 채웁니다. 모두 코드에서 실제로 참조됩니다.
+
+```
+NEXT_PUBLIC_API_URL=            # 백엔드 API (next.config.mjs의 /apis/* 프록시 대상)
+NEXT_PUBLIC_BROKER_URL=         # WebSocket 브로커 (채팅)
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=
+NEXT_PUBLIC_GOOGLE_MAPS_STYLE_ID=
+NEXT_PUBLIC_GA4_MEASUREMENT_ID=
+```
+
+`/apis/:path*` 요청은 `next.config.mjs`의 rewrite로 `${NEXT_PUBLIC_API_URL}/api/:path*`에 프록시됩니다.
+이미지 원본은 `triptune.s3.ap-northeast-2.amazonaws.com`만 `next/image`에 허용되어 있습니다.
 
 ---
 
 ## 파일 구조
 
 ```
+next.config.mjs      # SVGR, 이미지/캐시 헤더, /apis 프록시
 src/
-  ├── apis/           # API 호출 관련 코드
-  │   ├── BookMark/   # 북마크 관련 API
-  │   ├── Home/       # 홈 화면 관련 API
-  │   ├── Join/       # 회원가입 관련 API
-  │   ├── Login/      # 인증 관련 API
-  │   ├── MyPage/     # 마이페이지 관련 API
-  │   ├── Schedule/   # 일정 관련 API
-  │   ├── Travel/     # 여행 정보 관련 API
-  │   ├── Verify/     # 이메일 인증 관련 API
-  │   └── api.ts      # API 공통 설정
-  ├── app/            # Next.js 라우팅 및 페이지
-  │   ├── Travel/     # 여행지 상세/추천 페이지
-  │   ├── Schedule/   # 여행 일정 관리 페이지
-  │   ├── MyPage/     # 마이페이지
-  │   ├── Join/       # 회원가입
-  │   ├── Login/      # 로그인
-  │   └── Find/       # 계정 찾기/비밀번호 변경
-  ├── components/
-  │   ├── Feature/    # 주요 기능별 컴포넌트
-  │   └── Common/     # 공통 컴포넌트 (모달, 로딩 등)
-  ├── hooks/          # 커스텀 훅
-  ├── mocks/          # MSW 모의 서버
-  ├── store/          # 상태 관리(zustand)
-  ├── styles/         # 스타일 파일
-  ├── types/          # 타입 정의
-  └── utils/          # 유틸 함수
+  apis/              # 도메인별 API 호출
+    BookMark/ Home/ Join/ Login/ MyPage/ Schedule/ Travel/ Verify/
+    api.ts           # 공통 설정
+  app/               # App Router
+    Travel/[placeId] Schedule/[scheduleId] MyPage/ Join/ Login/ Find/
+    layout.tsx header.tsx page.tsx 404.tsx 500.tsx
+  components/
+    Common/          # NoResult, DataLoading, Pagination, 각종 모달 등
+    Feature/         # Home / Travel / Schedule / MyPage / Login / Join
+  hooks/             # useAuth, useTravel, useSchedule, useMyPage, useDebounce, useGeolocation
+  store/             # travelStore, scheduleStore, myPageBookMarkStore (zustand)
+  styles/            # CSS Modules
+  types/             # 타입 정의
+  utils/             # 유틸
+  mocks/server.ts    # MSW 서버·핸들러 (Jest용)
+cypress/             # E2E 스펙 및 설정
+docs/                # known-issues.md, figma-diff-report.md
 ```
 
 ---
 
-## 사전 요구사항 (최소)
+## 주요 기능
 
-- Node.js 18 이상
-- yarn
-
-## 설치 및 실행:
-
-```bash
-# 패키지 설치
-yarn install
-
-# 개발 서버 실행 (로컬 작업 권장: 포트 5814)
-yarn local
-
-# 개발 서버 실행 (기본 포트 3000)
-yarn dev
-
-# 타입 검사 / 린트 / 포맷
-yarn typecheck
-yarn lint
-yarn format
-
-# 프로덕션 빌드 및 실행
-yarn build
-yarn start
-```
-
----
-
-## 프론트 기능 기술 요약
-
-- **여행 일정 생성/수정/공유**
-
-  - 드래그 앤 드롭 기반 일정 편집
-  - 지도 기반 여행지 선택 및 루트 계획
-  - 공동 일정 편집 및 실시간 채팅
-
-- **장소 추천 및 상세 정보 제공**
-
-  - 지역별 인기 여행지 정보
-  - 유형별 장소 검색 및 필터링
-  - 북마크 기능
-
-- **마이페이지(내 정보, 내 일정, 회원 탈퇴 등)**
-
-  - 프로필 관리
-  - 작성한 일정 및 공유받은 일정 관리
-  - 북마크한 장소 관리
-
-- **소셜 로그인/회원가입/비밀번호 찾기**
-
-  - 이메일 인증
-  - OAuth 연동 (구글, 네이버, 카카오)
-
-- **실시간 알림 및 모달 UI**
-
-  - WebSocket 기반 실시간 알림
-  - 사용자 친화적인 모달 인터페이스
-
-- **반응형 UI 및 접근성 고려**
-  - 다양한 디바이스 대응
-  - 웹 접근성 고려
-
----
-
-## 주요 서비스 구현 가이드
-
-- **Next.js 14 기반의 App Router 구조**
-
-  - 페이지 라우팅
-  - 서버 컴포넌트 및 클라이언트 컴포넌트 구분
-
-- **상태 관리는 zustand, react-query 사용**
-
-  - 전역 상태 관리 (zustand)
-  - 서버 상태 및 캐싱 (react-query)
-
-- **MUI, styled-components, emotion 등으로 UI 구성**
-
-  - 공통 컴포넌트
-  - 테마 관리
-
-- **Google Maps, Swiper 등 외부 라이브러리 활용**
-
-  - 지도 기반 기능
-  - 슬라이더 및 캐러셀
-
-- **코드 포맷팅(Prettier), 린트(ESLint) 적용**
-
-  - 일관된 코드 스타일
-  - 코드 품질 관리
-
-- **API 연동 및 비동기 데이터 처리**
-  - 에러 핸들링
-  - 로딩 상태 관리
-
----
-
-## 환경 변수(.env) 설정 안내
-
-Google Maps, GA4, WebSocket 등 외부 서비스 연동에 환경 변수가 필요합니다.
-
-예시:
-
-```
-NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=발급받은_구글_맵_API_키
-NEXT_PUBLIC_GOOGLE_MAPS_STYLE_ID=구글_맵_스타일_ID
-NEXT_PUBLIC_GA4_MEASUREMENT_ID=구글_애널리틱스_측정_ID
-NEXT_PUBLIC_BROKER_URL=웹소켓_브로커_URL
-NEXT_PUBLIC_API_URL=백엔드_API_URL
-```
-
-`.env.local` 파일에 위와 같이 작성하세요.
-
----
-
-## 배포 방법
-
-Netlify, Vercel 등으로 배포 시:
-
-1. 레포지토리 연결
-2. 빌드 설정
-   ```bash
-   # 빌드 명령어
-   yarn build
-   ```
-3. 환경 변수 설정
-   - 배포 환경에 맞게 환경 변수를 설정
-4. 도메인 설정 및 SSL 인증서 적용
-
----
-
-## 주요 기술 스택
-
-- **프레임워크**: Next.js 14 (App Router), React 18
-- **언어**: TypeScript
-- **상태 관리**: Zustand, React Query (TanStack Query)
-- **스타일링**: CSS Modules 중심, MUI 7 · styled-components · emotion 병행
-- **지도 서비스**: Google Maps
-- **폼 관리**: React Hook Form
-- **테스팅**: Jest, React Testing Library
-- **실시간 통신**: WebSocket (STOMP)
-
----
-
-## 개발 가이드라인
-
-- **코드 작성 규칙**
-
-  - 타입을 명확히 작성
-  - 함수형 컴포넌트 사용
-  - 관심사 분리 준수
-  - 재사용 가능한 컴포넌트 설계
-
-- **주석 작성 가이드**
-
-  - 컴포넌트, 함수 목적 설명
-  - 매개변수 및 반환 값 설명
-  - 복잡한 로직에 대한 설명 추가
-
-- **브랜치 전략**
-  - master: 배포 브랜치
-  - develop: 개발 브랜치
-  - feature/[기능명]: 기능 개발 브랜치
-
----
-
-## 프로젝트 문의 및 정보
-
-- **이메일**: triptunehost@gmail.com
-- **GitHub**: https://github.com/TripTune-Project
-- **웹사이트**: https://www.triptune.co.kr
-
----
-
-## 버전 정보 / 변경 이력(Changelog)
-
-- v0.1.0 (2024-04) - 최초 릴리즈
-  - 일정 관리 기능
-  - 여행지 검색 및 추천
-  - 사용자 인증 및 계정 관리
-  - 실시간 채팅
-
----
-
-## 라이선스
-
-- MIT License
+- **여행 일정** — 생성/수정/공유, 드래그 앤 드롭 일정 편집, 지도 기반 루트 구성
+- **여행지** — 지역·유형별 검색과 추천, 상세 정보, 북마크
+- **협업** — 일정 공유·초대, STOMP 기반 실시간 채팅
+- **마이페이지** — 프로필, 내 일정·공유받은 일정, 북마크 관리, 회원 탈퇴
+- **계정** — 이메일 인증 회원가입, 비밀번호 찾기·변경, 카카오·네이버 소셜 로그인
 
 ---
 
 ## 테스트
 
-### 통합 테스트 (Integration Test)
-- Jest와 React Testing Library를 사용한 통합 테스트
-- 테스트 실행: `yarn test`
-- 테스트 감시 모드: `yarn test:watch`
-- 테스트 커버리지: `yarn test:coverage`
-
-### E2E 테스트 (End-to-End Test)
-- Cypress를 사용한 E2E 테스트
-- 테스트 UI 실행: `yarn cypress:open`
-- 테스트 헤드리스 모드 실행: `yarn cypress:run`
-- 전체 테스트 실행: `yarn test:e2e`
-
-### 테스트 환경 설정
-- 포트: 5814 (localhost:5814)
-- API URL: http://localhost:5814/api
-- 테스트 데이터: cypress.env.json에 정의
-
-### 테스트 커버리지 기준
-- 브랜치: 80%
-- 함수: 80%
-- 라인: 80%
-- 구문: 80%
-
-### 테스트 관련 파일 구조
-```
-├── cypress/
-│   ├── e2e/              # E2E 테스트 파일
-│   └── support/          # Cypress 지원 파일
-│       ├── commands.ts   # 커스텀 명령어
-│       └── e2e.ts        # E2E 테스트 설정
-├── cypress.env.json      # Cypress 환경 변수
-├── src/
-│   ├── **/*.test.{ts,tsx} # 통합 테스트 파일 (각 모듈 내 위치)
-│   └── mocks/            # MSW 모의 서버
-└── jest.config.js        # Jest 설정
+```bash
+yarn test            # Jest 통합 테스트
+yarn test:watch
+yarn test:coverage   # 커버리지 (jest.config.js 임계치 80%)
+yarn cy:open         # Cypress UI
+yarn cy:run          # Cypress 헤드리스
 ```
 
-### 테스트 실행 전 준비사항
-1. 개발 서버 실행: `yarn dev`
-2. 환경 변수 설정 확인
-3. MSW 서버 설정 확인
-
-### 주의사항
-- 테스트 실행 전 데이터베이스 초기화 필요
-- 민감한 정보는 환경 변수로 관리
-- 테스트 API 키는 별도 관리
+- Jest: `ts-jest` + `jest-fixed-jsdom`, 대상은 `src/**/__tests__/**` 와 `src/**/*.{spec,test}.{ts,tsx}`.
+  현재 작성된 테스트는 `src/components/Common/__tests__/Button.test.tsx` 한 건이라 커버리지 임계치 80%는 아직 목표값입니다.
+- Cypress: `baseUrl`은 `http://localhost:5814`이므로 `yarn local`로 서버를 띄운 뒤 실행합니다.
+  스펙은 `cypress/e2e/**/*.cy.ts`(현재 `home.cy.ts`), 테스트 계정·데이터는 `cypress.env.json`에 둡니다.
+  실행 시 비디오는 `cypress/videos/`, 실패 스크린샷은 `cypress/screenshots/`에 저장됩니다.
+- MSW: `src/mocks/server.ts`의 핸들러가 `NEXT_PUBLIC_API_URL` 기준으로 동작하므로 환경 변수가 필요합니다.
 
 ---
+
+## 코드 규칙
+
+- 신규 의존성 추가 지양 — 이미 설치된 라이브러리나 몇 줄 코드로 해결되면 그렇게 합니다.
+- `dynamic import` 지양 — 과거 Netlify 빌드 실패 이력이 있습니다.
+- 스타일은 해당 페이지의 CSS Module 우선. 인라인 스타일은 기존 패턴을 따를 때만.
+- 함수형 컴포넌트 + 명시적 타입. Prettier 설정(세미콜론 O, 작은따옴표, JSX 작은따옴표, printWidth 80, tab 2)을 따릅니다.
+- 버그는 증상이 아니라 근본 원인을 고칩니다. 공유 컴포넌트(`NoResult`, `DataLoading` 등) 수정 시 Travel / Schedule / MyPage 호출부를 모두 확인합니다.
+
+---
+
+## Git
+
+- 브랜치: `master`(배포), `develop`(개발), 작업 브랜치(`hjlim/...`, `feature/...`).
+- 커밋 메시지에 `Co-Authored-By` trailer를 붙이지 않습니다.
+
+## 배포
+
+Netlify(`@netlify/plugin-nextjs`) 기준. 레포지토리 연결 → 빌드 명령 `yarn build` → 환경 변수 설정 → 도메인·SSL 적용.
+
+## 미해결 이슈
+
+`docs/known-issues.md`에 코드 리딩 중 발견된 미수정 버그가 정리되어 있습니다.

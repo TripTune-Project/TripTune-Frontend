@@ -4,7 +4,7 @@
 
 ## 기술 스택
 
-- **프레임워크**: Next.js 14 (App Router), React 18
+- **프레임워크**: Next.js 15 (App Router), React 18
 - **언어**: TypeScript (strict)
 - **상태 관리**: Zustand(전역) + React Query / TanStack Query(서버 상태·캐싱)
 - **스타일링**: CSS Modules(`src/styles/*.module.css`)가 주력, 일부 MUI 7 / styled-components / emotion 병행
