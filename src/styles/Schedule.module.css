@@ -831,6 +831,12 @@
     color: #2c2c2c;
 }
 
+/* 여행 루트 카드만: 이름↔주소 간격. Figma 17px x (399/461) = 14.7px → 15px.
+   .placeName은 여행지 탭 카드(.placeItemSearch)와 공유하므로 .placeItem으로 한정한다. */
+.placeItem .placeName {
+    margin-bottom: 15px;
+}
+
 .placeAddress {
     margin: 0 0 2px 0;
     font-family: 'Inter', 'Noto Sans KR', sans-serif;
@@ -1037,12 +1043,10 @@
     margin: 18px 35px 20px 35px;
 }
 
+/* 여행지 탭: 검색 바 아래 간격. Figma 19px x (399/480) = 15.8px → 16px.
+   위쪽 18px은 Figma 21px x 0.8313 = 17.5px과 이미 일치하므로 그대로 둔다. (7/12 회의 "올리기") */
 .travelSearchContainerSearch {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 7px;
-    margin: 18px 35px 20px 35px;
+    margin-bottom: 16px;
 }
 
 .travelSearchContainerSearch input,
@@ -1843,7 +1847,7 @@
     overflow-x: hidden;
     width: 100%;
     box-sizing: border-box;
-    padding: 10px 0 10px 20px;
+    padding: 32px 0 10px 20px; /* Figma 탭 하단 ~ 첫 루트 카드 32.13px (7/12 회의) */
     list-style: none;
     margin-left: 23px;
 }
