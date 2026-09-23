@@ -128,11 +128,32 @@ export default function ScheduleDetailPage() {
 
     const response = await updateExistingSchedule(data);
     if (response.success) {
-      router.push('/Schedule');
+      // 저장 후에도 편집을 이어갈 수 있도록 페이지에 머문다
+      setAlertMessage('일정이 저장되었습니다.');
+      setAlertSeverity('success');
+      setAlertOpen(true);
     } else {
       console.error('일정 저장에 실패했습니다:', response.message);
     }
   };
+
+  // 알림 Snackbar (에러 화면과 일반 화면 모두에서 사용)
+  const alertSnackbar = (
+    <Snackbar
+      open={alertOpen}
+      autoHideDuration={3000}
+      onClose={handleAlertClose}
+      anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+    >
+      <Alert
+        onClose={handleAlertClose}
+        severity={alertSeverity}
+        sx={{ width: '100%' }}
+      >
+        {alertMessage}
+      </Alert>
+    </Snackbar>
+  );
 
   // 로딩 중일 때 로딩 화면 표시
   if (isLoading) {
@@ -146,24 +167,7 @@ export default function ScheduleDetailPage() {
 
   // 오류 발생 시 에러 화면 표시
   if (isError) {
-    return (
-      <div className={styles.errorContainer}>
-        <Snackbar
-          open={alertOpen}
-          autoHideDuration={3000}
-          onClose={handleAlertClose}
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        >
-          <Alert
-            onClose={handleAlertClose}
-            severity={alertSeverity}
-            sx={{ width: '100%' }}
-          >
-            {alertMessage}
-          </Alert>
-        </Snackbar>
-      </div>
-    );
+    return <div className={styles.errorContainer}>{alertSnackbar}</div>;
   }
 
   // 데이터 로딩 중일 때 로딩 화면 표시
@@ -230,6 +234,7 @@ export default function ScheduleDetailPage() {
           )}
         </div>
       </div>
+      {alertSnackbar}
     </>
   );
 }
