@@ -51,7 +51,12 @@ const HomePageSearch = () => {
    * 유효한 검색어가 있을 경우 Travel 페이지로 이동
    */
   const handleSearch = () => {
-    if (!searchTerm.trim()) return;
+    if (!searchTerm.trim()) {
+      setAlertMessage('검색어를 입력해주세요.');
+      setAlertSeverity('warning');
+      setAlertOpen(true);
+      return;
+    }
     router.push(`/Travel?keyword=${encodeURIComponent(searchTerm.trim())}`);
   };
 
