@@ -123,23 +123,47 @@
     width: 100%;
 }
 
+/* Figma createBtn: #004A55, 90×47, padding 6px 12px, Bold 16px */
 .confirmButton {
-    background-color: #076a6a;
+    background-color: #004a55;
     color: #fff;
-    padding: 10px 32px;
+    width: 90px;
+    height: 47px;
+    padding: 6px 12px;
     border: none;
-    border-radius: 8px;
     cursor: pointer;
     margin-top: 18px;
-    font-size: 1.08rem;
-    font-weight: 600;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    align-self: center;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 140%;
+    align-self: flex-end;
     transition: background 0.2s;
+}
+
+.confirmButton:hover:not(:disabled) {
+    background-color: #003840;
 }
 
 .confirmButton:disabled {
     background-color: #b2b2b2;
+    cursor: not-allowed;
+}
+
+/* 일정 생성·수정 모달: 입력줄을 캘린더와 같은 폭·같은 열로 맞춘다 */
+.inputGroup.modalInputGroup {
+    width: 100%;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.inputGroup.modalInputGroup .inputField,
+.modalDateValue {
+    margin-left: 30px;
+    font-size: 14px;
+}
+
+.modalDateIcon {
+    margin-left: 16px;
 }
 
 .closeButton {
@@ -1361,16 +1385,6 @@
     transition: background-color 0.3s ease;
 }
 
-.confirmButton {
-    background-color: #007bff;
-    color: #ffffff;
-    padding: 12px 24px;
-    border: none;
-    cursor: pointer;
-    margin-right: 12px;
-    transition: background-color 0.3s ease;
-}
-
 .closeButton {
     width: 15px;
     height: 15px;
@@ -1687,16 +1701,6 @@
     background-color: #007bff;
     color: #ffffff;
     padding: 8px 16px;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s ease;
-}
-
-.confirmButton {
-    background-color: #007bff;
-    color: #ffffff;
-    padding: 10px 20px;
     border: none;
     cursor: pointer;
     font-size: 14px;

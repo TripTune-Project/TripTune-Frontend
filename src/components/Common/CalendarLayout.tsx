@@ -149,7 +149,7 @@ const CalendarLayout = ({
           &nbsp; {mode === 'create' ? '일정 만들기' : '일정 수정'}
         </h2>
         {mode === 'create' && (
-          <div className={styles.inputGroup} style={{ marginLeft: '0px' }}>
+          <div className={`${styles.inputGroup} ${styles.modalInputGroup}`}>
             <label>여행 이름</label>
             <input
               type='text'
@@ -160,11 +160,19 @@ const CalendarLayout = ({
             />
           </div>
         )}
-        <div className={styles.inputGroup} style={{ marginLeft: '0px' }}>
-          <label>여행 날짜</label>&nbsp;&nbsp;
-          {startDate?.toLocaleDateString('ko-KR')} ~{' '}
-          {endDate?.toLocaleDateString('ko-KR')}
-          <Image src={scheduleDateIcon} alt='일정만들기' width={20} priority />
+        <div className={`${styles.inputGroup} ${styles.modalInputGroup}`}>
+          <label>여행 날짜</label>
+          <span className={styles.modalDateValue}>
+            {startDate?.toLocaleDateString('ko-KR')} ~{' '}
+            {endDate?.toLocaleDateString('ko-KR')}
+          </span>
+          <Image
+            src={scheduleDateIcon}
+            alt='일정만들기'
+            width={20}
+            className={styles.modalDateIcon}
+            priority
+          />
         </div>
         <div className={styles.datePickerContainer}>
           <DatePicker
