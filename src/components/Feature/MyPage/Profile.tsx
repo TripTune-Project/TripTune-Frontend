@@ -80,7 +80,11 @@ const Profile = () => {
           }
         } catch (error) {
           console.error('이미지 변경 중 오류 발생:', error);
-          setAlertMessage('오류가 발생했습니다. 다시 시도해주세요.');
+          setAlertMessage(
+            error instanceof Error
+              ? error.message
+              : '오류가 발생했습니다. 다시 시도해주세요.'
+          );
           setAlertSeverity('error');
           setAlertOpen(true);
         }
@@ -116,7 +120,12 @@ const Profile = () => {
       }
     } catch (error) {
       console.error('닉네임 변경 중 오류 발생:', error);
-      setAlertMessage('오류가 발생했습니다. 다시 시도해주세요.');
+      // 닉네임 중복 등 서버가 보낸 메시지를 그대로 보여준다
+      setAlertMessage(
+        error instanceof Error
+          ? error.message
+          : '오류가 발생했습니다. 다시 시도해주세요.'
+      );
       setAlertSeverity('error');
       setAlertOpen(true);
     }
