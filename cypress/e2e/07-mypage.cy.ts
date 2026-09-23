@@ -85,7 +85,12 @@ describe('마이페이지', () => {
     cy.contains('북마크').click();
     cy.wait('@bookmarks');
     cy.get('body').then(($b) => {
-      if ($b.find('[aria-label="Pagination Navigation"]').length === 0) {
+      // 페이지네이션 영역은 1페이지여도 보이므로 "2" 버튼 유무로 판단한다
+      const hasPage2 = $b
+        .find('[aria-label="Pagination Navigation"] button')
+        .toArray()
+        .some((el) => el.textContent?.trim() === '2');
+      if (!hasPage2) {
         cy.log('북마크가 1페이지 이하 — 페이지네이션 해당 없음');
         return;
       }
