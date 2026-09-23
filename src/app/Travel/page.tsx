@@ -84,6 +84,9 @@ const TravelPageContent = () => {
 
   // 검색어 디바운스 처리 (타이핑 최적화)
   const debouncedSearchTerm = useDebounce(searchTerm, 800);
+  // 실제 검색 API에 보낼 키워드. 타이핑은 디바운스 후, 검색 버튼·Enter는 즉시 반영한다.
+  // (refetch()는 enabled를 무시하므로 디바운스 전에 부르면 빈 키워드로 요청이 나간다)
+  const [queryKeyword, setQueryKeyword] = useState(keyword);
 
   // 검색어 기반 여행지 목록 데이터 쿼리
   // keyword는 디바운스된 값을 사용 → 타이핑 도중 매 글자마다 재조회/로딩 깜빡임 방지
@@ -93,18 +96,19 @@ const TravelPageContent = () => {
     refetch: refetchSearch,
   } = useTravelListSearch(
     {
-      keyword: debouncedSearchTerm,
+      keyword: queryKeyword,
       latitude: coordinates?.latitude ?? defaultCoordinates.latitude,
       longitude: coordinates?.longitude ?? defaultCoordinates.longitude,
     },
     currentPage,
     requiresAuth,
-    isSearching && isAuthStateReady // 인증 상태가 확정된 후에만 실행
+    isSearching && isAuthStateReady && queryKeyword.trim() !== '' // 인증 확정 + 키워드 있을 때만 실행
   );
 
   useEffect(() => {
     if (keyword) {
       setSearchTerm(keyword);
+      setQueryKeyword(keyword);
       setIsSearching(true);
       setCurrentPage(1);
     }
@@ -112,13 +116,11 @@ const TravelPageContent = () => {
 
   useEffect(() => {
     if (debouncedSearchTerm.trim()) {
+      // 키워드가 바뀌면 React Query가 자동으로 조회한다
+      setQueryKeyword(debouncedSearchTerm.trim());
       setIsSearching(true);
       setCurrentPage(1);
-      refetchSearch().finally(() => {
-        if (debouncedSearchTerm.trim()) {
-          inputRef.current?.focus();
-        }
-      });
+      inputRef.current?.focus();
     } else if (debouncedSearchTerm === '') {
       setIsSearching(false);
       setCurrentPage(1);
@@ -130,7 +132,6 @@ const TravelPageContent = () => {
     }
   }, [
     debouncedSearchTerm,
-    refetchSearch,
     refetchLocation,
     setCurrentPage,
     setIsSearching,
@@ -161,7 +162,7 @@ const TravelPageContent = () => {
       // 약간의 지연을 두어 인증 상태가 완전히 안정화된 후 데이터 조회
       const timer = setTimeout(() => {
         if (isSearching) {
-          refetchSearch();
+          if (queryKeyword.trim()) refetchSearch();
         } else {
           refetchLocation();
         }
@@ -175,16 +176,20 @@ const TravelPageContent = () => {
     refetchLocation,
     refetchSearch,
     isAuthStateReady,
+    queryKeyword,
   ]);
 
   /**
    * 검색 버튼 클릭 핸들러
    */
   const handleSearch = () => {
-    if (searchTerm.trim()) {
+    const term = searchTerm.trim();
+    if (term) {
       setIsSearching(true);
       setCurrentPage(1);
-      refetchSearch();
+      // 같은 키워드면 키가 안 바뀌어 자동 조회가 없으므로 직접 다시 조회한다
+      if (term === queryKeyword) refetchSearch();
+      else setQueryKeyword(term);
     } else {
       setAlertMessage('검색어를 입력해주세요.');
       setAlertSeverity('warning');
