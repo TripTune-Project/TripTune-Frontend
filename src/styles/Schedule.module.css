@@ -1308,6 +1308,12 @@
     background-color: #629a99;
 }
 
+.sendButton:disabled,
+.messageInput:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
 .userList {
     list-style: none;
     padding: 0;

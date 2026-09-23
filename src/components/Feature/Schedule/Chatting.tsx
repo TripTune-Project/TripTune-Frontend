@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Client } from '@stomp/stompjs';
 import { fetchScheduleChats } from '@/apis/Schedule/chatApi';
+import { fetchScheduleAttendees } from '@/apis/Schedule/attendeeApi';
 import styles from '@/styles/Schedule.module.css';
 import Image from 'next/image';
 import DataLoading from '@/components/Common/DataLoading';
@@ -23,7 +24,15 @@ const formatDate = (timestamp: string) => {
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
   const day = date.getDate();
-  const dayOfWeek = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'][date.getDay()];
+  const dayOfWeek = [
+    '일요일',
+    '월요일',
+    '화요일',
+    '수요일',
+    '목요일',
+    '금요일',
+    '토요일',
+  ][date.getDay()];
   return `${year}년 ${month}월 ${day}일 ${dayOfWeek}`;
 };
 
@@ -80,6 +89,8 @@ const Chatting = ({ onError }: ChattingProps) => {
   const [currentPage, setCurrentPage] = useState<number | null>(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
+  // 권한을 모르면 막지 않는다 (최종 판단은 서버)
+  const [canChat, setCanChat] = useState(true);
 
   // WebSocket 브로커 URL
   const brokerUrl = process.env.NEXT_PUBLIC_BROKER_URL;
@@ -87,7 +98,9 @@ const Chatting = ({ onError }: ChattingProps) => {
   // Snackbar 상태 관리
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
-  const [alertSeverity, setAlertSeverity] = useState<'success' | 'error' | 'warning' | 'info'>('info');
+  const [alertSeverity, setAlertSeverity] = useState<
+    'success' | 'error' | 'warning' | 'info'
+  >('info');
 
   /**
    * 알림창 닫기 핸들러
@@ -109,6 +122,23 @@ const Chatting = ({ onError }: ChattingProps) => {
     }
   };
 
+  // 내 권한 확인: 작성자이거나 ALL·CHAT 권한일 때만 채팅 가능
+  useEffect(() => {
+    fetchScheduleAttendees(Number(scheduleId))
+      .then((response) => {
+        const me = response.data?.find(
+          (attendee) => attendee.nickname === userNickname
+        );
+        if (!me) return;
+        setCanChat(
+          me.role === 'AUTHOR' ||
+            me.permission === 'ALL' ||
+            me.permission === 'CHAT'
+        );
+      })
+      .catch(() => {});
+  }, [scheduleId, userNickname]);
+
   // 초기 메시지 로드 및 WebSocket 연결 설정
   useEffect(() => {
     /**
@@ -118,7 +148,7 @@ const Chatting = ({ onError }: ChattingProps) => {
 
     const loadInitialMessages = async () => {
       if (!isInitialLoad) return;
-      
+
       try {
         const response = await fetchScheduleChats(Number(scheduleId), 1);
         if (!isMounted) return;
@@ -165,7 +195,9 @@ const Chatting = ({ onError }: ChattingProps) => {
               setMessages((prev) => {
                 const combinedMessages = [...prev, newMessage];
                 return combinedMessages.sort(
-                  (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+                  (a, b) =>
+                    new Date(a.timestamp).getTime() -
+                    new Date(b.timestamp).getTime()
                 );
               });
             }
@@ -182,7 +214,9 @@ const Chatting = ({ onError }: ChattingProps) => {
         },
         onStompError: (frame) => {
           if (!isMounted) return;
-          setAlertMessage(frame.headers['message'] || 'STOMP 에러가 발생했습니다.');
+          setAlertMessage(
+            frame.headers['message'] || 'STOMP 에러가 발생했습니다.'
+          );
           setAlertSeverity('error');
           setAlertOpen(true);
         },
@@ -279,24 +313,33 @@ const Chatting = ({ onError }: ChattingProps) => {
       return;
     }
 
-    if (message.trim() && clientRef.current?.connected) {
-      try {
-        clientRef.current.publish({
-          destination: '/pub/chats',
-          body: JSON.stringify({
-            scheduleId,
-            nickname: userNickname,
-            message,
-          }),
-        });
-      } catch (error) {
-        console.error('[메시지 전송 오류]', error);
-        setAlertMessage('메시지 전송에 실패했습니다.');
-        setAlertSeverity('error');
-        setAlertOpen(true);
-        onError?.('메시지 전송에 실패했습니다.');
-      }
+    if (!canChat || !message.trim()) return;
+
+    if (!clientRef.current?.connected) {
+      setAlertMessage(
+        '채팅에 연결되어 있지 않습니다. 채팅 권한이 없거나 연결이 끊겼습니다.'
+      );
+      setAlertSeverity('warning');
+      setAlertOpen(true);
+      return;
+    }
+
+    try {
+      clientRef.current.publish({
+        destination: '/pub/chats',
+        body: JSON.stringify({
+          scheduleId,
+          nickname: userNickname,
+          message,
+        }),
+      });
       setMessage('');
+    } catch (error) {
+      console.error('[메시지 전송 오류]', error);
+      setAlertMessage('메시지 전송에 실패했습니다.');
+      setAlertSeverity('error');
+      setAlertOpen(true);
+      onError?.('메시지 전송에 실패했습니다.');
     }
   };
 
@@ -377,6 +420,7 @@ const Chatting = ({ onError }: ChattingProps) => {
           type='text'
           value={message}
           className={styles.messageInput}
+          disabled={!canChat}
           onChange={(e) => {
             const newMessage = e.target.value;
             const messageLines = newMessage.split('\n').length;
@@ -391,9 +435,17 @@ const Chatting = ({ onError }: ChattingProps) => {
             setMessage(newMessage);
           }}
           onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-          placeholder='메시지를 입력하세요. (최대 3줄 또는 1000자)'
+          placeholder={
+            canChat
+              ? '메시지를 입력하세요. (최대 3줄 또는 1000자)'
+              : '채팅 권한이 없습니다.'
+          }
         />
-        <button onClick={handleSendMessage} className={styles.sendButton}>
+        <button
+          onClick={handleSendMessage}
+          className={styles.sendButton}
+          disabled={!canChat}
+        >
           전송
         </button>
       </div>
