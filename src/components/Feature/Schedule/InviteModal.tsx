@@ -93,6 +93,20 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
     loadAttendees();
   }, [isOpen, scheduleId]);
 
+  // 참석자 목록 다시 불러오기 (다른 사용자가 나간 경우 등 서버 상태와 맞춘다)
+  const reloadAttendees = async () => {
+    try {
+      const response = await fetchScheduleAttendees(Number(scheduleId));
+      if (response.success) {
+        setAllUsers(response.data || []);
+      } else {
+        console.error('참석자 정보 업데이트 실패:', response.message);
+      }
+    } catch (error) {
+      console.error('참석자 정보 갱신 중 오류 발생:', error);
+    }
+  };
+
   const toggleDropdown = (userEmail: string) => {
     setIsMainDropdownOpen(false);
     setDropdownStates((prev) => ({
@@ -117,19 +131,7 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
         setAlertMessage('공유가 완료되었습니다.');
         setAlertSeverity('success');
         setAlertOpen(true);
-
-        try {
-          const updatedResponse = await fetchScheduleAttendees(
-            Number(scheduleId)
-          );
-          if (updatedResponse.success) {
-            setAllUsers(updatedResponse.data || []);
-          } else {
-            console.error('참석자 정보 업데이트 실패:', updatedResponse.message);
-          }
-        } catch (error) {
-          console.error('참석자 정보 갱신 중 오류 발생:', error);
-        }
+        await reloadAttendees();
         setEmail('');
         setSelectedPermission('EDIT');
       } else {
@@ -152,8 +154,13 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
   ) => {
     if (newPermission === 'QUIT') {
       await handleQuitSchedule(attendeeId);
-    } else if (newPermission === 'LEAVE') {
+      setDropdownStates({});
+      return;
+    }
+    if (newPermission === 'LEAVE') {
       await handleLeaveSchedule();
+      setDropdownStates({});
+      return;
     }
     try {
       const response = await updatePermission(
@@ -174,12 +181,21 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
         );
         setDropdownStates({});
       } else {
-        setAlertMessage('권한 변경에 실패했습니다.');
+        setAlertMessage(response.message || '권한 변경에 실패했습니다.');
         setAlertSeverity('error');
         setAlertOpen(true);
+        setDropdownStates({});
+        await reloadAttendees();
       }
     } catch (error) {
-      console.error('권한 변경 중 오류 발생:', error);
+      // 이미 나간 사용자 등: 서버 메시지를 보여주고 목록을 최신 상태로 맞춘다
+      setAlertMessage(
+        error instanceof Error ? error.message : '권한 변경에 실패했습니다.'
+      );
+      setAlertSeverity('error');
+      setAlertOpen(true);
+      setDropdownStates({});
+      await reloadAttendees();
     }
   };
 
@@ -192,7 +208,7 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
         setAlertSeverity('success');
         setAlertOpen(true);
         setAllUsers((prevUsers) =>
-          prevUsers.filter((user) => user.role === 'AUTHOR')
+          prevUsers.filter((user) => user.attendeeId !== attendeeId)
         );
       } else {
         setAlertMessage(response.message || '내보내기에 실패했습니다.');
