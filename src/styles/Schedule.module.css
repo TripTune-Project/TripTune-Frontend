@@ -1,4 +1,13 @@
 /* 일정 만들기 1/3 분할 */
+/* DataLoading이 height:100%라 부모에 높이가 없으면 스피너가 상단에 붙는다 */
+.pageLoading {
+    height: 100dvh;
+}
+
+.chatLoading {
+    height: 100%;
+}
+
 .layoutContainer {
     display: flex;
     width: 100%;

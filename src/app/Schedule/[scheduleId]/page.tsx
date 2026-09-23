@@ -157,7 +157,11 @@ export default function ScheduleDetailPage() {
 
   // 로딩 중일 때 로딩 화면 표시
   if (isLoading) {
-    return <DataLoading />;
+    return (
+      <div className={styles.pageLoading}>
+        <DataLoading />
+      </div>
+    );
   }
 
   // 인증되지 않았을 때 로그인 모달 표시
@@ -172,7 +176,11 @@ export default function ScheduleDetailPage() {
 
   // 데이터 로딩 중일 때 로딩 화면 표시
   if (isLoadingData) {
-    return <DataLoading />;
+    return (
+      <div className={styles.pageLoading}>
+        <DataLoading />
+      </div>
+    );
   }
 
   return (
