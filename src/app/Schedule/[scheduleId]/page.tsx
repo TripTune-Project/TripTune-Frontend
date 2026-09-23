@@ -40,8 +40,12 @@ export default function ScheduleDetailPage() {
   >('error');
   const [isError, setIsError] = useState(false);
 
-  const { travelRoute, scheduleDetail, fetchScheduleDetailById, resetTravelRoute } =
-    useTravelStore();
+  const {
+    travelRoute,
+    scheduleDetail,
+    fetchScheduleDetailById,
+    resetTravelRoute,
+  } = useTravelStore();
 
   useEffect(() => {
     const fetchScheduleData = async () => {
@@ -126,14 +130,24 @@ export default function ScheduleDetailPage() {
       travelRoutes: transformedRoute,
     };
 
-    const response = await updateExistingSchedule(data);
-    if (response.success) {
-      // 저장 후에도 편집을 이어갈 수 있도록 페이지에 머문다
-      setAlertMessage('일정이 저장되었습니다.');
-      setAlertSeverity('success');
+    try {
+      const response = await updateExistingSchedule(data);
+      if (response.success) {
+        // 저장 후에도 편집을 이어갈 수 있도록 페이지에 머문다
+        setAlertMessage('일정이 저장되었습니다.');
+        setAlertSeverity('success');
+        setAlertOpen(true);
+      } else {
+        setAlertMessage(response.message || '일정 저장에 실패했습니다.');
+        setAlertSeverity('error');
+        setAlertOpen(true);
+      }
+    } catch (error) {
+      setAlertMessage(
+        error instanceof Error ? error.message : '일정 저장에 실패했습니다.'
+      );
+      setAlertSeverity('error');
       setAlertOpen(true);
-    } else {
-      console.error('일정 저장에 실패했습니다:', response.message);
     }
   };
 

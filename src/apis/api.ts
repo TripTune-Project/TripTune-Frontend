@@ -49,9 +49,6 @@ const getErrorType = (message: string, statusCode?: number): ErrorType => {
     message === '작성자 정보를 찾을 수 없습니다.' ||
     message === '인증되지 않은 사용자입니다. 로그인 후 다시 시도하세요.' ||
     message === '해당 일정에 접근 권한이 없는 사용자 입니다.' ||
-    message === '해당 일정에 편집 권한이 없는 사용자 입니다.' ||
-    message === '해당 일정에 삭제 권한이 없는 사용자 입니다.' ||
-    message === '채팅 권한이 없는 사용자 입니다.' ||
     message === '북마크 정보를 찾을 수 없습니다.' ||
     message === '프로필 이미지 데이터를 찾을 수 없습니다.'
   ) {
