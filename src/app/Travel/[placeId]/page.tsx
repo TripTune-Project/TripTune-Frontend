@@ -126,7 +126,7 @@ const TravelDetailPage = () => {
   const isAuthStateReady = isAuthenticated !== null;
   const requiresAuth = isAuthenticated === true;
 
-  const { data, isLoading, refetch } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ['travelDetail', placeIdNumber, requiresAuth],
     queryFn: async () => {
       const result = await fetchTravelDetailData(placeIdNumber, requiresAuth);
@@ -138,6 +138,7 @@ const TravelDetailPage = () => {
       }
     },
     enabled: isAuthStateReady, // 인증 상태가 확정된 후에만 실행
+    retry: 1,
   });
 
   useEffect(() => {
@@ -239,6 +240,17 @@ const TravelDetailPage = () => {
   const handleExpandClick = () => {
     setIsExpanded(!isExpanded);
   };
+
+  if (isError && !data) {
+    return (
+      <div className={styles.detailError} role='alert'>
+        <p>데이터를 불러오지 못했습니다. 다시 시도해주세요.</p>
+        <button className={styles.chooseBtn} onClick={() => refetch()}>
+          다시 시도
+        </button>
+      </div>
+    );
+  }
 
   if (isLoading || !data) return <DataLoading />;
 
