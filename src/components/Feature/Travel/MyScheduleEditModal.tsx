@@ -74,7 +74,11 @@ const MyScheduleEditModal = ({
         setAlertOpen(true);
       }
     } catch (error) {
-      setAlertMessage('일정을 추가하는 중 오류가 발생했습니다.');
+      setAlertMessage(
+        error instanceof Error
+          ? error.message
+          : '일정을 추가하는 중 오류가 발생했습니다.'
+      );
       setAlertSeverity('error');
       setAlertOpen(true);
     }

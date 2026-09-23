@@ -191,7 +191,11 @@ export default function SchedulePage() {
           setAlertOpen(true);
         }
       } catch (error) {
-        setAlertMessage('서버 내부 오류가 발생하였습니다.');
+        setAlertMessage(
+          error instanceof Error
+            ? error.message
+            : '서버 내부 오류가 발생하였습니다.'
+        );
         setAlertSeverity('error');
         setAlertOpen(true);
       }
