@@ -567,7 +567,6 @@ const DropdownMenu = styled.ul`
   padding: 5px 0;
   z-index: 10;
   width: 138px;
-  height: 199px;
   flex-shrink: 0;
   border-radius: 10px;
   border: 1px solid #e8e8e8;
