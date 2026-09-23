@@ -51,11 +51,16 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               loading='lazy'
             />
             <p className={styles.email}>
-              <b>Email</b>: triptunehost@gmail.com
+              <b>Email</b>:{' '}
+              <a href='mailto:triptunehost@gmail.com'>triptunehost@gmail.com</a>
             </p>
             <p className={styles.github}>
               <b>Github</b>:{' '}
-              <a href='https://github.com/TripTune-Project'>
+              <a
+                href='https://github.com/TripTune-Project'
+                target='_blank'
+                rel='noopener noreferrer'
+              >
                 https://github.com/TripTune-Project
               </a>
             </p>
