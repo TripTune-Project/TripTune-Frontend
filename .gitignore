@@ -59,3 +59,9 @@ next-env.d.ts
 /cypress/videos
 /cypress/screenshots
 /cypress/downloads
+
+# cypress: QA 계정 비밀번호가 들어가므로 커밋 금지
+cypress.env.json
+
+cypress/videos-prod
+cypress/screenshots-prod
