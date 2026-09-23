@@ -487,7 +487,6 @@ const ModalContainer = styled.div`
 const Header = styled.div`
   display: flex;
   align-items: center;
-  margin-left: 37px;
 `;
 
 const CloseButton = styled.button`
@@ -496,7 +495,7 @@ const CloseButton = styled.button`
   cursor: pointer;
   color: #888;
   font-size: 20px;
-  margin-left: 75%;
+  margin-left: auto;
 `;
 
 const EmailInputContainer = styled.div`
