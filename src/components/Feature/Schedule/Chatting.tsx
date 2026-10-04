@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { Client } from '@stomp/stompjs';
 import { fetchScheduleChats } from '@/apis/Schedule/chatApi';
 import { fetchScheduleAttendees } from '@/apis/Schedule/attendeeApi';
@@ -113,14 +113,16 @@ const Chatting = ({ onError }: ChattingProps) => {
     setAlertOpen(false);
   };
 
-  /**
-   * 스크롤 맨 위로 이동하는 함수
-   */
-  const scrollToTop = () => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = 0;
-    }
-  };
+  // 첫 메시지 로드 후 맨 아래(최신 메시지)로 스크롤해야 하는지 여부
+  const scrollToBottomRef = useRef(false);
+
+  // 메시지가 실제로 그려진 뒤에 스크롤해야 scrollHeight가 반영된다
+  useLayoutEffect(() => {
+    const container = chatContainerRef.current;
+    if (!scrollToBottomRef.current || !container) return;
+    scrollToBottomRef.current = false;
+    container.scrollTop = container.scrollHeight;
+  }, [messages]);
 
   // 내 권한 확인: 작성자이거나 ALL·CHAT 권한일 때만 채팅 가능
   useEffect(() => {
@@ -157,7 +159,7 @@ const Chatting = ({ onError }: ChattingProps) => {
           setMessages(response.data.content);
           setTotalPages(response.data.totalPages);
           setCurrentPage(1);
-          setTimeout(scrollToTop, 0);
+          scrollToBottomRef.current = true;
           setIsInitialLoad(false);
         } else {
           setAlertMessage(response.message as string);
