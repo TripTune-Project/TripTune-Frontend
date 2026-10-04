@@ -12,6 +12,8 @@ import SchedulePlacesMap from '@/components/Feature/Schedule/SchedulePlacesMap';
 import Chatting from '@/components/Feature/Schedule/Chatting';
 import InviteModal from '@/components/Feature/Schedule/InviteModal';
 import { updateExistingSchedule } from '@/apis/Schedule/scheduleApi';
+import { fetchScheduleAttendees } from '@/apis/Schedule/attendeeApi';
+import saveLocalContent from '@/utils/saveLocalContent';
 import { useTravelStore } from '@/store/scheduleStore';
 import useAuth from '@/hooks/useAuth';
 import LoginModal from '@/components/Common/LoginModal';
@@ -45,7 +47,37 @@ export default function ScheduleDetailPage() {
     scheduleDetail,
     fetchScheduleDetailById,
     resetTravelRoute,
+    setCanEdit,
+    editDeniedAt,
   } = useTravelStore();
+
+  // 내 편집 권한 확인: 작성자이거나 ALL·EDIT 권한일 때만 편집 가능
+  useEffect(() => {
+    if (!scheduleId) return;
+    const { getDecryptedCookie } = saveLocalContent();
+    const userNickname = getDecryptedCookie('nickname');
+    fetchScheduleAttendees(Number(scheduleId))
+      .then((response) => {
+        const me = response.data?.find(
+          (attendee) => attendee.nickname === userNickname
+        );
+        if (!me) return;
+        setCanEdit(
+          me.role === 'AUTHOR' ||
+            me.permission === 'ALL' ||
+            me.permission === 'EDIT'
+        );
+      })
+      .catch(() => {});
+  }, [scheduleId, setCanEdit]);
+
+  // 편집 권한 없이 편집을 시도하면 알림 표시
+  useEffect(() => {
+    if (!editDeniedAt) return;
+    setAlertMessage('해당 일정에 편집 권한이 없는 사용자 입니다.');
+    setAlertSeverity('error');
+    setAlertOpen(true);
+  }, [editDeniedAt]);
 
   useEffect(() => {
     const fetchScheduleData = async () => {

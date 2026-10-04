@@ -16,6 +16,10 @@ interface TravelStore {
   travelRoute: Place[]; // 여행 경로에 추가된 장소들의 리스트
   scheduleDetail: Schedule; // 일정 상세 정보
   deletedPlaces: number[]; // 삭제된 장소들의 ID 리스트
+  canEdit: boolean; // 현재 사용자의 편집 권한 여부
+  editDeniedAt: number; // 편집 권한 없이 편집을 시도한 시각 (알림 트리거용)
+
+  setCanEdit: (canEdit: boolean) => void;
 
   // 장소 추가 및 제거
   addPlace: (place: Makers) => void;
@@ -48,13 +52,23 @@ const initialState: Pick<TravelStore, 'addedPlaces' | 'travelRoute' | 'scheduleD
   deletedPlaces: [], // 삭제된 장소 ID 리스트
 };
 
+// 편집 권한이 없으면 상태를 바꾸지 않고 거부 시각만 기록한다
+const denyEdit = (state: TravelStore) =>
+  state.canEdit ? null : { editDeniedAt: Date.now() };
+
 // Zustand로 여행 상태 저장소 생성
 export const useTravelStore = create<TravelStore>((set) => ({
   ...initialState, // 초기 상태 설정
+  canEdit: true,
+  editDeniedAt: 0,
+
+  setCanEdit: (canEdit: boolean) => set({ canEdit }),
 
   // 장소 추가 - 중복 체크 강화
   addPlace: (place: Makers) =>
     set((state) => {
+      const denied = denyEdit(state);
+      if (denied) return denied;
       // 이미 존재하는 장소인지 확인
       const isDuplicate = state.addedPlaces.some((p) => p.placeId === place.placeId);
       
@@ -74,6 +88,8 @@ export const useTravelStore = create<TravelStore>((set) => ({
   // 장소 제거 - 순서 정리 및 상태 일관성 유지
   removePlace: (placeId: number) =>
     set((state) => {
+      const denied = denyEdit(state);
+      if (denied) return denied;
       // 이미 삭제된 장소인지 확인
       if (state.deletedPlaces.includes(placeId)) {
         return state; // 이미 삭제된 경우 상태 변경 없음
@@ -111,6 +127,8 @@ export const useTravelStore = create<TravelStore>((set) => ({
   // 여행 경로에 장소 추가
   addPlaceToRoute: (place: Place) =>
     set((state) => {
+      const denied = denyEdit(state);
+      if (denied) return denied;
       const updatedRoute = state.travelRoute.some(
         (p) => p.placeId === place.placeId
       )
@@ -122,6 +140,8 @@ export const useTravelStore = create<TravelStore>((set) => ({
   // 여행 경로에서 장소 제거
   removePlaceFromRoute: (placeId: number) =>
     set((state) => {
+      const denied = denyEdit(state);
+      if (denied) return denied;
       return {
         travelRoute: state.travelRoute.filter(
           (place) => place.placeId !== placeId
@@ -132,6 +152,8 @@ export const useTravelStore = create<TravelStore>((set) => ({
   // 여행 경로에서 장소 이동 (드래그 앤 드롭)
   onMovePlace: (dragIndex: number, hoverIndex: number) =>
     set((state) => {
+      const denied = denyEdit(state);
+      if (denied) return denied;
       const updatedRoute = [...state.travelRoute];
       const [movedItem] = updatedRoute.splice(dragIndex, 1);
       updatedRoute.splice(hoverIndex, 0, movedItem);
@@ -165,6 +187,8 @@ export const useTravelStore = create<TravelStore>((set) => ({
   // 일정 세부 정보를 업데이트
   updateScheduleDetail: (updates: Partial<Schedule>) =>
     set((state) => {
+      const denied = denyEdit(state);
+      if (denied) return denied;
       return {
         scheduleDetail: {
           ...state.scheduleDetail,
@@ -260,5 +284,6 @@ export const useTravelStore = create<TravelStore>((set) => ({
       addedPlaces: [],
       travelRoute: [],
       deletedPlaces: [],
+      canEdit: true,
     })),
 }));
