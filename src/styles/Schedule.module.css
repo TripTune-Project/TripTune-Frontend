@@ -577,10 +577,42 @@
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
+    /* 서버는 한 페이지에 고정 개수(4개)만 주므로 화면 높이에 맞춰 섹션 간격을 나눠 쓴다.
+       - 남을 때: 남는 공간을 목록 아래 한 곳이 아니라 입력·탭·검색·목록 사이에 분배
+       - 모자랄 때: --squeeze만큼 섹션 margin(합계 126px)을 비율대로 줄여 카드 4개를 유지
+         (4개가 딱 맞는 높이 894px → margin이 모두 10px이 되는 768px, 그 아래는 목록 스크롤)
+       여행 루트 탭은 목록이 flex:1로 남는 공간을 모두 가져가므로 분배 영향 없음 */
+    --squeeze: clamp(0px, 894px - 100vh, 126px);
+    justify-content: space-between;
     overflow-x: hidden;
     overflow-y: auto;
     box-sizing: border-box;
     background-color: #ffffff;
+}
+
+/* 줄일 수 있는 양(기본값 - 10px)의 비율만큼 --squeeze를 나눠 가진다. 합계 126
+   (.inputGroup:first-of-type / :nth-of-type(2)보다 우선하도록 같은 의사 클래스로 지정) */
+.pageContainer > .inputGroup:first-of-type {
+    margin-top: calc(35px - var(--squeeze) * 25 / 126);
+}
+
+.pageContainer > .inputGroup:nth-of-type(2) {
+    margin-top: calc(37px - var(--squeeze) * 27 / 126);
+}
+
+.pageContainer > .tabContainer {
+    margin-top: calc(37px - var(--squeeze) * 27 / 126);
+}
+
+.pageContainer > .travelSearchContainerSearch {
+    margin-top: calc(18px - var(--squeeze) * 8 / 126);
+    margin-bottom: calc(16px - var(--squeeze) * 6 / 126);
+}
+
+.pageContainer > .travelPagination {
+    flex-shrink: 0;
+    margin-top: calc(16px - var(--squeeze) * 6 / 126);
+    margin-bottom: calc(37px - var(--squeeze) * 27 / 126);
 }
 
 .tabButton {
