@@ -157,7 +157,8 @@ const ScheduleTravelSearch = () => {
       </div>
       <div
         className={styles.travelList}
-        style={{ flex: 1, minHeight: 0, maxHeight: 'none' }}
+        // 카드 개수만큼만 차지(남는 높이는 pageContainer가 섹션 사이에 분배), 부족하면 스크롤
+        style={{ flex: '0 1 auto', minHeight: 0, maxHeight: 'none' }}
       >
         {isSearching && searchTravelQuery.isLoading ? (
           <DataLoading />
@@ -226,8 +227,8 @@ const ScheduleTravelSearch = () => {
         )}
       </div>
       {totalPages > 0 && (
-        // 목록(flex:1)이 위 공간을 채우고 페이지네이션은 패널 하단에서 37px 위에 고정
-        <div style={{ marginTop: '16px', marginBottom: '37px', flexShrink: 0 }}>
+        // 페이지네이션은 패널 하단에 붙음(space-between 마지막 항목). 간격은 .travelPagination 참고
+        <div className={styles.travelPagination}>
           <Pagination
             total={totalPages * 5}
             currentPage={currentPage}
