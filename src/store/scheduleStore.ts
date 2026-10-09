@@ -204,12 +204,6 @@ export const useTravelStore = create<TravelStore>((set) => ({
       let totalPages = 1;
       let allRoutes: Place[] = [];
 
-      // 병합 전에 상태를 초기화하여 중복 방지
-      set((state) => ({
-        ...state,
-        deletedPlaces: [] // 병합 시 삭제된 장소 리스트 초기화
-      }));
-  
       // 모든 페이지의 데이터를 가져옴
       while (currentPage <= totalPages) {
         const response = await fetchTravelRoute(scheduleId, currentPage);
@@ -235,26 +229,21 @@ export const useTravelStore = create<TravelStore>((set) => ({
       allRoutes = allRoutes.sort((a, b) => (a.routeOrder ?? 0) - (b.routeOrder ?? 0));
   
       set((state) => {
-        // 중복 제거를 위한 맵 생성 (placeId를 키로 사용)
-        const routeMap = new Map<number, Place>();
-        
-        // 서버에서 가져온 경로를 맵에 추가
-        allRoutes.forEach(route => {
-          routeMap.set(route.placeId, route);
-        });
-        
-        // 현재 상태에 있는 경로 중 삭제되지 않은 항목을 맵에 추가 (기존 항목 유지)
-        state.travelRoute.forEach(route => {
-          if (!state.deletedPlaces.includes(route.placeId) && !routeMap.has(route.placeId)) {
-            routeMap.set(route.placeId, route);
-          }
-        });
-        
-        // 맵의 값을 배열로 변환하고 정렬
-        const mergedRoutes = Array.from(routeMap.values()).sort(
-          (a, b) => (a.routeOrder ?? 0) - (b.routeOrder ?? 0)
+        // 탭 전환마다 다시 호출되므로, 저장 전 로컬 편집(드래그 순서·추가·삭제)을 우선한다
+        // 로컬 경로 순서를 그대로 두고, 로컬에 없는 서버 항목만 뒤에 붙인다
+        const localRoutes = state.travelRoute.filter(
+          (route) => !state.deletedPlaces.includes(route.placeId)
         );
-        
+        const localIds = new Set(localRoutes.map((route) => route.placeId));
+        const mergedRoutes = [
+          ...localRoutes,
+          ...allRoutes.filter(
+            (route) =>
+              !localIds.has(route.placeId) &&
+              !state.deletedPlaces.includes(route.placeId)
+          ),
+        ];
+
         // 루트 순서 재할당 (1부터 시작하는 연속적인 숫자로)
         const reorderedRoutes = mergedRoutes.map((route, index) => ({
           ...route,
