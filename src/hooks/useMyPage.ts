@@ -37,7 +37,7 @@ export const useMyPageBookMarkList = (
   sort: 'newest' | 'oldest' | 'name' = 'newest'
 ) => {
   return useQuery({
-    queryKey: ['travelList', page, sort],
+    queryKey: ['bookmarkList', page, sort],
     queryFn: () => getBookmarks(page, sort),
   });
 };

@@ -75,7 +75,7 @@ const BookMark = () => {
           <div className={styles.totalCount}>
             전체
             <span className={styles.circleCount} >
-              {places.length}
+              {myPageBookMarkData?.data?.totalElements ?? 0}
             </span>
           </div>
         </div>
