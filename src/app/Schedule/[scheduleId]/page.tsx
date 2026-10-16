@@ -45,14 +45,14 @@ export default function ScheduleDetailPage() {
   const [isError, setIsError] = useState(false);
 
   const {
-    travelRoute,
     scheduleDetail,
     fetchScheduleDetailById,
     resetTravelRoute,
     setCanEdit,
     editDeniedAt,
     setScheduleDetail,
-    reloadRoutes,
+    loadRoutes,
+    routeError,
     attendeesUpdatedAt,
     notifyAttendeesUpdated,
   } = useTravelStore();
@@ -85,14 +85,21 @@ export default function ScheduleDetailPage() {
   // 일정 이벤트 처리 (/sub/schedules/{scheduleId}/events)
   const handleScheduleEvent = (event: ScheduleEvent) => {
     switch (event.eventType) {
-      case 'SCHEDULE_UPDATED':
-      case 'ROUTE_ADDED': {
-        const current = useTravelStore.getState().scheduleDetail;
+      case 'SCHEDULE_UPDATED': {
         // 오래된 이벤트나 내가 저장해 이미 반영된 version은 무시
-        if (event.data.version <= (current.version ?? -1)) return;
-        // 일정명·날짜는 이벤트 값으로, 여행 루트는 페이징 데이터라 재조회
+        const current = useTravelStore.getState().scheduleDetail;
+        if (event.data.scheduleVersion <= (current.scheduleVersion ?? -1))
+          return;
         setScheduleDetail({ ...current, ...event.data });
-        reloadRoutes(Number(scheduleId));
+        return;
+      }
+      case 'ROUTE_ADDED':
+      case 'ROUTE_UPDATED':
+      case 'ROUTE_DELETED': {
+        const { routeVersion } = useTravelStore.getState();
+        if (event.data.routeVersion <= (routeVersion ?? -1)) return;
+        // 여행 루트는 페이징 데이터라 이벤트에 없으므로 재조회
+        loadRoutes(Number(scheduleId));
         return;
       }
       default:
@@ -110,6 +117,14 @@ export default function ScheduleDetailPage() {
     setAlertSeverity('error');
     setAlertOpen(true);
   }, [editDeniedAt]);
+
+  // 여행 루트 추가·수정·삭제 실패(409 버전 충돌 포함) 알림. 최신 루트는 스토어가 다시 불러온다
+  useEffect(() => {
+    if (!routeError) return;
+    setAlertMessage(routeError.message);
+    setAlertSeverity('error');
+    setAlertOpen(true);
+  }, [routeError]);
 
   useEffect(() => {
     const fetchScheduleData = async () => {
@@ -177,22 +192,16 @@ export default function ScheduleDetailPage() {
     setAlertOpen(false);
   };
 
-  // 일정 저장 핸들러: 일정명·날짜와 여행 루트 전체를 version과 함께 저장
+  // 일정 저장 핸들러: 일정명·날짜만 저장 (여행 루트는 클릭할 때마다 따로 저장된다)
   const handleSaveSchedule = async () => {
     if (!scheduleDetail) return;
 
-    const transformedRoute = travelRoute.map((place, index) => ({
-      routeOrder: index + 1,
-      placeId: place.placeId,
-    }));
-
     const data = {
-      version: scheduleDetail.version,
+      scheduleVersion: scheduleDetail.scheduleVersion,
       scheduleName: scheduleDetail.scheduleName || '',
       startDate: scheduleDetail.startDate || '',
       endDate: scheduleDetail.endDate || '',
       scheduleId: Number(scheduleId),
-      travelRoutes: transformedRoute,
     };
 
     try {
@@ -201,7 +210,7 @@ export default function ScheduleDetailPage() {
         // 다음 저장의 충돌 확인을 위해 갱신된 version을 반영
         setScheduleDetail({
           ...useTravelStore.getState().scheduleDetail,
-          version: response.data?.version,
+          scheduleVersion: response.data?.scheduleVersion,
         });
         // 저장 후에도 편집을 이어갈 수 있도록 페이지에 머문다
         setAlertMessage('일정이 저장되었습니다.');
@@ -218,10 +227,9 @@ export default function ScheduleDetailPage() {
       );
       setAlertSeverity('error');
       setAlertOpen(true);
-      // 409: 다른 참석자가 먼저 저장해 version이 달라졌으면 최신 일정·여행 루트로 교체
+      // 409: 다른 참석자가 먼저 저장해 scheduleVersion이 달라졌으면 최신 일정으로 교체
       if (error instanceof ApiError && error.status === 409) {
         await fetchScheduleDetailById(scheduleId, 1).catch(() => {});
-        await reloadRoutes(Number(scheduleId));
       }
     }
   };

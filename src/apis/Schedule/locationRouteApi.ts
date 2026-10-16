@@ -1,7 +1,8 @@
-import { get } from '../api';
+import { get, patch, post, remove } from '../api';
 import {
   ApiResponse,
   RouteList,
+  RouteVersion,
   ScheduleTravelList,
 } from '@/types/scheduleType';
 
@@ -37,4 +38,39 @@ export const fetchTravelRoute = async (
   return await get<ApiResponse<RouteList>>(url, {
     requiresAuth: true,
   });
+};
+
+// 여행 루트 추가 (POST) - 마지막 순서로 추가
+export const addTravelRoute = async (
+  scheduleId: number,
+  routeVersion: number,
+  placeId: number
+): Promise<ApiResponse<RouteVersion>> => {
+  const url = `/api/schedules/${scheduleId}/routes`;
+  return await post(url, { routeVersion, placeId }, { requiresAuth: true });
+};
+
+// 여행 루트 순서 수정 (PATCH) - 전체 순서를 routeId 배열로 전달
+export const updateTravelRouteOrder = async (
+  scheduleId: number,
+  routeId: number,
+  routeVersion: number,
+  orderedRouteIds: number[]
+): Promise<ApiResponse<RouteVersion>> => {
+  const url = `/api/schedules/${scheduleId}/routes/${routeId}`;
+  return await patch(
+    url,
+    { routeVersion, orderedRouteIds },
+    { requiresAuth: true }
+  );
+};
+
+// 여행 루트 삭제 (DELETE)
+export const deleteTravelRoute = async (
+  scheduleId: number,
+  routeId: number,
+  routeVersion: number
+): Promise<ApiResponse<RouteVersion>> => {
+  const url = `/api/schedules/${scheduleId}/routes/${routeId}?routeVersion=${routeVersion}`;
+  return await remove(url, undefined, { requiresAuth: true });
 };

@@ -17,7 +17,7 @@ export interface Pagination {
 // 일정 정보
 export interface Schedule {
   scheduleId?: number;
-  version?: number; // 동시 수정 확인용 (일정 상세조회 시에만 내려옴)
+  scheduleVersion?: number; // 일정 동시 수정 확인용 (일정 상세조회 시에만 내려옴)
   role?: Role;
   scheduleName?: string;
   startDate?: string;
@@ -48,7 +48,7 @@ export interface ScheduleList extends Pagination {
 // 일정 상세 조회 응답
 export interface ScheduleDetail {
   scheduleId: number;
-  version?: number;
+  scheduleVersion?: number;
   role?: Role;
   scheduleName: string;
   startDate: string;
@@ -97,11 +97,10 @@ export interface CreateSchedule {
 // 일정 수정 요청
 export interface UpdateSchedule {
   scheduleId: number;
-  version?: number; // 요청: 상세조회로 받은 값 / 응답: 갱신된 값
+  scheduleVersion?: number; // 요청: 상세조회로 받은 값 / 응답: 갱신된 값
   scheduleName: string;
   startDate: string;
   endDate: string;
-  travelRoutes?: ScheduleTravelRoute[];
 }
 
 // 여행 일정
@@ -123,12 +122,19 @@ export interface SearchScheduleTravelParams {
 
 // 여행 루트 정보
 export interface Route extends Place {
+  routeId: number;
   routeOrder: number;
 }
 
 // 여행 루트 조회 응답
 export interface RouteList extends Pagination {
+  routeVersion: number; // 여행 루트 동시 수정 확인용
   content: Route[];
+}
+
+// 여행 루트 추가·수정·삭제 응답
+export interface RouteVersion {
+  routeVersion: number;
 }
 
 // 참석자 정보
@@ -183,16 +189,16 @@ export type ScheduleEvent =
       eventType: 'SCHEDULE_UPDATED';
       message: null;
       data: {
-        version: number;
+        scheduleVersion: number;
         scheduleName: string;
         startDate: string;
         endDate: string;
       };
     }
   | {
-      eventType: 'ROUTE_ADDED';
+      eventType: 'ROUTE_ADDED' | 'ROUTE_UPDATED' | 'ROUTE_DELETED';
       message: null;
-      data: { version: number };
+      data: { routeVersion: number };
     };
 
 // 채팅 조회 응답

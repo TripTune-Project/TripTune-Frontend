@@ -67,11 +67,10 @@ export const updateExistingSchedule = async (
 
   const requestBody: UpdateSchedule = {
     scheduleId: schedule.scheduleId,
-    version: schedule.version,
+    scheduleVersion: schedule.scheduleVersion,
     scheduleName: schedule.scheduleName,
     startDate: schedule.startDate,
     endDate: schedule.endDate,
-    travelRoutes: schedule.travelRoutes,
   };
   return await patch(url, requestBody, { requiresAuth: true });
 };
@@ -92,11 +91,11 @@ export const fetchSchedulesPreview = async (
   return await get(url, { requiresAuth: true });
 };
 
-// 9. 내 일정 담기
+// 9. 내 일정 담기 - 여행 루트 마지막 순서로 추가 (routeVersion 없이 요청)
 export const addPlaceToSchedule = async (
   scheduleId: number,
   placeId: number
 ): Promise<ApiResponse<null>> => {
-  const url = `/api/schedules/${scheduleId}/routes`;
+  const url = `/api/schedules/${scheduleId}/routes-last`;
   return await post(url, { placeId }, { requiresAuth: true });
 };
