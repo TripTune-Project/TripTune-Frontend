@@ -13,6 +13,9 @@ import trashIconGray from '../../../../public/assets/images/일정 만들기/일
 import trashIconRed from '../../../../public/assets/images/일정 만들기/일정 저장 및 수정/trashIconRed.png';
 import routeVector from '../../../../public/assets/images/일정 만들기/일정 저장 및 수정/routeVector.png';
 
+// 여행 루트 API 한 페이지 크기
+const ROUTE_PAGE_SIZE = 5;
+
 const ScheduleRoute = () => {
   // URL 파라미터에서 scheduleId 가져오기
   // useParams의 반환 타입을 업데이트
@@ -20,41 +23,26 @@ const ScheduleRoute = () => {
   const scheduleId = params?.scheduleId as string;
 
   // Zustand store에서 액션 및 상태 가져오기
-  const {
-    travelRoute,
-    removePlace,
-    removePlaceFromRoute,
-    onMovePlace,
-    fetchAndMergeRoutes,
-  } = useTravelStore();
+  const { travelRoute, removeRouteAt, onMovePlace, fetchAndMergeRoutes } =
+    useTravelStore();
 
-  // 무한 스크롤 준비
-  // 이전에는 react-query로 했었음
-  // 병합 이슈로 인하여 zustand만 살리기로!
+  // 무한 스크롤: 저장 시 루트 전체를 보내야 하므로 데이터는 모두 받아 두고,
+  // 화면에는 API 페이지 크기(5개)씩 늘려가며 보여준다
   const { ref, inView } = useInView();
-  const [hasMore, setHasMore] = useState(true);
+  const [visibleCount, setVisibleCount] = useState(ROUTE_PAGE_SIZE);
 
   // 페이지 로드 시 과거 데이터와 병합
   useEffect(() => {
-    if (scheduleId) {
-      fetchAndMergeRoutes(Number(scheduleId)).then((data: unknown) => {
-        if (!data) {
-          setHasMore(false); // 더 이상 가져올 데이터가 없는 경우 처리
-        }
-      });
-    }
+    if (scheduleId) fetchAndMergeRoutes(Number(scheduleId));
   }, [scheduleId, fetchAndMergeRoutes]);
 
-  // 사용자가 무한 스크롤 영역에 도달(inView)하고, 더 가져올 데이터가 있을(hasMore) 경우
+  // 목록 바닥(inView)에 닿으면 다음 5개를 보여준다
+  // visibleCount를 deps에 넣어, 늘린 뒤에도 바닥이 보이면 계속 이어서 늘린다
   useEffect(() => {
-    if (inView && hasMore) {
-      fetchAndMergeRoutes(Number(scheduleId)).then((data: unknown) => {
-        if (!data) {
-          setHasMore(false);
-        }
-      });
+    if (inView && visibleCount < travelRoute.length) {
+      setVisibleCount((count) => count + ROUTE_PAGE_SIZE);
     }
-  }, [inView, hasMore, scheduleId, fetchAndMergeRoutes]);
+  }, [inView, visibleCount, travelRoute.length]);
 
   // 지도 마커를 관리하는 참조
   const markersRef = useRef<
@@ -158,10 +146,10 @@ const ScheduleRoute = () => {
       hover: () => {
         setIsOver(true);
       },
-      drop: (item: { place: Place }) => {
+      drop: (item: { place: Place; index: number }) => {
         setIsOver(false);
-        removePlaceFromRoute(item.place.placeId);
-        removePlace(item.place.placeId);
+        // 같은 장소가 두 번 있을 수 있으므로 끌어온 순서의 항목 하나만 지운다
+        removeRouteAt(item.index);
         removeMarker(item.place.latitude, item.place.longitude);
       },
       canDrop: () => true,
@@ -231,8 +219,13 @@ const ScheduleRoute = () => {
           className={styles.routeListContainer}
           style={{ flex: 1, minHeight: 0, maxHeight: 'none' }}
         >
-          {travelRoute.map((place, index) => (
-            <PlaceItem key={place.placeId} place={place} index={index} />
+          {travelRoute.slice(0, visibleCount).map((place, index) => (
+            // 같은 장소가 두 번 있을 수 있어 placeId만으로는 key가 겹친다
+            <PlaceItem
+              key={`${place.placeId}-${index}`}
+              place={place}
+              index={index}
+            />
           ))}
           <li ref={ref} style={{ height: '1px', listStyle: 'none' }} />
         </ul>

@@ -16,6 +16,7 @@ import DataLoading from '@/components/Common/DataLoading';
 import { useRouter } from 'next/navigation';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+import { useTravelStore } from '@/store/scheduleStore';
 
 interface InviteModalProps {
   isOpen: boolean;
@@ -54,6 +55,9 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
   >('info');
 
   const loggedInNickname = getDecryptedCookie('nickname');
+  const attendeesUpdatedAt = useTravelStore(
+    (state) => state.attendeesUpdatedAt
+  );
 
   const loggedInIsAuthor = useMemo(() => {
     const author = allUsers.find((user) => user.role === 'AUTHOR');
@@ -91,7 +95,8 @@ const InviteModal = ({ isOpen, onClose }: InviteModalProps) => {
     };
 
     loadAttendees();
-  }, [isOpen, scheduleId]);
+    // 열려 있는 동안 참석자 변경 이벤트가 오면 목록을 다시 불러온다
+  }, [isOpen, scheduleId, attendeesUpdatedAt]);
 
   // 참석자 목록 다시 불러오기 (다른 사용자가 나간 경우 등 서버 상태와 맞춘다)
   const reloadAttendees = async () => {

@@ -67,6 +67,7 @@ export const updateExistingSchedule = async (
 
   const requestBody: UpdateSchedule = {
     scheduleId: schedule.scheduleId,
+    version: schedule.version,
     scheduleName: schedule.scheduleName,
     startDate: schedule.startDate,
     endDate: schedule.endDate,

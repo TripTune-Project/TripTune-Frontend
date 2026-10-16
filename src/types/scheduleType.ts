@@ -17,6 +17,7 @@ export interface Pagination {
 // 일정 정보
 export interface Schedule {
   scheduleId?: number;
+  version?: number; // 동시 수정 확인용 (일정 상세조회 시에만 내려옴)
   role?: Role;
   scheduleName?: string;
   startDate?: string;
@@ -47,6 +48,7 @@ export interface ScheduleList extends Pagination {
 // 일정 상세 조회 응답
 export interface ScheduleDetail {
   scheduleId: number;
+  version?: number;
   role?: Role;
   scheduleName: string;
   startDate: string;
@@ -95,6 +97,7 @@ export interface CreateSchedule {
 // 일정 수정 요청
 export interface UpdateSchedule {
   scheduleId: number;
+  version?: number; // 요청: 상세조회로 받은 값 / 응답: 갱신된 값
   scheduleName: string;
   startDate: string;
   endDate: string;
@@ -158,6 +161,39 @@ export interface ChatMessage {
   timestamp: string;
   message: string;
 }
+
+// 일정 이벤트 (/sub/schedules/{scheduleId}/events)
+export type ScheduleEvent =
+  | {
+      eventType: 'ATTENDEE_ADDED';
+      message: string;
+      data: Attendee;
+    }
+  | {
+      eventType: 'ATTENDEE_REMOVED' | 'ATTENDEE_LEFT';
+      message: string;
+      data: { attendeeId: number };
+    }
+  | {
+      eventType: 'ATTENDEE_PERMISSION_UPDATED';
+      message: string;
+      data: { attendeeId: number; permission: Permission };
+    }
+  | {
+      eventType: 'SCHEDULE_UPDATED';
+      message: null;
+      data: {
+        version: number;
+        scheduleName: string;
+        startDate: string;
+        endDate: string;
+      };
+    }
+  | {
+      eventType: 'ROUTE_ADDED';
+      message: null;
+      data: { version: number };
+    };
 
 // 채팅 조회 응답
 export interface ChatList extends Pagination {

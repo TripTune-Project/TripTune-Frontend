@@ -50,4 +50,34 @@ describe('fetchAndMergeRoutes (탭 전환 시 재호출)', () => {
     await useTravelStore.getState().fetchAndMergeRoutes(1);
     expect(ids()).toEqual([3, 2, 4]);
   });
+
+  it('같은 장소가 두 번 있으면 둘 다 보이고, 드래그 삭제는 하나만 지운다', async () => {
+    (fetchTravelRoute as jest.Mock).mockResolvedValueOnce({
+      success: true,
+      data: {
+        totalPages: 1,
+        content: [place(1, 1), place(2, 2), place(1, 3)],
+      },
+    });
+    await useTravelStore.getState().fetchAndMergeRoutes(1);
+    expect(ids()).toEqual([1, 2, 1]);
+
+    useTravelStore.getState().removeRouteAt(2);
+    expect(ids()).toEqual([1, 2]);
+    // 남은 1번 장소의 마커는 유지
+    expect(
+      useTravelStore.getState().addedPlaces.map((p) => p.placeId)
+    ).toContain(1);
+  });
+
+  it('reloadRoutes는 로컬 편집을 버리고 서버 순서로 교체한다 (다른 참석자 저장 이벤트)', async () => {
+    const store = useTravelStore.getState();
+    await store.fetchAndMergeRoutes(1);
+
+    store.onMovePlace(2, 0);
+    store.removePlace(1);
+
+    await useTravelStore.getState().reloadRoutes(1);
+    expect(ids()).toEqual([1, 2, 3]);
+  });
 });

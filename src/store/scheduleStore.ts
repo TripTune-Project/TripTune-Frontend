@@ -31,6 +31,8 @@ interface TravelStore {
   // 경로에 장소 추가 및 제거
   addPlaceToRoute: (place: Place) => void;
   removePlaceFromRoute: (placeId: number) => void;
+  // 여행 루트의 해당 순서 항목 하나만 제거 (같은 장소가 두 번 있을 때 하나만 지움)
+  removeRouteAt: (index: number) => void;
 
   // 일정 세부 정보 관리
   setScheduleDetail: (schedule: Schedule) => void;
@@ -39,6 +41,13 @@ interface TravelStore {
 
   // 과거 데이터와 새로운 데이터를 병합
   fetchAndMergeRoutes: (scheduleId: number) => Promise<void>;
+
+  // 로컬 편집을 버리고 서버 여행 루트로 교체 (다른 참석자의 저장 반영)
+  reloadRoutes: (scheduleId: number) => Promise<void>;
+
+  // 참석자 변경 이벤트 시각 (참석자·권한 재조회 트리거)
+  attendeesUpdatedAt: number;
+  notifyAttendeesUpdated: () => void;
 
   // 여행 루트 초기화
   resetTravelRoute: () => void;
@@ -57,12 +66,20 @@ const denyEdit = (state: TravelStore) =>
   state.canEdit ? null : { editDeniedAt: Date.now() };
 
 // Zustand로 여행 상태 저장소 생성
-export const useTravelStore = create<TravelStore>((set) => ({
+export const useTravelStore = create<TravelStore>((set, get) => ({
   ...initialState, // 초기 상태 설정
   canEdit: true,
   editDeniedAt: 0,
+  attendeesUpdatedAt: 0,
 
   setCanEdit: (canEdit: boolean) => set({ canEdit }),
+
+  notifyAttendeesUpdated: () => set({ attendeesUpdatedAt: Date.now() }),
+
+  reloadRoutes: async (scheduleId: number) => {
+    set({ travelRoute: [], deletedPlaces: [] });
+    await get().fetchAndMergeRoutes(scheduleId);
+  },
 
   // 장소 추가 - 중복 체크 강화
   addPlace: (place: Makers) =>
@@ -149,6 +166,26 @@ export const useTravelStore = create<TravelStore>((set) => ({
       };
     }),
 
+  removeRouteAt: (index: number) =>
+    set((state) => {
+      const denied = denyEdit(state);
+      if (denied) return denied;
+      const removed = state.travelRoute[index];
+      if (!removed) return state;
+      const travelRoute = state.travelRoute.filter((_, i) => i !== index);
+      // 같은 장소가 아직 루트에 남아 있으면 마커·삭제 목록은 그대로 둔다
+      if (travelRoute.some((place) => place.placeId === removed.placeId)) {
+        return { travelRoute };
+      }
+      return {
+        travelRoute,
+        addedPlaces: state.addedPlaces.filter(
+          (place) => place.placeId !== removed.placeId
+        ),
+        deletedPlaces: [...state.deletedPlaces, removed.placeId],
+      };
+    }),
+
   // 여행 경로에서 장소 이동 (드래그 앤 드롭)
   onMovePlace: (dragIndex: number, hoverIndex: number) =>
     set((state) => {
@@ -211,13 +248,9 @@ export const useTravelStore = create<TravelStore>((set) => ({
         if (response.success) {
           const { data } = response;
           totalPages = data.totalPages;
-          
-          // 이미 수집된 데이터와 중복되지 않는 항목만 추가
-          const newContent = data.content.filter(
-            (newItem) => !allRoutes.some((route) => route.placeId === newItem.placeId)
-          );
-          
-          allRoutes = [...allRoutes, ...newContent];
+
+          // 같은 장소가 루트에 두 번 들어갈 수 있으므로(내 일정 담기) placeId로 거르지 않는다
+          allRoutes = [...allRoutes, ...data.content];
           currentPage++;
         } else {
           console.error(`[여행 경로 가져오기] ${currentPage}페이지 조회 실패`);
@@ -274,5 +307,6 @@ export const useTravelStore = create<TravelStore>((set) => ({
       travelRoute: [],
       deletedPlaces: [],
       canEdit: true,
+      attendeesUpdatedAt: 0,
     })),
 }));
