@@ -1,6 +1,7 @@
 
 import { refreshApi } from './Login/refreshApi';
 import Cookies from 'js-cookie';
+import { removeAuthCookies } from '@/utils/saveLocalContent';
 
 // API 요청 옵션 인터페이스
 interface FetchOptions {
@@ -80,8 +81,7 @@ const handleError = async (
   switch (errorType) {
     case ErrorType.NEED_LOGIN:
       // 로그인 필요한 경우: 쿠키 삭제 후 로그인 페이지로 이동
-      Cookies.remove('accessToken');
-      Cookies.remove('nickname');
+      removeAuthCookies();
       window.location.href = '/login';
       break;
 
@@ -98,8 +98,7 @@ const handleError = async (
         const refreshToken = Cookies.get('refreshToken');
 
         if (!accessToken && !refreshToken) {
-          Cookies.remove('accessToken');
-          Cookies.remove('nickname');
+          removeAuthCookies();
           window.location.href = '/login';
           break;
         }
@@ -112,8 +111,7 @@ const handleError = async (
         return undefined;
       } catch (error: any) {
         // 토큰 갱신 실패 시에만 사용자에게 알림
-        Cookies.remove('accessToken');
-        Cookies.remove('nickname');
+        removeAuthCookies();
         window.location.href = '/login';
       }
       break;
@@ -189,8 +187,7 @@ const fetchData = async <T>(
       if (response.status === 401 && !isRetry) {
         // 로그아웃 API 호출인 경우 토큰 갱신 시도하지 않음
         if (endpoint === '/api/members/logout') {
-          Cookies.remove('accessToken');
-          Cookies.remove('nickname');
+          removeAuthCookies();
           return undefined as unknown as T;
         }
 
@@ -206,8 +203,7 @@ const fetchData = async <T>(
           return await fetchData<T>(method, endpoint, body, options, true);
         } catch (refreshError) {
           // 토큰 갱신 실패 시 로그인 페이지로 이동
-          Cookies.remove('accessToken');
-          Cookies.remove('nickname');
+          removeAuthCookies();
           window.location.href = '/login';
         }
       }

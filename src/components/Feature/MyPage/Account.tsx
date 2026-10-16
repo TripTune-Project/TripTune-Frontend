@@ -16,7 +16,7 @@ import {
 import { validateEmail, validatePassword } from '@/utils/validation';
 import { AccountPasswordFormData, AccountEmailFormData } from '@/types/myPage';
 import VerificationLoading from '@/components/Common/VerificationLoading';
-import Cookies from 'js-cookie';
+import { removeAuthCookies } from '@/utils/saveLocalContent';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 
@@ -181,8 +181,7 @@ const Account = () => {
       setAlertMessage('회원 탈퇴가 완료되었습니다.');
       setAlertSeverity('success');
       setAlertOpen(true);
-      Cookies.remove('accessToken');
-      Cookies.remove('nickname');
+      removeAuthCookies();
       router.push('/');
     } catch (error: any) {
       console.error('회원 탈퇴 실패:', error.message);

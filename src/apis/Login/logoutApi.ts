@@ -1,5 +1,5 @@
 import { patch } from '@/apis/api';
-import saveLocalContent from '@/utils/saveLocalContent';
+import saveLocalContent, { removeAuthCookies } from '@/utils/saveLocalContent';
 import Cookies from 'js-cookie';
 
 export const logoutApi = async () => {
@@ -17,7 +17,6 @@ export const logoutApi = async () => {
       }
     );
 
-    Cookies.remove('accessToken');
-    Cookies.remove('nickname');
+    removeAuthCookies();
   }
 };
