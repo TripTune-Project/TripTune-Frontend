@@ -10,6 +10,17 @@ interface FetchOptions {
   credentials?: string;
 }
 
+// HTTP 오류 응답: 메시지와 함께 상태 코드를 전달 (예: 409 버전 충돌 판별)
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    public status: number
+  ) {
+    super(message);
+    this.name = 'ApiError';
+  }
+}
+
 // 오류 타입 분류
 enum ErrorType {
   NEED_LOGIN, // 로그인 필요
@@ -112,7 +123,7 @@ const handleError = async (
       break;
   }
 
-  throw new Error(responseData.message);
+  throw new ApiError(responseData.message, response.status);
 };
 
 // API 요청 기본 함수
@@ -214,7 +225,7 @@ const fetchData = async <T>(
         throw error;
       }
 
-      throw new Error(data.message);
+      throw new ApiError(data.message, response.status);
     }
 
     return data as T;
