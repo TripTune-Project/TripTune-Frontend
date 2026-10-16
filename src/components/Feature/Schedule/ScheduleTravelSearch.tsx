@@ -34,25 +34,13 @@ const ScheduleTravelSearch = () => {
   const [alertMessage, setAlertMessage] = useState('');
   const [alertSeverity, setAlertSeverity] = useState<AlertColor>('info');
 
-  const {
-    addPlaceToRoute,
-    addedPlaces,
-    addPlace,
-    removePlace,
-    removePlaceFromRoute,
-    fetchAndMergeRoutes,
-  } = useTravelStore();
+  const { addedPlaces, addRoute, deletePlaceRoutes, loadRoutes } =
+    useTravelStore();
 
-  // 여행지 검색과 여행루트 데이터 동기화
+  // 여행지 검색과 여행루트 데이터 동기화 ([+]/[-] 표시와 지도 마커)
   useEffect(() => {
-    const loadTravelRoutes = async () => {
-      if (scheduleId) {
-        await fetchAndMergeRoutes(Number(scheduleId));
-        useTravelStore.getState().addedPlaces;
-      }
-    };
-    loadTravelRoutes();
-  }, [fetchAndMergeRoutes, scheduleId]);
+    if (scheduleId) loadRoutes(Number(scheduleId));
+  }, [loadRoutes, scheduleId]);
 
   // 기본 리스트 쿼리
   const travelListQuery = useScheduleTravelList(
@@ -99,17 +87,12 @@ const ScheduleTravelSearch = () => {
       (addedPlace) => addedPlace.placeId === place.placeId
     );
 
+    // 클릭하는 순간 서버에 반영 (여행 루트 추가·삭제 API)
     if (placeExists) {
-      removePlace(place.placeId);
-      removePlaceFromRoute(place.placeId);
+      deletePlaceRoutes(Number(scheduleId), place.placeId);
       removeMarker(place.latitude, place.longitude);
     } else {
-      addPlace({
-        placeId: place.placeId,
-        lat: place.latitude,
-        lng: place.longitude,
-      });
-      addPlaceToRoute(place);
+      addRoute(Number(scheduleId), place.placeId);
     }
   };
 

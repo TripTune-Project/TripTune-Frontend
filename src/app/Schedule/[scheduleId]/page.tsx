@@ -20,6 +20,8 @@ import LoginModal from '@/components/Common/LoginModal';
 import DataLoading from '@/components/Common/DataLoading';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+import { ScheduleEvent } from '@/types/scheduleType';
+import { ApiError } from '@/apis/api';
 
 /**
  * 일정 상세 페이지 컴포넌트
@@ -43,15 +45,20 @@ export default function ScheduleDetailPage() {
   const [isError, setIsError] = useState(false);
 
   const {
-    travelRoute,
     scheduleDetail,
     fetchScheduleDetailById,
     resetTravelRoute,
     setCanEdit,
     editDeniedAt,
+    setScheduleDetail,
+    loadRoutes,
+    routeError,
+    attendeesUpdatedAt,
+    notifyAttendeesUpdated,
   } = useTravelStore();
 
   // 내 편집 권한 확인: 작성자이거나 ALL·EDIT 권한일 때만 편집 가능
+  // 참석자 변경 이벤트(권한 수정·내보내기 등)가 오면 다시 확인한다
   useEffect(() => {
     if (!scheduleId) return;
     const { getDecryptedCookie } = saveLocalContent();
@@ -61,7 +68,11 @@ export default function ScheduleDetailPage() {
         const me = response.data?.find(
           (attendee) => attendee.nickname === userNickname
         );
-        if (!me) return;
+        if (!me) {
+          // 이벤트 후 참석자 목록에서 빠졌다면 내보내진 것이므로 목록으로 이동
+          if (attendeesUpdatedAt) router.push('/Schedule');
+          return;
+        }
         setCanEdit(
           me.role === 'AUTHOR' ||
             me.permission === 'ALL' ||
@@ -69,7 +80,35 @@ export default function ScheduleDetailPage() {
         );
       })
       .catch(() => {});
-  }, [scheduleId, setCanEdit]);
+  }, [scheduleId, setCanEdit, attendeesUpdatedAt, router]);
+
+  // 일정 이벤트 처리 (/sub/schedules/{scheduleId}/events)
+  const handleScheduleEvent = (event: ScheduleEvent) => {
+    switch (event.eventType) {
+      case 'SCHEDULE_UPDATED': {
+        // 오래된 이벤트나 내가 저장해 이미 반영된 version은 무시
+        const current = useTravelStore.getState().scheduleDetail;
+        if (event.data.scheduleVersion <= (current.scheduleVersion ?? -1))
+          return;
+        setScheduleDetail({ ...current, ...event.data });
+        return;
+      }
+      case 'ROUTE_ADDED':
+      case 'ROUTE_UPDATED':
+      case 'ROUTE_DELETED': {
+        const { routeVersion } = useTravelStore.getState();
+        if (event.data.routeVersion <= (routeVersion ?? -1)) return;
+        // 여행 루트는 페이징 데이터라 이벤트에 없으므로 재조회
+        loadRoutes(Number(scheduleId));
+        return;
+      }
+      default:
+        notifyAttendeesUpdated();
+        setAlertMessage(event.message);
+        setAlertSeverity('info');
+        setAlertOpen(true);
+    }
+  };
 
   // 편집 권한 없이 편집을 시도하면 알림 표시
   useEffect(() => {
@@ -78,6 +117,14 @@ export default function ScheduleDetailPage() {
     setAlertSeverity('error');
     setAlertOpen(true);
   }, [editDeniedAt]);
+
+  // 여행 루트 추가·수정·삭제 실패(409 버전 충돌 포함) 알림. 최신 루트는 스토어가 다시 불러온다
+  useEffect(() => {
+    if (!routeError) return;
+    setAlertMessage(routeError.message);
+    setAlertSeverity('error');
+    setAlertOpen(true);
+  }, [routeError]);
 
   useEffect(() => {
     const fetchScheduleData = async () => {
@@ -145,26 +192,26 @@ export default function ScheduleDetailPage() {
     setAlertOpen(false);
   };
 
-  // 일정 저장 핸들러
+  // 일정 저장 핸들러: 일정명·날짜만 저장 (여행 루트는 클릭할 때마다 따로 저장된다)
   const handleSaveSchedule = async () => {
     if (!scheduleDetail) return;
 
-    const transformedRoute = travelRoute.map((place, index) => ({
-      routeOrder: index + 1,
-      placeId: place.placeId,
-    }));
-
     const data = {
+      scheduleVersion: scheduleDetail.scheduleVersion,
       scheduleName: scheduleDetail.scheduleName || '',
       startDate: scheduleDetail.startDate || '',
       endDate: scheduleDetail.endDate || '',
       scheduleId: Number(scheduleId),
-      travelRoutes: transformedRoute,
     };
 
     try {
       const response = await updateExistingSchedule(data);
       if (response.success) {
+        // 다음 저장의 충돌 확인을 위해 갱신된 version을 반영
+        setScheduleDetail({
+          ...useTravelStore.getState().scheduleDetail,
+          scheduleVersion: response.data?.scheduleVersion,
+        });
         // 저장 후에도 편집을 이어갈 수 있도록 페이지에 머문다
         setAlertMessage('일정이 저장되었습니다.');
         setAlertSeverity('success');
@@ -180,6 +227,10 @@ export default function ScheduleDetailPage() {
       );
       setAlertSeverity('error');
       setAlertOpen(true);
+      // 409: 다른 참석자가 먼저 저장해 scheduleVersion이 달라졌으면 최신 일정으로 교체
+      if (error instanceof ApiError && error.status === 409) {
+        await fetchScheduleDetailById(scheduleId, 1).catch(() => {});
+      }
     }
   };
 
@@ -275,6 +326,7 @@ export default function ScheduleDetailPage() {
         <div className={styles.rightSection}>
           {isChatLoading ? (
             <Chatting
+              onEvent={handleScheduleEvent}
               onError={(error) => {
                 setAlertMessage(error);
                 setAlertSeverity('error');

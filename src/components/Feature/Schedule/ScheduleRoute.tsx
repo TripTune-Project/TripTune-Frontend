@@ -4,7 +4,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useInView } from 'react-intersection-observer';
 import { useTravelStore } from '@/store/scheduleStore';
 import { useParams } from 'next/navigation';
-import { Place } from '@/types/scheduleType';
+import { Route } from '@/types/scheduleType';
 import styles from '@/styles/Schedule.module.css';
 import Image from 'next/image';
 import locationIcon from '../../../../public/assets/images/일정 만들기/일정 저장 및 수정/mapIcon.png';
@@ -13,6 +13,37 @@ import trashIconGray from '../../../../public/assets/images/일정 만들기/일
 import trashIconRed from '../../../../public/assets/images/일정 만들기/일정 저장 및 수정/trashIconRed.png';
 import routeVector from '../../../../public/assets/images/일정 만들기/일정 저장 및 수정/routeVector.png';
 
+// 여행 루트 API 한 페이지 크기
+const ROUTE_PAGE_SIZE = 5;
+
+// 목록 드롭 영역: 목록 안에 놓는 순간 바뀐 순서를 서버에 저장
+// (항목 위에 놓아도 항목에는 drop이 없어 여기로 전달된다)
+// 렌더마다 다시 만들어지면 목록 스크롤이 초기화되므로 컴포넌트 밖에 둔다
+const RouteListDrop = ({
+  onDrop,
+  children,
+}: {
+  onDrop: (route: Route) => void;
+  children: React.ReactNode;
+}) => {
+  const listRef = useRef<HTMLUListElement>(null);
+  const [, drop] = useDrop({
+    accept: 'PLACE',
+    drop: (item: { place: Route }) => onDrop(item.place),
+  });
+  drop(listRef);
+
+  return (
+    <ul
+      ref={listRef}
+      className={styles.routeListContainer}
+      style={{ flex: 1, minHeight: 0, maxHeight: 'none' }}
+    >
+      {children}
+    </ul>
+  );
+};
+
 const ScheduleRoute = () => {
   // URL 파라미터에서 scheduleId 가져오기
   // useParams의 반환 타입을 업데이트
@@ -20,61 +51,29 @@ const ScheduleRoute = () => {
   const scheduleId = params?.scheduleId as string;
 
   // Zustand store에서 액션 및 상태 가져오기
-  const {
-    travelRoute,
-    removePlace,
-    removePlaceFromRoute,
-    onMovePlace,
-    fetchAndMergeRoutes,
-  } = useTravelStore();
+  const { travelRoute, deleteRoute, onMovePlace, saveRouteOrder, loadRoutes } =
+    useTravelStore();
 
-  // 무한 스크롤 준비
-  // 이전에는 react-query로 했었음
-  // 병합 이슈로 인하여 zustand만 살리기로!
+  // 무한 스크롤: 순서 변경 시 전체 순서(orderedRouteIds)를 보내야 하므로 데이터는 모두 받아 두고,
+  // 화면에는 API 페이지 크기(5개)씩 늘려가며 보여준다
   const { ref, inView } = useInView();
-  const [hasMore, setHasMore] = useState(true);
+  const [visibleCount, setVisibleCount] = useState(ROUTE_PAGE_SIZE);
 
-  // 페이지 로드 시 과거 데이터와 병합
+  // 여행 루트 탭 클릭 시 조회
   useEffect(() => {
-    if (scheduleId) {
-      fetchAndMergeRoutes(Number(scheduleId)).then((data: unknown) => {
-        if (!data) {
-          setHasMore(false); // 더 이상 가져올 데이터가 없는 경우 처리
-        }
-      });
-    }
-  }, [scheduleId, fetchAndMergeRoutes]);
+    if (scheduleId) loadRoutes(Number(scheduleId));
+  }, [scheduleId, loadRoutes]);
 
-  // 사용자가 무한 스크롤 영역에 도달(inView)하고, 더 가져올 데이터가 있을(hasMore) 경우
+  // 목록 바닥(inView)에 닿으면 다음 5개를 보여준다
+  // visibleCount를 deps에 넣어, 늘린 뒤에도 바닥이 보이면 계속 이어서 늘린다
   useEffect(() => {
-    if (inView && hasMore) {
-      fetchAndMergeRoutes(Number(scheduleId)).then((data: unknown) => {
-        if (!data) {
-          setHasMore(false);
-        }
-      });
+    if (inView && visibleCount < travelRoute.length) {
+      setVisibleCount((count) => count + ROUTE_PAGE_SIZE);
     }
-  }, [inView, hasMore, scheduleId, fetchAndMergeRoutes]);
-
-  // 지도 마커를 관리하는 참조
-  const markersRef = useRef<
-    { latitude: number; longitude: number; map: unknown }[]
-  >([]);
-
-  // 지도 마커를 제거하는 함수
-  const removeMarker = (latitude: number, longitude: number) => {
-    const markerIndex = markersRef.current.findIndex(
-      (marker) => marker.latitude === latitude && marker.longitude === longitude
-    );
-
-    if (markerIndex > -1) {
-      const [removedMarker] = markersRef.current.splice(markerIndex, 1);
-      removedMarker.map = null;
-    }
-  };
+  }, [inView, visibleCount, travelRoute.length]);
 
   // 개별 장소 항목 컴포넌트
-  const PlaceItem = ({ place, index }: { place: Place; index: number }) => {
+  const PlaceItem = ({ place, index }: { place: Route; index: number }) => {
     const ref = useRef<HTMLLIElement>(null);
 
     // 드래그를 설정
@@ -89,7 +88,7 @@ const ScheduleRoute = () => {
     // 드롭을 설정
     const [, drop] = useDrop({
       accept: 'PLACE',
-      hover(item: { place: Place; index?: number }) {
+      hover(item: { place: Route; index?: number }) {
         if (!ref.current) return;
         const dragIndex = item.index ?? -1;
         const hoverIndex = index;
@@ -122,7 +121,10 @@ const ScheduleRoute = () => {
             height={66}
           />
         )}
-        <div className={styles.placeThumbnail} style={{ width: '60px', height: '60px', minWidth: '60px' }}>
+        <div
+          className={styles.placeThumbnail}
+          style={{ width: '60px', height: '60px', minWidth: '60px' }}
+        >
           {place.thumbnailUrl ? (
             <Image
               src={place.thumbnailUrl}
@@ -133,7 +135,12 @@ const ScheduleRoute = () => {
               priority
             />
           ) : (
-            <div className={styles.noImage} style={{ width: '60px', height: '60px', fontSize: '8px' }}>이미지 없음</div>
+            <div
+              className={styles.noImage}
+              style={{ width: '60px', height: '60px', fontSize: '8px' }}
+            >
+              이미지 없음
+            </div>
           )}
         </div>
         <div className={styles.placeInfo}>
@@ -158,11 +165,10 @@ const ScheduleRoute = () => {
       hover: () => {
         setIsOver(true);
       },
-      drop: (item: { place: Place }) => {
+      drop: (item: { place: Route }) => {
         setIsOver(false);
-        removePlaceFromRoute(item.place.placeId);
-        removePlace(item.place.placeId);
-        removeMarker(item.place.latitude, item.place.longitude);
+        // 같은 장소가 두 번 있을 수 있으므로 끌어온 루트 하나만 지운다
+        deleteRoute(Number(scheduleId), item.place.routeId);
       },
       canDrop: () => true,
       collect: (monitor) => ({
@@ -227,15 +233,14 @@ const ScheduleRoute = () => {
           paddingBottom: '42px', // Figma: 삭제 버튼이 패널 하단에서 42px 위에 위치
         }}
       >
-        <ul
-          className={styles.routeListContainer}
-          style={{ flex: 1, minHeight: 0, maxHeight: 'none' }}
+        <RouteListDrop
+          onDrop={(route) => saveRouteOrder(Number(scheduleId), route.routeId)}
         >
-          {travelRoute.map((place, index) => (
-            <PlaceItem key={place.placeId} place={place} index={index} />
+          {travelRoute.slice(0, visibleCount).map((place, index) => (
+            <PlaceItem key={place.routeId} place={place} index={index} />
           ))}
           <li ref={ref} style={{ height: '1px', listStyle: 'none' }} />
-        </ul>
+        </RouteListDrop>
         <DeleteDropZone />
       </div>
     </DndProvider>

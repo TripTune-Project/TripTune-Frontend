@@ -5,7 +5,8 @@ import { fetchScheduleAttendees } from '@/apis/Schedule/attendeeApi';
 import styles from '@/styles/Schedule.module.css';
 import Image from 'next/image';
 import DataLoading from '@/components/Common/DataLoading';
-import { ChatMessage } from '@/types/scheduleType';
+import { ChatMessage, ScheduleEvent } from '@/types/scheduleType';
+import { useTravelStore } from '@/store/scheduleStore';
 import { useParams } from 'next/navigation';
 import saveLocalContent from '@/utils/saveLocalContent';
 import Snackbar from '@mui/material/Snackbar';
@@ -57,6 +58,7 @@ const formatTimestamp = (timestamp: string) => {
  */
 interface ChattingProps {
   onError?: (error: string) => void;
+  onEvent?: (event: ScheduleEvent) => void; // 일정 이벤트 수신 시
 }
 
 /**
@@ -69,7 +71,7 @@ interface ChattingProps {
  * @param {ChattingProps} props - 컴포넌트 props
  * @returns {JSX.Element} 채팅 컴포넌트
  */
-const Chatting = ({ onError }: ChattingProps) => {
+const Chatting = ({ onError, onEvent }: ChattingProps) => {
   // useParams의 반환 타입을 업데이트
   const params = useParams();
   const scheduleId = params?.scheduleId as string;
@@ -124,7 +126,16 @@ const Chatting = ({ onError }: ChattingProps) => {
     container.scrollTop = container.scrollHeight;
   }, [messages]);
 
+  // 최신 onEvent를 구독 콜백에서 쓰기 위해 ref로 보관 (재연결 방지)
+  const onEventRef = useRef(onEvent);
+  onEventRef.current = onEvent;
+
+  const attendeesUpdatedAt = useTravelStore(
+    (state) => state.attendeesUpdatedAt
+  );
+
   // 내 권한 확인: 작성자이거나 ALL·CHAT 권한일 때만 채팅 가능
+  // 참석자 변경 이벤트(권한 수정 등)가 오면 다시 확인한다
   useEffect(() => {
     fetchScheduleAttendees(Number(scheduleId))
       .then((response) => {
@@ -139,7 +150,7 @@ const Chatting = ({ onError }: ChattingProps) => {
         );
       })
       .catch(() => {});
-  }, [scheduleId, userNickname]);
+  }, [scheduleId, userNickname, attendeesUpdatedAt]);
 
   // 초기 메시지 로드 및 WebSocket 연결 설정
   useEffect(() => {
@@ -202,6 +213,15 @@ const Chatting = ({ onError }: ChattingProps) => {
                     new Date(b.timestamp).getTime()
                 );
               });
+            }
+          );
+
+          // 일정 이벤트 구독 (참석자·일정·여행 루트 변경)
+          stompClient.subscribe(
+            `/sub/schedules/${scheduleId}/events`,
+            (message) => {
+              if (!isMounted) return;
+              onEventRef.current?.(JSON.parse(message.body));
             }
           );
 
