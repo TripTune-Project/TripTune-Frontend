@@ -53,11 +53,10 @@ export const addTravelRoute = async (
 // 여행 루트 순서 수정 (PATCH) - 전체 순서를 routeId 배열로 전달
 export const updateTravelRouteOrder = async (
   scheduleId: number,
-  routeId: number,
   routeVersion: number,
   orderedRouteIds: number[]
 ): Promise<ApiResponse<RouteVersion>> => {
-  const url = `/api/schedules/${scheduleId}/routes/${routeId}`;
+  const url = `/api/schedules/${scheduleId}/routes`;
   return await patch(
     url,
     { routeVersion, orderedRouteIds },

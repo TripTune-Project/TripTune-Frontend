@@ -96,6 +96,6 @@ export const addPlaceToSchedule = async (
   scheduleId: number,
   placeId: number
 ): Promise<ApiResponse<null>> => {
-  const url = `/api/schedules/${scheduleId}/routes-last`;
+  const url = `/api/schedules/${scheduleId}/routes`;
   return await post(url, { placeId }, { requiresAuth: true });
 };

@@ -233,9 +233,7 @@ const ScheduleRoute = () => {
           paddingBottom: '42px', // Figma: 삭제 버튼이 패널 하단에서 42px 위에 위치
         }}
       >
-        <RouteListDrop
-          onDrop={(route) => saveRouteOrder(Number(scheduleId), route.routeId)}
-        >
+        <RouteListDrop onDrop={() => saveRouteOrder(Number(scheduleId))}>
           {travelRoute.slice(0, visibleCount).map((place, index) => (
             <PlaceItem key={place.routeId} place={place} index={index} />
           ))}

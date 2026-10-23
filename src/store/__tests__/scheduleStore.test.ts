@@ -84,8 +84,8 @@ describe('여행 루트 클릭 이벤트', () => {
     });
 
     useTravelStore.getState().onMovePlace(2, 0); // 30을 맨 앞으로
-    await useTravelStore.getState().saveRouteOrder(1, 30);
-    expect(updateTravelRouteOrder).toHaveBeenCalledWith(1, 30, 3, [30, 10, 20]);
+    await useTravelStore.getState().saveRouteOrder(1);
+    expect(updateTravelRouteOrder).toHaveBeenCalledWith(1, 3, [30, 10, 20]);
   });
 
   it('409 버전 충돌이면 메시지를 남기고 최신 루트로 되돌린다', async () => {

@@ -40,7 +40,7 @@ interface TravelStore {
   deletePlaceRoutes: (scheduleId: number, placeId: number) => Promise<void>;
   // 드래그 중 로컬 순서만 바꾼다 (서버 반영은 놓는 순간 saveRouteOrder)
   onMovePlace: (dragIndex: number, hoverIndex: number) => void;
-  saveRouteOrder: (scheduleId: number, routeId: number) => Promise<void>;
+  saveRouteOrder: (scheduleId: number) => Promise<void>;
 
   // 일정 세부 정보 관리
   setScheduleDetail: (schedule: Schedule) => void;
@@ -185,11 +185,10 @@ export const useTravelStore = create<TravelStore>((set, get) => {
         return { travelRoute: updatedRoute };
       }),
 
-    saveRouteOrder: (scheduleId: number, routeId: number) =>
+    saveRouteOrder: (scheduleId: number) =>
       runRouteRequest(scheduleId, (routeVersion) =>
         updateTravelRouteOrder(
           scheduleId,
-          routeId,
           routeVersion,
           get().travelRoute.map((route) => route.routeId)
         )
