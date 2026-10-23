@@ -205,6 +205,19 @@ const Chatting = ({ onError, onEvent }: ChattingProps) => {
               if (!isMounted) return;
               const newMessage: ChatMessage = JSON.parse(message.body);
 
+              // 내가 보냈거나 이미 맨 아래 근처를 보고 있을 때만 따라 내려간다
+              // (이전 메시지를 읽는 중에 남의 메시지로 끌려 내려가지 않도록)
+              const container = chatContainerRef.current;
+              const nearBottom =
+                !!container &&
+                container.scrollHeight -
+                  container.scrollTop -
+                  container.clientHeight <
+                  100;
+              if (newMessage.nickname === userNickname || nearBottom) {
+                scrollToBottomRef.current = true;
+              }
+
               setMessages((prev) => {
                 const combinedMessages = [...prev, newMessage];
                 return combinedMessages.sort(
