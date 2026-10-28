@@ -2,6 +2,7 @@ import { get, patch, post, remove } from '../api';
 import {
   ApiResponse,
   CreateSchedule,
+  RouteVersion,
   ScheduleDetail,
   ScheduleList,
   SchedulePreviewResponse,
@@ -91,11 +92,12 @@ export const fetchSchedulesPreview = async (
   return await get(url, { requiresAuth: true });
 };
 
-// 9. 내 일정 담기 - 여행 루트 마지막 순서로 추가 (routeVersion 없이 요청)
+// 9. 내 일정 담기 - 여행 루트 마지막 순서로 추가
 export const addPlaceToSchedule = async (
   scheduleId: number,
-  placeId: number
-): Promise<ApiResponse<null>> => {
+  placeId: number,
+  routeVersion: number
+): Promise<ApiResponse<RouteVersion>> => {
   const url = `/api/schedules/${scheduleId}/routes`;
-  return await post(url, { placeId }, { requiresAuth: true });
+  return await post(url, { placeId, routeVersion }, { requiresAuth: true });
 };

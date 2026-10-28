@@ -227,4 +227,5 @@ export interface SchedulePreviewItem {
   startDate: string;
   endDate: string;
   author: string;
+  routeVersion: number; // 여행 루트 동시 수정 확인용
 }

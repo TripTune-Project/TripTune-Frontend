@@ -29,6 +29,7 @@ const MyScheduleEditModal = ({
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    refetch,
   } = useMyScheduleList(isOpen);
 
   // Snackbar 상태
@@ -62,8 +63,17 @@ const MyScheduleEditModal = ({
       return;
     }
 
+    const selectedSchedule = schedules.find(
+      (schedule) => schedule?.scheduleId === selectedScheduleId
+    );
+    if (!selectedSchedule) return;
+
     try {
-      const response = await addPlaceToSchedule(selectedScheduleId, placeId);
+      const response = await addPlaceToSchedule(
+        selectedScheduleId,
+        placeId,
+        selectedSchedule.routeVersion
+      );
       if (response.success) {
         setAlertMessage('장소가 성공적으로 추가되었습니다.');
         setAlertSeverity('success');
@@ -81,6 +91,9 @@ const MyScheduleEditModal = ({
       );
       setAlertSeverity('error');
       setAlertOpen(true);
+    } finally {
+      // 성공(버전 증가)·409(버전 충돌) 모두 routeVersion이 바뀌므로 목록 재조회
+      refetch();
     }
   };
 
