@@ -232,10 +232,12 @@ const ModalContainer = styled.div`
   background: #fff;
   border-radius: 30px 0px;
   box-shadow: 0px 8px 24px 0px rgba(0, 0, 0, 0.3);
-  padding: 37px;
+  padding: 24px 37px;
   position: relative;
   width: 503px;
   height: 557px;
+  display: flex;
+  flex-direction: column;
   flex-shrink: 0;
   margin: auto;
 `;
@@ -263,11 +265,13 @@ const ModalTitle = styled.h1`
   font-family: 'Noto Sans KR', sans-serif;
   font-size: 20px;
   font-weight: 400;
+  margin: 0;
 `;
 
 const Divider = styled.hr`
   border: none;
   border-top: 1px solid #ddd;
+  margin: 12px 0 16px;
 `;
 
 const ModalSubtitle = styled.p`
@@ -277,13 +281,13 @@ const ModalSubtitle = styled.p`
   font-style: normal;
   font-weight: 505;
   line-height: 145%; /* 20.3px */
-  
+  margin: 0;
 `;
 
 const Notice = styled.p`
   font-family: 'Noto Sans KR', sans-serif;
   font-size: 10px;
-  margin-top: 8px;
+  margin-top: 4px;
   color: #F86C6C;
   font-style: normal;
   font-weight: 400;
@@ -292,7 +296,8 @@ const Notice = styled.p`
 `;
 
 const ScrollableContainer = styled.div`
-  max-height: 293px;
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
   padding-right: 8px;
   border-radius: 4px;
