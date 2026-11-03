@@ -48,58 +48,61 @@ const ScheduleMake = ({ initialTab }: ScheduleMakeProps) => {
 
   return (
     <div className={styles.pageContainer}>
-      <div className={styles.inputGroup}>
-        <label>여행 이름</label>
-        <input
-          type='text'
-          className={styles.inputField}
-          value={scheduleDetail?.scheduleName || ''}
-          placeholder='여행 이름을 입력해주세요.'
-          onChange={(e) =>
-            updateScheduleDetail({
-              ...scheduleDetail,
-              scheduleName: e.target.value,
-            })
-          }
-        />
-      </div>
-      <div className={styles.inputGroup}>
-        <label>여행 날짜</label>
-        <input
-          type='text'
-          className={styles.inputField}
-          value={`${formatDateToKoreanWithDay(scheduleDetail?.startDate || '')} ~ ${formatDateToKoreanWithDay(
-            scheduleDetail?.endDate || ''
-          )}`}
-          placeholder='시작일 ~ 종료일'
-          onClick={() => setShowModal(true)}
-          readOnly
-        />
-        <Image
-          src={dateIcon}
-          width={19}
-          height={22}
-          alt='dateIcon'
-          onClick={() => setShowModal(true)}
-        />
-      </div>
-      <div className={styles.tabContainer} style={{ marginLeft: '36px' }}>
-        <button
-          className={`${styles.tabButton} ${
-            tab === 'scheduleTravel' ? styles.activeTab : ''
-          }`}
-          onClick={() => handleTabChange('scheduleTravel')}
-        >
-          여행지
-        </button>
-        <button
-          className={`${styles.tabButton} ${
-            tab === 'travelRoot' ? styles.activeTab : ''
-          }`}
-          onClick={() => handleTabChange('travelRoot')}
-        >
-          여행 루트
-        </button>
+      {/* 여행 이름·날짜·탭은 한 덩어리: 여행지 탭에서 남는 높이가 이 사이로 분배되지 않게 해 두 탭의 간격을 맞춘다 */}
+      <div className={styles.scheduleFormHeader}>
+        <div className={styles.inputGroup}>
+          <label>여행 이름</label>
+          <input
+            type='text'
+            className={styles.inputField}
+            value={scheduleDetail?.scheduleName || ''}
+            placeholder='여행 이름을 입력해주세요.'
+            onChange={(e) =>
+              updateScheduleDetail({
+                ...scheduleDetail,
+                scheduleName: e.target.value,
+              })
+            }
+          />
+        </div>
+        <div className={styles.inputGroup}>
+          <label>여행 날짜</label>
+          <input
+            type='text'
+            className={styles.inputField}
+            value={`${formatDateToKoreanWithDay(scheduleDetail?.startDate || '')} ~ ${formatDateToKoreanWithDay(
+              scheduleDetail?.endDate || ''
+            )}`}
+            placeholder='시작일 ~ 종료일'
+            onClick={() => setShowModal(true)}
+            readOnly
+          />
+          <Image
+            src={dateIcon}
+            width={19}
+            height={22}
+            alt='dateIcon'
+            onClick={() => setShowModal(true)}
+          />
+        </div>
+        <div className={styles.tabContainer} style={{ marginLeft: '36px' }}>
+          <button
+            className={`${styles.tabButton} ${
+              tab === 'scheduleTravel' ? styles.activeTab : ''
+            }`}
+            onClick={() => handleTabChange('scheduleTravel')}
+          >
+            여행지
+          </button>
+          <button
+            className={`${styles.tabButton} ${
+              tab === 'travelRoot' ? styles.activeTab : ''
+            }`}
+            onClick={() => handleTabChange('travelRoot')}
+          >
+            여행 루트
+          </button>
+        </div>
       </div>
       {tab === 'scheduleTravel' ? <ScheduleTravelSearch /> : <ScheduleRoute />}
       {showModal && (
