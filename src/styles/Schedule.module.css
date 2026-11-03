@@ -910,6 +910,19 @@
     margin-bottom: 15px;
 }
 
+/* 여행 루트 카드는 높이가 같아야 번호·점선(.routeVector, 66px 고정)이 이어지므로
+   이름·주소가 길면 줄바꿈 대신 한 줄 말줄임 (전체 내용은 title로 확인) */
+.placeItem .placeInfo {
+    min-width: 0;
+}
+
+.placeItem .placeName,
+.placeItem .placeDetailAddress span {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
 .placeAddress {
     margin: 0 0 2px 0;
     font-family: 'Inter', 'Noto Sans KR', sans-serif;
