@@ -75,6 +75,7 @@ const ScheduleRoute = () => {
   // 개별 장소 항목 컴포넌트
   const PlaceItem = ({ place, index }: { place: Route; index: number }) => {
     const ref = useRef<HTMLLIElement>(null);
+    const address = `${place.address} ${place.detailAddress ?? ''}`;
 
     // 드래그를 설정
     const [{ isDragging }, drag] = useDrag({
@@ -148,10 +149,12 @@ const ScheduleRoute = () => {
           )}
         </div>
         <div className={styles.placeInfo}>
-          <div className={styles.placeName}>{place.placeName}</div>
-          <p className={styles.placeDetailAddress}>
+          <div className={styles.placeName} title={place.placeName}>
+            {place.placeName}
+          </div>
+          <p className={styles.placeDetailAddress} title={address}>
             <Image src={locationIcon} alt='장소' width={8} height={12} />
-            &nbsp;{place.address} {place.detailAddress ?? ''}
+            <span>&nbsp;{address}</span>
           </p>
         </div>
       </li>
