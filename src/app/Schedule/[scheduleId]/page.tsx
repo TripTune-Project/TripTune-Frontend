@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -51,14 +51,17 @@ export default function ScheduleDetailPage() {
     setCanEdit,
     editDeniedAt,
     setScheduleDetail,
-    loadRoutes,
+    onRouteEvent,
     routeError,
     attendeesUpdatedAt,
     notifyAttendeesUpdated,
   } = useTravelStore();
 
+  // 내 참석자 ID: 내보내기 이벤트(ATTENDEE_REMOVED)가 나를 가리키는지 확인용
+  const myAttendeeIdRef = useRef<number | null>(null);
+
   // 내 편집 권한 확인: 작성자이거나 ALL·EDIT 권한일 때만 편집 가능
-  // 참석자 변경 이벤트(권한 수정·내보내기 등)가 오면 다시 확인한다
+  // 참석자 변경 이벤트(권한 수정 등)가 오면 다시 확인한다
   useEffect(() => {
     if (!scheduleId) return;
     const { getDecryptedCookie } = saveLocalContent();
@@ -68,11 +71,8 @@ export default function ScheduleDetailPage() {
         const me = response.data?.find(
           (attendee) => attendee.nickname === userNickname
         );
-        if (!me) {
-          // 이벤트 후 참석자 목록에서 빠졌다면 내보내진 것이므로 목록으로 이동
-          if (attendeesUpdatedAt) router.push('/Schedule');
-          return;
-        }
+        if (!me) return;
+        myAttendeeIdRef.current = me.attendeeId;
         setCanEdit(
           me.role === 'AUTHOR' ||
             me.permission === 'ALL' ||
@@ -80,7 +80,7 @@ export default function ScheduleDetailPage() {
         );
       })
       .catch(() => {});
-  }, [scheduleId, setCanEdit, attendeesUpdatedAt, router]);
+  }, [scheduleId, setCanEdit, attendeesUpdatedAt]);
 
   // 일정 이벤트 처리 (/sub/schedules/{scheduleId}/events)
   const handleScheduleEvent = (event: ScheduleEvent) => {
@@ -95,13 +95,22 @@ export default function ScheduleDetailPage() {
       }
       case 'ROUTE_ADDED':
       case 'ROUTE_UPDATED':
-      case 'ROUTE_DELETED': {
-        const { routeVersion } = useTravelStore.getState();
-        if (event.data.routeVersion <= (routeVersion ?? -1)) return;
-        // 여행 루트는 페이징 데이터라 이벤트에 없으므로 재조회
-        loadRoutes(Number(scheduleId));
+      case 'ROUTE_DELETED':
+        // 여행 루트는 페이징 데이터라 이벤트에 없으므로 재조회 (필요할 때만)
+        onRouteEvent(Number(scheduleId), event.data.routeVersion);
         return;
-      }
+      case 'ATTENDEE_REMOVED':
+        // 내가 내보내졌으면 더 이상 일정 데이터를 볼 수 없으므로 안내 후 3초 뒤 일정 목록으로 이동
+        if (event.data.attendeeId === myAttendeeIdRef.current) {
+          setAlertMessage(event.message);
+          setAlertSeverity('info');
+          setAlertOpen(true);
+          setTimeout(() => {
+            router.push('/Schedule');
+          }, 3000);
+          return;
+        }
+      // falls through (다른 참석자가 내보내진 경우는 일반 참석자 이벤트와 같다)
       default:
         notifyAttendeesUpdated();
         setAlertMessage(event.message);

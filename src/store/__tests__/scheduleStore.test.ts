@@ -116,6 +116,38 @@ describe('여행 루트 클릭 이벤트', () => {
     ).toEqual([10, 30]);
   });
 
+  it('먼저 보낸 조회가 늦게 도착해도 예전 루트·version으로 덮어쓰지 않는다', async () => {
+    mockServerRoutes(5);
+    await useTravelStore.getState().loadRoutes(1);
+    (fetchTravelRoute as jest.Mock).mockResolvedValue({
+      success: true,
+      data: { routeVersion: 4, totalPages: 1, content: [route(10, 1, 1)] },
+    });
+
+    await useTravelStore.getState().loadRoutes(1);
+    expect(routeIds()).toEqual([10, 20, 30]);
+    expect(useTravelStore.getState().routeVersion).toBe(5);
+  });
+
+  it('내 요청 응답 전에 온 루트 이벤트는 건너뛰고 응답 후 1번만 재조회한다', async () => {
+    await useTravelStore.getState().loadRoutes(1);
+    let respond: (value: unknown) => void = () => {};
+    (addTravelRoute as jest.Mock).mockReturnValue(
+      new Promise((resolve) => (respond = resolve))
+    );
+    mockServerRoutes(4);
+    (fetchTravelRoute as jest.Mock).mockClear();
+
+    const adding = useTravelStore.getState().addRoute(1, 99);
+    await useTravelStore.getState().onRouteEvent(1, 4); // HTTP 응답보다 먼저 온 이벤트
+    expect(fetchTravelRoute).not.toHaveBeenCalled();
+
+    respond({ success: true, data: { routeVersion: 4 } });
+    await adding;
+    await useTravelStore.getState().onRouteEvent(1, 4); // 응답 뒤에 온 같은 이벤트
+    expect(fetchTravelRoute).toHaveBeenCalledTimes(2); // 재조회 1번 (2페이지)
+  });
+
   it('편집 권한이 없으면 요청하지 않는다', async () => {
     useTravelStore.getState().setCanEdit(false);
     await useTravelStore.getState().addRoute(1, 99);

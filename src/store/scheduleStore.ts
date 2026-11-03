@@ -34,6 +34,8 @@ interface TravelStore {
 
   // 여행 루트: 클릭 이벤트마다 서버에 반영하고, 끝나면 서버 루트를 다시 불러온다
   loadRoutes: (scheduleId: number) => Promise<void>;
+  // 여행 루트 변경 이벤트(ROUTE_ADDED·UPDATED·DELETED) 수신 시 필요할 때만 재조회
+  onRouteEvent: (scheduleId: number, routeVersion: number) => Promise<void>;
   addRoute: (scheduleId: number, placeId: number) => Promise<void>;
   deleteRoute: (scheduleId: number, routeId: number) => Promise<void>;
   // 여행지 탭의 [-]: 해당 장소의 루트를 모두 삭제
@@ -61,6 +63,9 @@ const denyEdit = (state: TravelStore) =>
 
 // Zustand로 여행 상태 저장소 생성
 export const useTravelStore = create<TravelStore>((set, get) => {
+  // 응답을 기다리는 내 여행 루트 요청 수 (화면 갱신이 필요 없어 상태에 두지 않는다)
+  let pendingRouteRequests = 0;
+
   /**
    * 여행 루트 변경 요청 공통 처리
    * - 편집 권한이 없으면 요청하지 않는다
@@ -77,6 +82,7 @@ export const useTravelStore = create<TravelStore>((set, get) => {
       set(denied);
       return;
     }
+    pendingRouteRequests++;
     try {
       const response = await request(get().routeVersion ?? 0);
       if (response.success) {
@@ -99,6 +105,9 @@ export const useTravelStore = create<TravelStore>((set, get) => {
           at: Date.now(),
         },
       });
+    } finally {
+      // 재조회 전에 내린다: 재조회 중 온 다른 참석자 이벤트는 version 비교로 처리
+      pendingRouteRequests--;
     }
     await get().loadRoutes(scheduleId);
   };
@@ -140,6 +149,14 @@ export const useTravelStore = create<TravelStore>((set, get) => {
           currentPage++;
         }
 
+        // 동시에 나간 조회 중 먼저 보낸 것이 늦게 도착하면 예전 루트·version이라 버린다
+        // (덮어쓰면 화면이 되돌아가고 다음 수정이 409가 된다)
+        if (
+          routeVersion !== undefined &&
+          routeVersion < (get().routeVersion ?? -1)
+        )
+          return;
+
         allRoutes.sort((a, b) => a.routeOrder - b.routeOrder);
         set({
           travelRoute: allRoutes,
@@ -153,6 +170,14 @@ export const useTravelStore = create<TravelStore>((set, get) => {
       } catch (error) {
         console.error('[여행 경로 가져오기] 오류 발생:', error);
       }
+    },
+
+    // 이미 반영된 version이면 무시. 내 요청이 응답 전이면 응답 후 어차피 재조회하므로 건너뛴다
+    // (이벤트가 HTTP 응답보다 먼저 와도 재조회가 1번으로 끝난다)
+    onRouteEvent: async (scheduleId: number, routeVersion: number) => {
+      if (pendingRouteRequests > 0) return;
+      if (routeVersion <= (get().routeVersion ?? -1)) return;
+      await get().loadRoutes(scheduleId);
     },
 
     addRoute: (scheduleId: number, placeId: number) =>
