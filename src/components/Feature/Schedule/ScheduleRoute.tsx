@@ -80,6 +80,10 @@ const ScheduleRoute = () => {
     const [{ isDragging }, drag] = useDrag({
       type: 'PLACE',
       item: { place, index },
+      // 목록·삭제 영역 밖에 놓으면 저장되지 않으므로, 드래그 중 바뀐 화면 순서를 서버 순서로 되돌린다
+      end: (_item, monitor) => {
+        if (!monitor.didDrop()) loadRoutes(Number(scheduleId));
+      },
       collect: (monitor) => ({
         isDragging: monitor.isDragging(),
       }),
