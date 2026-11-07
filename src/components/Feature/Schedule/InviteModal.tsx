@@ -506,6 +506,12 @@ const ModalContainer = styled.div`
   border-radius: 30px 0;
   box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.3);
   padding: 20px;
+
+  /* 가로로 눕힌 휴대폰처럼 모달(약 510px)보다 낮은 화면: 위아래가 잘리지 않게 화면 안에서 스크롤 */
+  @media (max-height: 560px) {
+    max-height: 100%;
+    overflow-y: auto;
+  }
 `;
 
 const Header = styled.div`
