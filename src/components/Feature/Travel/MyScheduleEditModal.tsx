@@ -151,7 +151,7 @@ const MyScheduleEditModal = ({
                 isSelected={selectedScheduleId === schedule?.scheduleId}
               >
                 <ScheduleItem>
-                  <div style={{marginTop: "-10px"}}>
+                  <div style={{ marginTop: '-10px', minWidth: 0 }}>
                     <ScheduleName>{schedule?.scheduleName}</ScheduleName>
                     <ScheduleDate>
                       일정: {schedule?.startDate} ~ {schedule?.endDate}
@@ -226,6 +226,7 @@ const ModalOverlay = styled.div`
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  padding: 16px; /* 좁은 화면에서 모달이 화면 가장자리에 붙지 않게 */
 `;
 
 const ModalContainer = styled.div`
@@ -236,10 +237,16 @@ const ModalContainer = styled.div`
   position: relative;
   width: 503px;
   height: 557px;
+  max-width: 100%;
+  max-height: 100%; /* 화면보다 작으면 일정 목록(ScrollableContainer)만 줄어들며 스크롤 */
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
   margin: auto;
+
+  @media (max-width: 599px) {
+    padding: 24px 20px;
+  }
 `;
 
 const CloseButton = styled.button`
@@ -307,6 +314,7 @@ const ScrollableContainer = styled.div`
 const ScheduleItemContainer = styled.div<ScheduleItemContainerProps>`
   padding: 8px 22px;
   width: 413px;
+  max-width: 100%;
   height: 91px;
   flex-shrink: 0;
   border-radius: 10px;
@@ -334,6 +342,10 @@ const ScheduleName = styled.h3`
   font-style: normal;
   font-weight: 505;
   line-height: 150%; /* 18px */
+  /* 카드 높이(91px)가 고정이라 긴 일정명은 한 줄 말줄임 (두 줄이 되면 작성자 줄이 카드 밖으로 넘침) */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const ScheduleDate = styled.p`
@@ -352,11 +364,15 @@ const ScheduleAuthor = styled.p`
   font-style: normal;
   font-weight: 400;
   line-height: 150%; /* 15px */
+  white-space: nowrap; /* 긴 닉네임도 한 줄 말줄임 (ScheduleName과 같은 이유) */
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const StyledCheckbox = styled.input`
   width: 24px;
   height: 24px;
+  flex-shrink: 0;
   border: 2px solid #ddd;
   border-radius: 50%;
   appearance: none;
@@ -419,6 +435,7 @@ const SelectButton = styled.button`
   font-size: 16px;
   display: flex;
   width: 429px;
+  max-width: 100%;
   height: 45px;
   justify-content: center;
   align-items: center;
