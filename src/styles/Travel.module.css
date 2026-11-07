@@ -26,7 +26,8 @@
 .listContainer {
     position: relative;
     z-index: 1;
-    width: 575px; /* Figma 카드 폭 570px + placeList 우측 패딩 5px */
+    /* Figma 카드 폭 570px + placeList 우측 패딩 5px. 화면이 좁아지면(약 1330px 미만) 지도와 비율을 맞춰 줄어든다 */
+    width: min(575px, 46%);
     min-height: 747px; /* 카드 5개 + 페이지네이션 높이. 로딩 중에도 같은 높이를 유지해 지도/하단이 튀지 않게 */
     flex-shrink: 0;
     display: flex;
@@ -182,6 +183,11 @@
     font: 300 12px/150% "Noto Sans KR", sans-serif;
     margin: 0;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.placeDetailAddress > span {
     overflow: hidden;
     text-overflow: ellipsis;
 }
@@ -757,45 +763,165 @@
 }
 
 /******************************
- * 반응형
+ * 반응형 (기준 화면 1920×900, 데스크탑 우선 — 구간 정의는 global.css 상단 참고)
  ******************************/
-.travelContainer {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-4);
-    padding: var(--spacing-4);
-    height: 100%;
+/* 작은 데스크탑·노트북 이하: 상세 정보 라벨 열을 글자 폭에 맞춰 값 열을 넓힌다 */
+@media (max-width: 1279px) {
+    .detailsGrid {
+        grid-template-columns: auto 1fr;
+        column-gap: 32px;
+    }
 }
 
-.travelContent {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-4);
-    flex: 1;
-}
-
-.travelList, .travelMap, .travelFilter {
-    background: var(--color-background);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-md);
-    padding: var(--spacing-4);
-}
-
-.travelMap {
-    min-height: 400px;
-}
-
-@media screen and (max-width: var(--breakpoint-md)) {
-    .travelContent {
-        grid-template-columns: 1fr;
+/* 낮은 데스크탑 화면(1536×730, 1440×731 등): 목록 컬럼을 화면 높이에 맞추고 카드 목록만 스크롤
+   → 페이지네이션과 지도 아래쪽이 화면 밖으로 밀려나지 않는다 */
+@media (min-width: 1024px) and (max-height: 800px) {
+    .container {
+        padding-top: 20px;
+        padding-bottom: 20px;
     }
 
-    .travelContainer {
-        padding: var(--spacing-2);
+    .listContainer {
+        min-height: 0;
+        height: calc(100vh - 116px); /* 헤더 76px(75px + 하단 선 1px) + 상하 패딩 40px */
+    }
+}
+
+/* 태블릿 이하: 한 열로 쌓는다 */
+@media (max-width: 1023px) {
+    /* 여행지 목록: 검색창 → 지도 → 카드 목록 → 페이지네이션 */
+    .container {
+        flex-direction: column;
+        gap: 16px;
+        padding: 20px 20px 30px;
     }
 
+    /* 목록 컬럼 상자를 풀어 검색창·카드·페이지네이션을 지도와 같은 열에 세우고, order로 지도를 검색창 바로 아래로 올린다 */
+    .listContainer {
+        display: contents;
+    }
+
+    .listContainer > * {
+        position: relative;
+        z-index: 1; /* 배경 장식(::before)보다 위 */
+    }
+
+    .searchContainer,
+    .mapContainer {
+        order: -1;
+    }
+
+    .searchContainer {
+        margin-bottom: 0;
+    }
+
+    .mapContainer {
+        flex: none;
+        min-height: 0;
+        height: clamp(220px, 50vw, 360px);
+    }
+
+    .placeList {
+        padding-right: 0;
+    }
+
+    /* 여행지 상세: 이미지 위, 정보 아래 */
     .topSection {
+        flex-direction: column;
+        margin: 32px auto 40px;
+    }
+
+    .rightSection {
+        width: 100%;
+        height: auto;
+        flex: none;
+        padding: 32px 24px;
+    }
+
+    .detailsScroll {
+        flex: none;
+        overflow: visible;
+    }
+
+    .detailplaceName {
+        margin-bottom: 32px;
+    }
+
+    .infoSection {
+        padding: 28px 24px;
+    }
+}
+
+/* 스마트폰 */
+@media (max-width: 599px) {
+    .distanceInfo {
+        flex-wrap: wrap; /* 도보·차량 시간이 한 줄에 안 들어가면 줄바꿈 (썸네일 쪽으로 넘치지 않게) */
+    }
+
+    .rightSection {
+        padding: 24px 16px;
+    }
+
+    .detailplaceName {
+        font-size: 24px;
+        margin-bottom: 24px;
+    }
+
+    /* 라벨 아래에 값을 두어 값이 전체 폭을 쓰게 한다 */
+    .detailsGrid {
+        grid-template-columns: 1fr;
+        row-gap: 2px;
+    }
+
+    .value {
+        margin: 0 0 12px 27px; /* 라벨 글자 시작선(아이콘 16px + 간격 11px)에 맞춤 */
+    }
+
+    .labelText,
+    .value {
+        font-size: 15px;
+    }
+
+    /* 두 버튼을 같은 폭으로 나누고, 한 줄에 안 들어가면(약 372px 미만) 한 줄에 하나씩 꽉 차게.
+       145px ≈ '내 일정 담기' 버튼 내용 폭(아이콘+글자+패딩 141px) */
+    .buttonContainer {
         flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .buttonContainer .bookmarkBtn,
+    .buttonContainer .chooseBtn {
+        flex: 1 1 145px;
+        width: auto;
+        white-space: nowrap; /* 버튼 안 글자가 두 줄이 되지 않고 버튼째 줄바꿈되게 */
+        height: 50px;
+        padding: 0 12px;
+        font-size: 16px;
+    }
+
+    .detailTitle {
+        font-size: 22px;
+    }
+
+    .infoSection {
+        padding: 20px 16px;
+    }
+}
+
+/* 작은 스마트폰: 썸네일을 줄여 카드 글자 영역을 확보 */
+@media (max-width: 374px) {
+    .placeItem {
+        min-height: 0;
+    }
+
+    .placeThumbnail,
+    .thumbnailImage {
+        width: 80px;
+        height: 80px;
+    }
+
+    .placeThumbnail {
+        margin-right: 12px;
     }
 }
 

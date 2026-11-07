@@ -3,8 +3,9 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 const containerStyle = {
   width: 'calc(100% - 40px)',
   maxWidth: '1297px',
-  height: '393px',
-  margin: '0 auto 180px',
+  // 1920px 기준 높이 393px·아래 여백 180px, 좁은 화면에서는 비율에 맞춰 줄어든다
+  height: 'clamp(240px, 40vw, 393px)',
+  margin: '0 auto clamp(40px, 9.375vw, 180px)',
   borderRadius: '0',
   overflow: 'hidden',
 };

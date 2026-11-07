@@ -368,7 +368,8 @@ const TravelPageContent = () => {
                 <DataLoading />
               ) : (
                 <>
-              <ul className={styles.placeList}>
+              {/* key: 페이지를 바꾸면 목록 내부 스크롤(낮은 화면)을 맨 위로 되돌린다 */}
+              <ul key={currentPage} className={styles.placeList}>
                 {places && places.length > 0 ? (
                   places.map((place) => {
                     const { walking, driving } = calculateTravelTime(
@@ -438,8 +439,11 @@ const TravelPageContent = () => {
                               width={7}
                               height={11}
                             />
-                            &nbsp;
-                            {place.address} {place.detailAddress}
+                            {/* flex 컨테이너의 글자는 말줄임(…)이 안 되므로 span으로 감싼다 */}
+                            <span>
+                              &nbsp;
+                              {place.address} {place.detailAddress}
+                            </span>
                           </p>
                           <div className={styles.distanceInfo}>
                             <span>{walking}</span>&nbsp;|&nbsp;

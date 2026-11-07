@@ -46,6 +46,13 @@ const StyledSwiperContainer = styled.div`
     width: 100%;
     height: 100%;
   }
+
+  /* 태블릿 이하: 이미지가 정보 영역 위로 올라가 전체 폭을 쓴다 */
+  @media (max-width: 1023px) {
+    width: 100%;
+    flex: none;
+    height: clamp(220px, 60vw, 460px);
+  }
 `;
 
 const StyledSwiperButtonPrev = styled.button`
@@ -98,6 +105,12 @@ const NoImageBox = styled.div`
   font-size: 22px;
   font-weight: 400;
   font-family: 'Noto Sans KR', sans-serif;
+
+  @media (max-width: 1023px) {
+    width: 100%;
+    flex: none;
+    height: clamp(220px, 60vw, 460px);
+  }
 `;
 
 const fetchTravelDetailData = async (
@@ -320,7 +333,7 @@ const TravelDetailPage = () => {
                         alt={image.imageName}
                         fill
                         style={{ objectFit: 'cover' }}
-                        sizes="(max-width: 1297px) 50vw, 649px"
+                        sizes='(max-width: 1023px) 100vw, (max-width: 1297px) 50vw, 649px'
                       />
                     </div>
                   </SwiperSlide>
