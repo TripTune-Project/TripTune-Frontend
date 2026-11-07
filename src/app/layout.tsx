@@ -14,7 +14,11 @@ const notoSansKR = Noto_Sans_KR({
 export const metadata: Metadata = {
   title: 'TripTune',
   description: 'TripTune은 여행자들을 위한 일정 플랫폼 서비스 입니다.',
-  icons: { icon: '/assets/favicon.ico' },
+  icons: {
+    icon: '/assets/favicon.ico',
+    apple: '/assets/icons/icon-192.png',
+  },
+  appleWebApp: { capable: true, title: 'TripTune' },
 };
 
 const GA4_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID;
