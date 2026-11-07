@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import styles from '@/styles/Header.module.css';
 import LogoutModal from '@/components/Common/LogoutModal';
@@ -28,6 +28,13 @@ const Header = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
+  // 모바일(767px 이하) 메뉴 열림 여부
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // 페이지를 이동하면 모바일 메뉴를 닫는다
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [pathname]);
 
   // 인증 관련 커스텀 훅 사용
   const {
@@ -82,6 +89,7 @@ const Header = () => {
         {/* 로고 및 홈 링크 */}
         <Link href='/'>
           <Image
+            className={styles.logo}
             src={MainLogoImage}
             alt='로고'
             width={184}
@@ -90,8 +98,33 @@ const Header = () => {
           />
         </Link>
 
+        {/* 모바일 메뉴 토글 버튼 (767px 이하에서만 보임) */}
+        <button
+          type='button'
+          className={styles.mobileMenuToggle}
+          aria-label={isMenuOpen ? '메뉴 닫기' : '메뉴 열기'}
+          aria-expanded={isMenuOpen}
+          aria-controls='main-nav'
+          onClick={() => setIsMenuOpen((open) => !open)}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+
+        {/* 모바일 메뉴가 열렸을 때 바깥을 누르면 닫히도록 깔리는 배경 */}
+        {isMenuOpen && (
+          <div
+            className={styles.menuBackdrop}
+            onClick={() => setIsMenuOpen(false)}
+          />
+        )}
+
         {/* 네비게이션 메뉴 */}
-        <nav className={styles.navMenu} style={{ marginLeft: 'auto' }}>
+        <nav
+          id='main-nav'
+          className={`${styles.navMenu} ${isMenuOpen ? styles.open : ''}`}
+        >
           <Link href='/' className={isActive('/')}>
             홈 화면
           </Link>

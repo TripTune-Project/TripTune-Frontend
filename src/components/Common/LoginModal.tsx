@@ -70,8 +70,9 @@ const ModalContent = styled.div`
   background: #ffffff;
   border-radius: 10px;
   box-shadow: 0px 8px 24px 0px rgba(0, 0, 0, 0.3);
-  width: 414px;
-  height: 252px;
+  /* 좁은 화면에서는 양옆 16px 여백을 남기고 줄어든다 */
+  width: min(414px, calc(100vw - 32px));
+  min-height: 252px;
 `;
 
 const Title = styled.h2`
@@ -99,6 +100,12 @@ const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
   gap: 10px;
+  width: 100%;
+
+  & > button {
+    flex: 0 1 153px;
+    min-width: 0;
+  }
 `;
 
 const BaseButton = styled.button`
