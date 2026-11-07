@@ -85,7 +85,7 @@ const ScheduleMake = ({ initialTab }: ScheduleMakeProps) => {
             onClick={() => setShowModal(true)}
           />
         </div>
-        <div className={styles.tabContainer} style={{ marginLeft: '36px' }}>
+        <div className={styles.tabContainer}>
           <button
             className={`${styles.tabButton} ${
               tab === 'scheduleTravel' ? styles.activeTab : ''

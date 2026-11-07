@@ -493,13 +493,16 @@ const ModalOverlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 16px;
   z-index: 1000;
 `;
 
+// 좁은 화면에서는 양옆 16px 여백을 남기고 줄어든다.
+// 위로 올리는 여백(200px)은 화면 높이 900px 이상에서만 다 쓰고, 낮은 화면에서는 줄여 머리가 잘리지 않게 한다
 const ModalContainer = styled.div`
-  margin-bottom: 200px;
+  margin-bottom: clamp(0px, 100vh - 700px, 200px);
   background: #fff;
-  width: 591px;
+  width: min(591px, 100%);
   border-radius: 30px 0;
   box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.3);
   padding: 20px;
@@ -529,11 +532,17 @@ const EmailInputContainer = styled.div`
   background: #fff;
   height: 47px;
   flex: 1;
+  min-width: 0;
   margin-top: 21px;
+
+  @media (max-width: 599px) {
+    flex-basis: 100%;
+  }
 `;
 
 const EmailInput = styled.input`
   flex: 1;
+  min-width: 0;
   padding: 10px;
   border: none;
   outline: none;
@@ -592,6 +601,12 @@ const DropdownMenu = styled.ul`
   border-radius: 10px;
   border: 1px solid #e8e8e8;
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+
+  /* 버튼이 화면 오른쪽 끝에 붙는 모바일에서는 메뉴를 왼쪽으로 펼친다 */
+  @media (max-width: 599px) {
+    left: auto;
+    right: 0;
+  }
 `;
 
 const DropdownItem = styled.li<{ isSelected?: boolean }>`
@@ -652,12 +667,21 @@ const ShareButton = styled.button`
   font-weight: 400;
   line-height: 145%; /* 20.3px */
   margin-top: 21px;
+
+  /* 모바일: 이메일 입력줄 아래 한 줄 전체 */
+  @media (max-width: 599px) {
+    width: 100%;
+    height: 44px;
+    margin-top: 0;
+  }
 `;
 
 const UserListHeader = styled.div`
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+  column-gap: 8px;
 `;
 
 const UserListTitle = styled.h3`
@@ -700,6 +724,7 @@ const UserListItem = styled.li`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 8px;
   padding: 10px 0;
   border-bottom: 1px solid #f0f0f0;
 `;
@@ -708,11 +733,13 @@ const UserDetails = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
+  min-width: 0;
 `;
 
 const ProfileImageWrapper = styled.div`
   width: 38px;
   height: 38px;
+  flex-shrink: 0;
   border-radius: 50%;
   overflow: hidden;
   display: flex;
@@ -729,12 +756,14 @@ const UserEmail = styled.span`
   font-style: normal;
   font-weight: 400;
   line-height: 150%; /* 18px */
+  overflow-wrap: anywhere; /* 긴 이메일은 줄바꿈 */
 `;
 
 const UserInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2px;
+  min-width: 0;
 `;
 
 const UserName = styled.span`
@@ -784,4 +813,8 @@ const ShareSection = styled.div`
   align-items: center;
   gap: 10px;
   margin-bottom: 20px;
+
+  @media (max-width: 599px) {
+    flex-wrap: wrap;
+  }
 `;

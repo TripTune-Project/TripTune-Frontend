@@ -1,11 +1,10 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useTravelStore } from '@/store/scheduleStore';
 
-// 맵 컨테이너의 스타일
+// 맵 컨테이너의 스타일: 가운데 영역(1920에서 980px × 헤더 아래 전체)을 꽉 채움
 const containerStyle = {
-  width: '980px',
-  height: 'calc(100vh - 75px)', // 헤더 75px 제외, 바닥까지 꽉 채움 (여백 0)
-  alignSelf: 'flex-start',
+  width: '100%',
+  height: '100%',
 };
 
 // 맵의 기본 중심 좌표 (서울 중심부)

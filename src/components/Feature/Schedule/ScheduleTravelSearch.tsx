@@ -180,11 +180,13 @@ const ScheduleTravelSearch = () => {
                       width={8}
                       height={12}
                     />
-                    &nbsp;
-                    {truncateText(
-                      `${place.address} ${place.detailAddress ?? ''}`,
-                      16
-                    )}
+                    <span>
+                      &nbsp;
+                      {truncateText(
+                        `${place.address} ${place.detailAddress ?? ''}`,
+                        16
+                      )}
+                    </span>
                   </p>
                 </div>
                 <button
