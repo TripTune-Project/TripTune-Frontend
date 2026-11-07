@@ -21,24 +21,25 @@ const ModalOverlay = styled.div`
 
 const ModalContent = styled.div`
   position: relative;
-  width: 503px;
-  height: 550px;
+  width: min(503px, calc(100vw - 32px));
+  height: min(550px, calc(100vh - 32px));
   background: #ffffff;
   border-radius: 30px 0 30px 0;
   box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.3);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 `;
 
 const DeactivateHeader = styled.div`
   position: relative;
-  width: 503px;
+  width: 100%;
   height: 72px;
   z-index: 16;
 `;
 
 const Rectangle = styled.div`
   position: absolute;
-  width: 503px;
+  width: 100%;
   height: 72px;
   top: 0;
   left: 0;
@@ -81,7 +82,7 @@ const Divider = styled.hr`
 
 const Info = styled.div`
   position: relative;
-  width: 433px;
+  width: min(433px, calc(100% - 40px));
   margin: 26px auto;
   color: #000000;
   font-family: NOto Sans KR, sans-serif;
@@ -94,7 +95,7 @@ const Info = styled.div`
 const Card = styled.div`
   margin-top:9px;
   position: relative;
-  width: 433px;
+  width: 100%;
   height: 162px;
   flex-shrink: 0;
   background: rgba(237, 249, 247, 0.3);
@@ -107,11 +108,17 @@ const Card = styled.div`
   font-style: normal;
   font-weight: 400;
   line-height: 210%; /* 23.1px */
+
+  /* 좁은 화면에서는 문구가 더 많이 줄바꿈되므로 높이를 내용에 맞춘다 */
+  @media (max-width: 599px) {
+    height: auto;
+    min-height: 162px;
+  }
 `;
 
 const PasswordSection = styled.div`
   position: relative;
-  width: 433px;
+  width: min(433px, calc(100% - 40px));
   margin: 29px auto;
 `;
 
@@ -133,12 +140,12 @@ const PasswordNotice = styled.div`
   font-style: normal;
   font-weight: 400;
   line-height: 150%; /* 15px */
-  width:435px;
+  width: 100%;
 `;
 
 const PasswordInput = styled.div`
   position: relative;
-  width: 433px;
+  width: 100%;
   height: 40px;
   margin-top: 9px;
   border: 1px solid #838282;
@@ -157,7 +164,7 @@ const InputField = styled.input`
 
 const DeactivateButton = styled.button`
   position: relative;
-  width: 433px;
+  width: min(433px, calc(100% - 40px));
   height: 45px;
   margin: 15px auto;
   cursor: pointer;
