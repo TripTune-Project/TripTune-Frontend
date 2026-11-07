@@ -36,6 +36,11 @@ const StyledSwiperContainer = styled.div`
   max-width: 1356px;
   margin: 0 auto 180px;
   padding: 0 70px 8px 0;
+
+  @media (max-width: 767px) {
+    padding-right: 0;
+    margin-bottom: 80px;
+  }
 `;
 
 const StyledSwiperButtonPrev = styled.div`
@@ -50,6 +55,10 @@ const StyledSwiperButtonPrev = styled.div`
   cursor: pointer;
   z-index: 10;
   user-select: none;
+
+  @media (max-width: 767px) {
+    display: none;
+  }
 
   &::after {
     content: '';
@@ -73,6 +82,10 @@ const StyledSwiperButtonNext = styled.div`
   cursor: pointer;
   z-index: 10;
   user-select: none;
+
+  @media (max-width: 767px) {
+    display: none;
+  }
 
   &::after {
     content: '';
@@ -158,8 +171,13 @@ const HomePageRecommendTravel = () => {
           <Swiper
             style={{ overflow: 'visible' }}
             modules={[Navigation, Pagination]}
-            slidesPerView={4}
-            spaceBetween={25}
+            slidesPerView={1.3}
+            spaceBetween={12}
+            breakpoints={{
+              600: { slidesPerView: 2, spaceBetween: 16 },
+              768: { slidesPerView: 3, spaceBetween: 20 },
+              1280: { slidesPerView: 4, spaceBetween: 25 },
+            }}
             navigation={{
               nextEl: '.recommend-swiper-button-next',
               prevEl: '.recommend-swiper-button-prev',
