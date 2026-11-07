@@ -825,6 +825,11 @@
         padding-right: 0;
     }
 
+    /* 검색 결과 없음 상자(NoResult): 넓은 화면에서는 지도 높이에 맞춘 678px지만, 지도 아래로 쌓이는 한 열에서는 너무 길다 */
+    .placeList > div {
+        max-height: 360px;
+    }
+
     /* 여행지 상세: 이미지 위, 정보 아래 */
     .topSection {
         flex-direction: column;

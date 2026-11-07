@@ -1104,6 +1104,13 @@
     grid-column: 1 / -1;
 }
 
+/* 빈 북마크 상자(NoResult)는 948px 고정 폭이라, 1919px 이하에서는 오른쪽이 잘리지 않게 목록 칸 폭에 맞춘다 (1920은 원래 모습 유지) */
+@media (max-width: 1919px) {
+    .bookmarkGrid > div:only-child {
+        max-width: 100%;
+    }
+}
+
 /* 북마크 이미지 컨테이너 */
 .imageContainer {
     width: 100%;
