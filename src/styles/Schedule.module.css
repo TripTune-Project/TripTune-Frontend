@@ -8,19 +8,30 @@
     height: 100%;
 }
 
-.layoutContainer {
+/* 일정 편집 화면 전체: 헤더(+좁은 화면의 탭 바) 아래를 세 영역이 화면 높이만큼 채운다.
+   안쪽 목록·채팅만 스크롤되고 페이지는 스크롤되지 않는다 (body overflow hidden) */
+.editorPage {
     display: flex;
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+}
+
+.layoutContainer {
+    position: relative;
+    display: flex;
+    flex: 1;
+    min-height: 0;
     width: 100%;
     max-width: 1920px;
-    height: calc(100vh - 75px);
     overflow-x: hidden;
 }
 
+/* 좌우 패널: 1920에서 470px(Figma), 화면이 줄면 24.5vw 비율로 같이 줄어든다.
+   좌측은 날짜(…~ 2026. 12. 27. (일))가 잘리지 않는 420px, 채팅은 300px까지 */
 .leftSection {
     background-color: #ffffff;
-    width: 470px;
-    min-width: 470px;
-    max-width: 470px;
+    width: clamp(420px, 24.5vw, 470px);
     display: flex;
     align-items: flex-start;
     justify-content: center;
@@ -41,9 +52,7 @@
 
 .rightSection {
     background-color: #f3f3f3;
-    width: 470px;
-    min-width: 470px;
-    max-width: 470px;
+    width: clamp(300px, 24.5vw, 470px);
     display: flex;
     align-items: flex-start;
     justify-content: center;
@@ -57,6 +66,7 @@
     inset: 0;
     width: 100%;
     height: 100%;
+    padding: 16px; /* 좁은 화면에서 모달이 화면 끝에 붙지 않게 */
     background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
@@ -70,6 +80,7 @@
     border-radius: 16px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
     width: fit-content;
+    max-width: 100%;
     max-height: 90vh;
     overflow-y: auto;
     position: relative;
@@ -81,6 +92,7 @@
 
 .detailTitle {
     margin-left: 0;
+    margin-right: 300px; /* 제목을 달력 왼쪽 쪽으로 붙임 (좁은 화면은 아래 반응형에서 0) */
     font-size: 1.25rem;
     font-weight: 700;
     margin-bottom: 18px;
@@ -306,7 +318,7 @@
 
 .createContainer {
     margin: 0 auto;
-    width: 1297px;
+    width: min(1297px, 100% - 64px);
     height: fit-content;
     background: none;
     box-shadow: none;
@@ -572,8 +584,9 @@
 }
 
 .pageContainer {
-    width: 470px;
-    height: calc(100vh - 75px);
+    width: 100%;
+    max-width: 470px; /* 탭 화면(1023px 이하)에서도 Figma 패널 폭으로 가운데 정렬 */
+    height: 100%;
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
@@ -596,6 +609,14 @@
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
+}
+
+/* 입력줄·탭은 패널 좌우 36/35px 여백 안을 채운다 (470px 패널에서 Figma 399px) */
+.scheduleFormHeader > .inputGroup,
+.scheduleFormHeader > .tabContainer {
+    width: auto;
+    margin-left: 36px;
+    margin-right: 35px;
 }
 
 /* 줄일 수 있는 양(기본값 - 10px)의 비율만큼 --squeeze를 나눠 가진다. 합계 126
@@ -631,7 +652,7 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    flex-shrink: 0;
+    flex-shrink: 1; /* 패널이 399px보다 좁으면 두 탭이 같이 줄어든다 */
     color: #848282;
     font-family: 'Inter', 'Noto Sans KR', sans-serif;
     font-size: 14px;
@@ -698,7 +719,13 @@
     color: #000;
     background: transparent;
     padding: 0;
-    margin-left: 30px;
+    /* 입력줄이 Figma 399px보다 좁아지면 이름↔값 간격(30px)부터 줄여 날짜 칸 폭을 지킨다 */
+    margin-left: clamp(0px, 100% - 369px, 30px);
+}
+
+/* 날짜가 그래도 넘치는 아주 좁은 화면(320px)에서는 말줄임 */
+.inputGroup .inputField[readonly] {
+    text-overflow: ellipsis;
 }
 
 .inputGroup .inputField::placeholder {
@@ -847,10 +874,24 @@
     position: relative;
     transition: box-shadow 0.3s ease;
     margin-left: 35px;
+    margin-right: 34px; /* 470px 패널에서 폭 401px (Figma) */
     height: 97px;
-    width: 401px;
     box-shadow: 4px 4px 24px 0px rgba(217, 217, 217, 0.57);
     box-sizing: border-box;
+}
+
+/* 카드가 좁아져도 글자가 오른쪽 [+]/[-] 버튼 밑으로 들어가지 않게 한 줄 말줄임 */
+.placeItemSearch .placeInfo {
+    min-width: 0;
+    padding-right: 40px;
+}
+
+.placeItemSearch .placeName,
+.placeItemSearch .placeAddress,
+.placeItemSearch .placeDetailAddress span {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .indexCircle {
@@ -942,7 +983,8 @@
     position: relative;
     transition: box-shadow 0.3s ease, transform 0.2s ease;
     margin-left: 50px;
-    width: calc(100% - 70px);
+    /* 목록(ul)이 왼쪽으로 23px 밀려 있으므로 그만큼 더 빼야 좁은 패널에서도 오른쪽 20px 여백이 남는다 */
+    width: calc(100% - 93px);
     max-width: 337px;
     border: 1px solid #e8e8e8;
     cursor: grab;
@@ -1044,8 +1086,8 @@
 .deleteZone {
     position: relative;
     z-index: 1000;
-    width: 399px;
     margin-left: 36px;
+    margin-right: 35px; /* 470px 패널에서 폭 399px (Figma) */
     margin-top: 20px;
     box-sizing: border-box;
 }
@@ -1153,6 +1195,11 @@
     margin: 0;
 }
 
+/* 검색 버튼(60px)+간격(7px)을 뺀 나머지. 400px 줄에서 Figma 334px */
+.travelSearchContainerSearch input {
+    width: min(334px, 100% - 66px);
+}
+
 .travelSearchContainerSearch input::placeholder,
 .travelSearchContainer input::placeholder {
     color: #555;
@@ -1232,13 +1279,17 @@
     align-items: center;
 }
 
+.headerMenu img {
+    margin-left: 14px;
+}
+
 /* 일정만들기 3번 : 채팅 */
 .chatContainer {
     display: flex;
     align-self: flex-start;
     flex-direction: column;
-    width: 470px;
-    height: calc(100vh - 75px);
+    width: 100%;
+    height: 100%;
     overflow: hidden;
     background-color: #f3f3f3;
 }
@@ -1590,12 +1641,11 @@
     margin-top: 17px;
     margin-left: 0;
     display: grid;
-    grid-template-columns: repeat(3, 416px);
+    grid-template-columns: repeat(3, minmax(0, 416px)); /* 1920에서 416px(Figma), 좁으면 같이 줄어든다 */
     gap: 24px;
 }
 
 .scheduleItem {
-    width: 416px;
     height: 308px;
     border: 1px solid #d9d9d9;
     background: #ffffff;
@@ -1922,4 +1972,238 @@
     padding: 32px 0 10px 20px; /* Figma 탭 하단 ~ 첫 루트 카드 32.13px (7/12 회의) */
     list-style: none;
     margin-left: 23px;
+}
+
+/* 일정 편집: 좁은 화면(1023px 이하)에서만 보이는 일정/지도/채팅 탭 바 */
+.panelTabs {
+    display: none;
+}
+
+/* ===== 반응형 (기준 1920×900, 데스크탑 우선 — 구간은 global.css 상단 기준표) ===== */
+
+/* 1919px 이하: 일정 목록 빈 화면(1297px 고정 폭 상자, NoResult 포함)을 그리드 전체 폭에 맞춘다 */
+@media (max-width: 1919px) {
+    .scheduleList > :not(.scheduleItem) {
+        grid-column: 1 / -1;
+        max-width: 100%;
+    }
+}
+
+/* 1023px 이하 (태블릿): 세 영역이 나란히 들어가지 않으므로 탭으로 하나씩 보여준다.
+   채팅(STOMP 구독)과 지도가 계속 살아 있도록 숨김은 display가 아니라 visibility로 한다
+   (display:none 안에서 만든 지도는 크기를 0으로 잡아 회색으로 그려진다) */
+@media (max-width: 1023px) {
+    .panelTabs {
+        display: flex;
+        flex-shrink: 0;
+        gap: 4px;
+        margin: 6px 16px;
+        padding: 3px;
+        border-radius: 10px;
+        background-color: #f3f3f3;
+    }
+
+    .panelTab {
+        flex: 1;
+        height: 32px;
+        border-radius: 8px;
+        color: #555;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .panelTab[aria-selected='true'] {
+        background-color: #76adac;
+        color: #ffffff;
+        font-weight: 700;
+    }
+
+    .leftSection,
+    .centerSection,
+    .rightSection {
+        position: absolute;
+        inset: 0;
+        width: auto;
+        visibility: hidden;
+    }
+
+    .layoutContainer[data-panel='make'] > .leftSection,
+    .layoutContainer[data-panel='map'] > .centerSection,
+    .layoutContainer[data-panel='chat'] > .rightSection {
+        visibility: visible;
+    }
+
+    /* 일정 목록: 2열 */
+    .createContainer {
+        width: calc(100% - 48px);
+        padding-top: 48px;
+        padding-bottom: 120px;
+    }
+
+    .scheduleList {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .tabAndSearchContainer {
+        gap: 16px;
+    }
+
+    /* 탭은 글자 폭 그대로 두고(줄바꿈 방지) 검색창이 남는 폭만큼 줄어든다 */
+    .tabAndSearchContainer > .tabContainer {
+        width: auto;
+        flex-shrink: 0;
+    }
+
+    .travelSearchContainer {
+        flex: 0 1 471px;
+        width: auto;
+        min-width: 0;
+    }
+
+    /* 배너 문구: 가운데 정렬용 left:50% 때문에 폭이 화면 절반으로 줄던 문제 */
+    .scheduleText {
+        width: calc(100% - 48px);
+    }
+}
+
+/* 767px 이하 (모바일) */
+@media (max-width: 767px) {
+    .header {
+        height: 56px;
+        padding: 0 16px;
+    }
+
+    .headerMenu img {
+        width: 103px;
+        margin-left: 0;
+    }
+
+    .scheduleShareBtn,
+    .scheduleUpdateBtn {
+        width: auto;
+        height: 36px;
+        padding: 0 14px;
+        font-size: 14px;
+    }
+
+    .scheduleShareBtn {
+        margin-right: 8px;
+    }
+
+    /* 일정 목록: 탭 아래에 검색창 */
+    .tabAndSearchContainer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .tabAndSearchContainer > .tabContainer {
+        margin-top: 0;
+    }
+
+    .travelSearchContainer {
+        flex: none;
+        width: 100%;
+        margin: 0;
+    }
+
+    .scheduleExplainDiv {
+        font-size: 20px;
+    }
+
+    .scheduleExplainP {
+        font-size: 14px;
+    }
+
+    .createAddButton {
+        width: min(254px, 100%);
+        height: 44px;
+    }
+
+    .scheduleList > :not(.scheduleItem) {
+        max-height: 420px;
+    }
+}
+
+/* 599px 이하 (스마트폰) */
+@media (max-width: 599px) {
+    /* 일정 편집 좌측 패널: 좌우 여백 16px, 라벨은 글자 폭만큼만 */
+    .scheduleFormHeader > .inputGroup,
+    .scheduleFormHeader > .tabContainer,
+    .travelSearchContainerSearch,
+    .placeItemSearch,
+    .deleteZone {
+        margin-left: 16px;
+        margin-right: 16px;
+    }
+
+    .scheduleFormHeader > .inputGroup label {
+        min-width: 0;
+    }
+
+    .messageContainer {
+        padding: 16px;
+    }
+
+    /* 일정 목록: 1열 */
+    .createContainer {
+        width: calc(100% - 32px);
+        padding-top: 32px;
+        padding-bottom: 80px;
+    }
+
+    .scheduleList {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+    }
+
+    .scheduleCounter,
+    .scheduleCounterShare {
+        font-size: 18px;
+    }
+
+    .scheduleCounter {
+        margin-right: 16px;
+    }
+
+    .scheduleCounter .counterNumber,
+    .scheduleCounterShare .counterNumber {
+        width: 44px;
+        height: 28px;
+        font-size: 14px;
+    }
+
+    /* 일정 만들기·수정 달력 모달 (달력은 한 달만 표시 — CalendarLayout) */
+    .modalContainer {
+        padding: 24px 20px 20px;
+    }
+
+    .detailTitle {
+        margin-right: 0;
+        align-self: flex-start;
+    }
+
+    .inputGroup.modalInputGroup .inputField,
+    .modalDateValue {
+        margin-left: 0;
+    }
+
+    /* 입력줄: 한 줄에 안 들어가면 날짜를 라벨 아래 줄로 통째로 내린다 (글자 단위로 깨지지 않게) */
+    .inputGroup.modalInputGroup {
+        flex-wrap: wrap;
+        row-gap: 4px;
+        height: auto;
+        min-height: 36px;
+    }
+
+    .inputGroup.modalInputGroup .inputField {
+        min-width: 0;
+    }
+
+    .modalDateValue {
+        white-space: nowrap;
+    }
+
+    .modalDateIcon {
+        margin-left: auto;
+    }
 }

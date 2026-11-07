@@ -57,10 +57,12 @@ const Description = styled.p`
   margin-bottom: 40px;
 `;
 
+// 모달 폭을 다 쓰고 그 안에서 가운데 정렬: 좁은 화면(320px)에서는 두 버튼(153px)이 같이 줄어든다
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
   gap: 10px;
+  width: 100%;
 `;
 
 const BaseButton = styled.button`

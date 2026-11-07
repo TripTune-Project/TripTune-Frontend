@@ -41,6 +41,11 @@ const CalendarLayout = ({
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
   const [alertOpen, setAlertOpen] = useState<boolean>(false);
   const [alertMessage, setAlertMessage] = useState<string>('');
+  // 스마트폰(599px 이하)에서는 두 달이 나란히 들어가지 않으므로 한 달만 보여준다
+  // ponytail: 모달을 연 시점의 폭으로만 정한다. 열어 둔 채 화면을 돌리는 경우까지 맞추려면 resize 구독 필요
+  const isNarrowScreen =
+    typeof window !== 'undefined' &&
+    window.matchMedia('(max-width: 599px)').matches;
 
   // 모달이 열렸을 때 배경 스크롤 방지
   useEffect(() => {
@@ -144,7 +149,7 @@ const CalendarLayout = ({
         <button className={styles.closeButton} onClick={onClose}>
           &times;
         </button>
-        <h2 className={styles.detailTitle} style={{ marginRight: '300px' }}>
+        <h2 className={styles.detailTitle}>
           <Image src={triptuneIcon} alt='일정만들기' width={40} priority />
           &nbsp; {mode === 'create' ? '일정 만들기' : '일정 수정'}
         </h2>
@@ -184,7 +189,7 @@ const CalendarLayout = ({
             minDate={mode === 'create' ? today : undefined}
             selectsRange
             inline
-            monthsShown={2}
+            monthsShown={isNarrowScreen ? 1 : 2}
             dateFormat='yyyy.MM.dd'
           />
         </div>

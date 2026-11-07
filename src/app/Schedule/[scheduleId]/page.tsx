@@ -23,6 +23,15 @@ import Alert from '@mui/material/Alert';
 import { ScheduleEvent } from '@/types/scheduleType';
 import { ApiError } from '@/apis/api';
 
+// 좁은 화면(1023px 이하)에서 한 번에 하나씩 보여줄 영역. 넓은 화면에서는 탭 바가 숨겨진다
+const PANEL_TABS = [
+  { key: 'make', label: '일정' },
+  { key: 'map', label: '지도' },
+  { key: 'chat', label: '채팅' },
+] as const;
+
+type Panel = (typeof PANEL_TABS)[number]['key'];
+
 /**
  * 일정 상세 페이지 컴포넌트
  * 특정 일정의 상세 정보를 보여주고 편집할 수 있는 페이지
@@ -43,6 +52,7 @@ export default function ScheduleDetailPage() {
     'error' | 'success' | 'info' | 'warning'
   >('error');
   const [isError, setIsError] = useState(false);
+  const [panel, setPanel] = useState<Panel>('make');
 
   const {
     scheduleDetail,
@@ -290,7 +300,7 @@ export default function ScheduleDetailPage() {
   }
 
   return (
-    <>
+    <div className={styles.editorPage}>
       <Head>
         <title>일정 상세 페이지 - 지도와 함께 만드는 나만의 일정</title>
         <meta
@@ -308,7 +318,6 @@ export default function ScheduleDetailPage() {
                 alt='로고'
                 width={141}
                 height={52}
-                style={{ marginLeft: '14px' }}
                 priority
               />
             </Link>
@@ -324,8 +333,23 @@ export default function ScheduleDetailPage() {
           저장
         </button>
       </header>
+      <div className={styles.panelTabs} role='tablist'>
+        {PANEL_TABS.map(({ key, label }) => (
+          <button
+            key={key}
+            type='button'
+            role='tab'
+            aria-selected={panel === key}
+            className={styles.panelTab}
+            onClick={() => setPanel(key)}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
       <InviteModal isOpen={isInviteModalOpen} onClose={handleCloseModal} />
-      <div className={styles.layoutContainer}>
+      {/* 탭에서 고르지 않은 영역도 언마운트하지 않고 CSS로만 숨긴다 (채팅이 일정 이벤트를 구독) */}
+      <div className={styles.layoutContainer} data-panel={panel}>
         <div className={styles.leftSection}>
           <ScheduleMake initialTab='scheduleTravel' />
         </div>
@@ -350,6 +374,6 @@ export default function ScheduleDetailPage() {
         </div>
       </div>
       {alertSnackbar}
-    </>
+    </div>
   );
 }
