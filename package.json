@@ -50,9 +50,8 @@
   "resolutions": {
     "postcss": "^8.5.28",
     "js-yaml": "^4.3.2",
-    "**/@next/eslint-plugin-next/glob": "10.5.0",
-    "**/eslint-config-next/**/minimatch": "9.0.9",
-    "**/eslint-config-next/minimatch": "9.0.9"
+    "**/@next/eslint-plugin-next/glob": "14.0.2",
+    "**/@typescript-eslint/typescript-estree/minimatch": "11.0.1"
   },
   "devDependencies": {
     "@netlify/plugin-nextjs": "^5.8.1",
