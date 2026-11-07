@@ -23,7 +23,7 @@ import Alert from '@mui/material/Alert';
 import { ScheduleEvent } from '@/types/scheduleType';
 import { ApiError } from '@/apis/api';
 
-// 좁은 화면(1023px 이하)에서 한 번에 하나씩 보여줄 영역. 넓은 화면에서는 탭 바가 숨겨진다
+// 모바일(767px 이하)에서 한 번에 하나씩 보여줄 영역. 더 넓은 화면에서는 탭 바가 숨겨진다
 const PANEL_TABS = [
   { key: 'make', label: '일정' },
   { key: 'map', label: '지도' },
@@ -53,6 +53,8 @@ export default function ScheduleDetailPage() {
   >('error');
   const [isError, setIsError] = useState(false);
   const [panel, setPanel] = useState<Panel>('make');
+  // 태블릿 세로(768~1023px)에서 채팅 서랍 열림 여부
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   const {
     scheduleDetail,
@@ -323,6 +325,16 @@ export default function ScheduleDetailPage() {
             </Link>
           </li>
         </ul>
+        {/* 태블릿 세로(768~1023px)에서만 보이는 채팅 서랍 버튼 (PC는 채팅 칸, 모바일은 채팅 탭) */}
+        <button
+          type='button'
+          className={styles.chatToggleBtn}
+          aria-expanded={isChatOpen}
+          aria-controls='schedule-chat'
+          onClick={() => setIsChatOpen((open) => !open)}
+        >
+          채팅
+        </button>
         <button className={styles.scheduleShareBtn} onClick={handleShareClick}>
           공유
         </button>
@@ -349,14 +361,18 @@ export default function ScheduleDetailPage() {
       </div>
       <InviteModal isOpen={isInviteModalOpen} onClose={handleCloseModal} />
       {/* 탭에서 고르지 않은 영역도 언마운트하지 않고 CSS로만 숨긴다 (채팅이 일정 이벤트를 구독) */}
-      <div className={styles.layoutContainer} data-panel={panel}>
+      <div
+        className={styles.layoutContainer}
+        data-panel={panel}
+        data-chat={isChatOpen ? 'open' : 'closed'}
+      >
         <div className={styles.leftSection}>
           <ScheduleMake initialTab='scheduleTravel' />
         </div>
         <div className={styles.centerSection}>
           <SchedulePlacesMap />
         </div>
-        <div className={styles.rightSection}>
+        <div className={styles.rightSection} id='schedule-chat'>
           {isChatLoading ? (
             <Chatting
               onEvent={handleScheduleEvent}
