@@ -93,7 +93,8 @@ const ChangePassword = () => {
           router.push('/Login');
         }, 1500);
       } else {
-        setAlertMessage('비밀번호 변경에 실패했습니다.');
+        // 서버가 내려준 실패 사유(토큰 만료, 기존 비밀번호와 동일 등)를 그대로 노출
+        setAlertMessage(resData.message || '비밀번호 변경에 실패했습니다.');
         setAlertSeverity('error');
         setAlertOpen(true);
       }
