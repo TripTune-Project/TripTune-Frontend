@@ -122,7 +122,7 @@ function FindPage() {
         open={alertOpen}
         autoHideDuration={3000}
         onClose={handleAlertClose}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
       >
         <Alert
           onClose={(event) => handleAlertClose(event, 'timeout')}
