@@ -27,7 +27,7 @@
 .joinContainer {
     position: relative;
     z-index: 1;
-    width: 550px;
+    width: min(550px, calc(100% - 32px));
     height: auto;
     min-height: 630px;
     flex-shrink: 0;
@@ -327,78 +327,67 @@
     font-family: 'Noto Sans KR', sans-serif;
 }
 
-/* 반응형 미디어 쿼리 */
-@media screen and (max-width: 768px) {
+/* ===== 반응형 (global.css 상단의 브레이크포인트 기준) ===== */
+
+/* 낮은 데스크탑 화면 (1536×730, 1440×731): 세로 여백 압축 */
+@media (min-width: 600px) and (max-height: 800px) {
     .joinContainer {
-        width: 95%;
-        padding: 1.5rem 0.8rem;
+        min-height: 0;
+        padding-top: 36px;
+        padding-bottom: 36px;
     }
 
     .joinTitle {
-        font-size: 2rem;
-        margin-top: 1.5rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .emailGroup {
-        flex-direction: column;
-        align-items: stretch;
-        height: auto;
-        gap: 10px;
-    }
-
-    .emailInput,
-    .inputVerification {
-        width: 100%;
-        margin-bottom: 10px;
-        min-width: 100%;
-    }
-
-    .emailButton,
-    .verifyButton {
-        width: 100%;
-        margin-left: 0;
-    }
-
-    .submitButton,
-    .emailButton,
-    .verifyButton {
-        height: 50px;
+        margin-bottom: 24px;
     }
 }
 
-@media screen and (max-width: 480px) {
+/* 스마트폰 (이메일 인증 행은 입력창+버튼 가로 배치를 유지) */
+@media (max-width: 599px) {
+    .joinBackground {
+        padding: 24px 0;
+    }
+
     .joinContainer {
-        width: 100%;
-        border-radius: 15px 0;
-        padding: 1rem 0.5rem;
+        min-height: 0;
+        padding: 32px 20px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 
     .joinTitle {
-        font-size: 1.8rem;
-        margin-top: 1rem;
-        margin-bottom: 1rem;
+        font-size: 22px;
+        margin-bottom: 24px;
     }
 
-    .input,
-    .inputError,
     .emailInput,
-    .inputVerification,
-    .emailButton,
-    .verifyButton {
-        height: 45px;
-        font-size: 14px;
+    .inputVerification {
+        min-width: 0;
     }
 
-    .submitButton {
-        height: 45px;
-        font-size: 16px;
+    .emailButton,
+    .verifyButton,
+    .verifiedButton {
+        width: 84px;
+        flex-shrink: 0;
     }
 
     .errorText,
     .notificationMessage,
     .verifiedText {
         font-size: 12px;
+    }
+}
+
+@media (max-width: 374px) {
+    .joinContainer {
+        padding: 28px 16px;
+    }
+
+    .input,
+    .inputError,
+    .emailInput,
+    .inputVerification {
+        font-size: 13px;
+        padding: 0 12px;
     }
 }
