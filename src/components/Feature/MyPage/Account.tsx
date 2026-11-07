@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import styles from '@/styles/Mypage.module.css';
 import DeleteUserModal from '@/components/Common/DeleteUserModal';
@@ -304,7 +304,21 @@ const Account = () => {
               </div>
             ) : (
               <div className={styles.emailRow}>
-                <span className={styles.readOnlyValue}>{userData?.email || ''}</span>
+                <span className={styles.readOnlyValue}>
+                  {/* @ 뒤에서 먼저 줄바꿈되도록 <wbr> */}
+                  <span>
+                    {(userData?.email || '').split('@').map((part, i) => (
+                      <Fragment key={i}>
+                        {i > 0 && (
+                          <>
+                            @<wbr />
+                          </>
+                        )}
+                        {part}
+                      </Fragment>
+                    ))}
+                  </span>
+                </span>
                 {!isEditingPwd && (
                   <button
                     className={styles.editBtn}
