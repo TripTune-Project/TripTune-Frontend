@@ -59,6 +59,12 @@ const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
   gap: 10px;
+  width: 100%;
+
+  & > button {
+    flex: 0 1 153px;
+    min-width: 0;
+  }
 `;
 
 const BaseButton = styled.button`

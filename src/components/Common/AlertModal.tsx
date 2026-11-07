@@ -19,8 +19,9 @@ const AlertModal = ({ isOpen, onClose, children }: AlertModalProps) => {
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          width: '414px',
-          height: '230px',
+          // 좁은 화면에서는 양옆 16px 여백을 남기고 줄어든다
+          width: 'min(414px, calc(100vw - 32px))',
+          minHeight: '230px',
           textAlign: 'center',
           outline: 'none',
         }}
