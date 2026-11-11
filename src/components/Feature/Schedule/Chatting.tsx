@@ -12,6 +12,19 @@ import saveLocalContent from '@/utils/saveLocalContent';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import Cookies from 'js-cookie';
+import {
+  encodeSettlement,
+  parseSettlement,
+  splitAmount,
+} from '@/utils/settlement';
+
+const EMPTY_SETTLE_FORM = {
+  total: '',
+  people: '',
+  bank: '',
+  account: '',
+  holder: '',
+};
 
 /**
  * 날짜 포맷팅 함수
@@ -93,6 +106,19 @@ const Chatting = ({ onError, onEvent }: ChattingProps) => {
   const [loading, setLoading] = useState(false);
   // 권한을 모르면 막지 않는다 (최종 판단은 서버)
   const [canChat, setCanChat] = useState(true);
+  const [attendeeCount, setAttendeeCount] = useState(0);
+  const [attachMenuOpen, setAttachMenuOpen] = useState(false);
+  const photoInputRef = useRef<HTMLInputElement>(null);
+  const [photo, setPhoto] = useState<{ file: File; url: string } | null>(null);
+
+  // 미리보기용 blob URL은 바뀌거나 언마운트될 때 해제
+  useEffect(() => {
+    return () => {
+      if (photo) URL.revokeObjectURL(photo.url);
+    };
+  }, [photo]);
+  const [settleOpen, setSettleOpen] = useState(false);
+  const [settleForm, setSettleForm] = useState(EMPTY_SETTLE_FORM);
 
   // WebSocket 브로커 URL
   const brokerUrl = process.env.NEXT_PUBLIC_BROKER_URL;
@@ -139,6 +165,7 @@ const Chatting = ({ onError, onEvent }: ChattingProps) => {
   useEffect(() => {
     fetchScheduleAttendees(Number(scheduleId))
       .then((response) => {
+        setAttendeeCount(response.data?.length ?? 0);
         const me = response.data?.find(
           (attendee) => attendee.nickname === userNickname
         );
@@ -339,24 +366,26 @@ const Chatting = ({ onError, onEvent }: ChattingProps) => {
    * 메시지 전송 핸들러
    * 입력된 메시지를 WebSocket을 통해 전송
    */
-  const handleSendMessage = () => {
-    const messageLines = message.split('\n').length;
-    if (messageLines > 3 || message.length > 1000) {
-      setAlertMessage('메시지는 3줄 이하 및 1000자 이하로 작성하세요.');
-      setAlertSeverity('warning');
-      setAlertOpen(true);
-      return;
-    }
+  const showAlert = (
+    text: string,
+    severity: 'success' | 'error' | 'warning' | 'info'
+  ) => {
+    setAlertMessage(text);
+    setAlertSeverity(severity);
+    setAlertOpen(true);
+  };
 
-    if (!canChat || !message.trim()) return;
-
+  /**
+   * 채팅 문자열 전송 (일반 메시지·정산 공통)
+   * @returns 전송 성공 여부
+   */
+  const publishMessage = (text: string): boolean => {
     if (!clientRef.current?.connected) {
-      setAlertMessage(
-        '채팅에 연결되어 있지 않습니다. 채팅 권한이 없거나 연결이 끊겼습니다.'
+      showAlert(
+        '채팅에 연결되어 있지 않습니다. 채팅 권한이 없거나 연결이 끊겼습니다.',
+        'warning'
       );
-      setAlertSeverity('warning');
-      setAlertOpen(true);
-      return;
+      return false;
     }
 
     try {
@@ -365,17 +394,151 @@ const Chatting = ({ onError, onEvent }: ChattingProps) => {
         body: JSON.stringify({
           scheduleId,
           nickname: userNickname,
-          message,
+          message: text,
         }),
       });
-      setMessage('');
+      return true;
     } catch (error) {
       console.error('[메시지 전송 오류]', error);
-      setAlertMessage('메시지 전송에 실패했습니다.');
-      setAlertSeverity('error');
-      setAlertOpen(true);
+      showAlert('메시지 전송에 실패했습니다.', 'error');
       onError?.('메시지 전송에 실패했습니다.');
+      return false;
     }
+  };
+
+  const handleSendMessage = () => {
+    const messageLines = message.split('\n').length;
+    if (messageLines > 3 || message.length > 1000) {
+      showAlert('메시지는 3줄 이하 및 1000자 이하로 작성하세요.', 'warning');
+      return;
+    }
+
+    if (!canChat || !message.trim()) return;
+
+    if (publishMessage(message)) setMessage('');
+  };
+
+  const MAX_PHOTO_MB = 10;
+
+  const handlePhotoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = ''; // 같은 파일을 다시 골라도 onChange가 오도록
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      showAlert('이미지 파일만 선택할 수 있습니다.', 'warning');
+      return;
+    }
+    if (file.size > MAX_PHOTO_MB * 1024 * 1024) {
+      showAlert(`사진은 ${MAX_PHOTO_MB}MB 이하만 보낼 수 있습니다.`, 'warning');
+      return;
+    }
+    setAttachMenuOpen(false);
+    setSettleOpen(false);
+    setPhoto({ file, url: URL.createObjectURL(file) });
+  };
+
+  const openPhotoPicker = () => {
+    setAttachMenuOpen(false);
+    photoInputRef.current?.click();
+  };
+
+  const openSettleForm = () => {
+    setPhoto(null);
+    setSettleForm((prev) => ({
+      ...prev,
+      people: prev.people || (attendeeCount ? String(attendeeCount) : ''),
+      holder: prev.holder || userNickname || '',
+    }));
+    setAttachMenuOpen(false);
+    setSettleOpen(true);
+  };
+
+  const settleTotal = Number(settleForm.total);
+  const settlePeople = Number(settleForm.people);
+  const settlePreview =
+    Number.isInteger(settleTotal) &&
+    settleTotal > 0 &&
+    Number.isInteger(settlePeople) &&
+    settlePeople > 0
+      ? splitAmount(settleTotal, settlePeople)
+      : null;
+
+  const handleSendSettlement = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!canChat) return;
+
+    const bank = settleForm.bank.trim();
+    const account = settleForm.account.trim();
+    const holder = settleForm.holder.trim();
+    if (!settlePreview || settlePeople > 100) {
+      showAlert('총액과 인원(1~100명)을 올바르게 입력하세요.', 'warning');
+      return;
+    }
+    if (!bank || !holder || !/^[0-9-]{6,30}$/.test(account)) {
+      showAlert('은행, 계좌번호(숫자·-), 예금주를 확인하세요.', 'warning');
+      return;
+    }
+
+    const sent = publishMessage(
+      encodeSettlement({
+        total: settleTotal,
+        people: settlePeople,
+        bank,
+        account,
+        holder,
+      })
+    );
+    if (sent) {
+      // 다음 정산에서 계좌를 다시 치지 않도록 계좌 정보는 남긴다
+      setSettleForm((prev) => ({ ...prev, total: '' }));
+      setSettleOpen(false);
+    }
+  };
+
+  const copyAccount = async (bank: string, account: string) => {
+    try {
+      await navigator.clipboard.writeText(`${bank} ${account}`);
+      showAlert('계좌번호를 복사했습니다.', 'success');
+    } catch {
+      showAlert('복사에 실패했습니다. 직접 선택해 복사해 주세요.', 'error');
+    }
+  };
+
+  const renderSettlementCard = (
+    s: NonNullable<ReturnType<typeof parseSettlement>>,
+    sender: string
+  ) => {
+    const { perPerson, remainder } = splitAmount(s.total, s.people);
+    return (
+      <div className={styles.settleCard}>
+        <div className={styles.settleCardTitle}>정산 요청</div>
+        <div className={styles.settleCardSummary}>
+          총 {s.total.toLocaleString()}원 · {s.people}명
+        </div>
+        <div className={styles.settleCardAmount}>
+          1인당 <strong>{perPerson.toLocaleString()}원</strong>
+        </div>
+        {remainder > 0 && (
+          <div className={styles.settleCardNote}>
+            나머지 {remainder.toLocaleString()}원은 {sender}님이 부담
+          </div>
+        )}
+        <div className={styles.settleCardAccount}>
+          <span>
+            {s.bank} {s.account}
+            <br />
+            예금주 {s.holder}
+          </span>
+          <button
+            type='button'
+            className={styles.settleCopyButton}
+            onClick={() => copyAccount(s.bank, s.account)}
+          >
+            복사
+          </button>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -391,6 +554,7 @@ const Chatting = ({ onError, onEvent }: ChattingProps) => {
             index === 0 ||
             formatDate(messages[index - 1].timestamp) !==
               formatDate(msg.timestamp);
+          const settlement = parseSettlement(msg.message);
           return (
             <div key={msg.messageId} className={styles.userMessages}>
               {/* 날짜가 바뀌면 날짜 구분선 표시 */}
@@ -429,15 +593,19 @@ const Chatting = ({ onError, onEvent }: ChattingProps) => {
                     {formatTimestamp(msg.timestamp)}
                   </span>
                 )}
-                <div
-                  className={
-                    msg.nickname === userNickname
-                      ? styles.receiveMessage
-                      : styles.sentMessage
-                  }
-                >
-                  <span>{msg.message}</span>
-                </div>
+                {settlement ? (
+                  renderSettlementCard(settlement, msg.nickname)
+                ) : (
+                  <div
+                    className={
+                      msg.nickname === userNickname
+                        ? styles.receiveMessage
+                        : styles.sentMessage
+                    }
+                  >
+                    <span>{msg.message}</span>
+                  </div>
+                )}
                 {msg.nickname !== userNickname && (
                   <span className={styles.timestamp}>
                     {formatTimestamp(msg.timestamp)}
@@ -449,8 +617,164 @@ const Chatting = ({ onError, onEvent }: ChattingProps) => {
         })}
         {loading && <DataLoading />}
       </div>
+      {/* 정산 입력 폼 */}
+      {settleOpen && canChat && (
+        <form className={styles.settleForm} onSubmit={handleSendSettlement}>
+          <div className={styles.settleFormRow}>
+            <label className={styles.settleField}>
+              총액(원)
+              <input
+                type='number'
+                inputMode='numeric'
+                min={1}
+                value={settleForm.total}
+                onChange={(e) =>
+                  setSettleForm({ ...settleForm, total: e.target.value })
+                }
+                placeholder='120000'
+              />
+            </label>
+            <label className={styles.settleField}>
+              인원
+              <input
+                type='number'
+                inputMode='numeric'
+                min={1}
+                max={100}
+                value={settleForm.people}
+                onChange={(e) =>
+                  setSettleForm({ ...settleForm, people: e.target.value })
+                }
+              />
+            </label>
+          </div>
+          <div className={styles.settleFormRow}>
+            <label className={styles.settleField}>
+              은행
+              <input
+                type='text'
+                maxLength={20}
+                value={settleForm.bank}
+                onChange={(e) =>
+                  setSettleForm({ ...settleForm, bank: e.target.value })
+                }
+                placeholder='카카오뱅크'
+              />
+            </label>
+            <label className={styles.settleField}>
+              예금주
+              <input
+                type='text'
+                maxLength={20}
+                value={settleForm.holder}
+                onChange={(e) =>
+                  setSettleForm({ ...settleForm, holder: e.target.value })
+                }
+              />
+            </label>
+          </div>
+          <label className={styles.settleField}>
+            계좌번호
+            <input
+              type='text'
+              inputMode='numeric'
+              maxLength={30}
+              value={settleForm.account}
+              onChange={(e) =>
+                setSettleForm({ ...settleForm, account: e.target.value })
+              }
+              placeholder='3333-01-1234567'
+            />
+          </label>
+          <div className={styles.settleFormFooter}>
+            <span className={styles.settlePreview}>
+              {settlePreview
+                ? `1인당 ${settlePreview.perPerson.toLocaleString()}원` +
+                  (settlePreview.remainder
+                    ? ` (나머지 ${settlePreview.remainder}원 본인 부담)`
+                    : '')
+                : '총액과 인원을 입력하세요'}
+            </span>
+            <div className={styles.settleFormActions}>
+              <button
+                type='button'
+                className={styles.settleCancelButton}
+                onClick={() => setSettleOpen(false)}
+              >
+                취소
+              </button>
+              <button type='submit' className={styles.sendButton}>
+                보내기
+              </button>
+            </div>
+          </div>
+        </form>
+      )}
+      {/* 사진 미리보기 */}
+      {photo && canChat && (
+        <div className={styles.photoPreview}>
+          <Image
+            src={photo.url}
+            alt='보낼 사진 미리보기'
+            width={64}
+            height={64}
+            unoptimized
+            className={styles.photoPreviewImage}
+          />
+          <div className={styles.photoPreviewInfo}>
+            <span className={styles.photoPreviewName}>{photo.file.name}</span>
+            <span className={styles.photoPreviewSize}>
+              {photo.file.size < 1024 * 1024
+                ? `${Math.ceil(photo.file.size / 1024)}KB`
+                : `${(photo.file.size / 1024 / 1024).toFixed(1)}MB`}{' '}
+              · 전송은 준비 중입니다
+            </span>
+          </div>
+          <div className={styles.settleFormActions}>
+            <button
+              type='button'
+              className={styles.settleCancelButton}
+              onClick={() => setPhoto(null)}
+            >
+              취소
+            </button>
+            {/* ponytail: 채팅 사진 업로드 API가 아직 없어 전송은 막아 둠. 생기면 여기서 업로드 후 URL을 메시지로 publish */}
+            <button type='button' className={styles.sendButton} disabled>
+              보내기
+            </button>
+          </div>
+        </div>
+      )}
       {/* 메시지 입력 영역 */}
       <div className={styles.inputContainer}>
+        <input
+          ref={photoInputRef}
+          type='file'
+          accept='image/*'
+          hidden
+          onChange={handlePhotoSelect}
+        />
+        {attachMenuOpen && canChat && (
+          <div className={styles.attachMenu} role='menu'>
+            <button type='button' role='menuitem' onClick={openPhotoPicker}>
+              사진
+            </button>
+            <button type='button' role='menuitem' onClick={openSettleForm}>
+              정산
+            </button>
+          </div>
+        )}
+        <button
+          type='button'
+          onClick={() => setAttachMenuOpen((open) => !open)}
+          className={styles.attachToggleButton}
+          disabled={!canChat}
+          aria-label='첨부 메뉴'
+          aria-haspopup='menu'
+          aria-expanded={attachMenuOpen}
+        >
+          +
+        </button>
         <input
           type='text'
           value={message}
