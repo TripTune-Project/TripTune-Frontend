@@ -226,7 +226,7 @@ const ScheduleTravelSearch = () => {
         open={alertOpen}
         autoHideDuration={3000}
         onClose={() => setAlertOpen(false)}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <Alert
           onClose={() => setAlertOpen(false)}

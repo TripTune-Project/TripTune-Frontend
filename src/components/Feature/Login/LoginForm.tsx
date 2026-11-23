@@ -152,7 +152,7 @@ const LoginForm = () => {
             open={openSnackbar}
             autoHideDuration={3000}
             onClose={closeSnackbar}
-            anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
           >
             <Alert
               onClose={closeSnackbar}

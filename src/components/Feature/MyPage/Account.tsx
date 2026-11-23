@@ -178,11 +178,15 @@ const Account = () => {
     }
     try {
       await deactivateAccount(password);
+      closeModal();
       setAlertMessage('회원 탈퇴가 완료되었습니다.');
       setAlertSeverity('success');
       setAlertOpen(true);
       removeAuthCookies();
-      router.push('/');
+      // 바로 이동하면 언마운트되어 알림이 안 보이므로, 회원가입 완료와 같이 3초 뒤 이동
+      setTimeout(() => {
+        router.push('/');
+      }, 3000);
     } catch (error: any) {
       console.error('회원 탈퇴 실패:', error.message);
       setAlertMessage('회원 탈퇴에 실패했습니다. 다시 시도해주세요.');

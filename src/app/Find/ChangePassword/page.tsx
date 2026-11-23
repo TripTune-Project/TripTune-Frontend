@@ -199,7 +199,7 @@ const ChangePassword = () => {
             open={alertOpen}
             autoHideDuration={3000}
             onClose={() => setAlertOpen(false)}
-            anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
           >
             <Alert
               onClose={() => setAlertOpen(false)}
